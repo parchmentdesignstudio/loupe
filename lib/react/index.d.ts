@@ -1,10 +1,10 @@
 import type { ForwardRefExoticComponent, RefAttributes, SVGProps } from 'react'
-import type { IconName, IconVariant } from '../index.js'
+import type { IconName, IconSize, IconVariant } from '../index.js'
 
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name' | 'ref'> {
   name: IconName
   variant?: IconVariant
-  size?: number
+  size?: IconSize
   label?: string
 }
 
