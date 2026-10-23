@@ -31,7 +31,7 @@ A symbol name used twice is left out until one is renamed. An icon with nothing 
 | `lib/index.js` | `toSvg()`, `resolveIcon()` and `iconNames()` for anything else |
 | `icons.json` | Every name, by variant and size |
 
-Icons draw in `currentColor`. Knock-out shapes use `--icon-fill` (and `--icon-fill-bg` on a few line icons), which are `none` unless a site sets them. The success icons fill with `--icon-success`.
+Icons draw in `currentColor`. Knock-out shapes use `--icon-fill`, the page background (`Canvas`) unless a site sets it, so set `color-scheme` for dark mode (`none` turns it off). A few line icons use `--icon-fill-bg`, a tint of the icon’s colour. The success icons fill with `--icon-success`, falling back to `--icon-fill`.
 
 ### Using it in a site
 

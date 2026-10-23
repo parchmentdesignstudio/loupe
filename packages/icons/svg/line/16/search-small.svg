@@ -1,1 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><g stroke="currentColor"><path stroke-width="4" d="m11 11 3 3"/><circle cx="7" cy="7" r="5" stroke-width="2" style="fill:var(--icon-fill, none)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><g stroke="currentColor"><path stroke-width="4" d="m11 11 3 3"/><circle cx="7" cy="7" r="5" stroke-width="2" style="fill:var(--icon-fill, Canvas)"/></g></svg>

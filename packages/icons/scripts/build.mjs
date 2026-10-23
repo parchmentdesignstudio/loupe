@@ -30,10 +30,10 @@ function rgbOf(value) {
   return null
 }
 
-const ICON_FILL = 'var(--icon-fill, none)'
+const ICON_FILL = 'var(--icon-fill, Canvas)'
 
 // Dark paint follows the text colour. Light paint is the knock-out behind a
-// line icon, which sites theme through --icon-fill (none by default).
+// line icon, which sites theme through --icon-fill (the page background, Canvas, by default).
 const recolour = {
   name: 'recolour',
   fn: () => ({
@@ -71,7 +71,7 @@ function paintOf(classes) {
     if (!c || c.includes(':')) continue
     if (c === 'fill-none') paint.fill = 'none'
     else if (/^fill-current(color)?$/i.test(c)) paint.fill = 'currentColor'
-    else if (c === 'fill-(--icon-fill-bg)') paint.style = 'fill:var(--icon-fill-bg, none)'
+    else if (c === 'fill-(--icon-fill-bg)') paint.style = 'fill:var(--icon-fill-bg, color-mix(in oklab, Canvas 70%, currentColor))'
     else if (c === 'fill-success') paint.style = `fill:var(--icon-success, ${ICON_FILL})`
     else if (/^fill-/.test(c)) paint.style = `fill:${ICON_FILL}`
     else if (/^stroke-current(color)?$/i.test(c)) paint.stroke = 'currentColor'
@@ -218,7 +218,7 @@ function build() {
     .join('\n')
   write(
     path.join(ROOT, 'preview.html'),
-    `<!doctype html><meta charset="utf-8"><title>Icons</title><style>body{font:11px system-ui;margin:24px;color:#092e24;background:#fbfaf5;--icon-fill:#fff}main{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}figure{margin:0;display:grid;justify-items:center;gap:6px;padding:12px 4px;border-radius:6px;background:#f1efe6}figcaption{text-align:center;overflow-wrap:anywhere}@media (prefers-color-scheme:dark){body{color:#f1efe6;background:#14201c;--icon-fill:#092e24}figure{background:#1d2c27}}</style><main>\n${cells}\n</main>\n`,
+    `<!doctype html><meta charset="utf-8"><title>Icons</title><style>body{font:11px system-ui;margin:24px;color:#092e24;background:#fbfaf5}main{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}figure{margin:0;display:grid;justify-items:center;gap:6px;padding:12px 4px;border-radius:6px;background:#f1efe6}figcaption{text-align:center;overflow-wrap:anywhere}@media (prefers-color-scheme:dark){body{color:#f1efe6;background:#14201c;--icon-fill:#092e24}figure{background:#1d2c27}}</style><main>\n${cells}\n</main>\n`,
   )
 
   const count = Object.keys(icons).length
