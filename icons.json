@@ -188,7 +188,6 @@
   },
   "solid": {
     "16": [
-      "about",
       "align-center",
       "align-justify",
       "align-left",
@@ -239,6 +238,7 @@
       "sun-horizon",
       "sun",
       "tv",
+      "user",
       "vector-square"
     ],
     "24": []
