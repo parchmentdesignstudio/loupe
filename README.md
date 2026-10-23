@@ -10,9 +10,11 @@ Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. 
 
 ### From Sketch to the library
 
-1. Draw the icon in the icons Sketch file as a symbol named `line/16/name`, `solid/24/name` and so on. Only symbols with that name pattern are exported; loose artboards and drafts are ignored.
-2. In Sketch, run **Plugins › Icon › Export to Loupe** (ctrl alt shift e). It writes every icon to `packages/icons/source/` with keylines hidden, then runs the build. No folder to choose.
+1. Draw the icon on the solid page of the icons Sketch file as a symbol named `solid/16/name` or `solid/24/name`. Only symbols with that name pattern are exported; loose artboards and drafts are ignored.
+2. In Sketch, run **Plugins › Icon › Export to Loupe** (ctrl alt shift e). It writes every solid icon to `packages/icons/source/solid/` with keylines hidden, then runs the build. No folder to choose.
 3. Commit, then release (below).
+
+Line icons aren’t in Sketch yet. `source/line/` holds iamsteve’s current line icons, styled with its Tailwind classes, which the build translates. They’ll be reworked and move to Sketch later.
 
 A symbol name used twice is left out until one is renamed. An icon with nothing visible (usually art that ended up inside the `Keylines` group) is left out of the build with a warning.
 
@@ -29,7 +31,7 @@ A symbol name used twice is left out until one is renamed. An icon with nothing 
 | `lib/index.js` | `toSvg()`, `resolveIcon()` and `iconNames()` for anything else |
 | `icons.json` | Every name, by variant and size |
 
-Icons draw in `currentColor`. The knock-out shape behind some line icons uses `--icon-fill`, which is `none` unless a site sets it.
+Icons draw in `currentColor`. Knock-out shapes use `--icon-fill` (and `--icon-fill-bg` on a few line icons), which are `none` unless a site sets them. The success icons fill with `--icon-success`.
 
 ### Using it in a site
 

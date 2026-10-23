@@ -1,12 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/note-pencil</title>
-    <g id="line/16/note-pencil" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(2, 1)">
-            <rect id="Rectangle" fill="color(display-p3 1.000 1.000 1.000)" x="8.8817842e-16" y="0" width="12" height="14" rx="0.667"></rect>
-            <path d="M8,8 L4,8 M6,0 L0.667,0 C0.298626072,0 6.66133815e-16,0.298626072 6.66133815e-16,0.667 L6.66133815e-16,13.333 C6.66133815e-16,13.701 0.298,14 0.667,14 L11.333,14 C11.7013739,14 12,13.7013739 12,13.333 L12,8" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            <polygon id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="1.5" fill="color(display-p3 0.035 0.180 0.141)" stroke-linecap="round" stroke-linejoin="round" points="11.673 0 8.34 3.333 8.34 4.667 9.673 4.667 13.007 1.333"></polygon>
-            <line x1="4" y1="4" x2="5" y2="4" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="note-pencil">
+    <rect width="10.667" height="12" x="2.667" y="2" class="fill-(--icon-fill)" rx=".667"/>
+    <path d="M10 10H6" class="stroke-current stroke-2 sl-r"/>
+    <path d="M8.667 2H3.333a.667.667 0 0 0-.666.667v10.666c0 .368.298.667.666.667h9.334a.667.667 0 0 0 .666-.667V6.667" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M12 2 8.667 5.333v1.334H10l3.333-3.334L12 2Z" class="Vector 33"/>
+  </g>
 </svg>

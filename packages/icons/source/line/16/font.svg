@@ -1,10 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/font</title>
-    <g id="line/16/font" stroke="none" fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(3, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <path d="M0,2 L0.625,0 L1.16,0.214 C1.63231161,0.402890262 2.1363176,0.499958081 2.645,0.5 L7.355,0.5 C7.8636824,0.499958081 8.36768839,0.402890262 8.84,0.214 L9.375,0 L10,2 C9.62142194,1.09176243 8.73398009,0.500134528 7.75,0.5 L7,0.5 C6.375,0.5 5,1 5,2 C5,1 3.625,0.5 3,0.5 L2.25,0.5 C1.266,0.5 0.378,1.092 0,2 Z M5,1 L5,11" id="Shape" stroke-width="2" stroke-linecap="round"></path>
-            <path d="M3,12 L7,12 L3,12 Z" id="Path" stroke-width="2" stroke-linecap="square"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="font">
+    <path d="m3 4 .625-2 .535.214a4 4 0 0 0 1.485.286h4.71a4 4 0 0 0 1.485-.286L12.375 2 13 4a2.438 2.438 0 0 0-2.25-1.5H10C9.375 2.5 8 3 8 4c0-1-1.375-1.5-2-1.5h-.75C4.266 2.5 3.378 3.092 3 4Z" class="Vector 35"/>
+    <path d="M8 3v10" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M6 14h4Z" class="fill-none stroke-current stroke-2 sl-s"/>
+  </g>
 </svg>

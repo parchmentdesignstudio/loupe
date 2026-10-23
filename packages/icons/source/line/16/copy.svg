@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/copy</title>
-    <g id="line/16/copy" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(2, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <path d="M3,4 L1,4 C0.44771525,4 0,4.44771525 0,5 L0,11 C0,11.5522847 0.44771525,12 1,12 L7,12 C7.55228475,12 8,11.5522847 8,11 L8,8" id="Path" stroke-width="2"></path>
-            <rect id="Rectangle" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" x="4" y="0" width="8" height="8" rx="1"></rect>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="copy">
+    <path d="M5 6H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3" class="fill-none stroke-current stroke-2 sl-r"/>
+    <rect width="8" height="8" x="6" y="2" class="fill-(--icon-fill) stroke-current stroke-2 sl-r" rx="1"/>
+  </g>
 </svg>

@@ -1,10 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/shapes</title>
-    <g id="line/24/shapes" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(3, 3)" fill="color(display-p3 1.000 1.000 1.000)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <circle id="Oval" stroke-width="2" cx="14.5" cy="14.5" r="3.5"></circle>
-            <path d="M7,11 L0,11 L0,18 L7,18 L7,11 Z M5,7 L13,7 L9,0 L5,7 Z" id="Shape" stroke-width="2" fill-rule="nonzero"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="shapes">
+    <circle cx="17.5" cy="17.5" r="3.5" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="M10 14H3v7h7v-7Z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="M8 10h8l-4-7-4 7Z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

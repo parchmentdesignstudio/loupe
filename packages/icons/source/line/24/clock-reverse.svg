@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/clock-reverse</title>
-    <g id="line/24/clock-reverse" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(3, 2.9984)">
-            <path d="M9,18.0015673 C5.78460979,18.0015673 2.81346657,16.2861771 1.20577139,13.5015673 C-0.401923796,10.7169577 -0.401923796,7.286177 1.20577139,4.50156732 C2.81346657,1.71695757 5.78460979,0.00156732351 9,0.00156732351 C13.9705628,0.00156732351 18,4.03100465 18,9.00156732 C18,13.97213 13.9705628,18.0015673 9,18.0015673 L9,18.0015673 Z" id="Path" fill="color(display-p3 1.000 1.000 1.000)"></path>
-            <path d="M1.34110451e-07,6.00156732 C1.34110451e-07,6.00156732 1.98800013,3.68156732 2.72700013,2.80956732 C2.90300013,2.60156732 3.10900013,2.37356732 3.31400013,2.19456732 C6.10000013,-0.245432676 10.0900001,-0.761432676 13.5000001,1.20756732 C17.7679227,3.70961926 19.2161576,9.18739068 16.7424709,13.471816 C14.2687842,17.7562414 8.80073982,19.2407799 4.50000013,16.7955673" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            <path d="M12.0000001,12.0015673 L9.00000013,9.00156732 L9.00000013,5.00156732 M1.34110451e-07,2.00156732 L1.34110451e-07,6.00156732 L4.00000013,6.00156732" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="clock-reverse">
+    <path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z" class="fill-(--icon-fill)"/>
+    <path d="M3 9s1.988-2.32 2.727-3.192c.176-.208.382-.436.587-.615C9.1 2.753 13.09 2.237 16.5 4.206a9 9 0 0 1-9 15.588" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="m15 15-3-3V8" class="stroke-current stroke-2 sl-r"/>
+    <path d="M3 5v4h4" class="stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

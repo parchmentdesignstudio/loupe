@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/share</title>
-    <g id="line/24/share" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(5, 3)">
-            <rect id="Rectangle" fill="color(display-p3 1.000 1.000 1.000)" x="0" y="7" width="14" height="11" rx="1"></rect>
-            <path d="M3,7 L1.5,7 C0.671572875,7 0,7.67157288 0,8.5 L0,16.5 C0,17.3284271 0.671572875,18 1.5,18 L12.5,18 C13.3284271,18 14,17.3284271 14,16.5 L14,8.5 C14,7.67157288 13.3284271,7 12.5,7 L11,7 M7,0 L7,11 M10,3 L7,0 L4,3" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="share">
+    <rect width="14" height="11" x="5" y="10" class="fill-(--icon-fill)" rx="1"/>
+    <path d="M8 10H6.5A1.5 1.5 0 0 0 5 11.5v8A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-8a1.5 1.5 0 0 0-1.5-1.5H16" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M12 3v11" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="m15 6-3-3-3 3" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/notepad</title>
-    <g id="line/16/notepad" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(2, 1)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <path d="M0.995008046,14 C0.730331251,13.9997364 0.476643969,13.8941349 0.289958766,13.7065115 C0.103273563,13.5188882 -0.00105504527,13.2646748 2.22044605e-16,13 L2.22044605e-16,0.667 C2.22044605e-16,0.298 0.298008046,0 0.667008046,0 L11.333008,0 C11.701008,0 12,0.298 12,0.667 L12,13 C12,13.5522847 11.5522928,14 11,14 L0.995008046,14 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
-            <path d="M4.00000805,0 L4.00000805,2 M8.00000805,0 L8.00000805,2 M4.00000805,6 L6.00000805,6 M4.00000805,10 L8.00000805,10" id="Shape" stroke-width="2"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="notepad">
+    <path d="M4 14a1 1 0 0 1-1-1V2.667C3 2.298 3.298 2 3.667 2h8.666c.368 0 .667.298.667.667V13c0 .552-.444 1-.996 1H4Z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="M6 2v2" class="stroke-current stroke-2 sl-r"/>
+    <path d="M10 2v2" class="stroke-current stroke-2 sl-r"/>
+    <path d="M6 7h2" class="stroke-current stroke-2 sl-r"/>
+    <path d="M6 10h4" class="stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

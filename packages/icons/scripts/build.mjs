@@ -40,7 +40,10 @@ const recolour = {
     element: {
       enter(node, parent) {
         if (node.name === 'mask' || parent?.inMask) node.inMask = true
-        if (node.inMask) return
+        if (node.inMask) {
+          if (SHAPES.has(node.name) && node.attributes.fill === undefined && node.name !== 'mask') node.attributes.fill = '#fff'
+          return
+        }
         for (const attr of ['fill', 'stroke']) {
           const value = node.attributes[attr]
           if (!value || value === 'none') continue
@@ -59,10 +62,70 @@ const recolour = {
   }),
 }
 
+// The line icons come from iamsteve, styled with its Tailwind utilities
+// (stroke-current stroke-2 sl-r) rather than attributes.
+function paintOf(classes) {
+  const paint = {}
+  for (const c of classes.split(/\s+/)) {
+    let m
+    if (!c || c.includes(':')) continue
+    if (c === 'fill-none') paint.fill = 'none'
+    else if (/^fill-current(color)?$/i.test(c)) paint.fill = 'currentColor'
+    else if (c === 'fill-(--icon-fill-bg)') paint.style = 'fill:var(--icon-fill-bg, none)'
+    else if (c === 'fill-success') paint.style = `fill:var(--icon-success, ${ICON_FILL})`
+    else if (/^fill-/.test(c)) paint.style = `fill:${ICON_FILL}`
+    else if (/^stroke-current(color)?$/i.test(c)) paint.stroke = 'currentColor'
+    else if ((m = /^(?:stroke|sw)-\[?(\d*\.?\d+)\]?$/.exec(c))) paint['stroke-width'] = m[1]
+    else if (c === 'sl-r') Object.assign(paint, { 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })
+    else if (c === 'sl-s') Object.assign(paint, { 'stroke-linecap': 'round', 'stroke-linejoin': 'miter' })
+    else if ((m = /^slc-([rsb])$/.exec(c))) paint['stroke-linecap'] = { r: 'round', s: 'square', b: 'butt' }[m[1]]
+    else if ((m = /^opacity-(\d+)$/.exec(c))) paint.opacity = String(Number(m[1]) / 100)
+  }
+  if (paint.style) delete paint.fill
+  return paint
+}
+
+const SHAPES = new Set(['path', 'circle', 'rect', 'line', 'polyline', 'polygon', 'ellipse'])
+
+const classesToAttributes = {
+  name: 'classesToAttributes',
+  fn: () => ({
+    element: {
+      enter(node, parent) {
+        const ownPaint = paintOf(node.attributes.class || '')
+        delete node.attributes.class
+        for (const [k, v] of Object.entries(ownPaint)) if (node.attributes[k] === undefined) node.attributes[k] = v
+        const filled = node.attributes.fill !== undefined || node.attributes.style?.includes('fill')
+        const stroked = node.attributes.stroke && node.attributes.stroke !== 'none'
+        node.hasFill = filled || parent?.hasFill
+        node.hasStroke = stroked || parent?.hasStroke
+        // A stroked shape with no fill anywhere is line work, not a black blob.
+        if (SHAPES.has(node.name) && node.hasStroke && !node.hasFill) node.attributes.fill = 'none'
+        // Unpainted shapes draw black by default, so keep them solid.
+        if (SHAPES.has(node.name) && !node.hasStroke && !node.hasFill && !node.inMask) node.attributes.fill = 'currentColor'
+        if (node.name === 'mask' || parent?.inMask) node.inMask = true
+        if (node.name === 'svg') {
+          const paint = {}
+          for (const k of ['fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'style', 'opacity']) {
+            if (node.attributes[k] !== undefined && (k !== 'fill' || node.attributes[k] !== 'none')) {
+              paint[k] = node.attributes[k]
+              delete node.attributes[k]
+            }
+          }
+          if (Object.keys(paint).length) {
+            node.children = [{ type: 'element', name: 'g', attributes: paint, children: node.children }]
+          }
+        }
+      },
+    },
+  }),
+}
+
 function clean(raw, id) {
   return optimize(raw, {
     multipass: true,
     plugins: [
+      classesToAttributes,
       recolour,
       {
         name: 'preset-default',

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>solid/16/caret-down</title>
-    <g id="solid/16/caret-down" stroke="none" fill="none"></g>
+    <g id="solid/16/caret-down" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M5,5.93438811 L5,12.065871 C5,12.4651926 5.44502091,12.7033936 5.77730209,12.4819282 L10.3759143,9.41695314 C10.6728036,9.21907637 10.672854,8.78284812 10.3760103,8.58490285 L5.7773981,5.51839496 C5.44512455,5.29682389 5,5.53501429 5,5.93438811 Z" id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(8, 9) rotate(90) translate(-8, -9)"></path>
+    </g>
 </svg>

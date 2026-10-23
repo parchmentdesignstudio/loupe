@@ -1,10 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/code</title>
-    <g id="line/16/code" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(1, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <rect id="Rectangle" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" x="0" y="0" width="14" height="12" rx="1"></rect>
-            <path d="M4,4 L6,6 L4,8 M8,8 L10,8" id="Shape" stroke-width="2"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="code">
+    <rect width="14" height="12" x="1" y="2" class="fill-(--icon-fill) stroke-current stroke-2 sl-r" rx="1"/>
+    <path d="m5 6 2 2-2 2" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M9 10h2" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

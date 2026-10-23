@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/checkmark-underline</title>
-    <g id="line/24/checkmark-underline" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M3,22.5 L21,22.5 M4,13 L9,17 L20,6" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)"></path>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="checkmark-underline">
+    <path d="M3 22.5h18" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="m4 13 5 4L20 6" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/component</title>
-    <g id="line/24/component" stroke="none" fill="none" fill-rule="nonzero" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M14.632,12 L18.316,8.316 L22,12 L18.316,15.684 L14.632,12 Z M8.316,18.316 L12,14.632 L15.684,18.316 L12,22 L8.316,18.316 Z M8.316,5.684 L12,2 L15.684,5.684 L12,9.368 L8.316,5.684 Z M2,12 L5.684,8.316 L9.368,12 L5.684,15.684 L2,12 Z" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" fill="color(display-p3 1.000 1.000 1.000)"></path>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="component">
+    <path d="m14.632 12 3.684-3.684L22 12l-3.684 3.684z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="M8.316 18.316 12 14.632l3.684 3.684L12 22z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="M8.316 5.684 12 2l3.684 3.684L12 9.368z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="m2 12 3.684-3.684L9.368 12l-3.684 3.684z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

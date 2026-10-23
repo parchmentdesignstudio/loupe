@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/folder</title>
-    <g id="line/16/folder" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(2, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <path d="M0,4 L12,4 L12,11 C12,11.5522847 11.5522847,12 11,12 L1,12 C0.44771525,12 0,11.5522847 0,11 L0,4 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
-            <path d="M1,1 C1,0.44771525 1.44771525,0 2,0 L4,0 L6,1 L10,1 C10.5522847,1 11,1.44771525 11,2 L11,4 L1,4 L1,1 Z" id="Path" stroke-width="2"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="folder">
+    <path d="M2 6h12v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6Z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="M3 3a1 1 0 0 1 1-1h2l2 1h4a1 1 0 0 1 1 1v2H3V3Z" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

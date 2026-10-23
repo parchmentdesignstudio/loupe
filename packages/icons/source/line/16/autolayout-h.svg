@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/autolayout-h</title>
-    <g id="line/16/autolayout-h" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(2, 2)" fill="color(display-p3 1.000 1.000 1.000)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <rect id="Rectangle" stroke-width="2" x="0" y="0" width="4" height="12" rx="1"></rect>
-            <rect id="Rectangle" stroke-width="2" x="8" y="0" width="4" height="12" rx="1"></rect>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="autolayout / h">
+    <rect width="4" height="12" x="2" y="2" class="fill-(--icon-fill) stroke-current stroke-2 sl-r" rx="1"/>
+    <rect width="4" height="12" x="10" y="2" class="fill-(--icon-fill) stroke-current stroke-2 sl-r" rx="1"/>
+  </g>
 </svg>

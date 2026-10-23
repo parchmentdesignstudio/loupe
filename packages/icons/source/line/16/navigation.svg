@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/navigation</title>
-    <g id="line/16/navigation" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M13,4 L3,4 M13,12 L3,12" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)"></path>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="navigation">
+    <path d="M13 4H3" class="stroke-current stroke-2 sl-r"/>
+    <path d="M13 12H3" class="stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

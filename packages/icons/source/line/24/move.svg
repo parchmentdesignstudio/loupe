@@ -1,7 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/move</title>
-    <g id="line/24/move" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M9,18 L12,21 L15,18 M15,6 L12,3 L9,6 M6,9 L3,12 L6,15 M15,12 L19.5,12 M4.5,12 L9,12 M12,4.5 L12,9 M12,15 L12,19.5 M18,15 L21,12 L18,9" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)"></path>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="move">
+    <path d="m9 18 3 3 3-3" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="m15 6-3-3-3 3" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="m6 9-3 3 3 3" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M15 12h4.5" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M4.5 12H9" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M12 4.5V9" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M12 15v4.5" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="m18 15 3-3-3-3" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

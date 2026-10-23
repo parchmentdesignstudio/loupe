@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/shadow</title>
-    <g id="line/24/shadow" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(4.222, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <circle id="Oval" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" cx="7.778" cy="7" r="7"></circle>
-            <path d="M15.556,15.778 C11.260044,20.0729823 4.29595595,20.0729823 -8.8817842e-16,15.778" id="Path" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="shadow">
+    <circle cx="12" cy="10" r="6" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="M18.983 19A10.955 10.955 0 0 1 12 21.5c-2.651 0-5.083-.938-6.983-2.5" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/component-instance</title>
-    <g id="line/24/component-instance" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M10.94,3.443 C11.5256351,2.85809324 12.4743649,2.85809324 13.06,3.443 L20.556,10.939 C20.8375125,11.2203322 20.9956798,11.6020087 20.9956798,12 C20.9956798,12.3979913 20.8375125,12.7796678 20.556,13.061 L13.061,20.556 C12.7796678,20.8375125 12.3979913,20.9956798 12,20.9956798 C11.6020087,20.9956798 11.2203322,20.8375125 10.939,20.556 L3.443,13.061 C3.16148749,12.7796678 3.00332023,12.3979913 3.00332023,12 C3.00332023,11.6020087 3.16148749,11.2203322 3.443,10.939 L10.939,3.443 L10.94,3.443 Z" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" fill="color(display-p3 1.000 1.000 1.000)"></path>
-    </g>
-</svg>

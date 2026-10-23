@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/home</title>
-    <g id="line/16/home" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(1, 1)">
-            <polygon id="Path" fill="color(display-p3 1.000 1.000 1.000)" points="14 6 7 0 0 6 1 6 1 14 5 14 5 8 9 8 9 14 13 14 13 6"></polygon>
-            <polyline id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0 6 7 0 14 6"></polyline>
-            <path d="M1,5.33 L1,14 L5,14 L5,8 L9,8 L9,14 L13,14 L13,5.33 M5,13 L9,13" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="home">
+    <path d="M15 7 8 1 1 7h1v8h4V9h4v6h4V7h1Z" class="fill-(--icon-fill)"/>
+    <path d="m1 7 7-6 7 6" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M2 6.33V15h4V9h4v6h4V6.33" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M6 14h4" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

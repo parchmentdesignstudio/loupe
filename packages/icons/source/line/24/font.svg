@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/font</title>
-    <g id="line/24/font" stroke="none" fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(4, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <line x1="8" y1="2" x2="8" y2="17" id="Path" stroke-width="4" stroke-linecap="round"></line>
-            <path d="M5,18 L11,18 L5,18 Z" id="Path" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M0,4 L1,0 L2.155,0.578 C2.71079236,0.85578321 3.32365582,1.00026834 3.945,1 L12.055,1 C12.6763442,1.00026834 13.2892076,0.85578321 13.845,0.578 L15,0 L16,4 L15.912,3.735 C15.3673656,2.10122415 13.8381643,0.999441853 12.116,1 L11,1 C10,1 9,2 9,4 L7,4 C7,2 6,1 5,1 L3.884,1 C2.16183571,0.999441853 0.632634395,2.10122415 0.088,3.735 L0,4 Z" id="Path" stroke-width="2" stroke-linecap="round"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="font">
+    <path d="M12 5v15" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M9 21h6Z" class="fill-none stroke-current stroke-2 sl-s"/>
+    <path d="m4 7 1-4 1.155.578A4 4 0 0 0 7.945 4h8.11a4 4 0 0 0 1.79-.422L19 3l1 4-.088-.265A4 4 0 0 0 16.116 4H15c-1 0-2 1-2 3h-2c0-2-1-3-2-3H7.884a4 4 0 0 0-3.796 2.735L4 7Z" class="Vector 35"/>
+  </g>
 </svg>

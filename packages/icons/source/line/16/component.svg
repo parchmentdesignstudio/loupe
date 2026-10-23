@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/component</title>
-    <g id="line/16/component" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
-        <g id="Group" transform="translate(2, 2)" fill="color(display-p3 1.000 1.000 1.000)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <polygon id="Path" stroke-width="2" points="3 3 6 0 9 3 6 6"></polygon>
-            <path d="M0,6 L3,3 L6,6 L3,9 L0,6 Z M3,9 L6,6 L9,9 L6,12 L3,9 Z" id="Shape" stroke-width="2" fill-rule="nonzero"></path>
-            <polygon id="Path" stroke-width="2" points="6 6 9 3 12 6 9 9"></polygon>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="component">
+    <path d="m5 5 3-3 3 3-3 3z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="m2 8 3-3 3 3-3 3z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="m5 11 3-3 3 3-3 3z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="m8 8 3-3 3 3-3 3z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

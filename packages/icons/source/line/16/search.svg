@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/search</title>
-    <g id="line/16/search" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(2, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <line x1="9" y1="9" x2="11" y2="11" id="Path" stroke-width="4" stroke-linecap="round"></line>
-            <circle id="Oval" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" cx="5" cy="5" r="5"></circle>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="search">
+    <path d="m11 11 2 2" class="fill-none stroke-current stroke-4 sl-r"/>
+    <circle cx="7" cy="7" r="5" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>
