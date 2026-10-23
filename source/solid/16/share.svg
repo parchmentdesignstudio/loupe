@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>solid/16/share</title>
-    <g id="solid/16/share" stroke="none" fill="none"></g>
+    <g id="solid/16/share" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M2.5,10 L3,10 C3.27614237,10 3.5,10.2238576 3.5,10.5 L3.5,12.5 L12.5,12.5 L12.5,10.5 C12.5,10.2238576 12.7238576,10 13,10 L13.5,10 C13.7761424,10 14,10.2238576 14,10.5 L14,13.5 C14,13.7761424 13.7761424,14 13.5,14 L2.5,14 C2.22385763,14 2,13.7761424 2,13.5 L2,10.5 C2,10.2238576 2.22385763,10 2.5,10 Z" id="Combined-Shape" fill="color(display-p3 0.035 0.180 0.141)"></path>
+        <path d="M5.5,2.95185425 L5.5,8.95185425 L11.5,8.95185425 C11.7761424,8.95185425 12,9.17571187 12,9.45185425 L12,9.95185425 C12,10.2279966 11.7761424,10.4518542 11.5,10.4518542 L4.5,10.4518542 C4.22385763,10.4518542 4,10.2279966 4,9.95185425 L4,2.95185425 C4,2.67571187 4.22385763,2.45185425 4.5,2.45185425 L5,2.45185425 C5.27614237,2.45185425 5.5,2.67571187 5.5,2.95185425 Z" id="Combined-Shape" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(8, 6.4519) rotate(135) translate(-8, -6.4519)"></path>
+        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" x="7.25" y="2" width="1.5" height="9" rx="0.5"></rect>
+    </g>
 </svg>

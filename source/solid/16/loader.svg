@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>solid/16/loader</title>
-    <g id="solid/16/loader" stroke="none" fill="none"></g>
+    <g id="solid/16/loader" stroke="none" fill="none" fill-rule="evenodd">
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="0.75" y="7.25" width="4" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="7.25" y="11.25" width="1.5" height="4" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="11.25" y="7.25" width="4" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="7.25" y="0.75" width="1.5" height="4" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(4.2877, 4.2877) rotate(45) translate(-4.2877, -4.2877)" x="2.2876894" y="3.5376894" width="4" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(4.2877, 11.7123) rotate(45) translate(-4.2877, -11.7123)" x="3.5376894" y="9.7123106" width="1.5" height="4" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(11.7123, 11.7123) rotate(45) translate(-11.7123, -11.7123)" x="9.7123106" y="10.9623106" width="4" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(11.7123, 4.2877) rotate(45) translate(-11.7123, -4.2877)" x="10.9623106" y="2.2876894" width="1.5" height="4" rx="0.5"></rect>
+    </g>
 </svg>
