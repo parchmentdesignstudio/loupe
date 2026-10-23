@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class="fill-none sw-2 sl-r" focusable="false" aria-hidden="true">
+<path d="M15 8 5 14v-4l3-2-3-2V2l10 6Z" fill="#EEEAEC" class="stroke-currentcolor" />
+<path d="M2 8H1M13 8H8" class="stroke-currentcolor"/>
+<circle cx="2" cy="4" r="1" fill="#7F6371" stroke="none"/>
+<circle cx="2" cy="12" r="1" fill="#7F6371" stroke="none"/>
+</svg>

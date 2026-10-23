@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/arrow-up</title>
-    <g id="line/16/arrow-up" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M8,2 L8,14 M12,6 L8,2 L4,6" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)"></path>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="arrow-up">
+    <path d="M8 2v12" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M12 6 8 2 4 6" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/box</title>
-    <g id="line/16/box" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(2, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <path d="M2,12 C1.44771525,12 1,11.5522847 1,11 L1,4 L11,4 L11,11 C11,11.5522847 10.5522847,12 10,12 L2,12 Z" id="Path" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            <line x1="4" y1="7" x2="8" y2="7" id="Path" stroke-width="2"></line>
-            <path d="M0.5,4 C0.223857625,4 0,3.77614237 0,3.5 L0,0.5 C0,0.223857625 0.223857625,0 0.5,0 L11.5,0 C11.7761424,0 12,0.223857625 12,0.5 L12,3.5 C12,3.77614237 11.7761424,4 11.5,4 L0.5,4 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" stroke-linecap="round" stroke-linejoin="round"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="box">
+    <path d="M4 14a1 1 0 0 1-1-1V6h10v7a1 1 0 0 1-1 1H4Z" class="fill-(--icon-fill) stroke-current stroke-2 sl-r"/>
+    <path d="M6 9h4" class="stroke-current stroke-2"/>
+    <path d="M2.5 6a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-11Z" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

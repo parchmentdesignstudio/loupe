@@ -1,20 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/type</title>
-    <defs>
-        <polygon id="path-1" points="0 0 8 0 8 14 0 14"></polygon>
-    </defs>
-    <g id="line/16/type" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(1, 1)">
-            <polygon id="Path" fill="color(display-p3 1.000 1.000 1.000)" points="7 2 8 3 8 9 4 9"></polygon>
-            <g id="Clipped">
-                <mask id="mask-2" fill="white">
-                    <use xlink:href="#path-1"></use>
-                </mask>
-                <g id="Path"></g>
-                <path d="M3,10 L8,10 M1,15 L6.76,1 L13,15" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linejoin="round" mask="url(#mask-2)"></path>
-            </g>
-            <path d="M10,1 L11,1 L11,13 L10,13 M12,1 L11,1 L11,13 L12,13" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </g>
+<svg viewBox="0 0 16 16">
+  <g class="type">
+    <path d="m8 3 1 1v6H5l3-7Z" class="fill-(--icon-fill)"/>
+    <g class="mask-type-16">
+      <mask id="a" width="8" height="14" x="1" y="1" class="a" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+        <path d="M1 1h8v14H1z" class="mask"/>
+      </mask>
+      <g mask="url(#a)">
+        <path d="M4 11h5" class="fill-none stroke-current stroke-2 sl-r"/>
+        <path d="M2 16 7.76 2 14 16" class="fill-none stroke-current stroke-2 sl-r"/>
+      </g>
     </g>
+    <path d="M11 2h1v12h-1" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M13 2h-1v12h1" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

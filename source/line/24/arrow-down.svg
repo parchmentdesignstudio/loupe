@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/arrow-down</title>
-    <g id="line/24/arrow-down" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <path d="M12,22 L12,2 M6,16 L12,22 L18,16" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)"></path>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="arrow-down">
+    <path d="M12 22V2" class="stroke-current stroke-2 sl-r"/>
+    <path d="m6 16 6 6 6-6" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

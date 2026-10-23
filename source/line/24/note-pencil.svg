@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/note-pencil</title>
-    <g id="line/24/note-pencil" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(4, 3)">
-            <rect id="Rectangle" fill="color(display-p3 1.000 1.000 1.000)" x="0" y="0" width="16" height="18" rx="1"></rect>
-            <path d="M9,0 L1,0 C0.44771525,0 0,0.44771525 0,1 L0,17 C0,17.5522847 0.44771525,18 1,18 L15,18 C15.5522847,18 16,17.5522847 16,17 L16,7 M4,14 L12,14 M4,11 L12,11" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            <polygon id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="14 0 9 5 9 7 11 7 16 2"></polygon>
-        </g>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="note-pencil">
+    <rect width="16" height="18" x="4" y="3" class="fill-(--icon-fill)" rx="1"/>
+    <path d="M13 3H5a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V10" class="fill-none stroke-current stroke-2 sl-r"/>
+    <path d="M8 17h8" class="stroke-current stroke-2 sl-r"/>
+    <path d="M8 14h8" class="stroke-current stroke-2 sl-r"/>
+    <path d="m18 3-5 5v2h2l5-5-2-2Z" class="Vector 33"/>
+  </g>
 </svg>

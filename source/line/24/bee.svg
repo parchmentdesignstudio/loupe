@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/bee</title>
-    <g id="line/24/bee" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(2, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
-            <path d="M8,4 C8,1 7,0 4,0 M12,4 C12,1 13,0 16,0" id="Shape" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            <path d="M10,10 C12.209139,10 14,8.209139 14,6 C14,3.790861 12.209139,2 10,2 C7.790861,2 6,3.790861 6,6 C6,8.209139 7.790861,10 10,10 Z" id="Path" stroke-width="2" fill="color(display-p3 0.035 0.180 0.141)" stroke-linecap="round" stroke-linejoin="round"></path>
-            <path d="M10,19 C13.3137085,19 16,16.3137085 16,13 C16,9.6862915 13.3137085,7 10,7 C6.6862915,7 4,9.6862915 4,13 C4,16.3137085 6.6862915,19 10,19 Z" id="Path" stroke-width="2" fill="color(display-p3 0.973 0.898 0.557)" stroke-linecap="round" stroke-linejoin="round"></path>
-            <path d="M5,10 C8.871,11.341 11.058,11.325 15,10 M5,14 C8.871,15.341 11.058,15.325 15,14" id="Shape" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            <path d="M20,15.667 C20,13.3683687 19.0868723,11.1638833 17.4614945,9.53850553 C15.8361167,7.91312774 13.6316313,7 11.333,7 L10,7 L10,8.333 C10,13.1196519 13.8803481,17 18.667,17 C19.403,17 20,16.403 20,15.667 L20,15.667 Z M0,15.667 C0,10.8803481 3.88034807,7 8.667,7 L10,7 L10,8.333 C10,10.6316313 9.08687226,12.8361167 7.46149447,14.4614945 C5.83611668,16.0868723 3.63163132,17 1.333,17 C0.596804428,17 0,16.4031956 0,15.667 L0,15.667 Z" id="Shape" stroke-width="2" fill="color(display-p3 0.980 0.973 0.925)" fill-rule="nonzero"></path>
-        </g>
-    </g>
+<svg viewBox="0 0 24 24">
+  <g class="bee">
+    <path d="M10 6c0-3-1-4-4-4" class="stroke-current stroke-2 sl-r"/>
+    <path d="M14 6c0-3 1-4 4-4" class="stroke-current stroke-2 sl-r"/>
+    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" class="fill-current stroke-current stroke-2 sl-r"/>
+    <path d="M12 21a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" class="fill-dandelion-100 dark:fill-fern-900 stroke-current stroke-2 sl-r"/>
+    <path d="M7 12c3.871 1.341 6.058 1.325 10 0" class="path"/>
+    <path d="M7 16c3.871 1.341 6.058 1.325 10 0" class="stroke-current stroke-2 sl-r"/>
+    <path d="M22 17.667A8.667 8.667 0 0 0 13.333 9H12v1.333A8.667 8.667 0 0 0 20.667 19c.736 0 1.333-.597 1.333-1.333Z" class="fill-dandelion-0 dark:fill-fern-900 stroke-current stroke-2 sl-r"/>
+    <path d="M2 17.667A8.667 8.667 0 0 1 10.667 9H12v1.333A8.667 8.667 0 0 1 3.333 19 1.333 1.333 0 0 1 2 17.667Z" class="fill-dandelion-0 dark:fill-fern-900 stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>

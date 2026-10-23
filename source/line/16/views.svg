@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/views</title>
-    <g id="line/16/views" stroke="none" fill="none" fill-rule="nonzero" stroke-linejoin="round" stroke-width="2">
-        <path d="M2,4 L6,4 L6,14 L2,14 L2,4 Z M6,6 L10,6 L10,14 L6,14 L6,6 Z M10,2 L14,2 L14,14 L10,14 L10,2 Z" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" fill="color(display-p3 1.000 1.000 1.000)"></path>
+<svg viewBox="0 0 16 16">
+  <g class="views">
+    <g class="fill-(--icon-fill) stroke-current stroke-2 sl-r">
+      <path d="M2 4h4v10H2z" class="fill-white stroke-current stroke-2 sl-r"/>
+      <path d="M6 6h4v8H6z" class="fill-white stroke-current stroke-2 sl-r"/>
+      <path d="M10 2h4v12h-4z" class="fill-white stroke-current stroke-2 sl-r"/>
     </g>
+  </g>
 </svg>

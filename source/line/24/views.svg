@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/24/views</title>
-    <g id="line/24/views" stroke="none" fill="none" fill-rule="nonzero" stroke-linejoin="round" stroke-width="2">
-        <path d="M4,9 L8,9 L8,21 L4,21 L4,9 Z M8,5 L12,5 L12,21 L8,21 L8,5 Z M12,9 L16,9 L16,21 L12,21 L12,9 Z M16,3 L20,3 L20,21 L16,21 L16,3 Z" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" fill="color(display-p3 1.000 1.000 1.000)"></path>
+<svg viewBox="0 0 24 24">
+  <g class="views">
+    <g class="fill-(--icon-fill) stroke-current stroke-2 sl-r">
+      <path d="M4 9h4v12H4z" class="fill-white stroke-current stroke-2 sl-r"/>
+      <path d="M8 5h4v16H8z" class="fill-white stroke-current stroke-2 sl-r"/>
+      <path d="M12 9h4v12h-4z" class="fill-white stroke-current stroke-2 sl-r"/>
+      <path d="M16 3h4v18h-4z" class="fill-white stroke-current stroke-2 sl-r"/>
     </g>
+  </g>
 </svg>

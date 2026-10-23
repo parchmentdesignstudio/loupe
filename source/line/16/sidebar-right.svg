@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>line/16/sidebar-right</title>
-    <g id="line/16/sidebar-right" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
-        <g id="Group" transform="translate(2, 2)">
-            <path d="M9.5,12 C8.67157288,12 8,11.3284271 8,10.5 L8,1.5 C8,0.671572875 8.67157288,-4.4408921e-16 9.5,-4.4408921e-16 L10.5,-4.4408921e-16 C11.3284271,-4.4408921e-16 12,0.671572875 12,1.5 L12,10.5 C12,11.3284271 11.3284271,12 10.5,12 L9.5,12 L9.5,12 Z" id="Path" fill="color(display-p3 1.000 1.000 1.000)"></path>
-            <rect id="Rectangle" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x="0" y="0" width="12" height="12" rx="1"></rect>
-            <line x1="7" y1="0" x2="7" y2="12" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
-        </g>
-    </g>
+<svg viewBox="0 0 16 16">
+  <g class="sidebar-right">
+    <path d="M11.5 14a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 11.5 2h1A1.5 1.5 0 0 1 14 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-1Z" class="fill-(--icon-fill)"/>
+    <rect width="12" height="12" x="2" y="2" class="fill-(--icon-fill-bg) stroke-current stroke-2 sl-r" rx="1"/>
+    <path d="M10 3v10" class="fill-none stroke-current stroke-2 sl-r"/>
+  </g>
 </svg>
