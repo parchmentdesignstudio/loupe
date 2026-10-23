@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/search</title>
+    <g id="line/24/search" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(3, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <line x1="16" y1="16" x2="17" y2="17" id="Path" stroke-width="4" stroke-linecap="round"></line>
+            <line x1="14" y1="14" x2="15" y2="15" id="Path" stroke-width="4" stroke-linecap="square"></line>
+            <path d="M7.5,15 C11.6421356,15 15,11.6421356 15,7.5 C15,3.35786438 11.6421356,-8.8817842e-16 7.5,-8.8817842e-16 C3.35786438,-8.8817842e-16 -8.8817842e-16,3.35786438 -8.8817842e-16,7.5 C-8.8817842e-16,11.6421356 3.35786438,15 7.5,15 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+        </g>
+    </g>
+</svg>

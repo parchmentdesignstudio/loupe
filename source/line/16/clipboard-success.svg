@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/clipboard-success</title>
+    <g id="line/16/clipboard-success" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-width="1">
+        <g id="Group" transform="translate(2, 1)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <polygon id="Path" stroke-width="2" fill="color(display-p3 0.671 0.835 0.784)" stroke-linejoin="round" points="0 0 12 0 12 14 0 14"></polygon>
+            <polygon id="Path" stroke-width="2" points="5 1 7 1 7 2 5 2"></polygon>
+            <polyline id="Path" stroke-width="2" stroke-linejoin="round" points="4 8 5 9 8 6"></polyline>
+        </g>
+    </g>
+</svg>

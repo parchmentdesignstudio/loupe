@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/font-outline</title>
+    <g id="line/24/font-outline" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <path d="M6.155,3.578 L5,3 L4,10 C4,10 5,8 8,8 L10,8 L10,15 C10,17 9,18 8,18 L8,21 L16,21 L16,18 C15,18 14,17 14,15 L14,8 L16,8 C19,8 20,10 20,10 L19,3 L17.845,3.578 C17.2892076,3.85578321 16.6763442,4.00026834 16.055,4 L7.945,4 C7.32365582,4.00026834 6.71079236,3.85578321 6.155,3.578 Z" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" fill="color(display-p3 1.000 1.000 1.000)"></path>
+    </g>
+</svg>

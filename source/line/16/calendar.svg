@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/calendar</title>
+    <g id="line/16/calendar" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(2, 3)">
+            <rect id="Rectangle" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" fill="color(display-p3 0.035 0.180 0.141)" stroke-linecap="round" stroke-linejoin="round" x="0" y="0" width="12" height="10" rx="1"></rect>
+            <line x1="1" y1="2" x2="11" y2="2" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+            <rect id="Rectangle" fill="color(display-p3 1.000 1.000 1.000)" x="1" y="3" width="10" height="6" rx="0.5"></rect>
+        </g>
+    </g>
+</svg>

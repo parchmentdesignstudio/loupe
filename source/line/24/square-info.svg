@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/square-info</title>
+    <g id="line/24/square-info" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(3, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M0.993018137,18 C0.728523433,17.9997387 0.475039621,17.8940735 0.288671571,17.7063916 C0.10230352,17.5187098 -0.00157854016,17.26449 -4.4408921e-16,17 L-4.4408921e-16,1 C-4.4408921e-16,0.44771525 0.447733387,0 1.00001814,0 L17.0000181,0 C17.5523029,0 18.0000181,0.44771525 18.0000181,1 L18.0000181,17 C18.0000181,17.552 17.5580181,18 17.0050181,18 L0.993018137,18 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+            <path d="M7.00001814,8 L9.00001814,8 L9.00001814,14 M7.00001814,14 L11.0000181,14" id="Shape" stroke-width="2"></path>
+            <circle id="Oval" stroke-width="2" fill="color(display-p3 0.035 0.180 0.141)" cx="8.50001814" cy="4.5" r="0.5"></circle>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/shadow</title>
+    <g id="line/16/shadow" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(3.05, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <circle id="Oval" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" cx="4.95" cy="4" r="4"></circle>
+            <path d="M9.9,9.95 C8.58748514,11.2633995 6.80680195,12.0013341 4.95,12.0013341 C3.09319805,12.0013341 1.31251486,11.2633995 4.4408921e-16,9.95" id="Path" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

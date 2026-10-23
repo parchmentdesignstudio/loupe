@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/accessibility</title>
+    <g id="line/24/accessibility" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(2, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M10,20 C15.523,20 20,15.523 20,10 C20,4.477 15.523,0 10,0 C4.477,0 0,4.477 0,10 C0,15.523 4.477,20 10,20 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+            <path d="M10,6 C10.5522847,6 11,5.55228475 11,5 C11,4.44771525 10.5522847,4 10,4 C9.44771525,4 9,4.44771525 9,5 C9,5.55228475 9.44771525,6 10,6 Z" id="Path" fill="color(display-p3 0.035 0.180 0.141)"></path>
+            <path d="M14,8 C14,8 11.682,9 10,9 C8.318,9 6,8 6,8" id="Path" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <polygon id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" stroke-linecap="round" stroke-linejoin="round" points="11 9 9 9 9 13 11 13"></polygon>
+            <path d="M9,13 L8,16 M11,13 L12,16" id="Shape" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/puzzle</title>
+    <g id="line/16/puzzle" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <path d="M2,2.5 C2,2.22385763 2.22385763,2 2.5,2 L11.389,2 C11.6651424,2 11.889,2.22385763 11.889,2.5 L11.889,5.145 C11.889,5.527 12.313,5.787 12.682,5.689 C13.604,5.444 15,5.489 15,8 C15,10.512 13.604,10.556 12.682,10.311 C12.312,10.213 11.889,10.473 11.889,10.855 L11.889,13.5 C11.889,13.7761424 11.6651424,14 11.389,14 L2.5,14 C2.22385763,14 2,13.7761424 2,13.5 L2,10.768 C2,10.406 2.38,10.15 2.734,10.218 C3.654,10.395 5.111,10.31 5.111,8 C5.111,5.69 3.654,5.605 2.734,5.782 C2.38,5.85 2,5.594 2,5.232 L2,2.5 Z" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" fill="color(display-p3 1.000 1.000 1.000)"></path>
+    </g>
+</svg>

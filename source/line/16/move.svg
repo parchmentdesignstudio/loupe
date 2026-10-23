@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/move</title>
+    <g id="line/16/move" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <path d="M6,12 L8,14 L10,12 M10,4 L8,2 L6,4 M4,6 L2,8 L4,10 M10,8 L13,8 M3,8 L6,8 M8,3 L8,6 M8,10 L8,13 M12,10 L14,8 L12,6" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)"></path>
+    </g>
+</svg>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/comment</title>
+    <g id="line/16/comment" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <path d="M11,2 L5,2 C3.34314575,2 2,3.34314575 2,5 L2,13 C2,13.3787721 2.21400238,13.7250352 2.5527864,13.8944272 C2.89157043,14.0638192 3.29698235,14.0272632 3.6,13.8 L4.933,12.8 C5.62538468,12.2807115 6.46751915,12 7.333,12 L11,12 C12.6568542,12 14,10.6568542 14,9 L14,5 C14,3.34314575 12.6568542,2 11,2 Z" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" fill="color(display-p3 1.000 1.000 1.000)"></path>
+    </g>
+</svg>

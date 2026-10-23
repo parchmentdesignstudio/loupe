@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/clipboard</title>
+    <g id="line/24/clipboard" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(5, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1.49600301,19 C1.0986269,18.9997353 0.717660832,18.8414873 0.437048828,18.560125 C0.156436824,18.2787627 -0.000793422221,17.8973754 0,17.5 L0,3 C0,2.44771525 0.447718261,2 1,2 L13,2 C13.5522878,2 14,2.44771525 14,3 L14,17.5 C14,18.328 13.331003,19 12.503003,19 L1.49600301,19 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+            <polygon id="Path" stroke-width="2" fill="color(display-p3 0.035 0.180 0.141)" points="3.00000301 3 11.000003 3 11.000003 4 3.00000301 4"></polygon>
+            <circle id="Oval" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" cx="7.00000301" cy="2" r="2"></circle>
+        </g>
+    </g>
+</svg>

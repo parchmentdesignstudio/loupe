@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/design</title>
+    <g id="line/24/design" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(2, 5)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M2,10 C2,5.584 5.584,2 10,2 C14.416,2 18,5.584 18,10" id="Path" stroke-width="2"></path>
+            <path d="M2,14 C3.1045695,14 4,13.1045695 4,12 C4,10.8954305 3.1045695,10 2,10 C0.8954305,10 0,10.8954305 0,12 C0,13.1045695 0.8954305,14 2,14 Z M18,14 C19.1045695,14 20,13.1045695 20,12 C20,10.8954305 19.1045695,10 18,10 C16.8954305,10 16,10.8954305 16,12 C16,13.1045695 16.8954305,14 18,14 Z" id="Shape" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" fill-rule="nonzero"></path>
+            <line x1="2" y1="2" x2="18" y2="2" id="Path" stroke-width="2"></line>
+            <path d="M8,2 C8,3.1045695 8.8954305,4 10,4 C11.1045695,4 12,3.1045695 12,2 C12,0.8954305 11.1045695,0 10,0 C8.8954305,0 8,0.8954305 8,2 Z" id="Path" stroke-width="2" fill="color(display-p3 0.035 0.180 0.141)"></path>
+            <path d="M4,0 L0,0 L0,4 L4,4 L4,0 Z M20,0 L16,0 L16,4 L20,4 L20,0 Z" id="Shape" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

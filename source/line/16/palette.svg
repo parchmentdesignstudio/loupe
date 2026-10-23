@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/palette</title>
+    <g id="line/16/palette" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(2, 2)">
+            <path d="M4.4408921e-16,6 C4.4408921e-16,3.85640653 1.1435935,1.87564438 3,0.803847592 C4.85640645,-0.267949197 7.14359355,-0.267949197 9,0.803847592 C10.8564065,1.87564438 12,3.85640653 12,6 L12,7.54700009 C12,7.79700009 11.797,8 11.547,8 L9.333,8 C8.597,8 8,8.59700009 8,9.33300009 L8,11.5470001 C8,11.7970001 7.797,12 7.547,12 L6,12 C2.6862915,12 4.4408921e-16,9.31370859 4.4408921e-16,6 Z" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle id="Oval" fill="color(display-p3 0.035 0.180 0.141)" cx="6" cy="3.00000009" r="1"></circle>
+            <circle id="Oval" fill="color(display-p3 0.035 0.180 0.141)" cx="5" cy="8.00000009" r="1"></circle>
+            <circle id="Oval" fill="color(display-p3 0.035 0.180 0.141)" cx="3" cy="5.00000009" r="1"></circle>
+        </g>
+    </g>
+</svg>
