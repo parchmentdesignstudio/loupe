@@ -2,14 +2,14 @@
 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>solid/16/sun-full</title>
     <g id="solid/16/sun-full" stroke="none" fill="none" fill-rule="evenodd">
-        <circle id="Oval-2" fill="color(display-p3 0.035 0.180 0.141)" cx="8" cy="8" r="4"></circle>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" x="0.75" y="7.25" width="2.5" height="1.5" rx="0.5"></rect>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" x="7.25" y="12.75" width="1.5" height="2.5" rx="0.5"></rect>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" x="12.75" y="7.25" width="2.5" height="1.5" rx="0.5"></rect>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" x="7.25" y="0.75" width="1.5" height="2.5" rx="0.5"></rect>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(3.7574, 3.7574) rotate(45) translate(-3.7574, -3.7574)" x="2.50735931" y="3.00735931" width="2.5" height="1.5" rx="0.5"></rect>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(3.7574, 12.2426) rotate(45) translate(-3.7574, -12.2426)" x="3.00735931" y="10.9926407" width="1.5" height="2.5" rx="0.5"></rect>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(12.2426, 12.2426) rotate(45) translate(-12.2426, -12.2426)" x="10.9926407" y="11.4926407" width="2.5" height="1.5" rx="0.5"></rect>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(12.2426, 3.7574) rotate(45) translate(-12.2426, -3.7574)" x="11.4926407" y="2.50735931" width="1.5" height="2.5" rx="0.5"></rect>
+        <circle id="fill" fill="color(display-p3 0.035 0.180 0.141)" cx="8" cy="8" r="4"></circle>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="0.75" y="7.25" width="2.5" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="7.25" y="12.75" width="1.5" height="2.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="12.75" y="7.25" width="2.5" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="7.25" y="0.75" width="1.5" height="2.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(3.7574, 3.7574) rotate(45) translate(-3.7574, -3.7574)" x="2.50735931" y="3.00735931" width="2.5" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(3.7574, 12.2426) rotate(45) translate(-3.7574, -12.2426)" x="3.00735931" y="10.9926407" width="1.5" height="2.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(12.2426, 12.2426) rotate(45) translate(-12.2426, -12.2426)" x="10.9926407" y="11.4926407" width="2.5" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(12.2426, 3.7574) rotate(45) translate(-12.2426, -3.7574)" x="11.4926407" y="2.50735931" width="1.5" height="2.5" rx="0.5"></rect>
     </g>
 </svg>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>solid/16/scribble</title>
-    <g id="solid/16/scribble" stroke="none" fill="none"></g>
+    <g id="solid/16/scribble" stroke="none" fill="none" stroke-width="1.5">
+        <path d="M2,14 C13.1030523,-12.6128157 3.6429729,13.627761 6.98351456,11.7009566 C9.33908673,10.3422766 9.86799214,5.86027089 11.8239214,3.62237337 C13.7186131,1.4545415 8.17956957,15.4896555 14,10.0165879" id="stroke" stroke="color(display-p3 0.035 0.180 0.141)"></path>
+    </g>
 </svg>
