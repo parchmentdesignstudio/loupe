@@ -45,16 +45,17 @@ npm install github:stevemckinney/loupe#icons
 import Icon from '@parchment/icons/astro'
 ---
 <Icon name="home" />
-<Icon name="search" variant="solid" size={24} label="Search" />
+<Icon name="search" label="Search" />
+<Icon name="calendar" variant="line" size={24} />
 ```
 
 ```jsx
 import { Icon } from '@parchment/icons/react'
 
-<Icon name="home" size={20} className="text-olive" />
+<Icon name="home" className="text-olive" />
 ```
 
-`size` is the rendered size. The closest drawn grid is used, so 20 draws from the 24px set, and an icon only drawn at 24 still works at 16. Without `label` the icon is hidden from screen readers.
+Icons are solid and 16px by default. `size` picks the drawn set, 16 or 24, and the icon renders at exactly that size: nothing is scaled, so asking for an icon that isn’t drawn at that size is an error. Without `label` the icon is hidden from screen readers.
 
 ## Releasing
 

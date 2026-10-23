@@ -1,18 +1,18 @@
 ---
 import type { HTMLAttributes } from 'astro/types'
-import type { IconName, IconVariant } from '../index.js'
+import type { IconName, IconSize, IconVariant } from '../index.js'
 import { resolveIcon, iconAttributes } from '../index.js'
 
 interface Props extends Omit<HTMLAttributes<'svg'>, 'name'> {
   name: IconName
   variant?: IconVariant
-  size?: number
+  size?: IconSize
   label?: string
 }
 
-const { name, variant = 'line', size = 16, label, ...rest } = Astro.props
+const { name, variant = 'solid', size = 16, label, ...rest } = Astro.props
 const icon = resolveIcon(name, { variant, size })
-if (!icon) throw new Error(`Unknown icon: ${variant}/${name}`)
+if (!icon) throw new Error(`No ${variant} icon called ${name} drawn at ${size}px`)
 ---
 
 <svg {...iconAttributes({ size, label })} viewBox={icon.viewBox} {...rest} set:html={icon.body} />

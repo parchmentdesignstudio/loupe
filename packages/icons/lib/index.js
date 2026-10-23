@@ -3,15 +3,10 @@ import data from '../data.js'
 export const variants = ['line', 'solid']
 export const sizes = [16, 24]
 
-// The drawn size closest to what’s asked for, so a 20px icon uses the 24 grid
-// and a 16 icon missing at 16 falls back to its 24 drawing.
-export function resolveIcon(name, { variant = 'line', size = 16 } = {}) {
-  const order = [...sizes].sort((a, b) => Math.abs(a - size) - Math.abs(b - size) || b - a)
-  for (const drawn of order) {
-    const icon = data[`${variant}/${drawn}/${name}`]
-    if (icon) return { ...icon, name, variant, drawn }
-  }
-  return null
+// Icons render only at the size they’re drawn, never scaled.
+export function resolveIcon(name, { variant = 'solid', size = 16 } = {}) {
+  const icon = data[`${variant}/${size}/${name}`]
+  return icon ? { ...icon, name, variant, size } : null
 }
 
 export function iconAttributes({ size = 16, label } = {}) {
@@ -30,9 +25,9 @@ function escape(value) {
 }
 
 // A complete <svg> string, for templates, emails or anything without a component.
-export function toSvg(name, { variant = 'line', size = 16, label, class: className } = {}) {
+export function toSvg(name, { variant = 'solid', size = 16, label, class: className } = {}) {
   const icon = resolveIcon(name, { variant, size })
-  if (!icon) throw new Error(`Unknown icon: ${variant}/${name}`)
+  if (!icon) throw new Error(`No ${variant} icon called ${name} drawn at ${size}px`)
   const attrs = { ...iconAttributes({ size, label }), viewBox: icon.viewBox, ...(className ? { class: className } : {}) }
   const open = Object.entries(attrs).map(([k, v]) => `${k}="${escape(v)}"`).join(' ')
   return `<svg ${open}>${icon.body}</svg>`
