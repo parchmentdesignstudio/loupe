@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/bell</title>
+    <g id="line/24/bell" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(4.4607, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <line x1="4.53926791" y1="13" x2="10.5392679" y2="13" id="Path" stroke-width="2" stroke-linejoin="round"></line>
+            <path d="M10.5392679,16 C10.5392679,17.6568542 9.19612216,19 7.53926791,19 C5.88241366,19 4.53926791,17.6568542 4.53926791,16 L4.53926791,15 L10.5392679,15 L10.5392679,16 Z" id="Path" stroke-width="2"></path>
+            <path d="M1.53926791,6 C1.53926791,2.6862915 4.22555941,0 7.53926791,0 C10.8529764,0 13.5392679,2.6862915 13.5392679,6 L13.5392679,10 C13.5392679,10.451 14.1492679,11.513 14.8192679,12.542 C15.4952679,13.578 14.7762679,15 13.5392679,15 L1.53926791,15 C0.303267909,15 -0.415732091,13.578 0.259267909,12.542 C0.929267909,11.512 1.53926791,10.452 1.53926791,10 L1.53926791,6 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/note</title>
+    <g id="line/24/note" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(4, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M3.707,0.293 C3.89449273,0.105450625 4.14880519,0 4.414,0 L15,0 C15.5522847,0 16,0.44771525 16,1 L16,17 C16,17.5522847 15.5522847,18 15,18 L1,18 C0.44771525,18 0,17.5522847 0,17 L0,4.414 C0,4.14880519 0.105450625,3.89449273 0.293,3.707 L3.707,0.293 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+            <path d="M4,10 L12,10 M8,6 L12,6 M4,14 L12,14 M5,0 L5,3 C5,4.1045695 4.1045695,5 3,5 L0,5" id="Shape" stroke-width="2"></path>
+        </g>
+    </g>
+</svg>

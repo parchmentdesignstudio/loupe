@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/vector-square</title>
+    <g id="line/16/vector-square" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(2, 2)" fill="color(display-p3 1.000 1.000 1.000)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M2,11 C1.44771525,11 1,10.5522847 1,10 L1,2 C1,1.44771525 1.44771525,1 2,1 L10,1 C10.5522847,1 11,1.44771525 11,2 L11,10 C11,10.552 10.556,11 10.004,11 L2,11 Z" id="Path" stroke-width="2"></path>
+            <path d="M2,0 L0,0 L0,2 L2,2 L2,0 Z M2,10 L0,10 L0,12 L2,12 L2,10 Z M12,0 L10,0 L10,2 L12,2 L12,0 Z M12,10 L10,10 L10,12 L12,12 L12,10 Z" id="Shape" stroke-width="2" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

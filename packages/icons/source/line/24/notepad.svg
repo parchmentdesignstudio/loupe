@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/notepad</title>
+    <g id="line/24/notepad" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(5, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1.49600301,19 C1.0986269,18.9997353 0.717660832,18.8414873 0.437048828,18.560125 C0.156436824,18.2787627 -0.000793422221,17.8973754 0,17.5 L0,3 C0,2.44771525 0.447718261,2 1,2 L13,2 C13.5522878,2 14,2.44771525 14,3 L14,17.5 C14,18.328 13.331003,19 12.503003,19 L1.49600301,19 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+            <path d="M4.00000301,0 L4.00000301,4 M10.000003,0 L10.000003,4 M4.00000301,14 L10.000003,14 M4.00000301,10 L10.000003,10" id="Shape" stroke-width="2"></path>
+        </g>
+    </g>
+</svg>

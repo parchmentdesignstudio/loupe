@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/external</title>
+    <g id="line/16/external" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(3, 2)">
+            <rect id="Rectangle" fill="color(display-p3 1.000 1.000 1.000)" x="0" y="3" width="8" height="8" rx="1"></rect>
+            <path d="M4,7 L11,0 M6,0 L11,0 L11,5 M3,3 L1,3 C0.44771525,3 0,3.44771525 0,4 L0,10 C0,10.5522847 0.44771525,11 1,11 L7,11 C7.55228475,11 8,10.5522847 8,10 L8,8" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

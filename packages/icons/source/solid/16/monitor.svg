@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/monitor</title>
+    <g id="solid/16/monitor" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M2,2 L14,2 C14.5522847,2 15,2.44771525 15,3 L15,11 C15,11.5522847 14.5522847,12 14,12 L2,12 C1.44771525,12 1,11.5522847 1,11 L1,3 C1,2.44771525 1.44771525,2 2,2 Z M2.5,3.5 L2.5,10.5 L13.5,10.5 L13.5,3.5 L2.5,3.5 Z" id="Combined-Shape" fill="color(display-p3 0.035 0.180 0.141)"></path>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="5" y="12.75" width="6" height="1.5" rx="0.5"></rect>
+        <rect id="fill" fill="color(display-p3 0.035 0.180 0.141)" x="6" y="11.75" width="4" height="1.5"></rect>
+    </g>
+</svg>

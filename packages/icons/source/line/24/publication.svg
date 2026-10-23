@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/publication</title>
+    <g id="line/24/publication" stroke="none" fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(3, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1.5,18 C0.671572875,18 0,17.3284271 0,16.5 L0,1.5 C0,0.671572875 0.671572875,0 1.5,0 L16.5,0 C17.3284271,0 18,0.671572875 18,1.5 L18,16.5 C18,17.3284271 17.3284271,18 16.5,18 L1.5,18 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" stroke-linecap="round"></path>
+            <path d="M10.5,9 C10.2238576,9 10,8.77614237 10,8.5 L10,5.5 C10,5.22385763 10.2238576,5 10.5,5 L13.5,5 C13.7761424,5 14,5.22385763 14,5.5 L14,8.5 C14,8.77614237 13.7761424,9 13.5,9 L10.5,9 Z" id="Path" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M3,5 L7,5 M3,9 L7,9 M3,13 L15,13" id="Shape" stroke-width="2"></path>
+        </g>
+    </g>
+</svg>

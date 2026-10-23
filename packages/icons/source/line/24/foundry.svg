@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/foundry</title>
+    <g id="line/24/foundry" stroke="none" fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(3, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M0.993018137,18 C0.728523433,17.9997387 0.475039621,17.8940735 0.288671571,17.7063916 C0.10230352,17.5187098 -0.00157854016,17.26449 -4.4408921e-16,17 L-4.4408921e-16,1 C-4.4408921e-16,0.44771525 0.447733387,0 1.00001814,0 L17.0000181,0 C17.5523029,0 18.0000181,0.44771525 18.0000181,1 L18.0000181,17 C18.0000181,17.552 17.5580181,18 17.0050181,18 L0.993018137,18 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" stroke-linecap="round"></path>
+            <polyline id="Path" stroke-width="2" points="5.00001814 6 5.00001814 4 13.0000181 4 13.0000181 6"></polyline>
+            <line x1="9.00001814" y1="4" x2="9.00001814" y2="13" id="Path" stroke-width="2" stroke-linecap="round"></line>
+            <line x1="8.00001814" y1="14" x2="10.0000181" y2="14" id="Path" stroke-width="2" stroke-linecap="square"></line>
+        </g>
+    </g>
+</svg>

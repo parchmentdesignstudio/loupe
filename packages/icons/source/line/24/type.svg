@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/type</title>
+    <g id="line/24/type" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(2.354, 2)">
+            <polygon id="Path" fill="color(display-p3 1.000 1.000 1.000)" points="9.646 1 12.646 7.5 12.646 14 3.646 14"></polygon>
+            <path d="M9.646,-2.22044605e-16 C10.0396244,-2.22044605e-16 10.396614,0.23098085 10.558,0.59 L12.646,5.23 L12.646,10.103 L9.646,3.437 L2.193,20 L8.8817842e-16,20 L8.734,0.59 C8.89538602,0.23098085 9.25237556,-2.22044605e-16 9.646,-2.22044605e-16 Z" id="Path" fill="color(display-p3 0.035 0.180 0.141)"></path>
+            <line x1="3.646" y1="14" x2="12.646" y2="14" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linejoin="round"></line>
+            <path d="M13.646,1 L15.646,1 L15.646,19 L13.646,19 M17.646,1 L15.646,1 L15.646,19 L17.646,19" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

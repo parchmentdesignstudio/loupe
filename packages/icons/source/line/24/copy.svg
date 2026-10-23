@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/copy</title>
+    <g id="line/24/copy" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(3, 3)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M5,6 L1.5,6 C0.671572875,6 0,6.67157288 0,7.5 L0,16.5 C0,17.3284271 0.671572875,18 1.5,18 L11.5,18 C12.3284271,18 13,17.3284271 13,16.5 L13,12" id="Path" stroke-width="2"></path>
+            <rect id="Rectangle" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)" x="5" y="0" width="13" height="12" rx="1.5"></rect>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/font-outline</title>
+    <g id="line/16/font-outline" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <path d="M4.104,2.385 L3.334,2 L2.667,6.667 C2.667,6.667 3.333,5.333 5.333,5.333 L6.667,5.333 L6.667,10 C6.667,11.333 6,12 5.333,12 L5.333,14 L10.667,14 L10.667,12 C10,12 9.333,11.333 9.333,10 L9.333,5.333 L10.667,5.333 C12.667,5.333 13.333,6.667 13.333,6.667 L12.667,2 L11.897,2.385 C11.527,2.57 11.117,2.667 10.704,2.667 L5.296,2.667 C4.882,2.667 4.474,2.57 4.104,2.385 Z" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" fill="color(display-p3 1.000 1.000 1.000)"></path>
+    </g>
+</svg>

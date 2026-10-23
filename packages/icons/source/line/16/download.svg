@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/download</title>
+    <g id="line/16/download" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(2, 1)">
+            <line x1="0" y1="14" x2="12" y2="14" id="Path" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+            <polyline id="Path" fill="color(display-p3 0.882 0.827 0.973)" points="3 7 6 10 9 7"></polyline>
+            <path d="M3,7 L6,10 L9,7 M6,0 L6,9" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

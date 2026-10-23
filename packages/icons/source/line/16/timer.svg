@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/timer</title>
+    <g id="line/16/timer" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(2, 1.5)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M6,13 C9.03756612,13 11.5,10.5375661 11.5,7.5 C11.5,4.46243388 9.03756612,2 6,2 C2.96243388,2 0.5,4.46243388 0.5,7.5 C0.5,10.5375661 2.96243388,13 6,13 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+            <path d="M0,2 L2,0 M12,2 L10,0 M6,5.5 L6,7.5 L8,7.5" id="Shape" stroke-width="2"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/24/sidebar-right</title>
+    <g id="line/24/sidebar-right" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(3, 4)">
+            <path d="M13.5,16 C12.6715729,16 12,15.3284271 12,14.5 L12,1.5 C12,0.671572875 12.6715729,0 13.5,0 L16.5,0 C17.3284271,0 18,0.671572875 18,1.5 L18,14.5 C18,15.3284271 17.3284271,16 16.5,16 L13.5,16 Z" id="Path" fill="color(display-p3 1.000 1.000 1.000)"></path>
+            <path d="M1.5,16 C0.671572875,16 0,15.3284271 0,14.5 L0,1.5 C0,0.671572875 0.671572875,0 1.5,0 L16.5,0 C17.3284271,0 18,0.671572875 18,1.5 L18,14.5 C18,15.3284271 17.3284271,16 16.5,16 L1.5,16 Z M12,0 L12,15" id="Shape" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

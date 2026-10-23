@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/sidebar-bottom-closed</title>
+    <g id="line/16/sidebar-bottom-closed" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(2, 2)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <rect id="Rectangle" stroke-width="2" x="0" y="0" width="12" height="12" rx="1"></rect>
+            <line x1="0" y1="7" x2="12" y2="7" id="Path" stroke-width="2"></line>
+        </g>
+    </g>
+</svg>

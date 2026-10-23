@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line/16/checkmark-square</title>
+    <g id="line/16/checkmark-square" stroke="none" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+        <g id="Group" transform="translate(1, 1)" stroke="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1,14 C0.44771525,14 0,13.5522847 0,13 L0,1 C0,0.44771525 0.44771525,0 1,0 L13,0 C13.5522847,0 14,0.44771525 14,1 L14,13 C14,13.552 13.559,14 13.006,14 L1,14 Z" id="Path" stroke-width="2" fill="color(display-p3 1.000 1.000 1.000)"></path>
+            <polyline id="Path" stroke-width="2" points="10 5 6 9 4 7"></polyline>
+        </g>
+    </g>
+</svg>
