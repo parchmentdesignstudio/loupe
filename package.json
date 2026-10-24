@@ -1,0 +1,46 @@
+{
+  "name": "@parchment/logos",
+  "version": "0.1.0",
+  "description": "Company logos, with versions drawn for 16px where a company’s own doesn’t hold up, as SVG files and Astro and React components",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "lib",
+    "svg",
+    "data.js",
+    "data.d.ts",
+    "logos.json"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./astro": "./lib/astro/Logo.astro",
+    "./react": {
+      "types": "./lib/react/index.d.ts",
+      "default": "./lib/react/index.js"
+    },
+    "./logos.json": "./logos.json",
+    "./svg/*": "./svg/*"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch"
+  },
+  "peerDependencies": {
+    "astro": ">=4",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "svgo": "^4.0.0"
+  }
+}

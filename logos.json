@@ -1,0 +1,81 @@
+{
+  "awwwards": {
+    "original": true,
+    "drawn": []
+  },
+  "blackletra": {
+    "original": true,
+    "drawn": []
+  },
+  "buy-me-a-coffee": {
+    "original": true,
+    "drawn": []
+  },
+  "candidsky": {
+    "original": true,
+    "drawn": []
+  },
+  "figma": {
+    "original": true,
+    "drawn": []
+  },
+  "fingerprint": {
+    "original": true,
+    "drawn": []
+  },
+  "github": {
+    "original": true,
+    "drawn": []
+  },
+  "iamsteve": {
+    "original": false,
+    "drawn": [
+      24,
+      32
+    ]
+  },
+  "kostic-type": {
+    "original": true,
+    "drawn": []
+  },
+  "lapa-ninja": {
+    "original": true,
+    "drawn": []
+  },
+  "linkedin": {
+    "original": true,
+    "drawn": []
+  },
+  "mastodon": {
+    "original": true,
+    "drawn": []
+  },
+  "maxibestof": {
+    "original": true,
+    "drawn": []
+  },
+  "nextjs": {
+    "original": true,
+    "drawn": []
+  },
+  "oh-no-type": {
+    "original": true,
+    "drawn": []
+  },
+  "parchment": {
+    "original": true,
+    "drawn": []
+  },
+  "talktalk": {
+    "original": true,
+    "drawn": []
+  },
+  "vercel": {
+    "original": true,
+    "drawn": []
+  },
+  "x": {
+    "original": true,
+    "drawn": []
+  }
+}
