@@ -21,6 +21,19 @@ importers:
         specifier: ^4.0.0
         version: 4.1.0
 
+  packages/logos:
+    dependencies:
+      astro:
+        specifier: '>=4'
+        version: 7.4.2(yaml@2.9.1)
+      react:
+        specifier: '>=18'
+        version: 19.3.1
+    devDependencies:
+      svgo:
+        specifier: ^4.0.0
+        version: 4.1.0
+
 packages:
 
   '@astrojs/compiler-binding-android-arm64@0.5.2':

@@ -5,6 +5,7 @@ Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. 
 | Package | What it is |
 |---|---|
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
+| `@parchment/logos` | Company logos, with versions drawn for 16px where a company’s own doesn’t hold up |
 
 ## Icons
 
@@ -57,6 +58,54 @@ import { Icon } from '@parchment/icons/react'
 
 Icons are solid and 16px by default. `size` picks the drawn set, 16 or 24, and the icon renders at exactly that size: nothing is scaled, so asking for an icon that isn’t drawn at that size is an error. Without `label` the icon is hidden from screen readers.
 
+## Logos
+
+Each logo is the company’s own, a version drawn for one size, or both. Draw a version wherever theirs doesn’t hold up, usually at 16px, or where there isn’t one worth using anymore.
+
+### Adding a logo
+
+Put the company’s logo in `packages/logos/source/<name>.svg`, as they supply it. It scales to any size.
+
+To draw one for 16px, export it from a 16px artboard to `source/16/<name>.svg`. That’s used at 16px, and the original still covers every other size. Any size works the same way, eg: `source/24/`. A logo with no original shows only at the sizes it’s drawn.
+
+Draw in black, with white for anything knocked out. Black and dark greys become `currentColor`, and white and light greys `--icon-fill`, the same knock-out as the icons. Any colour stays as it is, like the yellow of Buy Me a Coffee’s cup.
+
+The build leaves out a group called `Keylines`, and warns about a drawing that isn’t as tall as its folder. `pnpm logos` builds, and `pnpm logos:watch` rebuilds whenever `source/` changes. Open `packages/logos/preview.html` to see every logo at 16, 24 and 32px, and which sizes are drawn.
+
+### What the build makes
+
+| Output | Use |
+|---|---|
+| `svg/<name>.svg`, `svg/<size>/<name>.svg` | Clean files for anything that takes an SVG |
+| `lib/astro/Logo.astro` | Astro component |
+| `lib/react/index.js` | React component |
+| `lib/index.js` | `toSvg()`, `resolveLogo()` and `logoNames()` for anything else |
+| `logos.json` | Every logo, whether it has an original, and the sizes it’s drawn at |
+
+### Using it in a site
+
+```sh
+pnpm add github:stevemckinney/loupe#logos
+npm install github:stevemckinney/loupe#logos
+```
+
+```astro
+---
+import Logo from '@parchment/logos/astro'
+---
+<Logo name="fingerprint" />
+<Logo name="github" label="GitHub" />
+<Logo name="iamsteve" size={24} />
+```
+
+```jsx
+import { Logo } from '@parchment/logos/react'
+
+<Logo name="buy-me-a-coffee" size={24} />
+```
+
+Logos are 16px tall by default, and as wide as their proportions make them. `size` sets the height. A version drawn for that size is used when there is one, otherwise the original scales to it, and asking for a size a logo has neither for is an error. Without `label` the logo is hidden from screen readers.
+
 ## Releasing
 
 Each package is published to its own branch, so npm and pnpm can both install it from GitHub.
@@ -65,4 +114,4 @@ Each package is published to its own branch, so npm and pnpm can both install it
 pnpm release icons
 ```
 
-This builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Bump the version in `packages/icons/package.json` first, then sites can pin with `#icons@0.2.0` or follow `#icons`.
+This builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Bump the version in `packages/icons/package.json` first, then sites can pin with `#icons@0.2.0` or follow `#icons`. Logos release the same way with `pnpm release logos`, to the `logos` branch.

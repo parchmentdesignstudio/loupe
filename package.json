@@ -8,6 +8,8 @@
     "build": "pnpm -r build",
     "icons": "pnpm --filter @parchment/icons build",
     "icons:watch": "pnpm --filter @parchment/icons watch",
+    "logos": "pnpm --filter @parchment/logos build",
+    "logos:watch": "pnpm --filter @parchment/logos watch",
     "release": "node scripts/release.mjs"
   }
 }
