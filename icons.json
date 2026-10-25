@@ -182,6 +182,9 @@
   },
   "solid": {
     "16": [
+      "airplane-arrival",
+      "airplane-departure",
+      "airplane",
       "arrow-down-left-and-arrow-up-right",
       "arrow-down",
       "arrow-left",
