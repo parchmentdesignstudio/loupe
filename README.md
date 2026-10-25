@@ -20,12 +20,16 @@ A symbol name used twice is left out until one is renamed. An icon with nothing 
 
 `pnpm icons:watch` rebuilds whenever `source/` changes. Open `packages/icons/preview.html` to see every icon.
 
+### Names
+
+Names say what an icon draws, not what it’s for: `magnifyingglass` rather than search, `house` rather than home and `xmark` rather than close, so a name fits wherever the icon is used. The main shape comes first, then its details, then anything it sits in or carries, as in `arrow-up-right-square` or `note-text-badge-pencil`. A glyph has the same name in line and solid.
+
 ### What the build makes
 
 | Output | Use |
 |---|---|
 | `svg/<variant>/<size>/<name>.svg` | Clean files for anything that takes an SVG |
-| `sprite/<variant>-<size>.svg` | One sprite per set, for `<use href="sprite/line-16.svg#home">` |
+| `sprite/<variant>-<size>.svg` | One sprite per set, for `<use href="sprite/line-16.svg#house">` |
 | `lib/astro/Icon.astro` | Astro component |
 | `lib/react/index.js` | React component |
 | `lib/index.js` | `toSvg()`, `resolveIcon()` and `iconNames()` for anything else |
@@ -44,15 +48,15 @@ npm install github:stevemckinney/loupe#icons
 ---
 import Icon from '@parchment/icons/astro'
 ---
-<Icon name="home" />
-<Icon name="search" label="Search" />
-<Icon name="calendar" variant="line" size={24} />
+<Icon name="house" />
+<Icon name="magnifyingglass" label="Search" />
+<Icon name="calendar-blank" variant="line" size={24} />
 ```
 
 ```jsx
 import { Icon } from '@parchment/icons/react'
 
-<Icon name="home" className="text-olive" />
+<Icon name="house" className="text-olive" />
 ```
 
 Icons are solid and 16px by default. `size` picks the drawn set, 16 or 24, and the icon renders at exactly that size: nothing is scaled, so asking for an icon that isn’t drawn at that size is an error. Without `label` the icon is hidden from screen readers.
