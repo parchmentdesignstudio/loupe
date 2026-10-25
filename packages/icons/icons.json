@@ -243,6 +243,9 @@
       "text-justify-left-compact",
       "text-justify-left",
       "text-justify",
+      "train-side-front-car",
+      "train-side-middle-car",
+      "train-side-rear-car",
       "tv",
       "vector-square",
       "xmark"
