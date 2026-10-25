@@ -943,6 +943,18 @@ export default {
     "viewBox": "0 0 16 16",
     "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><rect width=\"6\" height=\"1.5\" x=\"2\" y=\"11.75\" rx=\".5\"/><rect width=\"12\" height=\"1.5\" x=\"2\" y=\"8.75\" rx=\".5\"/><rect width=\"7\" height=\"1.5\" x=\"2\" y=\"5.75\" rx=\".5\"/><rect width=\"3.5\" height=\"1.5\" x=\"10.5\" y=\"5.75\" rx=\".5\"/><rect width=\"4.5\" height=\"1.5\" x=\"9.5\" y=\"11.75\" rx=\".5\"/><rect width=\"12\" height=\"1.5\" x=\"2\" y=\"2.75\" rx=\".5\"/></g>"
   },
+  "solid/16/train-side-front-car": {
+    "viewBox": "0 0 16 16",
+    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M2 3h2.704a5 5 0 0 1 2.429.63l6.838 3.798A2 2 0 0 1 15 9.177V10a3 3 0 0 1-3 3H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m.75 1.5a.25.25 0 0 0-.25.25v3.5c0 .138.112.25.25.25H11a.25.25 0 0 0 .25-.25v-.47a.25.25 0 0 0-.129-.219l-4.717-2.62a3.5 3.5 0 0 0-1.7-.441z\"/>"
+  },
+  "solid/16/train-side-middle-car": {
+    "viewBox": "0 0 16 16",
+    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M2 3h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m.75 1.5a.25.25 0 0 0-.25.25v3.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-3.5a.25.25 0 0 0-.25-.25z\"/>"
+  },
+  "solid/16/train-side-rear-car": {
+    "viewBox": "0 0 16 16",
+    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9.414a1 1 0 0 1 .293-.707l5.414-5.414A1 1 0 0 1 7.414 3Zm-3.75 1.5a.25.25 0 0 0-.25.25v6.5c0 .138.112.25.25.25h3a.25.25 0 0 0 .25-.25v-6.5a.25.25 0 0 0-.25-.25zm-2.214 0a1 1 0 0 0-.708.293L4.573 7.548a.25.25 0 0 0-.073.177v.525c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25v-3.5a.25.25 0 0 0-.25-.25z\"/>"
+  },
   "solid/16/tv": {
     "viewBox": "0 0 16 16",
     "body": "<g fill=\"none\" fill-rule=\"evenodd\"><path fill=\"currentColor\" d=\"M2 2h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1m.5 1.5v7h11v-7z\"/><rect width=\"6\" height=\"1.5\" x=\"5\" y=\"12.75\" fill=\"currentColor\" rx=\".5\"/><path d=\"M13.5 10.5v-7h-11v7z\" opacity=\".6\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
