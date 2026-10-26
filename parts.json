@@ -1,1 +1,10 @@
-{}
+{
+  "solid/16/car-side": [
+    "body",
+    "wheel"
+  ],
+  "solid/16/ferry-side": [
+    "boat",
+    "wave"
+  ]
+}
