@@ -121,10 +121,62 @@ const classesToAttributes = {
   }),
 }
 
+// A layer or group named part-<name> in Sketch (part-body, part-wheel) is a
+// moving part. Sketch exports the name as its id, which becomes
+// data-part="<name>" for a site to animate. Everything else still merges.
+const PART = /^part-([a-z0-9]+(?:-[a-z0-9]+)*)$/
+
+const markParts = {
+  name: 'markParts',
+  fn: () => ({
+    element: {
+      enter(node) {
+        const m = PART.exec(String(node.attributes.id || '').toLowerCase())
+        if (!m) return
+        node.attributes['data-part'] = m[1]
+        delete node.attributes.id
+      },
+    },
+  }),
+}
+
+// Layers sharing a part name move as one, so they're gathered into a single
+// <g data-part> where the first of them was.
+const gatherParts = {
+  name: 'gatherParts',
+  fn: () => ({
+    root: {
+      exit(root) {
+        const found = new Map()
+        const visit = (node) => {
+          for (const child of node.children || []) {
+            if (child.type !== 'element') continue
+            const part = child.attributes['data-part']
+            if (!part) { visit(child); continue }
+            if (!found.has(part)) found.set(part, [])
+            found.get(part).push({ node: child, parent: node })
+          }
+        }
+        visit(root)
+        for (const [part, list] of found) {
+          const parent = list[0].parent
+          if (list.length < 2 || list.some((e) => e.parent !== parent)) continue
+          const nodes = list.map((e) => e.node)
+          nodes.forEach((n) => delete n.attributes['data-part'])
+          const at = parent.children.indexOf(nodes[0])
+          parent.children = parent.children.filter((c) => !nodes.includes(c))
+          parent.children.splice(at, 0, { type: 'element', name: 'g', attributes: { 'data-part': part }, children: nodes })
+        }
+      },
+    },
+  }),
+}
+
 function clean(raw, id) {
   return optimize(raw, {
     multipass: true,
     plugins: [
+      markParts,
       classesToAttributes,
       recolour,
       {
@@ -136,8 +188,19 @@ function clean(raw, id) {
       'removeXlink',
       { name: 'prefixIds', params: { prefix: id, delim: '-' } },
       { name: 'removeAttrs', params: { attrs: ['svg:(version|class|data-name)'] } },
+      gatherParts,
     ],
   }).data
+}
+
+// Each part an icon names, and any that keeps a transform of its own, which a
+// CSS animation would replace.
+function partsOf(svg) {
+  const tags = [...svg.matchAll(/<[^>]*\bdata-part="([^"]+)"[^>]*>/g)]
+  return {
+    parts: [...new Set(tags.map((m) => m[1]))],
+    transformed: tags.filter((m) => /\stransform="/.test(m[0])).map((m) => m[1]),
+  }
 }
 
 function walk(dir) {
@@ -158,6 +221,7 @@ function build() {
   const icons = {}
   const skipped = []
   const empty = []
+  const transformed = []
 
   for (const file of walk(SOURCE).sort()) {
     const rel = path.relative(SOURCE, file).split(path.sep).join('/')
@@ -170,7 +234,9 @@ function build() {
     const viewBox = /viewBox="([^"]+)"/.exec(svg)[1]
     const body = svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '')
     if (!body.trim()) { empty.push(key); continue }
-    icons[key] = { variant, size: Number(size), name, viewBox, body }
+    const found = partsOf(body)
+    if (found.transformed.length) transformed.push(`${key} (${found.transformed.join(', ')})`)
+    icons[key] = { variant, size: Number(size), name, viewBox, body, ...(found.parts.length ? { parts: found.parts } : {}) }
   }
 
   for (const dir of ['svg', 'sprite']) fs.rmSync(path.join(ROOT, dir), { recursive: true, force: true })
@@ -192,8 +258,11 @@ function build() {
     )
   }
 
-  const data = Object.fromEntries(Object.entries(icons).map(([key, i]) => [key, { viewBox: i.viewBox, body: i.body }]))
+  const data = Object.fromEntries(Object.entries(icons).map(([key, i]) => [key, { viewBox: i.viewBox, body: i.body, ...(i.parts ? { parts: i.parts } : {}) }]))
   write(path.join(ROOT, 'data.js'), `export default ${JSON.stringify(data, null, 2)}\n`)
+
+  const parts = Object.fromEntries(Object.entries(icons).filter(([, i]) => i.parts).map(([key, i]) => [key, i.parts]))
+  write(path.join(ROOT, 'parts.json'), JSON.stringify(parts, null, 2) + '\n')
 
   const byVariant = { line: { 16: [], 24: [] }, solid: { 16: [], 24: [] } }
   for (const icon of Object.values(icons)) byVariant[icon.variant][icon.size].push(icon.name)
@@ -207,7 +276,7 @@ function build() {
       `export type IconName = ${union(names)}`,
       `export type LineIconName = ${union([...new Set([...byVariant.line[16], ...byVariant.line[24]])].sort())}`,
       `export type SolidIconName = ${union([...new Set([...byVariant.solid[16], ...byVariant.solid[24]])].sort())}`,
-      `declare const data: Record<string, { viewBox: string; body: string }>`,
+      `declare const data: Record<string, { viewBox: string; body: string; parts?: string[] }>`,
       `export default data`,
       '',
     ].join('\n'),
@@ -223,6 +292,9 @@ function build() {
 
   const count = Object.keys(icons).length
   console.log(`Built ${count} icons in ${Date.now() - started}ms`)
+  const withParts = Object.entries(parts).map(([key, list]) => `${key} (${list.join(', ')})`)
+  if (withParts.length) console.log(`Moving parts: ${withParts.join(', ')}`)
+  if (transformed.length) console.warn(`Parts with their own transform, which an animation would replace: ${transformed.join(', ')}`)
   if (empty.length) console.warn(`Left out, nothing visible (art inside Keylines?): ${empty.join(', ')}`)
   if (skipped.length) console.log(`Skipped (not variant/size/name): ${skipped.join(', ')}`)
 }
