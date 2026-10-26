@@ -24,6 +24,18 @@ A symbol name used twice is left out until one is renamed. An icon with nothing 
 
 Names say what an icon draws, not what it’s for: `magnifyingglass` rather than search, `house` rather than home and `xmark` rather than close, so a name fits wherever the icon is used. The main shape comes first, then its details, then anything it sits in or carries, as in `arrow-up-right-square` or `note-text-badge-pencil`. A glyph has the same name in line and solid.
 
+### Moving parts
+
+A layer that should move on its own is named `part-` and what it is, in lowercase: `part-body`, `part-wheel`, `part-wave`. Layers that move as one go in a group with that name, such as `part-boat` holding `hull` and `cabin`; the Icon plugin’s Clean up keeps those groups whole. The build turns each part into a `data-part` attribute and keeps it apart from the rest of the icon, gathering layers that share a name into one group:
+
+```css
+.route:hover [data-part='body'] {
+  animation: settle 0.5s ease-out;
+}
+```
+
+Parts only move in an inline SVG (the components or `toSvg()`), not through a sprite’s `<use>`. A part can’t carry a `transform` of its own, as an animation would replace it, so the build warns if one does. `parts.json` lists every icon’s parts, so a re-export that drops one shows in the diff.
+
 ### What the build makes
 
 | Output | Use |
@@ -34,6 +46,7 @@ Names say what an icon draws, not what it’s for: `magnifyingglass` rather than
 | `lib/react/index.js` | React component |
 | `lib/index.js` | `toSvg()`, `resolveIcon()` and `iconNames()` for anything else |
 | `icons.json` | Every name, by variant and size |
+| `parts.json` | The moving parts each icon names, for animation |
 
 Icons draw in `currentColor`. Knock-out shapes use `--icon-fill`, the page background (`Canvas`) unless a site sets it, so set `color-scheme` for dark mode (`none` turns it off). A few line icons use `--icon-fill-bg`, a tint of the icon’s colour. The success icons fill with `--icon-success`, falling back to `--icon-fill`.
 

@@ -10,7 +10,8 @@
     "sprite",
     "data.js",
     "data.d.ts",
-    "icons.json"
+    "icons.json",
+    "parts.json"
   ],
   "exports": {
     ".": {
@@ -23,6 +24,7 @@
       "default": "./lib/react/index.js"
     },
     "./icons.json": "./icons.json",
+    "./parts.json": "./parts.json",
     "./svg/*": "./svg/*",
     "./sprite/*": "./sprite/*"
   },
