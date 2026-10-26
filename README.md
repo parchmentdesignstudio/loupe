@@ -104,8 +104,8 @@ The build leaves out a group called `Keylines`, and warns about a drawing that i
 ### Using it in a site
 
 ```sh
-pnpm add github:stevemckinney/loupe#logos
-npm install github:stevemckinney/loupe#logos
+pnpm add github:parchmentdesignstudio/loupe#logos
+npm install github:parchmentdesignstudio/loupe#logos
 ```
 
 ```astro
