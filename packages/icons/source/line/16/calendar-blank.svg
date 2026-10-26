@@ -1,0 +1,7 @@
+<svg viewBox="0 0 16 16">
+  <g class="calendar">
+    <rect width="12" height="10" x="2" y="3" class="fill-current stroke-current stroke-2 sl-r" rx="1"/>
+    <path d="M3 5h10" class="fill-none stroke-current stroke-2 sl-r"/>
+    <rect width="10" height="6" x="3" y="6" class="fill-(--icon-fill)" rx=".5"/>
+  </g>
+</svg>

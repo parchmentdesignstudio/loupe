@@ -1,0 +1,37 @@
+{
+  "solid/16/airplane-arrival": [
+    "shadow",
+    "plane"
+  ],
+  "solid/16/airplane-departure": [
+    "shadow",
+    "plane"
+  ],
+  "solid/16/airplane-side": [
+    "plane"
+  ],
+  "solid/16/bus-side": [
+    "body",
+    "wheel"
+  ],
+  "solid/16/car-side": [
+    "body",
+    "wheel"
+  ],
+  "solid/16/ferry-side-front": [
+    "boat",
+    "wave"
+  ],
+  "solid/16/ferry-side-middle": [
+    "boat",
+    "wave"
+  ],
+  "solid/16/ferry-side-rear": [
+    "boat",
+    "wave"
+  ],
+  "solid/16/ferry-side": [
+    "boat",
+    "wave"
+  ]
+}

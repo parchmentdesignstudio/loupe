@@ -1,7 +1,1 @@
-<svg viewBox="0 0 16 16">
-  <g class="calendar">
-    <rect width="12" height="10" x="2" y="3" class="fill-current stroke-current stroke-2 sl-r" rx="1"/>
-    <path d="M3 5h10" class="fill-none stroke-current stroke-2 sl-r"/>
-    <rect width="10" height="6" x="3" y="6" class="fill-(--icon-fill)" rx=".5"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class="sw-2 sl-r" focusable="false" aria-hidden="true"><path class="stroke-currentcolor fill-s1" d="M14,15H2a1,1,0,0,1-1-1V3H15V14A1,1,0,0,1,14,15Z"/><rect class="fill-currentcolor" x="4" y="7" width="2" height="2" rx="1" ry="1"/><rect class="fill-currentcolor" x="7" y="7" width="2" height="2" rx="1" ry="1"/><rect class="fill-currentcolor" x="10" y="7" width="2" height="2" rx="1" ry="1"/><rect class="fill-currentcolor" x="4" y="10" width="2" height="2" rx="1" ry="1"/><rect class="fill-currentcolor" x="7" y="10" width="2" height="2" rx="1" ry="1"/><rect class="fill-currentcolor" x="10" y="10" width="2" height="2" rx="1" ry="1"/><path class="fill-none stroke-currentcolor" d="M2,1H14a1,1,0,0,1,1,1V3a0,0,0,0,1,0,0H1A0,0,0,0,1,1,3V2A1,1,0,0,1,2,1Z"/></svg>
