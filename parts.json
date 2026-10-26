@@ -7,6 +7,18 @@
     "body",
     "wheel"
   ],
+  "solid/16/ferry-side-front": [
+    "boat",
+    "wave"
+  ],
+  "solid/16/ferry-side-middle": [
+    "boat",
+    "wave"
+  ],
+  "solid/16/ferry-side-rear": [
+    "boat",
+    "wave"
+  ],
   "solid/16/ferry-side": [
     "boat",
     "wave"
