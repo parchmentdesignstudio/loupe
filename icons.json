@@ -182,7 +182,9 @@
   },
   "solid": {
     "16": [
+      "airplane-arrival-belly",
       "airplane-arrival",
+      "airplane-departure-belly",
       "airplane-departure",
       "airplane-side-belly",
       "airplane-side",
