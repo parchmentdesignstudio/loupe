@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>solid/16/close</title>
-    <g id="solid/16/close" stroke="none" fill="none" fill-rule="evenodd">
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(8, 7.5) rotate(45) translate(-8, -7.5)" x="7.25" y="1" width="1.5" height="13" rx="0.5"></rect>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(8, 7.5) rotate(135) translate(-8, -7.5)" x="7.25" y="1" width="1.5" height="13" rx="0.5"></rect>
-    </g>
-</svg>

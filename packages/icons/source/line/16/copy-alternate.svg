@@ -1,6 +1,0 @@
-<svg viewBox="0 0 16 16">
-  <g class="copy-alternate">
-    <path d="M5 6H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3" class="fill-none stroke-current stroke-2 sl-r"/>
-    <rect width="8" height="8" x="6" y="2" class="fill-(--icon-fill) stroke-current stroke-2 sl-r" rx="1"/>
-  </g>
-</svg>

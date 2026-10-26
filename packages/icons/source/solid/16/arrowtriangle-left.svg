@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/arrowtriangle-left</title>
+    <g id="solid/16/arrowtriangle-left" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M4,4.93438811 L4,11.065871 C4,11.4651926 4.44502091,11.7033936 4.77730209,11.4819282 L9.37591426,8.41695314 C9.67280364,8.21907637 9.67285397,7.78284812 9.37601027,7.58490285 L4.7773981,4.51839496 C4.44512455,4.29682389 4,4.53501429 4,4.93438811 Z" id="fill" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(7, 8) rotate(180) translate(-7, -8)"></path>
+    </g>
+</svg>

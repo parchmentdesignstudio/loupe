@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>solid/16/external</title>
-    <g id="solid/16/external" stroke="none" fill="none" fill-rule="evenodd">
-        <path d="M6.52222591,3.37527409 L6.52222591,9.37527409 L12.5222259,9.37527409 C12.7983683,9.37527409 13.0222259,9.59913171 13.0222259,9.87527409 L13.0222259,10.3752741 C13.0222259,10.6514165 12.7983683,10.8752741 12.5222259,10.8752741 L5.52222591,10.8752741 C5.24608354,10.8752741 5.02222591,10.6514165 5.02222591,10.3752741 L5.02222591,3.37527409 C5.02222591,3.09913171 5.24608354,2.87527409 5.52222591,2.87527409 L6.02222591,2.87527409 C6.29836829,2.87527409 6.52222591,3.09913171 6.52222591,3.37527409 Z" id="Combined-Shape" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(9.0222, 6.8753) rotate(180) translate(-9.0222, -6.8753)"></path>
-        <rect id="Rectangle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(7.574, 8.3235) rotate(45) translate(-7.574, -8.3235)" x="6.82396816" y="1.82353184" width="1.5" height="13" rx="0.5"></rect>
-    </g>
-</svg>

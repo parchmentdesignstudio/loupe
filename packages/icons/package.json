@@ -1,6 +1,6 @@
 {
   "name": "@parchment/icons",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Line and solid icons at 16 and 24px, as SVG files, sprites, and Astro and React components",
   "type": "module",
   "sideEffects": false,
@@ -10,7 +10,8 @@
     "sprite",
     "data.js",
     "data.d.ts",
-    "icons.json"
+    "icons.json",
+    "parts.json"
   ],
   "exports": {
     ".": {
@@ -23,6 +24,7 @@
       "default": "./lib/react/index.js"
     },
     "./icons.json": "./icons.json",
+    "./parts.json": "./parts.json",
     "./svg/*": "./svg/*",
     "./sprite/*": "./sprite/*"
   },
