@@ -1,4 +1,8 @@
 {
+  "solid/16/bus-side": [
+    "body",
+    "wheel"
+  ],
   "solid/16/car-side": [
     "body",
     "wheel"
