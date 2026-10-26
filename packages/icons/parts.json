@@ -1,4 +1,15 @@
 {
+  "solid/16/airplane-arrival": [
+    "shadow",
+    "plane"
+  ],
+  "solid/16/airplane-departure": [
+    "shadow",
+    "plane"
+  ],
+  "solid/16/airplane-side": [
+    "plane"
+  ],
   "solid/16/bus-side": [
     "body",
     "wheel"
