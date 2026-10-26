@@ -172,8 +172,86 @@ const gatherParts = {
   }),
 }
 
+// Sketch exports an outline mask as <mask fill="white"> on the layers it masks.
+// It clips, so it becomes a clipPath, which ignores paint, where a mask’s shape
+// would pick up currentColor. A part’s clip moves onto a group around the part,
+// so the clip stays put while the part moves through it, as a ferry’s hull
+// slides past its waterline.
+const URL_REF = /^url\(#(.+)\)$/
+
+const holdClips = {
+  name: 'holdClips',
+  fn: () => ({
+    root: {
+      exit(root) {
+        const all = []
+        const byId = new Map()
+        const visit = (node) => {
+          for (const child of node.children || []) {
+            if (child.type !== 'element') continue
+            all.push({ node: child, parent: node })
+            if (child.attributes.id) byId.set(child.attributes.id, child)
+            visit(child)
+          }
+        }
+        visit(root)
+
+        const clips = new Set()
+        for (const { node } of all) {
+          if (node.name !== 'mask' || node.attributes.fill !== 'white') continue
+          node.name = 'clipPath'
+          node.attributes = { id: node.attributes.id }
+          node.children = node.children.map((child) => {
+            if (child.type !== 'element' || child.name !== 'use') return child
+            if (['x', 'y', 'transform'].some((a) => child.attributes[a] !== undefined)) return child
+            const ref = byId.get(String(child.attributes.href ?? child.attributes['xlink:href'] ?? '').replace(/^#/, ''))
+            if (!ref || !SHAPES.has(ref.name)) return child
+            const { id: _id, fill: _fill, style: _style, ...shape } = ref.attributes
+            return { type: 'element', name: ref.name, attributes: shape, children: [] }
+          })
+          clips.add(node.attributes.id)
+        }
+        for (const { node } of all) {
+          const m = URL_REF.exec(node.attributes.mask || '')
+          if (!m || !clips.has(m[1])) continue
+          node.attributes['clip-path'] = node.attributes.mask
+          delete node.attributes.mask
+        }
+
+        // The shapes the clips took in are no longer used where Sketch defined them
+        const used = new Set()
+        const refs = (node) => {
+          for (const child of node.children || []) {
+            if (child.type !== 'element') continue
+            for (const value of Object.values(child.attributes)) for (const m of String(value).matchAll(/#([\w-]+)/g)) used.add(m[1])
+            refs(child)
+          }
+        }
+        refs(root)
+        for (const { node, parent } of all) {
+          if (node.name !== 'defs') continue
+          node.children = node.children.filter((c) => c.type !== 'element' || !c.attributes.id || used.has(c.attributes.id))
+          if (!node.children.some((c) => c.type === 'element')) parent.children = parent.children.filter((c) => c !== node)
+        }
+
+        for (const { node, parent } of all) {
+          if (!node.attributes['data-part']) continue
+          const hold = {}
+          for (const a of ['transform', 'clip-path', 'mask']) {
+            if (node.attributes[a] === undefined) continue
+            hold[a] = node.attributes[a]
+          }
+          if (!hold['clip-path'] && !hold.mask) continue
+          for (const a of Object.keys(hold)) delete node.attributes[a]
+          parent.children[parent.children.indexOf(node)] = { type: 'element', name: 'g', attributes: hold, children: [node] }
+        }
+      },
+    },
+  }),
+}
+
 function clean(raw, id) {
-  return optimize(raw, {
+  const svg = optimize(raw, {
     multipass: true,
     plugins: [
       markParts,
@@ -191,6 +269,8 @@ function clean(raw, id) {
       gatherParts,
     ],
   }).data
+  // After the rest, as SVGO would collapse a part's wrapper again
+  return optimize(svg, { plugins: [holdClips] }).data
 }
 
 // Each part an icon names, and any that keeps a transform of its own, which a
