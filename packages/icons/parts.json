@@ -44,5 +44,9 @@
   "solid/16/ferry-side": [
     "boat",
     "wave"
+  ],
+  "solid/16/sailboat": [
+    "boat",
+    "wave"
   ]
 }
