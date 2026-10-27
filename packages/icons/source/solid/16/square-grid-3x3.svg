@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>square-grid-3x3</title>
+    <g id="solid/16/square-grid-3x3" stroke="none" fill="none" fill-rule="evenodd">
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="1.5" y="1.5" width="3.5" height="3.5" rx="0.75"></rect>
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="6.25" y="1.5" width="3.5" height="3.5" rx="0.75"></rect>
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="11" y="1.5" width="3.5" height="3.5" rx="0.75"></rect>
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="1.5" y="6.25" width="3.5" height="3.5" rx="0.75"></rect>
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="6.25" y="6.25" width="3.5" height="3.5" rx="0.75"></rect>
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="11" y="6.25" width="3.5" height="3.5" rx="0.75"></rect>
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="1.5" y="11" width="3.5" height="3.5" rx="0.75"></rect>
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="6.25" y="11" width="3.5" height="3.5" rx="0.75"></rect>
+        <rect id="cell" fill="color(display-p3 0.035 0.180 0.141)" x="11" y="11" width="3.5" height="3.5" rx="0.75"></rect>
+    </g>
+</svg>
