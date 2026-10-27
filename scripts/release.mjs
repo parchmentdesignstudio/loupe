@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Publishes a package to its own branch (packages/icons → icons), so any site
-// can install it with "github:stevemckinney/loupe#icons", npm included.
+// can install it with "github:parchmentdesignstudio/loupe#icons", npm included.
 //
 //   pnpm release icons
 

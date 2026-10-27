@@ -1,10 +1,21 @@
 {
+  "solid/16/airplane-arrival-belly": [
+    "shadow",
+    "plane"
+  ],
   "solid/16/airplane-arrival": [
+    "shadow",
+    "plane"
+  ],
+  "solid/16/airplane-departure-belly": [
     "shadow",
     "plane"
   ],
   "solid/16/airplane-departure": [
     "shadow",
+    "plane"
+  ],
+  "solid/16/airplane-side-belly": [
     "plane"
   ],
   "solid/16/airplane-side": [
@@ -31,6 +42,10 @@
     "wave"
   ],
   "solid/16/ferry-side": [
+    "boat",
+    "wave"
+  ],
+  "solid/16/sailboat": [
     "boat",
     "wave"
   ]
