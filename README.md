@@ -56,8 +56,8 @@ Icons draw in `currentColor`. Knock-out shapes use `--icon-fill`, the page backg
 ### Using it in a site
 
 ```sh
-pnpm add github:stevemckinney/loupe#icons
-npm install github:stevemckinney/loupe#icons
+pnpm add github:parchmentdesignstudio/loupe#icons
+npm install github:parchmentdesignstudio/loupe#icons
 ```
 
 ```astro
