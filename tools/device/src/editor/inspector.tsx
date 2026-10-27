@@ -3,7 +3,7 @@ import { kinds, modelById, models, screenSize, type Orientation } from '../devic
 import { Check, cx, IconButton, Note, NumberField, Section, Segmented, Select, TextButton } from '../ui/controls'
 import { Icon } from '../ui/icon'
 import * as actions from './actions'
-import { artboardSizes, fills, layouts, nameOf, rectOf, type Device, type StatusBar } from './document'
+import { artboardSizes, fills, rectOf, type Device, type Layout, type StatusBar } from './document'
 import { round, union } from './geometry'
 import { useImageUrl } from './images'
 import { useStore } from './store'
@@ -16,16 +16,16 @@ export function Inspector() {
 }
 
 function Devices({ devices }: { devices: Device[] }) {
+  const row = useStore((state) => state.doc.artboard.layout === 'row')
   const ids = devices.map((device) => device.id)
   const single = devices.length === 1 ? devices[0] : null
   const bounds = union(devices.map(rectOf))!
   const model = new Set(devices.map((device) => device.model)).size === 1 ? modelById(devices[0].model) : null
   const orientation = new Set(devices.map((device) => device.orientation)).size === 1 ? devices[0].orientation : null
-  const locked = devices.every((device) => device.locked)
 
   return (
     <>
-      <Section title={single ? nameOf(single) : `${devices.length} devices`}>
+      <Section title={single ? 'Device' : `${devices.length} devices`}>
         <Select label="Device" value={model?.id ?? ''} onChange={(value) => actions.switchModel(ids, value)}>
           {!model && (
             <option value="" disabled>
@@ -55,13 +55,16 @@ function Devices({ devices }: { devices: Device[] }) {
             onChange={(next) => actions.rotate(devices.filter((device) => device.orientation !== next).map((device) => device.id))}
           />
         )}
-        {locked && <Note>Locked, so it stays put. Unlock it from its layer.</Note>}
       </Section>
 
-      <Section title="Position and size">
+      <Section title={row ? 'Size' : 'Position and size'}>
         <div className="grid grid-cols-2 gap-2">
-          <NumberField label="X" title="From the left" value={bounds.x} onChange={(x) => actions.setBounds({ x })} />
-          <NumberField label="Y" title="From the top" value={bounds.y} onChange={(y) => actions.setBounds({ y })} />
+          {!row && (
+            <>
+              <NumberField label="X" title="From the left" value={bounds.x} onChange={(x) => actions.setBounds({ x })} />
+              <NumberField label="Y" title="From the top" value={bounds.y} onChange={(y) => actions.setBounds({ y })} />
+            </>
+          )}
           <NumberField label="W" title="Width" value={bounds.width} min={8} onChange={(width) => actions.setBounds({ width })} />
           <NumberField label="H" title="Height" value={bounds.height} min={8} onChange={(height) => actions.setBounds({ height })} />
         </div>
@@ -69,7 +72,7 @@ function Devices({ devices }: { devices: Device[] }) {
       </Section>
 
       {single && <Screen device={single} />}
-      <Arrange count={devices.length} />
+      <Arrange count={devices.length} row={row} />
     </>
   )
 }
@@ -120,27 +123,41 @@ function Screen({ device }: { device: Device }) {
   )
 }
 
-function Arrange({ count }: { count: number }) {
+/** Free, lining up and stacking; in the row, moving along it */
+function Arrange({ count, row }: { count: number; row: boolean }) {
   return (
     <Section title="Arrange">
-      <div className="-mx-1 flex justify-between">
-        <IconButton icon="align-horizontal-left" label="Align left" onClick={() => actions.align('left')} />
-        <IconButton icon="align-horizontal-center" label="Align centre" onClick={() => actions.align('centre')} />
-        <IconButton icon="align-horizontal-right" label="Align right" onClick={() => actions.align('right')} />
-        <IconButton icon="align-vertical-top" label="Align top" onClick={() => actions.align('top')} />
-        <IconButton icon="align-vertical-center" label="Align middle" onClick={() => actions.align('middle')} />
-        <IconButton icon="align-vertical-bottom" label="Align bottom" onClick={() => actions.align('bottom')} />
-      </div>
-      {count === 1 && <Note>One device lines up with the artboard.</Note>}
+      {!row && (
+        <>
+          <div className="-mx-1 flex justify-between">
+            <IconButton icon="align-horizontal-left" label="Align left" onClick={() => actions.align('left')} />
+            <IconButton icon="align-horizontal-center" label="Align centre" onClick={() => actions.align('centre')} />
+            <IconButton icon="align-horizontal-right" label="Align right" onClick={() => actions.align('right')} />
+            <IconButton icon="align-vertical-top" label="Align top" onClick={() => actions.align('top')} />
+            <IconButton icon="align-vertical-center" label="Align middle" onClick={() => actions.align('middle')} />
+            <IconButton icon="align-vertical-bottom" label="Align bottom" onClick={() => actions.align('bottom')} />
+          </div>
+          {count === 1 && <Note>One device lines up with the artboard.</Note>}
+        </>
+      )}
       <div className="-mx-1 flex gap-1">
-        {count >= 3 && (
+        {row ? (
           <>
-            <IconButton icon="distribute-horizontal-center" label="Space evenly across" onClick={() => actions.distribute('x')} />
-            <IconButton icon="distribute-vertical-center" label="Space evenly down" onClick={() => actions.distribute('y')} />
+            <IconButton icon="arrow-left" label="Move left" shortcut="←" onClick={() => actions.reorder('backward')} />
+            <IconButton icon="arrow-right" label="Move right" shortcut="→" onClick={() => actions.reorder('forward')} />
+          </>
+        ) : (
+          <>
+            {count >= 3 && (
+              <>
+                <IconButton icon="distribute-horizontal-center" label="Space evenly across" onClick={() => actions.distribute('x')} />
+                <IconButton icon="distribute-vertical-center" label="Space evenly down" onClick={() => actions.distribute('y')} />
+              </>
+            )}
+            <IconButton icon="square-3-layers-3d-top-filled" label="Bring forward" shortcut="⌘]" onClick={() => actions.reorder('forward')} />
+            <IconButton icon="square-3-layers-3d-bottom-filled" label="Send backward" shortcut="⌘[" onClick={() => actions.reorder('backward')} />
           </>
         )}
-        <IconButton icon="square-3-layers-3d-top-filled" label="Bring forward" shortcut="⌘]" onClick={() => actions.reorder('forward')} />
-        <IconButton icon="square-3-layers-3d-bottom-filled" label="Send backward" shortcut="⌘[" onClick={() => actions.reorder('backward')} />
         <IconButton icon="square-on-square" label="Duplicate" shortcut="⌘D" onClick={() => actions.duplicate()} />
         <IconButton icon="trash" label="Delete" shortcut="⌫" onClick={actions.removeSelected} />
       </div>
@@ -189,8 +206,6 @@ function Fill() {
 
 function Artboard() {
   const artboard = useStore((state) => state.doc.artboard)
-  const guides = useStore((state) => state.doc.guides.length)
-  const settings = useStore((state) => state.settings)
   const preset = artboardSizes.find((each) => each.width === artboard.width && each.height === artboard.height)
 
   return (
@@ -219,16 +234,44 @@ function Artboard() {
       </Section>
 
       <Section title="Layout">
-        <Note>mcknny’s Mockup layouts, which set the devices out afresh.</Note>
-        <div className="grid grid-cols-2 gap-1.5">
-          {layouts.map((layout) => (
-            <TextButton key={layout.id} onClick={() => actions.applyLayout(layout.id)}>
-              {layout.name}
-            </TextButton>
-          ))}
-        </div>
+        <Segmented<Layout>
+          label="Layout"
+          value={artboard.layout}
+          options={[
+            { value: 'row', label: 'Automatic' },
+            { value: 'free', label: 'Free' },
+          ]}
+          onChange={actions.setLayout}
+        />
+        {artboard.layout === 'row' ? (
+          <>
+            <div className="grid grid-cols-2 gap-2">
+              <NumberField label="Gap" title="Between devices" value={artboard.gap} onChange={(gap) => actions.setArtboard({ gap })} />
+            </div>
+            <Note>A centred row, as a flexbox lays it out. Drag a device along it, or use the arrow keys.</Note>
+          </>
+        ) : (
+          <Note>Each device stays where it’s put, and snaps to the others, the grid and guides.</Note>
+        )}
       </Section>
 
+      {artboard.layout === 'free' && <Placing />}
+
+      <Section title="Start again">
+        <Note>Back to mcknny’s three phones on its artboard. You can undo it.</Note>
+        <TextButton onClick={actions.startOver}>Start again</TextButton>
+      </Section>
+    </>
+  )
+}
+
+/** What only matters placing devices freely: the grid, columns, guides and snapping */
+function Placing() {
+  const guides = useStore((state) => state.doc.guides.length)
+  const settings = useStore((state) => state.settings)
+
+  return (
+    <>
       <Section title="Grid">
         <div className="grid grid-cols-2 gap-2">
           <NumberField label="Size" title="Grid size" value={settings.grid.size} min={1} onChange={(size) => actions.setGrid({ size })} />
@@ -258,11 +301,6 @@ function Artboard() {
         <Check label="Snap" checked={settings.snap} onChange={() => actions.toggle('snap')} />
         <Check label="To other devices, their spacing and the artboard" checked={settings.objects} onChange={() => actions.toggle('objects')} />
         <Note>Hold ⌘ while dragging to place something freely, or shift to keep to one axis.</Note>
-      </Section>
-
-      <Section title="Start again">
-        <Note>Back to mcknny’s three phones on its artboard. You can undo it.</Note>
-        <TextButton onClick={actions.startOver}>Start again</TextButton>
       </Section>
     </>
   )

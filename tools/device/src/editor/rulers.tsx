@@ -127,7 +127,7 @@ export function Rulers() {
   const down = Math.max(0, view.height - RULER)
 
   useEffect(() => {
-    const bounds = union(doc.devices.filter((device) => selection.includes(device.id) && !device.hidden).map(rectOf))
+    const bounds = union(doc.devices.filter((device) => selection.includes(device.id)).map(rectOf))
     const colours = palettes[dark ? 'dark' : 'light']
     const guides = (axis: Axis) => doc.guides.filter((guide) => guide.axis === axis).map((guide) => guide.value)
     if (top.current) draw(top.current, 'x', across, viewport.x - RULER, viewport.zoom, bounds && [bounds.x, bounds.x + bounds.width], guides('x'), colours)

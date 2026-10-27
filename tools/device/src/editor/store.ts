@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import { createDevice, defaultDoc, defaultSettings, type Doc, type Settings } from './document'
+import { byPosition, createDevice, defaultArtboard, defaultDoc, defaultSettings, flow, type Device, type Doc, type Settings } from './document'
 import type { Rect } from './geometry'
 import type { SnapGap, SnapLine } from './snapping'
 
@@ -48,21 +48,27 @@ function read(key: string): unknown {
   }
 }
 
+// What earlier versions saved that this one has no more: names, and hiding
+// and locking from the layers panel, so nothing hidden stays out of reach
+type Saved = Device & { name?: unknown; hidden?: unknown; locked?: unknown }
+
 function loadDoc(): Doc {
   const stored = read(DOC_KEY) as Doc | null
   if (stored?.version !== 1 || !Array.isArray(stored.devices) || !stored.artboard) return defaultDoc()
-  // Fills in anything a device saved by an earlier version lacks
-  return { ...stored, guides: stored.guides ?? [], devices: stored.devices.map((device) => createDevice(device.model, device)) }
+  const artboard = { ...defaultArtboard, ...stored.artboard }
+  const devices = (stored.devices as Saved[]).map(({ name, hidden, locked, ...device }) => createDevice(device.model, device))
+  return flow({ ...stored, artboard, guides: stored.guides ?? [], devices: artboard.layout === 'row' ? byPosition(devices) : devices })
 }
 
 function loadSettings(): Settings {
-  const stored = (read(SETTINGS_KEY) ?? {}) as Partial<Settings>
+  const stored = (read(SETTINGS_KEY) ?? {}) as Partial<Settings> & { panels?: { right?: boolean } }
+  const { panels, ...rest } = stored
   return {
     ...defaultSettings,
-    ...stored,
+    ...rest,
     grid: { ...defaultSettings.grid, ...stored.grid },
     columns: { ...defaultSettings.columns, ...stored.columns },
-    panels: { ...defaultSettings.panels, ...stored.panels },
+    inspector: stored.inspector ?? panels?.right ?? defaultSettings.inspector,
   }
 }
 
@@ -109,16 +115,17 @@ function kept(doc: Doc, selection: string[]) {
   return selection.filter((id) => doc.devices.some((device) => device.id === id))
 }
 
-/** Changes the document as one step to undo */
+/** Changes the document as one step to undo, laying out the row afresh */
 export function change(recipe: (doc: Doc) => Doc) {
   const before = state.doc
-  const after = recipe(before)
+  const after = flow(recipe(before))
   if (after === before) return
   set({ doc: after, past: [...state.past, before].slice(-HISTORY), future: [], selection: kept(after, state.selection) })
 }
 
 // A drag changes the document many times over, from where it started, and
-// is one step to undo once it ends
+// is one step to undo once it ends. It lays out the row itself, as what’s
+// being dragged follows the pointer rather than its place
 let gestureStart: Doc | null = null
 
 export function beginGesture() {

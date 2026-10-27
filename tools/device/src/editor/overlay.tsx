@@ -45,12 +45,10 @@ export function Overlay() {
   const { width: W, height: H } = view
   const artboard = { x: 0, y: 0, width: doc.artboard.width, height: doc.artboard.height }
   const board = box(artboard)
-  const visible = doc.devices.filter((device) => !device.hidden)
-  const selected = visible.filter((device) => selection.includes(device.id))
+  const selected = doc.devices.filter((device) => selection.includes(device.id))
   const bounds = union(selected.map(rectOf))
-  const resizable = selected.some((device) => !device.locked)
-  const hover = !busy && hovered && !selection.includes(hovered) ? visible.find((device) => device.id === hovered) : undefined
-  const drop = dropTarget ? visible.find((device) => device.id === dropTarget) : undefined
+  const hover = !busy && hovered && !selection.includes(hovered) ? doc.devices.find((device) => device.id === hovered) : undefined
+  const drop = dropTarget ? doc.devices.find((device) => device.id === dropTarget) : undefined
   const guide = activeGuide ? doc.guides.find((each) => each.id === activeGuide) : undefined
 
   // The grid, over what’s in view of the artboard, with every eighth line stronger
@@ -148,18 +146,17 @@ export function Overlay() {
 
         {marquee && <rect {...box(marquee)} className="fill-avocado/8 stroke-avocado" />}
 
-        {resizable &&
-          handles.map(([handle, x, y]) => (
-            <rect
-              key={handle}
-              data-handle={handle}
-              x={Math.round(x - HANDLE / 2) + 0.5}
-              y={Math.round(y - HANDLE / 2) + 0.5}
-              width={HANDLE}
-              height={HANDLE}
-              className={cx('pointer-events-auto fill-white stroke-avocado', handle === 'nw' || handle === 'se' ? 'cursor-nwse-resize' : 'cursor-nesw-resize')}
-            />
-          ))}
+        {handles.map(([handle, x, y]) => (
+          <rect
+            key={handle}
+            data-handle={handle}
+            x={Math.round(x - HANDLE / 2) + 0.5}
+            y={Math.round(y - HANDLE / 2) + 0.5}
+            width={HANDLE}
+            height={HANDLE}
+            className={cx('pointer-events-auto fill-white stroke-avocado', handle === 'nw' || handle === 'se' ? 'cursor-nwse-resize' : 'cursor-nesw-resize')}
+          />
+        ))}
       </svg>
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden text-[11px] font-medium tabular-nums">

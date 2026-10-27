@@ -30,7 +30,6 @@ export async function renderPng(doc: Doc, scale: number): Promise<Blob> {
   }
 
   for (const device of doc.devices) {
-    if (device.hidden) continue
     const art = frameArt(device.model, device.orientation, doc.theme)
     const { layout } = art
     const { screen } = layout

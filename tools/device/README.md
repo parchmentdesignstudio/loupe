@@ -1,6 +1,6 @@
 # Device
 
-A canvas for laying out devices and their screens. It starts from mcknny’s Mockup component: its 1776 × 1152 artboard, its phone and desktop frames, its layouts and its wireframes. Then it adds current phones, tablets, laptops and a display, drawn to the same build.
+A canvas for laying out devices and their screens. It starts from mcknny’s Mockup component: its 1776 × 1152 artboard, its phone and desktop frames, its row of phones 57 apart and its wireframes. Then it adds current phones, tablets, laptops and a display, drawn to the same build.
 
 ## Running it
 
@@ -13,17 +13,17 @@ It opens on http://localhost:5190. Your work saves in the browser as you go: the
 
 ## Using it
 
-- Add a device from the left, with a click to put it in view, or drag it where it goes. Add device, in the toolbar floating along the bottom of the canvas, puts mcknny’s phone in view in one click.
+- Add device, in the toolbar floating along the bottom of the canvas, adds mcknny’s phone. The inspector changes it to any other device.
 - Drop a screenshot onto a device for its screen, or onto the canvas for a new device of the model it fits. Pasting works too, and double-clicking a device picks a file.
-- Drag devices about, resize them from a corner, or line them up from the inspector.
-- With nothing selected, the inspector sets the artboard’s size and fill, mcknny’s layouts, the grid, columns and guides.
+- Devices sit in a centred row that lays itself out, as a flexbox would, 57 apart. Drag one along the row, or move it with the arrow keys, and resize it from a corner. Too many for the artboard run over both edges alike.
+- With nothing selected, the inspector sets the artboard’s size and fill, and its layout: automatic, with the gap, or free, to place devices anywhere with the grid, columns and guides.
 - Export the artboard as a PNG at 1x, 2x or 3x. A clear artboard exports clear, as mcknny’s composed images are.
 
 Light and dark switch the frames between mcknny’s two sets, for a light page or a dark one.
 
 ### Snapping
 
-A drag snaps to whatever is within 6 points on screen:
+With the layout free, a drag snaps to whatever is within 6 points on screen:
 
 - the artboard’s edges and centre
 - other devices’ edges, centres and the spacing between them
@@ -43,14 +43,14 @@ Hold ⌘ to place something freely, or shift to keep to one axis. The magnet in 
 | ⌘C, ⌘V | Copy and paste devices, or paste a screenshot |
 | ⌘D, ⌫ | Duplicate, delete |
 | Alt and drag | Drags a copy |
-| Arrows | Nudge a point, or a grid step with shift |
-| ⌘], ⌘[ | Forward, backward, or with alt, to the front or back |
+| ←, → | Along the row, or with shift, to either end |
+| Arrows, free | Nudge a point, or a grid step with shift |
+| ⌘], ⌘[ | Forward, backward: along the row, or up and down the stack when free. With alt, to either end |
 | ⇧1, ⇧2, ⇧0 | Zoom to fit, to the selection, to 100% |
 | ⌘+, ⌘− | Zoom in, out |
 | `⌘'` | Grid |
 | ⇧G | Columns |
 | ⇧R | Rulers |
-| ⇧⌘H, ⇧⌘L | Hide, lock |
 | ⇧⌘E | Export at 2x |
 
 ## Screens
@@ -65,6 +65,7 @@ Screens are sized in points, and the inspector says what to capture each one at.
 | `src/devices/frames.ts` | The frames: mcknny’s SVGs for its phone and desktop, and the rest drawn to the same build |
 | `src/devices/frames/` | mcknny’s frames, from its `src/assets/images/devices` |
 | `src/devices/device-view.tsx` | A device in layers: frame, screen, status bar, then its island or notch |
+| `src/editor/document.ts` | The document, and the row that lays itself out, with its tests beside it |
 | `src/editor/snapping.ts` | What a drag snaps to, with its tests beside it |
 | `src/editor/canvas.tsx` | Panning, zooming, selecting and dragging |
 | `src/editor/toolbar.tsx` | The toolbar along the top, and the one floating along the bottom of the canvas |
@@ -76,6 +77,6 @@ To add a device, list it in `models.ts` with its screen size in points, then giv
 
 Icons come from Loupe, `@parchment/icons`. Lucide stands in for any Loupe doesn’t have, under the name Loupe would give it, so each switches over once it’s drawn and released.
 
-`pnpm test` runs the snapping tests.
+`pnpm test` runs the tests, for the row and for snapping.
 
 `LOG.md` keeps a running log of changes while the tool is being simplified, with any controls that are in two places until one goes.

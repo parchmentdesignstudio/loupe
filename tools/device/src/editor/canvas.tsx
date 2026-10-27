@@ -2,7 +2,7 @@ import { memo, useEffect, useLayoutEffect, useRef, useState, type CSSProperties,
 import { DeviceView } from '../devices/device-view'
 import type { Theme } from '../devices/models'
 import * as actions from './actions'
-import { id, rectOf, type Device, type Doc } from './document'
+import { flow, id, rectOf, slotAt, type Device, type Doc } from './document'
 import { between, intersects, round, translate, union, type Axis, type Point, type Rect } from './geometry'
 import { useImageUrl } from './images'
 import { Overlay } from './overlay'
@@ -32,6 +32,19 @@ function moved(doc: Doc, rects: Map<string, Rect>, dx: number, dy: number): Doc 
   }
 }
 
+/** In the row, what’s dragged follows the pointer, and the rest make room for it where its middle has got to */
+function dragAlong(doc: Doc, rects: Map<string, Rect>, bounds: Rect, dx: number, dy: number): Doc {
+  const staying = doc.devices.filter((device) => !rects.has(device.id))
+  const lifted = doc.devices.filter((device) => rects.has(device.id))
+  const index = slotAt(flow({ ...doc, devices: staying }).devices, bounds.x + dx + bounds.width / 2)
+  return moved(flow({ ...doc, devices: staying.toSpliced(index, 0, ...lifted) }), rects, dx, dy)
+}
+
+/** In the row, devices change size only, as the row places them */
+function widened(doc: Doc, rects: Map<string, Rect>, scale: number): Doc {
+  return { ...doc, devices: doc.devices.map((device) => (rects.has(device.id) ? { ...device, width: round(rects.get(device.id)!.width * scale) } : device)) }
+}
+
 function scaled(doc: Doc, rects: Map<string, Rect>, from: Rect, to: Rect): Doc {
   const scale = to.width / from.width
   return {
@@ -52,10 +65,10 @@ function artboardStyle(fill: string | null, theme: Theme, zoom: number): CSSProp
   return { background: `repeating-conic-gradient(${a} 0 25%, ${b} 0 50%) 0 0 / ${tile}px ${tile}px` }
 }
 
-const Placed = memo(function Placed({ device, theme }: { device: Device; theme: Theme }) {
+const Placed = memo(function Placed({ device, theme, lifted }: { device: Device; theme: Theme; lifted: boolean }) {
   const screen = useImageUrl(device.screen)
   return (
-    <div data-device-id={device.id} className="absolute" style={{ left: device.x, top: device.y }}>
+    <div data-device-id={device.id} className="absolute" style={{ left: device.x, top: device.y, zIndex: lifted ? 1 : undefined }}>
       <DeviceView
         model={device.model}
         orientation={device.orientation}
@@ -77,7 +90,11 @@ export function Canvas() {
   const tool = useStore((state) => state.tool)
   const spaceHeld = useStore((state) => state.spaceHeld)
   const rulers = useStore((state) => state.settings.rulers)
+  const selection = useStore((state) => state.selection)
+  const busy = useStore((state) => state.busy)
   const [panning, setPanning] = useState(false)
+  // Dragged along the row, it passes over the rest rather than under
+  const lifting = busy && doc.artboard.layout === 'row'
 
   const local = (event: { clientX: number; clientY: number }): Point => {
     const bounds = element.current!.getBoundingClientRect()
@@ -222,7 +239,7 @@ export function Canvas() {
     }
 
     const handle = target.closest<SVGElement>('[data-handle]')
-    const resizing = handle ? actions.movable() : []
+    const resizing = handle ? actions.selectedDevices() : []
     if (handle && resizing.length > 0) {
       const rects = new Map(resizing.map((device) => [device.id, rectOf(device)]))
       beginGesture()
@@ -234,7 +251,7 @@ export function Canvas() {
 
     const deviceElement = target.closest<HTMLElement>('[data-device-id]')
     const device = deviceElement && state.doc.devices.find((each) => each.id === deviceElement.dataset.deviceId)
-    if (device && !device.locked) {
+    if (device) {
       const wasSelected = state.selection.includes(device.id)
       if (!wasSelected) actions.select(event.shiftKey ? [...state.selection, device.id] : [device.id])
       node.setPointerCapture(pointer)
@@ -273,7 +290,7 @@ export function Canvas() {
       case 'press': {
         if (Math.hypot(screen.x - current.from.x, screen.y - current.from.y) < 3) return
         // Becomes a move, of copies with alt
-        const ids = actions.movable().map((device) => device.id)
+        const ids = actions.selectedDevices().map((device) => device.id)
         const copies = event.altKey ? actions.copiesOf(state.doc, ids) : null
         const sources = state.doc.devices.filter((device) => ids.includes(device.id))
         const rects = new Map(sources.map((device) => [copies?.get(device.id)?.id ?? device.id, rectOf(device)]))
@@ -296,6 +313,10 @@ export function Canvas() {
           dx = 0
           axes.x = false
         }
+        if (state.doc.artboard.layout === 'row') {
+          previewGesture((doc) => dragAlong(actions.withCopies(doc, current.copies), current.rects, current.bounds, dx, dy))
+          return
+        }
         const context = free ? null : actions.snapContext(new Set(current.rects.keys()))
         if (context) {
           const snapped = snapRect(translate(current.bounds, dx, dy), context, axes)
@@ -309,22 +330,28 @@ export function Canvas() {
 
       case 'resize': {
         // Along the diagonal through the handle, from the opposite corner,
-        // or from the centre with alt
+        // or from the centre with alt, as the row always does
         const { bounds, handle } = current
+        const row = state.doc.artboard.layout === 'row'
+        const fromCentre = event.altKey || row
         const west = handle === 'nw' || handle === 'sw'
         const north = handle === 'nw' || handle === 'ne'
         const corner = { x: west ? bounds.x : bounds.x + bounds.width, y: north ? bounds.y : bounds.y + bounds.height }
         const centre = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 }
-        const anchor = event.altKey ? centre : { x: west ? bounds.x + bounds.width : bounds.x, y: north ? bounds.y + bounds.height : bounds.y }
+        const anchor = fromCentre ? centre : { x: west ? bounds.x + bounds.width : bounds.x, y: north ? bounds.y + bounds.height : bounds.y }
         const reach = { x: corner.x - anchor.x, y: corner.y - anchor.y }
         const along = ((world.x - anchor.x) * reach.x + (world.y - anchor.y) * reach.y) / (reach.x ** 2 + reach.y ** 2)
         const scale = Math.max(along, 16 / bounds.width)
+        if (row) {
+          previewGesture((doc) => flow(widened(doc, current.rects, scale)))
+          return
+        }
         const width = bounds.width * scale
         const height = bounds.height * scale
-        let rect = event.altKey
+        let rect = fromCentre
           ? { x: centre.x - width / 2, y: centre.y - height / 2, width, height }
           : { x: west ? anchor.x - width : anchor.x, y: north ? anchor.y - height : anchor.y, width, height }
-        const context = free || event.altKey ? null : actions.snapContext(new Set(current.rects.keys()))
+        const context = free || fromCentre ? null : actions.snapContext(new Set(current.rects.keys()))
         if (context) {
           const snapped = snapResize(rect, { x: west ? 'end' : 'start', y: north ? 'end' : 'start' }, context)
           rect = snapped.rect
@@ -336,7 +363,7 @@ export function Canvas() {
 
       case 'marquee': {
         const area = between(current.world, world)
-        const touched = state.doc.devices.filter((device) => actions.selectable(device) && intersects(rectOf(device), area)).map((device) => device.id)
+        const touched = state.doc.devices.filter((device) => intersects(rectOf(device), area)).map((device) => device.id)
         set({ marquee: area, selection: [...new Set([...current.base, ...touched])] })
         return
       }
@@ -384,6 +411,13 @@ export function Canvas() {
       }
       case 'marquee':
         break
+      case 'move': {
+        // Let go in the row, what was dragged settles into its place
+        const settled = flow(state.doc)
+        if (settled !== state.doc) previewGesture(() => settled)
+        endGesture()
+        break
+      }
       default:
         endGesture()
     }
@@ -393,15 +427,14 @@ export function Canvas() {
   const onDoubleClick = (event: MouseEvent<HTMLDivElement>) => {
     const target = (event.target as Element).closest<HTMLElement>('[data-device-id]')
     const device = target && get().doc.devices.find((each) => each.id === target.dataset.deviceId)
-    if (device && !device.locked) actions.chooseScreen(device.id)
+    if (device) actions.chooseScreen(device.id)
   }
 
   const onDragOver = (event: DragEvent<HTMLDivElement>) => {
-    const files = event.dataTransfer.types.includes('Files')
-    if (!files && !event.dataTransfer.types.includes(actions.MODEL_TYPE)) return
+    if (!event.dataTransfer.types.includes('Files')) return
     event.preventDefault()
     event.dataTransfer.dropEffect = 'copy'
-    const target = files ? ((event.target as Element).closest<HTMLElement>('[data-device-id]')?.dataset.deviceId ?? null) : null
+    const target = (event.target as Element).closest<HTMLElement>('[data-device-id]')?.dataset.deviceId ?? null
     if (target !== get().dropTarget) set({ dropTarget: target })
   }
 
@@ -414,11 +447,6 @@ export function Canvas() {
     const target = get().dropTarget
     set({ dropTarget: null, hovered: null })
     const world = toWorld(get().viewport, local(event))
-    const model = event.dataTransfer.getData(actions.MODEL_TYPE)
-    if (model) {
-      actions.addDevice(model, world)
-      return
-    }
     const files = [...event.dataTransfer.files].filter((file) => file.type.startsWith('image/'))
     if (files.length === 0) return
     if (target) {
@@ -446,7 +474,9 @@ export function Canvas() {
     >
       <div className="absolute top-0 left-0 origin-top-left" style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
         <div className="absolute top-0 left-0" style={{ width: doc.artboard.width, height: doc.artboard.height, ...artboardStyle(doc.artboard.fill, doc.theme, viewport.zoom) }} />
-        {doc.devices.map((device) => (device.hidden ? null : <Placed key={device.id} device={device} theme={doc.theme} />))}
+        {doc.devices.map((device) => (
+          <Placed key={device.id} device={device} theme={doc.theme} lifted={lifting && selection.includes(device.id)} />
+        ))}
       </div>
       <Overlay />
       {rulers && <Rulers />}

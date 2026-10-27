@@ -98,7 +98,6 @@ export function Toolbar() {
 
   return (
     <header className="flex h-12 shrink-0 items-center gap-0.5 border-b border-olive-150 bg-white px-2 dark:border-olive-900 dark:bg-olive-975">
-      <IconButton icon="sidebar-left" label="Layers and devices" pressed={settings.panels.left} onClick={() => actions.togglePanel('left')} />
       <h1 className="px-2 text-sm font-medium">Device</h1>
       <Divider />
       <Tools />
@@ -123,7 +122,7 @@ export function Toolbar() {
       <Zoom />
       <Divider />
       <Export />
-      <IconButton icon="sidebar-right" label="Inspector" pressed={settings.panels.right} onClick={() => actions.togglePanel('right')} className="ml-1" />
+      <IconButton icon="sidebar-right" label="Inspector" pressed={settings.inspector} onClick={() => actions.toggle('inspector')} className="ml-1" />
     </header>
   )
 }

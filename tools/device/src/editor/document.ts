@@ -1,6 +1,6 @@
 import type { Tone } from '../devices/frames'
 import { layoutOf } from '../devices/frames'
-import { modelById, upright, type Kind, type Orientation, type Theme } from '../devices/models'
+import { modelById, upright, type Orientation, type Theme } from '../devices/models'
 import { round, type Axis, type Rect } from './geometry'
 
 export type StatusBar = Tone | 'none'
@@ -17,9 +17,6 @@ export interface Device {
   /** The screenshot, by its id in the image store */
   screen: string | null
   statusBar: StatusBar
-  name: string | null
-  hidden: boolean
-  locked: boolean
 }
 
 export interface Guide {
@@ -29,18 +26,24 @@ export interface Guide {
   value: number
 }
 
+/** Devices in a centred row that lays itself out, or each where it’s put */
+export type Layout = 'row' | 'free'
+
 export interface Artboard {
   width: number
   height: number
   /** A colour, or null to leave it clear */
   fill: string | null
+  layout: Layout
+  /** Between devices in the row */
+  gap: number
 }
 
 export interface Doc {
   version: 1
   artboard: Artboard
   theme: Theme
-  /** From the back to the front */
+  /** From the back to the front, and in the row, from left to right */
   devices: Device[]
   guides: Guide[]
 }
@@ -55,11 +58,14 @@ export interface Settings {
   /** Shown guides snap too */
   guides: boolean
   rulers: boolean
-  panels: { left: boolean; right: boolean }
+  inspector: boolean
 }
 
 /** mcknny’s composed images, which its Mockup lays devices out on */
 export const CANVAS = { width: 1776, height: 1152 }
+
+/** mcknny’s artboard, with its devices in a row 57 apart, as its Mockup sets them */
+export const defaultArtboard: Artboard = { ...CANVAS, fill: null, layout: 'row', gap: 57 }
 
 export const id = () => crypto.randomUUID()
 
@@ -72,14 +78,6 @@ export function rectOf(device: Device): Rect {
   return { x: device.x, y: device.y, width: device.width, height: heightOf(device) }
 }
 
-export function nameOf(device: Device): string {
-  return device.name ?? modelById(device.model).name
-}
-
-export function kindOf(device: Device): Kind {
-  return modelById(device.model).kind
-}
-
 export function createDevice(model: string, values: Partial<Device> = {}): Device {
   return {
     id: id(),
@@ -90,9 +88,6 @@ export function createDevice(model: string, values: Partial<Device> = {}): Devic
     width: 380,
     screen: null,
     statusBar: 'dark',
-    name: null,
-    hidden: false,
-    locked: false,
     ...values,
   }
 }
@@ -102,22 +97,44 @@ export function createDevice(model: string, values: Partial<Device> = {}): Devic
  * of 1152, unless that’s wider than three quarters of the artboard. Its
  * phone comes out 380 wide and its desktop 1326, as its Mockup has them
  */
-export function startingWidth(model: string, orientation: Orientation, artboard: Artboard): number {
+export function startingWidth(model: string, orientation: Orientation, artboard: Pick<Artboard, 'width' | 'height'>): number {
   const layout = layoutOf(model, orientation)
   const scale = Math.min(artboard.width / CANVAS.width, artboard.height / CANVAS.height)
   const height = ((380 * 936) / 440) * scale
   return round(Math.min((height * layout.width) / layout.height, artboard.width * 0.75))
 }
 
-export const layouts = [
-  { id: 'phones-3', name: 'Three phones' },
-  { id: 'phones-2', name: 'Two phones' },
-  { id: 'phones-1', name: 'One phone' },
-  { id: 'crop', name: 'Cropped phone' },
-  { id: 'desktop', name: 'Desktop' },
-] as const
+/**
+ * Lays devices out as a centred flexbox would: in a row, each its own size
+ * and the gap apart, centred across and down the artboard. More than fit
+ * run over both edges alike. Free devices stay where they are
+ */
+export function flow(doc: Doc): Doc {
+  const { layout, gap, width, height } = doc.artboard
+  if (layout !== 'row') return doc
+  const span = doc.devices.reduce((total, device) => total + device.width, 0) + Math.max(0, doc.devices.length - 1) * gap
+  let left = (width - span) / 2
+  let moved = false
+  const devices = doc.devices.map((device) => {
+    const x = round(left)
+    const y = round((height - heightOf(device)) / 2)
+    left += device.width + gap
+    if (x === device.x && y === device.y) return device
+    moved = true
+    return { ...device, x, y }
+  })
+  return moved ? { ...doc, devices } : doc
+}
 
-export type LayoutId = (typeof layouts)[number]['id']
+/** From left to right, by their middles */
+export function byPosition(devices: Device[]): Device[] {
+  return devices.toSorted((a, b) => a.x + a.width / 2 - (b.x + b.width / 2))
+}
+
+/** Where in a row something dropped at x goes: after every device whose middle it’s past */
+export function slotAt(devices: Device[], x: number): number {
+  return devices.filter((device) => device.x + device.width / 2 < x).length
+}
 
 type Screen = Pick<Device, 'screen' | 'statusBar'>
 
@@ -131,54 +148,20 @@ const samples: Record<'phone' | 'desktop', Screen[]> = {
   desktop: [{ screen: 'sample:desktop-home', statusBar: 'dark' }],
 }
 
-/**
- * mcknny’s Mockup layouts, at its sizes on a 1776 × 1152 artboard and in
- * proportion on any other: one to three phones 380 wide, 57 apart and
- * centred, one cropped phone 1072 wide from 187 down, or a desktop 1326
- * wide. Screens carry over, in order, from devices of the same kind, and
- * while every screen is one of mcknny’s wireframes, they fill any gaps
- */
-export function arrange(doc: Doc, layout: LayoutId): Doc {
-  const { width: W, height: H } = doc.artboard
-  const scale = Math.min(W / CANVAS.width, H / CANVAS.height)
-  const showing = doc.devices.every((device) => !device.screen || device.screen.startsWith('sample:'))
-  const screens = (kinds: Kind[]): Screen[] => {
-    const own = doc.devices.filter((device) => device.screen && kinds.includes(kindOf(device))).map(({ screen, statusBar }) => ({ screen, statusBar }))
-    if (!showing) return own
-    const fallback = samples[kinds.includes('phone') ? 'phone' : 'desktop'].filter((sample) => !own.some((each) => each.screen === sample.screen))
-    return [...own, ...fallback]
-  }
+const wide = (model: string) => ['laptop', 'desktop'].includes(modelById(model).kind)
 
-  if (layout === 'desktop') {
-    const width = 1326 * scale
-    const height = (width * 892) / 1464
-    const [screen] = screens(['desktop', 'laptop'])
-    return { ...doc, devices: [createDevice('desktop', { ...screen, x: round((W - width) / 2), y: round((H - height) / 2), width: round(width) })] }
-  }
-
-  const phones = screens(['phone'])
-  if (layout === 'crop') {
-    const width = 1072 * scale
-    return { ...doc, devices: [createDevice('phone', { ...phones[0], x: round((W - width) / 2), y: round(187 * scale), width: round(width) })] }
-  }
-
-  const count = Number(layout.slice(-1))
-  const width = 380 * scale
-  const gap = 57 * scale
-  const height = (width * 936) / 440
-  const left = (W - (count * width + (count - 1) * gap)) / 2
-  return {
-    ...doc,
-    devices: Array.from({ length: count }, (_, index) =>
-      createDevice('phone', { ...phones[index], x: round(left + index * (width + gap)), y: round((H - height) / 2), width: round(width) }),
-    ),
-  }
+/** A wireframe the shape of another model’s screen, for a device changing to it */
+export function sampleFor(device: Device, model: string): Screen {
+  const { screen, statusBar } = device
+  if (!screen?.startsWith('sample:') || wide(device.model) === wide(model)) return { screen, statusBar }
+  return wide(model) ? samples.desktop[0] : samples.phone[0]
 }
 
 /** Three phones, as mcknny’s Mockup lays them out, with its wireframes on their screens */
 export function defaultDoc(): Doc {
-  const doc: Doc = { version: 1, artboard: { ...CANVAS, fill: null }, theme: 'light', devices: [], guides: [] }
-  return arrange(doc, 'phones-3')
+  const width = startingWidth('phone', 'portrait', defaultArtboard)
+  const devices = samples.phone.map((sample) => createDevice('phone', { ...sample, width }))
+  return flow({ version: 1, artboard: defaultArtboard, theme: 'light', devices, guides: [] })
 }
 
 export const defaultSettings: Settings = {
@@ -188,7 +171,7 @@ export const defaultSettings: Settings = {
   columns: { count: 12, gutter: 32, margin: 64, visible: false },
   guides: true,
   rulers: true,
-  panels: { left: true, right: true },
+  inspector: true,
 }
 
 /** The edges of the layout columns across the artboard */

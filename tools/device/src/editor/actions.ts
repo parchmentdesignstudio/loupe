@@ -1,18 +1,20 @@
 import { layoutOf } from '../devices/frames'
 import { modelById, models, screenSize, upright, type Orientation, type Theme } from '../devices/models'
 import {
-  arrange,
+  byPosition,
   columnEdges,
   createDevice,
   defaultDoc,
   heightOf,
   id,
   rectOf,
+  sampleFor,
+  slotAt,
   startingWidth,
   type Artboard,
   type Device,
   type Doc,
-  type LayoutId,
+  type Layout,
   type Settings,
 } from './document'
 import { renderPng } from './export'
@@ -22,29 +24,26 @@ import type { SnapContext } from './snapping'
 import { change, get, set, updateSettings } from './store'
 import { fit, step, toWorld, visibleArea, zoomAt } from './viewport'
 
-export const MODEL_TYPE = 'application/x-device-model'
-
 // Selection
 
 export function select(ids: string[]) {
   set({ selection: [...new Set(ids)] })
 }
 
-export const selectable = (device: Device) => !device.hidden && !device.locked
-
 export function selectAll() {
-  select(get().doc.devices.filter(selectable).map((device) => device.id))
-}
-
-/** The selection without what’s hidden or locked, which stays put */
-export function movable(): Device[] {
-  const { doc, selection } = get()
-  return doc.devices.filter((device) => selection.includes(device.id) && selectable(device))
+  select(get().doc.devices.map((device) => device.id))
 }
 
 export function selectedDevices(): Device[] {
   const { doc, selection } = get()
   return doc.devices.filter((device) => selection.includes(device.id))
+}
+
+/** Just after the last of the selection, or at the end with none */
+function afterSelection(doc: Doc): number {
+  const { selection } = get()
+  const last = doc.devices.findLastIndex((device) => selection.includes(device.id))
+  return last >= 0 ? last + 1 : doc.devices.length
 }
 
 // Snapping
@@ -56,7 +55,7 @@ export function snapContext(excluding: Set<string>): SnapContext | null {
   return {
     threshold: 6 / viewport.zoom,
     artboard: settings.objects ? { x: 0, y: 0, width: doc.artboard.width, height: doc.artboard.height } : null,
-    objects: settings.objects ? doc.devices.filter((device) => !device.hidden && !excluding.has(device.id)).map(rectOf) : [],
+    objects: settings.objects ? doc.devices.filter((device) => !excluding.has(device.id)).map(rectOf) : [],
     guides: settings.guides ? doc.guides.filter((guide) => !excluding.has(guide.id)) : [],
     columns: settings.columns.visible ? columnEdges(doc.artboard, settings.columns).flatMap(({ x, width }) => [x, x + width]) : [],
     grid: settings.grid.snap ? settings.grid.size : null,
@@ -81,25 +80,37 @@ function placeFor(): Point {
   return inside ? centre : { x: width / 2, y: height / 2 }
 }
 
-/** Adds a device centred on a point, on the grid, stepped on from any already there */
-export function addDevice(model: string, at: Point = placeFor(), values: Partial<Device> = {}): Device {
+/**
+ * Adds a device. In the row it goes where it’s dropped, or else after the
+ * selection, or at the end. Free, it’s centred on the point, on the grid,
+ * and stepped on from any already about there
+ */
+export function addDevice(model: string, at?: Point, values: Partial<Device> = {}): Device {
   const { doc, settings } = get()
   const orientation = values.orientation ?? upright(modelById(model))
   const width = values.width ?? startingWidth(model, orientation, doc.artboard)
-  const grid = settings.snap && settings.grid.snap ? settings.grid.size : 0
-  const snap = (value: number) => (grid ? Math.round(value / grid) * grid : round(value))
-  let x = snap(at.x - width / 2)
-  let y = snap(at.y - heightOf({ model, orientation, width }) / 2)
-  // Snapping to the grid can leave it a point or two off one already there, so near enough counts
-  const step = 24
-  while (doc.devices.some((device) => Math.abs(device.x - x) < step / 2 && Math.abs(device.y - y) < step / 2)) {
-    x += step
-    y += step
+  let device: Device
+  if (doc.artboard.layout === 'row') {
+    device = createDevice(model, { ...values, orientation, width })
+    const index = at ? slotAt(doc.devices, at.x) : afterSelection(doc)
+    change((current) => ({ ...current, devices: current.devices.toSpliced(index, 0, device) }))
+  } else {
+    const point = at ?? placeFor()
+    const grid = settings.snap && settings.grid.snap ? settings.grid.size : 0
+    const snap = (value: number) => (grid ? Math.round(value / grid) * grid : round(value))
+    let x = snap(point.x - width / 2)
+    let y = snap(point.y - heightOf({ model, orientation, width }) / 2)
+    // Snapping to the grid can leave it a point or two off one already there, so near enough counts
+    const step = 24
+    while (doc.devices.some((each) => Math.abs(each.x - x) < step / 2 && Math.abs(each.y - y) < step / 2)) {
+      x += step
+      y += step
+    }
+    device = createDevice(model, { ...values, orientation, width, x, y })
+    change((current) => ({ ...current, devices: [...current.devices, device] }))
   }
-  const device = createDevice(model, { ...values, orientation, width, x, y })
-  change((current) => ({ ...current, devices: [...current.devices, device] }))
   set({ selection: [device.id], tool: 'select' })
-  return device
+  return get().doc.devices.find((each) => each.id === device.id) ?? device
 }
 
 /** What Add device adds, with nothing to choose: mcknny’s phone */
@@ -119,7 +130,7 @@ export function removeSelected() {
 export function copiesOf(doc: Doc, ids: string[], offset = 0): Map<string, Device> {
   const copies = new Map<string, Device>()
   for (const device of doc.devices) {
-    if (ids.includes(device.id)) copies.set(device.id, { ...device, id: id(), x: round(device.x + offset), y: round(device.y + offset), hidden: false, locked: false })
+    if (ids.includes(device.id)) copies.set(device.id, { ...device, id: id(), x: round(device.x + offset), y: round(device.y + offset) })
   }
   return copies
 }
@@ -139,14 +150,14 @@ export function duplicate(offset = 24) {
 
 export function nudge(dx: number, dy: number) {
   updateDevices(
-    movable().map((device) => device.id),
+    selectedDevices().map((device) => device.id),
     (device) => ({ x: round(device.x + dx), y: round(device.y + dy) }),
   )
 }
 
-/** Moves and scales the selection as one, to new bounds */
+/** Moves and scales the selection as one, to new bounds. In the row, only its size counts */
 export function setBounds(next: Partial<Rect>) {
-  const devices = movable()
+  const devices = selectedDevices()
   const bounds = union(devices.map(rectOf))
   if (!bounds) return
   const scale = next.width !== undefined ? next.width / bounds.width : next.height !== undefined ? next.height / bounds.height : 1
@@ -167,7 +178,7 @@ export type Edge = 'left' | 'centre' | 'right' | 'top' | 'middle' | 'bottom'
 
 /** Lines devices up: one with the artboard, more with each other */
 export function align(edge: Edge) {
-  const devices = movable()
+  const devices = selectedDevices()
   if (devices.length === 0) return
   const { artboard } = get().doc
   const frame = devices.length === 1 ? { x: 0, y: 0, width: artboard.width, height: artboard.height } : union(devices.map(rectOf))!
@@ -185,7 +196,7 @@ export function align(edge: Edge) {
 
 /** Spaces three or more devices evenly between the outermost */
 export function distribute(axis: Axis) {
-  const placed = movable()
+  const placed = selectedDevices()
     .map((device) => ({ device, rect: rectOf(device) }))
     .sort((a, b) => start(a.rect, axis) - start(b.rect, axis))
   if (placed.length < 3) return
@@ -202,6 +213,7 @@ export function distribute(axis: Axis) {
 
 export type Order = 'forward' | 'backward' | 'front' | 'back'
 
+/** Free, up or down the stack; in the row, along it to the right or left */
 export function reorder(order: Order) {
   const { selection } = get()
   if (selection.length === 0) return
@@ -223,7 +235,7 @@ export function reorder(order: Order) {
   })
 }
 
-/** Changes devices to another model, keeping their heights and centres */
+/** Changes devices to another model, keeping their heights and centres, and a wireframe to the new shape */
 export function switchModel(ids: string[], model: string) {
   const next = modelById(model)
   updateDevices(ids, (device) => {
@@ -231,7 +243,7 @@ export function switchModel(ids: string[], model: string) {
     const rect = rectOf(device)
     const layout = layoutOf(model, orientation)
     const width = round((rect.height * layout.width) / layout.height)
-    return { model, orientation, width, x: round(rect.x + (rect.width - width) / 2) }
+    return { model, orientation, width, x: round(rect.x + (rect.width - width) / 2), ...sampleFor(device, model) }
   })
 }
 
@@ -247,22 +259,6 @@ export function rotate(ids: string[]) {
     const height = (width * layout.height) / layout.width
     return { orientation, width: round(width), x: round(rect.x + (rect.width - width) / 2), y: round(rect.y + (rect.height - height) / 2) }
   })
-}
-
-export function rename(deviceId: string, name: string) {
-  updateDevices([deviceId], () => ({ name: name.trim() || null }))
-}
-
-export function toggleHidden(ids: string[]) {
-  const devices = get().doc.devices.filter((device) => ids.includes(device.id))
-  const hidden = !devices.every((device) => device.hidden)
-  updateDevices(ids, () => ({ hidden }))
-}
-
-export function toggleLocked(ids: string[]) {
-  const devices = get().doc.devices.filter((device) => ids.includes(device.id))
-  const locked = !devices.every((device) => device.locked)
-  updateDevices(ids, () => ({ locked }))
 }
 
 // Screens
@@ -287,14 +283,14 @@ export async function placeScreen(deviceId: string, file: File) {
   updateDevices([deviceId], (device) => ({ screen: added.id, statusBar: device.statusBar === 'none' ? 'none' : added.statusBar }))
 }
 
-/** A device for each image, of the model whose screen it fits */
+/** A device for each image, of the model whose screen it fits: next along in the row, or stepped on down and right */
 export async function addScreens(files: File[], at?: Point) {
   let point = at
   for (const file of files) {
     const added = await addImage(file)
     const { model, orientation } = closestModel(added.width, added.height)
     const device = addDevice(model, point, { orientation, screen: added.id, statusBar: added.statusBar })
-    point = { x: device.x + device.width / 2 + 48, y: device.y + heightOf(device) / 2 + 48 }
+    point = get().doc.artboard.layout === 'row' ? undefined : { x: device.x + device.width / 2 + 48, y: device.y + heightOf(device) / 2 + 48 }
   }
 }
 
@@ -311,8 +307,8 @@ export function chooseScreen(deviceId: string) {
 }
 
 export function pasteImages(files: File[]) {
-  const [only] = movable()
-  if (only && movable().length === 1) return placeScreen(only.id, files[0])
+  const selected = selectedDevices()
+  if (selected.length === 1) return placeScreen(selected[0].id, files[0])
   return addScreens(files)
 }
 
@@ -324,11 +320,15 @@ export function copySelection(): number {
   return clipboard.length
 }
 
+/** Free, on top and stepped on; in the row, after the selection */
 export function pasteDevices() {
   if (clipboard.length === 0) return
   clipboard = clipboard.map((device) => ({ ...device, id: id(), x: round(device.x + 24), y: round(device.y + 24) }))
   const copies = clipboard
-  change((doc) => ({ ...doc, devices: [...doc.devices, ...copies] }))
+  change((doc) => {
+    const index = doc.artboard.layout === 'row' ? afterSelection(doc) : doc.devices.length
+    return { ...doc, devices: doc.devices.toSpliced(index, 0, ...copies) }
+  })
   select(copies.map((device) => device.id))
 }
 
@@ -348,13 +348,15 @@ export function setArtboard(patch: Partial<Artboard>) {
   change((doc) => ({ ...doc, artboard: { ...doc.artboard, ...patch } }))
 }
 
-export function setTheme(theme: Theme) {
-  change((doc) => (doc.theme === theme ? doc : { ...doc, theme }))
+/** Into the row in the order they stand, from left to right, or free from where they are */
+export function setLayout(layout: Layout) {
+  change((doc) =>
+    doc.artboard.layout === layout ? doc : { ...doc, artboard: { ...doc.artboard, layout }, devices: layout === 'row' ? byPosition(doc.devices) : doc.devices },
+  )
 }
 
-export function applyLayout(layout: LayoutId) {
-  change((doc) => arrange(doc, layout))
-  select([])
+export function setTheme(theme: Theme) {
+  change((doc) => (doc.theme === theme ? doc : { ...doc, theme }))
 }
 
 export function startOver() {
@@ -376,7 +378,7 @@ export function fitArtboard() {
 }
 
 export function zoomToSelection() {
-  const bounds = union(selectedDevices().filter((device) => !device.hidden).map(rectOf))
+  const bounds = union(selectedDevices().map(rectOf))
   if (!bounds) return fitArtboard()
   set({ viewport: fit(bounds, area()) })
 }
@@ -392,7 +394,7 @@ export function zoomStep(direction: 1 | -1) {
 
 // Settings
 
-export function toggle(key: 'snap' | 'objects' | 'guides' | 'rulers') {
+export function toggle(key: 'snap' | 'objects' | 'guides' | 'rulers' | 'inspector') {
   updateSettings((settings) => ({ ...settings, [key]: !settings[key] }))
 }
 
@@ -402,10 +404,6 @@ export function setGrid(patch: Partial<Settings['grid']>) {
 
 export function setColumns(patch: Partial<Settings['columns']>) {
   updateSettings((settings) => ({ ...settings, columns: { ...settings.columns, ...patch } }))
-}
-
-export function togglePanel(side: 'left' | 'right') {
-  updateSettings((settings) => ({ ...settings, panels: { ...settings.panels, [side]: !settings.panels[side] } }))
 }
 
 // Export

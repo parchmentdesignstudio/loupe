@@ -29,8 +29,6 @@ function keyDown(event: KeyboardEvent) {
     if (event.code === 'Digit0') return handled(), actions.zoomTo(1)
     if (event.code === 'Quote') return handled(), actions.setGrid({ visible: !settings.grid.visible })
     if (event.code === 'KeyE' && event.shiftKey) return handled(), void actions.exportImage(2)
-    if (event.code === 'KeyH' && event.shiftKey) return handled(), actions.toggleHidden(get().selection)
-    if (event.code === 'KeyL' && event.shiftKey) return handled(), actions.toggleLocked(get().selection)
     if (event.code === 'BracketRight') return handled(), actions.reorder(event.altKey ? 'front' : 'forward')
     if (event.code === 'BracketLeft') return handled(), actions.reorder(event.altKey ? 'back' : 'backward')
     return
@@ -38,6 +36,12 @@ function keyDown(event: KeyboardEvent) {
 
   if (event.code in arrows) {
     event.preventDefault()
+    // In the row, along it, or with shift, to either end
+    if (get().doc.artboard.layout === 'row') {
+      if (event.code === 'ArrowLeft') actions.reorder(event.shiftKey ? 'back' : 'backward')
+      if (event.code === 'ArrowRight') actions.reorder(event.shiftKey ? 'front' : 'forward')
+      return
+    }
     const distance = event.shiftKey ? (settings.snap && settings.grid.snap ? settings.grid.size : 10) : 1
     const [x, y] = arrows[event.code]
     return actions.nudge(x * distance, y * distance)
