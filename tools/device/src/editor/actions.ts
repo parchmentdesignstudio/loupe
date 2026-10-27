@@ -4,7 +4,6 @@ import {
   byPosition,
   columnEdges,
   createDevice,
-  defaultDoc,
   heightOf,
   id,
   rectOf,
@@ -357,12 +356,6 @@ export function setLayout(layout: Layout) {
 
 export function setTheme(theme: Theme) {
   change((doc) => (doc.theme === theme ? doc : { ...doc, theme }))
-}
-
-export function startOver() {
-  change(() => defaultDoc())
-  select([])
-  fitArtboard()
 }
 
 // View

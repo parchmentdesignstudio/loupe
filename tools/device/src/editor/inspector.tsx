@@ -256,11 +256,6 @@ function Artboard() {
       </Section>
 
       {artboard.layout === 'free' && <Placing />}
-
-      <Section title="Start again">
-        <Note>Back to mcknny’s three phones on its artboard. You can undo it.</Note>
-        <TextButton onClick={actions.startOver}>Start again</TextButton>
-      </Section>
     </>
   )
 }

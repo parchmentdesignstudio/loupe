@@ -53,3 +53,12 @@ Asked for: the left panel to go, as shortcuts are enough and there’ll never be
 - Hide and lock went with it, ⇧⌘H and ⇧⌘L too: with the list gone, nothing could bring a device back. Any device saved hidden or locked shows again
 - Adding a particular model is now Add device, then picking the model in the inspector. A screenshot dropped on the canvas still becomes the model it fits
 - Seven Lucide stand-ins aren’t needed any more: iphone, ipad, laptopcomputer, eye, eye-slash, lock and lock-open
+
+### 4. No start again
+
+27 October 2026 · Trying
+
+Asked for: the start again section to go, as it isn’t needed.
+
+- Removed: Start again at the foot of the inspector, which put mcknny’s three phones back on its artboard
+- With nothing saved, the tool still opens on those three phones
