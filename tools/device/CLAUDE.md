@@ -9,6 +9,10 @@ The same as mcknny’s:
 - **Quotes**: curly, ’ not ', in anything that reads as copy
 - **Comments**: only for a true gotcha, in a line or two
 
+## Working on it
+
+Steve is simplifying the tool one change at a time. Each change goes in `LOG.md`: what he asked for, what was done, and any control it repeats. Nothing comes out until he settles a change, as a later idea may build on an earlier one.
+
 ## Where things come from
 
 - The phone and desktop frames are mcknny’s, from its `src/assets/images/devices`, and stay as they are. Other devices are drawn in `src/devices/frames.ts` to the same build

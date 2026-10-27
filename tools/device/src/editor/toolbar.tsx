@@ -1,8 +1,29 @@
 import { useState } from 'react'
-import { Divider, IconButton, Menu, MenuItem, Segmented } from '../ui/controls'
+import { cx, Divider, IconButton, Menu, MenuItem, Segmented } from '../ui/controls'
 import { Icon } from '../ui/icon'
 import * as actions from './actions'
 import { redo, set, undo, useStore } from './store'
+
+function Tools() {
+  const tool = useStore((state) => state.tool)
+  return (
+    <>
+      <IconButton icon="cursorarrow" label="Select" shortcut="V" pressed={tool === 'select'} onClick={() => set({ tool: 'select' })} />
+      <IconButton icon="hand-raised" label="Pan" shortcut="H, or hold space" pressed={tool === 'hand'} onClick={() => set({ tool: 'hand' })} />
+    </>
+  )
+}
+
+function UndoRedo() {
+  const canUndo = useStore((state) => state.past.length > 0)
+  const canRedo = useStore((state) => state.future.length > 0)
+  return (
+    <>
+      <IconButton icon="arrow-uturn-backward" label="Undo" shortcut="⌘Z" disabled={!canUndo} onClick={undo} />
+      <IconButton icon="arrow-uturn-forward" label="Redo" shortcut="⇧⌘Z" disabled={!canRedo} onClick={redo} />
+    </>
+  )
+}
 
 function Zoom() {
   const zoom = useStore((state) => state.viewport.zoom)
@@ -72,22 +93,17 @@ function Export() {
 }
 
 export function Toolbar() {
-  const tool = useStore((state) => state.tool)
   const settings = useStore((state) => state.settings)
   const theme = useStore((state) => state.doc.theme)
-  const canUndo = useStore((state) => state.past.length > 0)
-  const canRedo = useStore((state) => state.future.length > 0)
 
   return (
     <header className="flex h-12 shrink-0 items-center gap-0.5 border-b border-olive-150 bg-white px-2 dark:border-olive-900 dark:bg-olive-975">
       <IconButton icon="sidebar-left" label="Layers and devices" pressed={settings.panels.left} onClick={() => actions.togglePanel('left')} />
       <h1 className="px-2 text-sm font-medium">Device</h1>
       <Divider />
-      <IconButton icon="cursorarrow" label="Select" shortcut="V" pressed={tool === 'select'} onClick={() => set({ tool: 'select' })} />
-      <IconButton icon="hand-raised" label="Pan" shortcut="H, or hold space" pressed={tool === 'hand'} onClick={() => set({ tool: 'hand' })} />
+      <Tools />
       <Divider />
-      <IconButton icon="arrow-uturn-backward" label="Undo" shortcut="⌘Z" disabled={!canUndo} onClick={undo} />
-      <IconButton icon="arrow-uturn-forward" label="Redo" shortcut="⇧⌘Z" disabled={!canRedo} onClick={redo} />
+      <UndoRedo />
       <Divider />
       <IconButton icon="magnet" label="Snapping" shortcut="hold ⌘ to place freely" pressed={settings.snap} onClick={() => actions.toggle('snap')} />
       <IconButton icon="square-grid-3x3" label="Grid" shortcut="⌘’" pressed={settings.grid.visible} onClick={() => actions.setGrid({ visible: !settings.grid.visible })} />
@@ -109,5 +125,40 @@ export function Toolbar() {
       <Export />
       <IconButton icon="sidebar-right" label="Inspector" pressed={settings.panels.right} onClick={() => actions.togglePanel('right')} className="ml-1" />
     </header>
+  )
+}
+
+/** Some of the top’s quick actions again, floating over the bottom of the canvas, with a device to add in one click */
+export function FloatingToolbar() {
+  const rulers = useStore((state) => state.settings.rulers)
+  const { name, screen } = actions.defaultModel
+
+  return (
+    <div className={cx('pointer-events-none absolute right-0 bottom-4 flex justify-center', rulers ? 'left-5' : 'left-0')}>
+      {/* Inside the canvas, so scrolling over it pans, but a click here mustn’t start a drag there */}
+      <div
+        role="group"
+        aria-label="Quick actions"
+        onPointerDown={(event) => event.stopPropagation()}
+        className="pointer-events-auto flex cursor-default items-center gap-0.5 rounded-[10px] bg-white p-1 shadow-float dark:bg-olive-975 dark:shadow-dark-float"
+      >
+        <Tools />
+        <Divider />
+        <button
+          type="button"
+          title={`Add device (${name}, ${screen.width} × ${screen.height})`}
+          onClick={() => actions.addDefaultDevice()}
+          className={cx(
+            'flex h-8 shrink-0 items-center gap-1.5 rounded-md pr-2.5 pl-2 text-[13px] font-medium outline-avocado',
+            'hover:bg-olive-100 focus-visible:outline-2 dark:hover:bg-olive-900',
+          )}
+        >
+          <Icon name="plus" />
+          Add device
+        </button>
+        <Divider />
+        <UndoRedo />
+      </div>
+    </div>
   )
 }

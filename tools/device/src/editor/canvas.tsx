@@ -9,6 +9,7 @@ import { Overlay } from './overlay'
 import { Rulers } from './rulers'
 import { snapRect, snapResize, snapValue } from './snapping'
 import { beginGesture, cancelGesture, endGesture, get, previewGesture, set, updateSettings, useStore, type Viewport } from './store'
+import { FloatingToolbar } from './toolbar'
 import { RULER, toWorld, zoomAt } from './viewport'
 
 export type Handle = 'nw' | 'ne' | 'sw' | 'se'
@@ -449,6 +450,7 @@ export function Canvas() {
       </div>
       <Overlay />
       {rulers && <Rulers />}
+      <FloatingToolbar />
     </div>
   )
 }

@@ -90,14 +90,23 @@ export function addDevice(model: string, at: Point = placeFor(), values: Partial
   const snap = (value: number) => (grid ? Math.round(value / grid) * grid : round(value))
   let x = snap(at.x - width / 2)
   let y = snap(at.y - heightOf({ model, orientation, width }) / 2)
-  while (doc.devices.some((device) => Math.abs(device.x - x) < 1 && Math.abs(device.y - y) < 1)) {
-    x += 24
-    y += 24
+  // Snapping to the grid can leave it a point or two off one already there, so near enough counts
+  const step = 24
+  while (doc.devices.some((device) => Math.abs(device.x - x) < step / 2 && Math.abs(device.y - y) < step / 2)) {
+    x += step
+    y += step
   }
   const device = createDevice(model, { ...values, orientation, width, x, y })
   change((current) => ({ ...current, devices: [...current.devices, device] }))
-  select([device.id])
+  set({ selection: [device.id], tool: 'select' })
   return device
+}
+
+/** What Add device adds, with nothing to choose: mcknny’s phone */
+export const defaultModel = modelById('phone')
+
+export function addDefaultDevice(): Device {
+  return addDevice(defaultModel.id)
 }
 
 export function removeSelected() {
