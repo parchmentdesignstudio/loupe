@@ -72,7 +72,7 @@ function Devices({ devices }: { devices: Device[] }) {
       </Section>
 
       {single && <Screen device={single} />}
-      <Arrange count={devices.length} row={row} />
+      {!row && <Arrange count={devices.length} />}
     </>
   )
 }
@@ -123,41 +123,28 @@ function Screen({ device }: { device: Device }) {
   )
 }
 
-/** Free, lining up and stacking; in the row, moving along it */
-function Arrange({ count, row }: { count: number; row: boolean }) {
+/** Lining up and stacking, for devices placed freely */
+function Arrange({ count }: { count: number }) {
   return (
     <Section title="Arrange">
-      {!row && (
-        <>
-          <div className="-mx-1 flex justify-between">
-            <IconButton icon="align-horizontal-left" label="Align left" onClick={() => actions.align('left')} />
-            <IconButton icon="align-horizontal-center" label="Align centre" onClick={() => actions.align('centre')} />
-            <IconButton icon="align-horizontal-right" label="Align right" onClick={() => actions.align('right')} />
-            <IconButton icon="align-vertical-top" label="Align top" onClick={() => actions.align('top')} />
-            <IconButton icon="align-vertical-center" label="Align middle" onClick={() => actions.align('middle')} />
-            <IconButton icon="align-vertical-bottom" label="Align bottom" onClick={() => actions.align('bottom')} />
-          </div>
-          {count === 1 && <Note>One device lines up with the artboard.</Note>}
-        </>
-      )}
+      <div className="-mx-1 flex justify-between">
+        <IconButton icon="align-horizontal-left" label="Align left" onClick={() => actions.align('left')} />
+        <IconButton icon="align-horizontal-center" label="Align centre" onClick={() => actions.align('centre')} />
+        <IconButton icon="align-horizontal-right" label="Align right" onClick={() => actions.align('right')} />
+        <IconButton icon="align-vertical-top" label="Align top" onClick={() => actions.align('top')} />
+        <IconButton icon="align-vertical-center" label="Align middle" onClick={() => actions.align('middle')} />
+        <IconButton icon="align-vertical-bottom" label="Align bottom" onClick={() => actions.align('bottom')} />
+      </div>
+      {count === 1 && <Note>One device lines up with the artboard.</Note>}
       <div className="-mx-1 flex gap-1">
-        {row ? (
+        {count >= 3 && (
           <>
-            <IconButton icon="arrow-left" label="Move left" shortcut="←" onClick={() => actions.reorder('backward')} />
-            <IconButton icon="arrow-right" label="Move right" shortcut="→" onClick={() => actions.reorder('forward')} />
-          </>
-        ) : (
-          <>
-            {count >= 3 && (
-              <>
-                <IconButton icon="distribute-horizontal-center" label="Space evenly across" onClick={() => actions.distribute('x')} />
-                <IconButton icon="distribute-vertical-center" label="Space evenly down" onClick={() => actions.distribute('y')} />
-              </>
-            )}
-            <IconButton icon="square-3-layers-3d-top-filled" label="Bring forward" shortcut="⌘]" onClick={() => actions.reorder('forward')} />
-            <IconButton icon="square-3-layers-3d-bottom-filled" label="Send backward" shortcut="⌘[" onClick={() => actions.reorder('backward')} />
+            <IconButton icon="distribute-horizontal-center" label="Space evenly across" onClick={() => actions.distribute('x')} />
+            <IconButton icon="distribute-vertical-center" label="Space evenly down" onClick={() => actions.distribute('y')} />
           </>
         )}
+        <IconButton icon="square-3-layers-3d-top-filled" label="Bring forward" shortcut="⌘]" onClick={() => actions.reorder('forward')} />
+        <IconButton icon="square-3-layers-3d-bottom-filled" label="Send backward" shortcut="⌘[" onClick={() => actions.reorder('backward')} />
         <IconButton icon="square-on-square" label="Duplicate" shortcut="⌘D" onClick={() => actions.duplicate()} />
         <IconButton icon="trash" label="Delete" shortcut="⌫" onClick={actions.removeSelected} />
       </div>

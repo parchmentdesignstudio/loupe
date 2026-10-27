@@ -10,7 +10,7 @@ Each change is trying, settled or dropped.
 |---|---|---|
 | Select, pan | Top toolbar | Floating toolbar, from 1 |
 | Undo, redo | Top toolbar | Floating toolbar, from 1 |
-| Placing devices | Free, with snapping, the grid, columns and guides | The automatic row, from 2. Free is still there, under Layout |
+| Placing devices | Free, with snapping, the grid, columns and guides | The automatic row, from 2. Free stays under Layout for now, until Steve has used the row |
 
 ## Changes
 
@@ -39,7 +39,7 @@ Asked for: devices that set themselves out like an automatic flexbox, centred an
 - Dragging a device moves it along the row: the rest make room, and it settles into its place when let go. The arrow keys move it one along, or to either end with shift, as ⌘[ and ⌘] do
 - Resizing from a corner grows it about its middle
 - Changing a device with one of mcknny’s wireframes from a phone to a laptop or desktop swaps in the desktop wireframe, and back
-- The inspector’s Layout is Automatic or Free, with the gap. In the row, a device shows its size without a position, and Arrange moves it left or right rather than lining it up
+- The inspector’s Layout is Automatic or Free, with the gap. In the row, a device shows its size without a position, and Arrange moved it left or right rather than lining it up, until 5 took Arrange out of the row
 - Free keeps the old way: each device where it’s put, snapping to the others, the grid and guides. The grid, columns, guides and snapping settings only show with Free
 - Removed: mcknny’s layouts, Three phones, Two phones, One phone, Cropped phone and Desktop. The row makes all but Cropped phone, a phone 1072 wide from 187 down and cut off by the bottom edge, which Free can still do by hand
 
@@ -62,3 +62,12 @@ Asked for: the start again section to go, as it isn’t needed.
 
 - Removed: Start again at the foot of the inspector, which put mcknny’s three phones back on its artboard
 - With nothing saved, the tool still opens on those three phones
+
+### 5. No arrange panel in the row
+
+27 October 2026 · Trying
+
+Asked for: the arrange panel to go.
+
+- Gone from the row: moving along it, duplicating and deleting all have shortcuts, ←, →, ⌘D and ⌫, and a device drags along the row too
+- Free keeps it, as lining up and spacing evenly have no shortcuts. It goes if Free does
