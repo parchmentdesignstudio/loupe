@@ -1,6 +1,6 @@
 {
   "name": "@parchment/icons",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Line and solid icons at 16 and 24px, as SVG files, sprites, and Astro and React components",
   "type": "module",
   "sideEffects": false,
