@@ -19,8 +19,8 @@ function UndoRedo() {
   const canRedo = useStore((state) => state.future.length > 0)
   return (
     <>
-      <IconButton icon="arrow-uturn-backward" label="Undo" shortcut="⌘Z" disabled={!canUndo} onClick={undo} />
-      <IconButton icon="arrow-uturn-forward" label="Redo" shortcut="⇧⌘Z" disabled={!canRedo} onClick={redo} />
+      <IconButton icon="arrow-uturn-left" label="Undo" shortcut="⌘Z" disabled={!canUndo} onClick={undo} />
+      <IconButton icon="arrow-uturn-right" label="Redo" shortcut="⇧⌘Z" disabled={!canRedo} onClick={redo} />
     </>
   )
 }

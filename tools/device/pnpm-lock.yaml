@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@parchment/icons':
         specifier: github:parchmentdesignstudio/loupe#icons
-        version: https://codeload.github.com/parchmentdesignstudio/loupe/tar.gz/cedba34d3da45669d66dd46979471a3f3abbf82f(react@19.3.1)
+        version: https://codeload.github.com/parchmentdesignstudio/loupe/tar.gz/73d92a7f23850a5fc70fe2b46d23625cb185921e(react@19.3.1)
       lucide-react:
         specifier: ^1.61.0
         version: 1.61.0(@types/react@19.3.0)(react@19.3.1)
@@ -67,9 +67,9 @@ packages:
   '@oxc-project/types@0.155.0':
     resolution: {integrity: sha512-SeE8JPwW1xs1tHeNycjUtUBdhorRa8o4jlvjwk49R7/Z291i+4DQa7JJIgOm/TaYQZx+QrPQbVJ/9c8dMIZN8Q==}
 
-  '@parchment/icons@https://codeload.github.com/parchmentdesignstudio/loupe/tar.gz/cedba34d3da45669d66dd46979471a3f3abbf82f':
-    resolution: {tarball: https://codeload.github.com/parchmentdesignstudio/loupe/tar.gz/cedba34d3da45669d66dd46979471a3f3abbf82f}
-    version: 0.4.0
+  '@parchment/icons@https://codeload.github.com/parchmentdesignstudio/loupe/tar.gz/73d92a7f23850a5fc70fe2b46d23625cb185921e':
+    resolution: {tarball: https://codeload.github.com/parchmentdesignstudio/loupe/tar.gz/73d92a7f23850a5fc70fe2b46d23625cb185921e}
+    version: 0.5.0
     peerDependencies:
       astro: '>=4'
       react: '>=18'
@@ -814,7 +814,7 @@ snapshots:
 
   '@oxc-project/types@0.155.0': {}
 
-  '@parchment/icons@https://codeload.github.com/parchmentdesignstudio/loupe/tar.gz/cedba34d3da45669d66dd46979471a3f3abbf82f(react@19.3.1)':
+  '@parchment/icons@https://codeload.github.com/parchmentdesignstudio/loupe/tar.gz/73d92a7f23850a5fc70fe2b46d23625cb185921e(react@19.3.1)':
     optionalDependencies:
       react: 19.3.1
 

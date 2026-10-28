@@ -10,33 +10,19 @@ import {
   AlignStartVertical,
   AlignVerticalDistributeCenter,
   BringToFront,
-  Columns3,
-  Grid3x3,
   Hand,
   Image,
-  Magnet,
-  MousePointer2,
   Plus,
-  Redo2,
-  Ruler,
   SendToBack,
   Trash2,
-  Undo2,
   type LucideIcon,
 } from 'lucide-react'
 
 // Lucide stands in for icons Loupe doesn’t have yet, under the names Loupe
 // would give them, so each switches over once it’s drawn there
 const fallbacks = {
-  cursorarrow: MousePointer2,
   'hand-raised': Hand,
   plus: Plus,
-  magnet: Magnet,
-  'square-grid-3x3': Grid3x3,
-  'rectangle-split-3x1': Columns3,
-  ruler: Ruler,
-  'arrow-uturn-backward': Undo2,
-  'arrow-uturn-forward': Redo2,
   trash: Trash2,
   photo: Image,
   'align-horizontal-left': AlignStartVertical,
