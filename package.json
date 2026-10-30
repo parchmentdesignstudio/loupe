@@ -8,6 +8,12 @@
     "build": "pnpm -r build",
     "icons": "pnpm --filter @parchment/icons build",
     "icons:watch": "pnpm --filter @parchment/icons watch",
-    "release": "node scripts/release.mjs"
+    "ui": "pnpm --filter @parchment/ui dev",
+    "release": "node scripts/release.mjs",
+    "lint": "oxlint",
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "oxlint": "^1.90.0"
   }
 }

@@ -5,6 +5,7 @@ Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. 
 | Package | What it is |
 |---|---|
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
+| `@parchment/ui` | Accessible React components, built on React Aria |
 
 ## Icons
 
@@ -76,6 +77,65 @@ import { Icon } from '@parchment/icons/react'
 
 Icons are solid and 16px by default. `size` picks the drawn set, 16 or 24, and the icon renders at exactly that size: nothing is scaled, so asking for an icon that isn’t drawn at that size is an error. Without `label` the icon is hidden from screen readers.
 
+## UI
+
+React components built on React Aria, so keyboard use, focus, labels and screen readers work the same in every site. Each is styled with Tailwind classes, composed through tailwind-variants.
+
+### Using it in a site
+
+```sh
+pnpm add github:parchmentdesignstudio/loupe#ui
+```
+
+The site needs React 19, and for Astro, `@astrojs/react`. Import the tokens after Tailwind. They add the utilities the components use, such as `bg-ink`, `text-body` and `shadow-raised`, and point Tailwind at the package’s classes.
+
+```css
+@import 'tailwindcss';
+@import '@parchment/ui/tokens.css';
+```
+
+```jsx
+import { Button, Chip, ChipGroup } from '@parchment/ui'
+
+<Button onPress={schedule}>Schedule call</Button>
+<Button variant="plain" shape="circle" aria-label="Email Steve"><Icon name="envelope" /></Button>
+<ChipGroup aria-label="Or start with">
+  <Chip onPress={start}>A new website</Chip>
+</ChipGroup>
+```
+
+To change a token, set its variable on `:root`, such as `--ink` or `--text-size`.
+
+### Writing a component
+
+Wrap the React Aria component and style it with a `tv()` recipe. Name the variants after React Aria’s render props (`isHovered`, `isPressed`, `isFocusVisible`, `isDisabled`), so each state’s classes live in the recipe rather than in conditions. `composeRenderProps` hands React Aria’s state to the recipe, and keeps a `className` prop working, as a string or a function.
+
+```tsx
+export const chip = tv({
+  extend: focusRing,
+  base: 'rounded-full bg-paper px-3.5 py-2 text-body shadow-raised',
+  variants: {
+    isPressed: { true: 'scale-97' },
+    isDisabled: { true: 'opacity-40' },
+  },
+})
+
+export function Chip(props: ChipProps) {
+  return <AriaButton {...props} className={composeRenderProps(props.className, (className, state) => chip({ ...state, className }))} />
+}
+```
+
+Import `tv` from `src/tv.ts` rather than tailwind-variants itself. It teaches the merge the tokens’ names, so `text-body` (a size) and `text-ink` (a colour) don’t cancel each other out. Inputs keep 16px text, as iOS zooms into anything smaller.
+
+### Checks
+
+| Command | What it does |
+|---|---|
+| `pnpm ui` | The preview page, every component in its states, at localhost:5199 |
+| `pnpm test` | Vitest, with an axe check for each component |
+| `pnpm lint` | oxlint, with the accessibility rules on. The icons package isn’t linted yet |
+| `pnpm --filter @parchment/ui build` | Builds `lib`, which is committed so releases can install it |
+
 ## Releasing
 
 Each package is published to its own branch, so npm and pnpm can both install it from GitHub.
@@ -84,4 +144,4 @@ Each package is published to its own branch, so npm and pnpm can both install it
 pnpm release icons
 ```
 
-This builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Bump the version in `packages/icons/package.json` first, then sites can pin with `#icons@0.2.0` or follow `#icons`.
+This builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Bump the version in `packages/icons/package.json` first, then sites can pin with `#icons@0.2.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`.
