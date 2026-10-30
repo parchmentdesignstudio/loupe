@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/arrow-left-arrow-right</title>
+    <g id="solid/16/arrow-left-arrow-right" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="Group" transform="translate(4, 6)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M6.5,2.5 L6.5,5.5 L9.5,5.5 C9.77614237,5.5 10,5.72385763 10,6 L10,6.5 C10,6.77614237 9.77614237,7 9.5,7 L5.5,7 C5.22385763,7 5,6.77614237 5,6.5 L5,2.5 C5,2.22385763 5.22385763,2 5.5,2 L6,2 C6.27614237,2 6.5,2.22385763 6.5,2.5 Z" id="Combined-Shape" transform="translate(7.5, 4.5) scale(-1, 1) rotate(45) translate(-7.5, -4.5)"></path>
+            <rect id="Rectangle" x="-2" y="3.75" width="12" height="1.5" rx="0.5"></rect>
+        </g>
+        <g id="Group" transform="translate(2, 1)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1.5,2.5 L1.5,5.5 L4.5,5.5 C4.77614237,5.5 5,5.72385763 5,6 L5,6.5 C5,6.77614237 4.77614237,7 4.5,7 L0.5,7 C0.223857625,7 2.84217094e-14,6.77614237 2.84217094e-14,6.5 L2.84217094e-14,2.5 C2.84217094e-14,2.22385763 0.223857625,2 0.5,2 L1,2 C1.27614237,2 1.5,2.22385763 1.5,2.5 Z" id="Combined-Shape" transform="translate(2.5, 4.5) rotate(45) translate(-2.5, -4.5)"></path>
+            <rect id="Rectangle" x="0" y="3.75" width="12" height="1.5" rx="0.5"></rect>
+        </g>
+    </g>
+</svg>
