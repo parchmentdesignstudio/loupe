@@ -1,0 +1,41 @@
+/* Parchment's tokens for Tailwind, as utilities such as bg-ink, text-body and shadow-raised.
+   A site imports this after tailwindcss and sets the variables on :root to change them. The
+   @source line has Tailwind read the components' classes from the package */
+@source "./lib";
+
+@theme inline {
+	--color-ink: var(--ink);
+	--color-paper: var(--paper);
+	--color-ground: var(--ground);
+	--color-surface: var(--surface);
+	--color-muted: var(--muted);
+	--color-danger: var(--danger);
+	--font-sans: var(--face);
+	--font-mono: var(--mono);
+	--text-body: var(--text-size);
+	--text-body--line-height: var(--text-leading);
+	--text-label: var(--label-size);
+	--text-label--line-height: var(--label-leading);
+	--text-title: var(--title-size);
+	--text-title--line-height: var(--title-leading);
+	--shadow-raised: 0 1px 2px color-mix(in oklab, var(--ink) 8%, transparent), 0 0 0 1px color-mix(in oklab, var(--ink) 6%, transparent);
+}
+
+@layer base {
+	:root {
+		--ink: #1f2f31;
+		--paper: #ffffff;
+		--ground: #fbf6ef;
+		--surface: var(--ground);
+		--muted: #5b6668;
+		--danger: #b3261e;
+		--face: field-gothic, nimbus-sans, 'Helvetica Neue', Arial, sans-serif;
+		--mono: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
+		--text-size: 0.9375rem;
+		--text-leading: 1.4;
+		--label-size: 0.75rem;
+		--label-leading: 1.35;
+		--title-size: 1.25rem;
+		--title-leading: 1.1;
+	}
+}
