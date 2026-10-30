@@ -859,7 +859,7 @@ export default {
   },
   "solid/16/desktopcomputer": {
     "viewBox": "0 0 16 16",
-    "body": "<g fill=\"none\" fill-rule=\"evenodd\"><path fill=\"currentColor\" d=\"M3 1h10a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m.5 1.5v8h9v-8zM6.75 12h2.5A2.75 2.75 0 0 1 12 14.75a.25.25 0 0 1-.25.25h-7.5a.25.25 0 0 1-.25-.25A2.75 2.75 0 0 1 6.75 12\"/><path d=\"M12.5 10.5v-8h-9v8z\" opacity=\".6\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
+    "body": "<g fill=\"none\" fill-rule=\"evenodd\"><path fill=\"currentColor\" d=\"M3 1h10a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m.5 1.5v8h9v-8zM7.75 12h.5A2.75 2.75 0 0 1 11 14.75a.25.25 0 0 1-.25.25h-5.5a.25.25 0 0 1-.25-.25A2.75 2.75 0 0 1 7.75 12\"/><path d=\"M12.5 10.5v-8h-9v8z\" opacity=\".6\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
   },
   "solid/16/display": {
     "viewBox": "0 0 16 16",
