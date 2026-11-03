@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/arrow-turn-right-up</title>
+    <g id="solid/16/arrow-turn-right-up" stroke="none" fill="none" fill-rule="evenodd">
+        <rect id="bar" fill="color(display-p3 0.035 0.180 0.141)" x="2" y="11.75" width="7" height="1.5" rx="0.5"></rect>
+        <path d="M11.25,10.5 C11.25,12.018783 10.018783,13.25 8.5,13.25 L8.5,11.75 C9.190356,11.75 9.75,11.190356 9.75,10.5 L11.25,10.5 Z" id="curve" fill="color(display-p3 0.035 0.180 0.141)"></path>
+        <rect id="bar" fill="color(display-p3 0.035 0.180 0.141)" x="9.75" y="2.55" width="1.5" height="8.45" rx="0.5"></rect>
+        <path d="M8.5,2.749534 L9,2.749534 C9.27614237,2.749534 9.5,2.97339163 9.5,3.249534 L9.5,6.249534 L12.5,6.249534 C12.7761424,6.249534 13,6.47339163 13,6.749534 L13,7.249534 C13,7.52567637 12.7761424,7.749534 12.5,7.749534 L8.5,7.749534 C8.22385763,7.749534 8,7.52567637 8,7.249534 L8,3.249534 C8,2.97339163 8.22385763,2.749534 8.5,2.749534 Z" id="angle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(10.5, 5.2495) rotate(135) translate(-10.5, -5.2495)"></path>
+    </g>
+</svg>

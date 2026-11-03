@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>sailboat</title>
+    <title>solid/16/sailboat</title>
     <g id="solid/16/sailboat" stroke="none" fill="none" fill-rule="evenodd">
         <g id="part-boat" stroke-width="1" transform="translate(2.25, 1)" fill="color(display-p3 0.035 0.180 0.141)">
             <path d="M0.809002975,7.5 L11.1464466,7.5 C11.3691728,7.5 11.4807145,7.76928548 11.3232233,7.9267767 L9.07726748,10.1727325 C9.05722189,10.1927781 9.0349771,10.2110178 9.00924718,10.2229183 C8.15689182,10.6171472 7.16815389,10.5896631 6.3382,10.1471 C4.83586345,9.345822 3.05157758,9.28743347 1.50533183,9.97891062 C1.38468608,10.0328631 1.24229694,9.98469016 1.18319502,9.86648174 L0.361785914,8.22359987 C0.195567308,7.89114977 0.437315351,7.5 0.809002975,7.5 Z" id="hull"></path>

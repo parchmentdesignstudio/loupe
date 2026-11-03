@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>train-side-middle-car</title>
+    <title>solid/16/train-side-middle-car</title>
     <g id="solid/16/train-side-middle-car" stroke="none" fill="none" fill-rule="evenodd">
         <path d="M2,3 L14,3 C14.5522847,3 15,3.44771525 15,4 L15,12 C15,12.5522847 14.5522847,13 14,13 L2,13 C1.44771525,13 1,12.5522847 1,12 L1,4 C1,3.44771525 1.44771525,3 2,3 Z M2.75,4.5 C2.61192881,4.5 2.5,4.61192881 2.5,4.75 L2.5,8.25 C2.5,8.38807119 2.61192881,8.5 2.75,8.5 L13.25,8.5 C13.3880712,8.5 13.5,8.38807119 13.5,8.25 L13.5,4.75 C13.5,4.61192881 13.3880712,4.5 13.25,4.5 L2.75,4.5 Z" id="Combined-Shape" fill="color(display-p3 0.035 0.180 0.141)"></path>
     </g>

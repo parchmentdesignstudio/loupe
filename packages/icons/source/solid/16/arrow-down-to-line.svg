@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/arrow-down-to-line</title>
+    <g id="solid/16/arrow-down-to-line" stroke="none" fill="none" fill-rule="evenodd">
+        <rect id="bar" fill="color(display-p3 0.035 0.180 0.141)" x="7.25" y="3.5" width="1.5" height="8" rx="0.5"></rect>
+        <path d="M5,4.050253 L5.5,4.050253 C5.77614237,4.050253 6,4.27411063 6,4.550253 L6,9.550253 L11,9.550253 C11.2761424,9.550253 11.5,9.77411063 11.5,10.050253 L11.5,10.550253 C11.5,10.8263954 11.2761424,11.050253 11,11.050253 L5,11.050253 C4.72385763,11.050253 4.5,10.8263954 4.5,10.550253 L4.5,4.550253 C4.5,4.27411063 4.72385763,4.050253 5,4.050253 Z" id="angle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(8, 7.5503) rotate(-45) translate(-8, -7.5503)"></path>
+        <rect id="bar" fill="color(display-p3 0.035 0.180 0.141)" x="2.75" y="13.25" width="10.5" height="1.5" rx="0.5"></rect>
+    </g>
+</svg>
