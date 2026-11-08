@@ -85,6 +85,25 @@ Icons are solid and 16px by default. `size` picks the drawn set, 16 or 24, and t
 
 React components built on React Aria, so keyboard use, focus, labels and screen readers work the same in every site. Each is styled with Tailwind classes, composed through tailwind-variants.
 
+| Component | What it’s for |
+|---|---|
+| `Button` | Any action, as solid, plain or quiet, and a circle for an icon |
+| `Chip`, `ChipGroup` | Suggestions to tap |
+| `Composer` | A message field with its send button |
+| `TextField` | Text, or several lines with `multiline` |
+| `Checkbox`, `CheckboxGroup` | Ticking any number of options |
+| `RadioGroup`, `Radio` | Choosing one option |
+| `Switch` | A setting that takes effect straight away |
+| `Select` | Choosing one option from a list that opens |
+| `ComboBox` | Typing to filter a list of options |
+| `ListBoxItem`, `ListBoxSection` | The options in a select or combo box, optionally under headings |
+| `Modal`, `Dialog`, `DialogTrigger` | A dialog over the page, with `DialogHeading`, `DialogActions` and `DialogClose` |
+| `Popover` | A dialog beside what opened it |
+| `Menu`, `MenuTrigger` | Actions in a list that opens, with `MenuItem`, `MenuSection` and `MenuSeparator` |
+| `Tooltip`, `TooltipTrigger` | A short label for a control, on hover and keyboard focus |
+
+Fields share a `Label`, `Description` and `FieldError`, and each takes `label`, `description` and `errorMessage`. Overlays come and go with the `animate-enter` and `animate-exit` keyframes in `tokens.css`, and fade instead when reduced motion is on.
+
 ### Using it in a site
 
 ```sh

@@ -39,7 +39,7 @@ function status(text) {
 // Sources
 
 async function addFiles(files, target) {
-  const list = [...files].filter((f) => /^image\//.test(f.type) || /\.svg$/i.test(f.name))
+  const list = [...files].filter((f) => f.type.startsWith('image/') || /\.svg$/i.test(f.name))
   if (!list.length) return
   try {
     const loaded = await Promise.all(list.map(loadSource))
@@ -62,7 +62,7 @@ function usesOf(source) {
     if (output.kind === 'ios' || output.kind === 'og') continue
     if (sourceFor(output, state) === source) sizes.add(Math.min(output.w, output.h))
   }
-  return [...sizes].sort((a, b) => a - b)
+  return [...sizes].toSorted((a, b) => a - b)
 }
 
 function sourceRow(source, { onRemove, extra }) {
@@ -78,7 +78,7 @@ function renderSources() {
   const artwork = $('artwork-list')
   artwork.replaceChildren()
   if (!state.sources.length) artwork.append(el('li', { class: 'empty' }, 'Drop an SVG or a large PNG'))
-  for (const source of [...state.sources].sort((a, b) => b.size - a.size)) {
+  for (const source of state.sources.toSorted((a, b) => b.size - a.size)) {
     const uses = usesOf(source)
     artwork.append(sourceRow(source, {
       onRemove: () => {

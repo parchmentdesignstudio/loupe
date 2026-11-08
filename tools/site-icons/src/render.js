@@ -3,7 +3,7 @@
 let nextId = 1
 
 function parseLength(value) {
-  if (!value || /%$/.test(value)) return null
+  if (!value || value.endsWith('%')) return null
   const n = parseFloat(value)
   return Number.isFinite(n) && n > 0 ? n : null
 }
@@ -21,8 +21,8 @@ function loadImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.decoding = 'async'
-    img.onload = () => resolve(img)
-    img.onerror = () => reject(new Error('This file couldn’t be read as an image.'))
+    img.addEventListener('load', () => resolve(img), { once: true })
+    img.addEventListener('error', () => reject(new Error('This file couldn’t be read as an image.')), { once: true })
     img.src = url
   })
 }
@@ -104,7 +104,7 @@ async function place(ctx, source, x, y, boxW, boxH, fit = 'contain') {
 // bigger than every artwork uses the largest.
 export function pickSource(sources, px) {
   if (!sources.length) return null
-  const sorted = [...sources].sort((a, b) => a.size - b.size)
+  const sorted = sources.toSorted((a, b) => a.size - b.size)
   return sorted.find((s) => s.size >= px) ?? sorted[sorted.length - 1]
 }
 
@@ -174,7 +174,7 @@ export async function renderOutput(output, state) {
     iosBackground(ctx, output.w, state, output.appearance)
     if (output.appearance === 'tinted') ctx.filter = 'grayscale(1) brightness(1.15)'
     // Layers are listed front first, so draw them back to front.
-    for (const layer of [...iosLayers(state)].reverse()) {
+    for (const layer of iosLayers(state).toReversed()) {
       const box = output.w * layer.scale
       const offset = (output.w - box) / 2
       await place(ctx, layer.source, offset, offset, box, box)
