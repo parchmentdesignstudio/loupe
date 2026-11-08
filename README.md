@@ -5,6 +5,7 @@ Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. 
 | Package | What it is |
 |---|---|
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
+| `@parchment/components` | React Aria components styled with Tailwind |
 
 | Tool | What it does |
 |---|---|
@@ -90,7 +91,51 @@ pnpm release icons
 
 This builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Bump the version in `packages/icons/package.json` first, then sites can pin with `#icons@0.2.0` or follow `#icons`.
 
-## Site icons
+## Components
+
+`@parchment/components` holds the design system’s React components, built on [React Aria Components](https://react-spectrum.adobe.com/react-aria/components.html) and styled with Tailwind v4 and tailwind-variants. They live here until the design system has its own repo.
+
+So far: text field (with a multi-line option), checkbox and checkbox group, radio group, switch, select, combo box, list box, popover, dialog and modal, menu, tooltip and button.
+
+`pnpm --filter @parchment/components dev` opens a page showing every component and its states.
+
+### Styling
+
+Each component’s classes come from a tailwind-variants recipe whose variants are React Aria’s render props, so states read as `isHovered`, `isPressed`, `isFocusVisible`, `isSelected`, `isInvalid` and `isDisabled` rather than CSS pseudo-classes:
+
+```ts
+const box = tv({
+  base: 'size-[18px] rounded-[5px] border',
+  variants: {
+    isSelected: { false: 'border-line-strong bg-raised', true: 'bg-accent text-on-accent' },
+    isPressed: { true: 'scale-95' },
+  },
+})
+```
+
+The recipes are exported where they’re useful elsewhere, such as `button`, `fieldGroup`, `textInput` and `focusRing`. Every component also takes a `className`, merged after its own.
+
+Colours are tokens in `theme.css`: `paper`, `surface`, `raised`, `ink`, `muted`, `line`, `line-strong`, `accent`, `accent-hover`, `on-accent`, `highlight`, `critical`, `on-critical`, `disabled` and `backdrop`, used as `bg-raised`, `text-muted` and so on. Each is set from a `--pc-*` property, which switches for dark mode with `prefers-color-scheme` or `data-theme` on `<html>`, and which a site can override. Overlays animate in and out with keyframes from the same file, and fade only when reduced motion is on.
+
+### Using it in a site
+
+```sh
+pnpm add github:parchmentdesignstudio/loupe#components github:parchmentdesignstudio/loupe#icons react-aria-components
+```
+
+```css
+@import 'tailwindcss';
+@import '@parchment/components/theme.css';
+```
+
+The theme tells Tailwind to scan the components’ files, so their classes are generated alongside the site’s.
+
+```tsx
+import { Select, SelectItem, TextField } from '@parchment/components'
+```
+
+`pnpm release components` builds `lib/` and publishes it to the `components` branch, the same way as the icons.
+
 
 `pnpm --filter @parchment/site-icons dev` opens the tool. It runs in the browser, so nothing is uploaded.
 
