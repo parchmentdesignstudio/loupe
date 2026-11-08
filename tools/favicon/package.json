@@ -1,5 +1,5 @@
 {
-  "name": "@parchment/site-icons",
+  "name": "@parchment/favicon",
   "private": true,
   "description": "Make every favicon, app icon and social image a site needs from one piece of artwork",
   "type": "module",

@@ -41,7 +41,7 @@
 <div class="page">
   <header class="page-head">
     <h1>Icon sizes reference</h1>
-    <p id="last"><a href="index.html">Site icons</a></p>
+    <p id="last"><a href="index.html">Favicon</a></p>
   </header>
   <div id="list"></div>
 </div>
@@ -56,7 +56,7 @@
 
   if (made.at) {
     const when = new Date(made.at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-    document.getElementById('last').innerHTML = `Ticks show what you exported on ${when}. <a href="index.html">Site icons</a>`
+    document.getElementById('last').innerHTML = `Ticks show what you exported on ${when}. <a href="index.html">Favicon</a>`
   }
 
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])

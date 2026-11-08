@@ -18,6 +18,7 @@
 	"ignorePatterns": [
 		"**/lib/**",
 		"**/node_modules/**",
-		"packages/icons/**"
+		"packages/icons/**",
+		"tools/device/**"
 	]
 }

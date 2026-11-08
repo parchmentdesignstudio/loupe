@@ -1,15 +1,16 @@
 # Loupe
 
-Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. Each part is its own package under `packages/`, and tools for making things sit under `tools/`.
+Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. Packages, under `packages/`, are what sites install, and each is released to its own branch. Tools, under `tools/`, are what you open to make things, and they’re never released.
 
 | Package | What it is |
 |---|---|
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
 | `@parchment/ui` | Accessible React components, built on React Aria |
 
-| Tool | What it does |
-|---|---|
-| `tools/site-icons` | Makes the favicons, app icons and Open Graph image a site needs |
+| Tool | What it does | Command |
+|---|---|---|
+| `tools/device` | Lays out devices and their screens, for mockups | `pnpm device` |
+| `tools/favicon` | Makes the favicons, app icons and Open Graph image a site needs | `pnpm favicon` |
 
 ## Icons
 
@@ -155,8 +156,8 @@ Import `tv` from `src/tv.ts` rather than tailwind-variants itself. It teaches th
 | Command | What it does |
 |---|---|
 | `pnpm ui` | The preview page, every component in its states, at localhost:5199 |
-| `pnpm test` | Vitest, with an axe check for each component |
-| `pnpm lint` | oxlint, with the accessibility rules on. The icons package isn’t linted yet |
+| `pnpm test` | Vitest across the workspace, with an axe check for each component |
+| `pnpm lint` | oxlint, with the accessibility rules on. The icons package and device aren’t linted yet |
 | `pnpm --filter @parchment/ui build` | Builds `lib`, which is committed so releases can install it |
 
 ## Releasing
@@ -169,9 +170,13 @@ pnpm release icons
 
 This builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Bump the version in `packages/icons/package.json` first, then sites can pin with `#icons@0.2.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`.
 
-## Site icons
+## Device
 
-`pnpm --filter @parchment/site-icons dev` opens the tool. It runs in the browser, so nothing is uploaded.
+`pnpm device` opens the canvas at localhost:5190, for laying out devices and their screens. Its icons come straight from `packages/icons`, so a new one shows there as soon as it’s built, before it’s released. `tools/device/README.md` covers using it.
+
+## Favicon
+
+`pnpm favicon` opens the tool. It runs in the browser, so nothing is uploaded.
 
 Drop in artwork and every output is drawn on one canvas: the favicon at 16, 32 and 48, the Apple touch icon, the manifest icons, a maskable icon, the Open Graph image and the iOS icon in light, dark and tinted. Select one to change its padding, background or artwork, or save it on its own. Export zip gives you every file, the manifest, the HTML for the `<head>` and an Icon Composer file.
 
