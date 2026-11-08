@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1468" height="892" fill="none" viewBox="0 0 1468 892">
+  <rect width="1468" height="892" fill="color(display-p3 .949 .9569 .9373)" rx="40"/>
+  <rect width="1456" height="880" x="6" y="6" fill="color(display-p3 .124 .124 .124)" rx="34"/>
+  <g clip-path="url(#b)">
+    <path fill="color(display-p3 .0706 .0706 .0706)" d="M12 12h1444v868H12z"/>
+  </g>
+  <!-- The inner shadow Figma drew with a filter, a 2px white rim inside the edge, drawn instead, so Safari draws it crisply at any size -->
+  <rect width="1468" height="892" rx="40" stroke="#fff" stroke-width="4" clip-path="url(#rim)"/>
+  <defs>
+    <clipPath id="rim">
+      <rect width="1468" height="892" rx="40"/>
+    </clipPath>
+    <clipPath id="b">
+      <rect width="1444" height="868" x="12" y="12" fill="#fff" rx="28"/>
+    </clipPath>
+  </defs>
+</svg>
