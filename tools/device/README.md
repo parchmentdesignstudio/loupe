@@ -4,9 +4,11 @@ A canvas for laying out devices and their screens. It starts from mcknny’s Moc
 
 ## Running it
 
+From Loupe’s root:
+
 ```sh
 pnpm install
-pnpm dev
+pnpm device
 ```
 
 It opens on http://localhost:5190. Your work saves in the browser as you go: the document in local storage, and screenshots in IndexedDB.
@@ -75,7 +77,7 @@ Screens are sized in points, and the inspector says what to capture each one at.
 
 To add a device, list it in `models.ts` with its screen size in points, then give it a spec in `frames.ts`: a phone, tablet, laptop or display, with its screen’s corner radius and bezel.
 
-Icons come from Loupe, `@parchment/icons`. Lucide stands in for any Loupe doesn’t have, under the name Loupe would give it, so each switches over once it’s drawn and released.
+Icons come straight from Loupe’s `packages/icons`, so a new icon shows here as soon as it’s built, before it’s released. Lucide stands in for any Loupe doesn’t have, under the name Loupe would give it, so each switches over once it’s drawn.
 
 `pnpm test` runs the tests, for the row and for snapping.
 

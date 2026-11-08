@@ -17,4 +17,4 @@ Steve is simplifying the tool one change at a time. Each change goes in `LOG.md`
 
 - The phone and desktop frames are mcknny’s, from its `src/assets/images/devices`, and stay as they are. Other devices are drawn in `src/devices/frames.ts` to the same build
 - The status bar, island and home indicator follow mcknny’s `Phone.astro` and `StatusBar.astro`
-- Icons are Loupe’s. When Loupe doesn’t have one, a Lucide stand-in goes in `src/ui/icon.tsx` under the name Loupe would give it, and it’s listed as one to draw
+- Icons come straight from Loupe’s `packages/icons`, so a new one shows here once it’s built. When Loupe doesn’t have one, a Lucide stand-in goes in `src/ui/icon.tsx` under the name Loupe would give it, and it’s listed as one to draw
