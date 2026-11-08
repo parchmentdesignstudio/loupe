@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/checkmark</title>
+    <g id="solid/16/checkmark" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M10,1.01040764 L10.5,1.01040764 C10.7761424,1.01040764 11,1.23426527 11,1.51040764 L11,11.5104076 C11,11.78655 10.7761424,12.0104076 10.5,12.0104076 L5.5,12.0104076 C5.22385763,12.0104076 5,11.78655 5,11.5104076 L5,11.0104076 C5,10.7342653 5.22385763,10.5104076 5.5,10.5104076 L9.5,10.5104076 L9.5,1.51040764 C9.5,1.23426527 9.72385763,1.01040764 10,1.01040764 Z" id="Combined-Shape" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(8, 6.5104) rotate(45) translate(-8, -6.5104)"></path>
+    </g>
+</svg>

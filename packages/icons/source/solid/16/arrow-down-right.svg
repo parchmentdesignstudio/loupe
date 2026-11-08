@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/arrow-down-right</title>
+    <g id="solid/16/arrow-down-right" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M13.022226,5.624726 L13.022226,12.624726 C13.022226,12.9008684 12.7983684,13.124726 12.522226,13.124726 L5.522226,13.124726 C5.24608363,13.124726 5.022226,12.9008684 5.022226,12.624726 L5.022226,12.124726 C5.022226,11.8485836 5.24608363,11.624726 5.522226,11.624726 L11.522226,11.624726 L11.522226,5.624726 C11.522226,5.34858363 11.7460836,5.124726 12.022226,5.124726 L12.522226,5.124726 C12.7983684,5.124726 13.022226,5.34858363 13.022226,5.624726 Z" id="angle" fill="color(display-p3 0.035 0.180 0.141)"></path>
+        <rect id="shaft" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(7.574, 7.6765) rotate(-45) translate(-7.574, -7.6765)" x="6.82396816" y="1.17646816" width="1.5" height="13" rx="0.5"></rect>
+    </g>
+</svg>

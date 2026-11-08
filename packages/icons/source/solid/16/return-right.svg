@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/return-right</title>
+    <g id="solid/16/return-right" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M9.500466,7 L10.000466,7 C10.2766084,7 10.500466,7.22385763 10.500466,7.5 L10.500466,10.5 L13.500466,10.5 C13.7766084,10.5 14.000466,10.7238576 14.000466,11 L14.000466,11.5 C14.000466,11.7761424 13.7766084,12 13.500466,12 L9.500466,12 C9.22432363,12 9.000466,11.7761424 9.000466,11.5 L9.000466,7.5 C9.000466,7.22385763 9.22432363,7 9.500466,7 Z" id="angle" fill="color(display-p3 0.035 0.180 0.141)" transform="translate(11.5005, 9.5) rotate(-135) translate(-11.5005, -9.5)"></path>
+        <rect id="bar" fill="color(display-p3 0.035 0.180 0.141)" x="3.5" y="8.75" width="10.7" height="1.5" rx="0.5"></rect>
+        <path d="M1.5,7.75 C1.5,9.130712 2.619288,10.25 4,10.25 L4,8.75 C3.447715,8.75 3,8.302285 3,7.75 L1.5,7.75 Z" id="curve" fill="color(display-p3 0.035 0.180 0.141)"></path>
+        <rect id="bar" fill="color(display-p3 0.035 0.180 0.141)" x="1.5" y="5" width="1.5" height="3.25" rx="0.5"></rect>
+        <path d="M4,3 C2.619288,3 1.5,4.119288 1.5,5.5 L3,5.5 C3,4.947715 3.447715,4.5 4,4.5 L4,3 Z" id="curve" fill="color(display-p3 0.035 0.180 0.141)"></path>
+        <rect id="bar" fill="color(display-p3 0.035 0.180 0.141)" x="3.5" y="3" width="3.25" height="1.5" rx="0.5"></rect>
+    </g>
+</svg>
