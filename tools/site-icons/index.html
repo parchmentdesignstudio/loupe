@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Site icons</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <h1>Site icons</h1>
+    <nav>
+      <a href="reference.html">Reference</a>
+      <button type="button" class="primary" id="export">Export zip</button>
+    </nav>
+  </header>
+
+  <aside class="panel" aria-label="Sources">
+    <section id="drop-artwork" class="drop">
+      <div class="section-head">
+        <h2>Artwork</h2>
+        <label class="button small">Add<input type="file" id="artwork-input" accept=".svg,image/svg+xml,image/png,image/jpeg,image/webp" multiple hidden></label>
+      </div>
+      <p class="hint">Each output uses the artwork drawn closest above its size. Add a 16 or 32px drawing to replace the scaled one.</p>
+      <ul class="sources" id="artwork-list"></ul>
+    </section>
+
+    <section id="drop-og" class="drop">
+      <div class="section-head">
+        <h2>Open Graph image</h2>
+        <label class="button small">Choose<input type="file" id="og-input" accept="image/*,.svg" hidden></label>
+      </div>
+      <p class="hint" id="og-hint">Without one, the artwork is placed on the background colour.</p>
+      <ul class="sources" id="og-list"></ul>
+    </section>
+
+    <section id="drop-layers" class="drop">
+      <div class="section-head">
+        <h2>iOS layers</h2>
+        <label class="button small">Add<input type="file" id="layer-input" accept=".svg,image/svg+xml,image/png" multiple hidden></label>
+      </div>
+      <p class="hint">Front first, up to four. Draw each on the same 1024 canvas.</p>
+      <ul class="sources" id="layer-list"></ul>
+      <label class="field">Background
+        <select id="ios-fill">
+          <option value="gradient">Automatic gradient</option>
+          <option value="solid">Solid</option>
+        </select>
+      </label>
+    </section>
+
+    <section>
+      <h2>Site</h2>
+      <div class="fields">
+        <label class="field">Name<input id="site-name" type="text" value="Parchment"></label>
+        <label class="field">Short name<input id="site-short" type="text" value="Parchment"></label>
+        <label class="field">URL<input id="site-url" type="url" value="https://parchment.studio"></label>
+        <div class="colours">
+          <label class="field">Background<span class="colour"><input id="bg" type="color" value="#f1efe6"><code id="bg-value">#f1efe6</code></span></label>
+          <label class="field">Theme<span class="colour"><input id="theme" type="color" value="#0f3d30"><code id="theme-value">#0f3d30</code></span></label>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+  <main class="canvas" id="canvas">
+    <div class="canvas-tools">
+      <label class="toggle"><input type="checkbox" id="masks" checked> Show masks</label>
+      <span class="status" id="status" role="status"></span>
+    </div>
+    <div id="boards"></div>
+    <section class="code">
+      <div class="section-head">
+        <h2>HTML</h2>
+        <button type="button" class="button small" id="copy-head">Copy</button>
+      </div>
+      <pre id="head-code"></pre>
+    </section>
+  </main>
+
+  <aside class="inspector" id="inspector" aria-label="Selected output"></aside>
+</div>
+<script type="module" src="src/app.js"></script>
+</body>
+</html>

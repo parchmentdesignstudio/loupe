@@ -1,10 +1,14 @@
 # Loupe
 
-Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. Each part is its own package under `packages/`.
+Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. Each part is its own package under `packages/`, and tools for making things sit under `tools/`.
 
 | Package | What it is |
 |---|---|
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
+
+| Tool | What it does |
+|---|---|
+| `tools/site-icons` | Makes the favicons, app icons and Open Graph image a site needs |
 
 ## Icons
 
@@ -85,3 +89,19 @@ pnpm release icons
 ```
 
 This builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Bump the version in `packages/icons/package.json` first, then sites can pin with `#icons@0.2.0` or follow `#icons`.
+
+## Site icons
+
+`pnpm --filter @parchment/site-icons dev` opens the tool. It runs in the browser, so nothing is uploaded.
+
+Drop in artwork and every output is drawn on one canvas: the favicon at 16, 32 and 48, the Apple touch icon, the manifest icons, a maskable icon, the Open Graph image and the iOS icon in light, dark and tinted. Select one to change its padding, background or artwork, or save it on its own. Export zip gives you every file, the manifest, the HTML for the `<head>` and an Icon Composer file.
+
+### Sizes
+
+Each piece of artwork has the size it was drawn at, read from the SVG or image. Every output uses the artwork drawn closest above its own size, so a single large SVG fills everything, and a simplified drawing at 16px takes over the 16px favicon without touching the rest. Change the size on a piece of artwork to move where it applies. A PNG smaller than an output it’s used for is flagged on the canvas.
+
+### iOS
+
+The iOS layers go into `ios/AppIcon.icon`, which opens in Icon Composer and drops into Xcode. List them front first, up to four, each drawn on the same 1024 canvas, and each becomes its own group so it sits at its own depth. Without layers, the main artwork is used as one. Apple doesn’t document the `.icon` format, so the file follows what Icon Composer saves; open it there to set the glass, shadows and appearances before shipping. The flat light, dark and tinted PNGs are previews of those appearances, for older systems.
+
+`reference.html` lists every size by platform and ticks off what your last export included.
