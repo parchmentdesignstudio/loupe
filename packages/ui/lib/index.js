@@ -1,5 +1,16 @@
 export { Button, button } from './Button.js';
+export { Checkbox, CheckboxGroup, box, choice } from './Checkbox.js';
 export { Chip, ChipGroup, chip } from './Chip.js';
+export { ComboBox } from './ComboBox.js';
 export { Composer } from './Composer.js';
+export { Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Modal } from './Dialog.js';
+export { Description, FieldError, Label, field } from './Field.js';
+export { ListBox, ListBoxItem, ListBoxSection, SectionHeader, option } from './ListBox.js';
+export { Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger } from './Menu.js';
+export { Popover, popover } from './Popover.js';
+export { Radio, RadioGroup } from './RadioGroup.js';
+export { Select, trigger } from './Select.js';
+export { Switch } from './Switch.js';
 export { TextField, input } from './TextField.js';
+export { Tooltip, TooltipTrigger } from './Tooltip.js';
 export { composeClassName, focusRing, tv } from './tv.js';
