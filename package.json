@@ -9,6 +9,8 @@
     "icons": "pnpm --filter @parchment/icons build",
     "icons:watch": "pnpm --filter @parchment/icons watch",
     "ui": "pnpm --filter @parchment/ui dev",
+    "device": "pnpm --filter @parchment/device dev",
+    "favicon": "pnpm --filter @parchment/favicon dev",
     "release": "node scripts/release.mjs",
     "lint": "oxlint",
     "test": "pnpm -r test"
