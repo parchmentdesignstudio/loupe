@@ -53,6 +53,20 @@
 	}
 }
 
+/* A sheet’s backdrop fades as it swipes, and a sheet with another on top steps back. React Aria
+   plays these by name, so no utility uses them and they sit outside @theme */
+@keyframes sheet-backdrop {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes sheet-scale-back {
+	to {
+		transform: translateZ(-120px);
+	}
+}
+
 @layer base {
 	:root {
 		--ink: #1f2f31;

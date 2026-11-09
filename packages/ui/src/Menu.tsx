@@ -1,10 +1,11 @@
-import { Collection, Menu as AriaMenu, MenuItem as AriaMenuItem, type MenuItemProps as AriaMenuItemProps, type MenuProps as AriaMenuProps, MenuSection as AriaMenuSection, type MenuSectionProps as AriaMenuSectionProps, Separator, composeRenderProps } from 'react-aria-components';
+import { Menu as AriaMenu, MenuItem as AriaMenuItem, type MenuItemProps as AriaMenuItemProps, type MenuProps as AriaMenuProps, MenuSection as AriaMenuSection, type MenuSectionProps, Separator, composeRenderProps } from 'react-aria-components';
 import { Check, ChevronRight } from './glyphs.js';
-import { option, SectionHeader } from './ListBox.js';
+import { option, section } from './ListBox.js';
 import { Popover, type PopoverProps } from './Popover.js';
 import { tv } from './tv.js';
 
 export { MenuTrigger, SubmenuTrigger } from 'react-aria-components';
+export type { MenuSectionProps };
 
 export interface MenuProps<T> extends AriaMenuProps<T> {
 	placement?: PopoverProps['placement'];
@@ -49,18 +50,9 @@ export function MenuItem({ variant, ...props }: MenuItemProps) {
 	);
 }
 
-export interface MenuSectionProps<T> extends AriaMenuSectionProps<T> {
-	title?: string;
-}
-
-/** Menu items grouped under a heading */
-export function MenuSection<T extends object>({ title, items, children, ...props }: MenuSectionProps<T>) {
-	return (
-		<AriaMenuSection {...props} className="not-first:mt-1.5 not-first:border-t not-first:border-ink/8 not-first:pt-1.5">
-			{title && <SectionHeader>{title}</SectionHeader>}
-			<Collection items={items}>{children}</Collection>
-		</AriaMenuSection>
-	);
+/** Menu items grouped under a Header, which goes first inside it */
+export function MenuSection<T extends object>(props: MenuSectionProps<T>) {
+	return <AriaMenuSection {...props} className={section({ className: props.className })} />;
 }
 
 export function MenuSeparator() {

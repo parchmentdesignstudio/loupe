@@ -97,13 +97,20 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `Switch` | A setting that takes effect straight away |
 | `Select` | Choosing one option from a list that opens |
 | `ComboBox` | Typing to filter a list of options |
-| `ListBoxItem`, `ListBoxSection` | The options in a select or combo box, optionally under headings |
+| `ListBoxItem`, `ListBoxSection` | The options in a select or combo box, optionally grouped in sections |
+| `Header` | A section’s heading, first inside a `ListBoxSection` or `MenuSection` |
 | `Modal`, `Dialog`, `DialogTrigger` | A dialog over the page, with `DialogHeading`, `DialogActions` and `DialogClose` |
+| `Sheet`, `SheetTrigger` | A panel that slides in from an edge of the screen, and swipes back out |
 | `Popover` | A dialog beside what opened it |
 | `Menu`, `MenuTrigger` | Actions in a list that opens, with `MenuItem`, `MenuSection` and `MenuSeparator` |
 | `Tooltip`, `TooltipTrigger` | A short label for a control, on hover and keyboard focus |
+| `Navigation` | A page’s navigation: a column beside the page on wider screens, and a sheet behind a button on phones |
+| `Link` | A link to another page, or a place on this one |
+| `NavigationTree` | Links to the pages of a site or tool, in sections, with the current page marked, through `NavigationTreeSection`, `NavigationTreeHeader`, `NavigationTreeItem` and `NavigationTreeItemContent` |
 
 Fields share a `Label`, `Description` and `FieldError`, and each takes `label`, `description` and `errorMessage`. Overlays come and go with the `animate-enter` and `animate-exit` keyframes in `tokens.css`, and fade instead when reduced motion is on.
+
+A dialog or sheet with a field puts focus in the first one: give it `autoFocus`, as React Aria’s own examples do. Lint allows `autoFocus` on the package’s components, but not on plain HTML elements.
 
 ### Using it in a site
 
@@ -131,6 +138,8 @@ import { Button, Chip, ChipGroup } from '@parchment/ui'
 To change a token, set its variable on `:root`, such as `--ink` or `--text-size`.
 
 ### Writing a component
+
+A component takes the name and props of the React Aria component it wraps: React Aria’s `Link` is our `Link`, and its `NavigationTree` is ours, down to `NavigationTreeItemContent`. React Aria is the primitive, and the package adds Parchment’s styling. Where React Aria has nothing, use the HTML element’s name.
 
 Wrap the React Aria component and style it with a `tv()` recipe. Name the variants after React Aria’s render props (`isHovered`, `isPressed`, `isFocusVisible`, `isDisabled`), so each state’s classes live in the recipe rather than in conditions. `composeRenderProps` hands React Aria’s state to the recipe, and keeps a `className` prop working, as a string or a function.
 

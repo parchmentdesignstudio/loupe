@@ -1,5 +1,5 @@
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Collection, Header, ListBox as AriaListBox, ListBoxItem as AriaListBoxItem, ListBoxSection as AriaListBoxSection, composeRenderProps } from 'react-aria-components';
+import { ListBox as AriaListBox, ListBoxItem as AriaListBoxItem, ListBoxSection as AriaListBoxSection, composeRenderProps } from 'react-aria-components';
 import { Check } from './glyphs.js';
 import { composeClassName, tv } from './tv.js';
 /** A list of options, as in a select or combo box */
@@ -26,11 +26,11 @@ export function ListBoxItem(props) {
     const textValue = props.textValue ?? (typeof props.children === 'string' ? props.children : undefined);
     return (_jsx(AriaListBoxItem, { ...props, textValue: textValue, className: composeRenderProps(props.className, (className, state) => option({ ...state, className })), children: composeRenderProps(props.children, (children, { isSelected }) => (_jsxs(_Fragment, { children: [_jsx("span", { className: "flex min-w-0 flex-1 items-center gap-2 truncate group-data-[selected]:font-medium", children: children }), isSelected && _jsx(Check, {})] }))) }));
 }
-/** A heading within a list or menu */
-export function SectionHeader({ children }) {
-    return _jsx(Header, { className: "px-3 pt-2 pb-1 font-mono text-label text-muted", children: children });
-}
-/** Options grouped under a heading */
-export function ListBoxSection({ title, items, children, ...props }) {
-    return (_jsxs(AriaListBoxSection, { ...props, className: "not-first:mt-1.5 not-first:border-t not-first:border-ink/8 not-first:pt-1.5", children: [title && _jsx(SectionHeader, { children: title }), _jsx(Collection, { items: items, children: children })] }));
+// Shared by list box and menu sections
+export const section = tv({
+    base: 'not-first:mt-1.5 not-first:border-t not-first:border-ink/8 not-first:pt-1.5',
+});
+/** Options grouped under a Header, which goes first inside it */
+export function ListBoxSection(props) {
+    return _jsx(AriaListBoxSection, { ...props, className: section({ className: props.className }) });
 }
