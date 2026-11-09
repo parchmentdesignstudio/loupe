@@ -1,6 +1,7 @@
-import { type MenuItemProps as AriaMenuItemProps, type MenuProps as AriaMenuProps, type MenuSectionProps as AriaMenuSectionProps } from 'react-aria-components';
+import { type MenuItemProps as AriaMenuItemProps, type MenuProps as AriaMenuProps, type MenuSectionProps } from 'react-aria-components';
 import { type PopoverProps } from './Popover.js';
 export { MenuTrigger, SubmenuTrigger } from 'react-aria-components';
+export type { MenuSectionProps };
 export interface MenuProps<T> extends AriaMenuProps<T> {
     placement?: PopoverProps['placement'];
 }
@@ -11,9 +12,6 @@ export interface MenuItemProps extends AriaMenuItemProps {
     variant?: 'default' | 'danger';
 }
 export declare function MenuItem({ variant, ...props }: MenuItemProps): import("react").JSX.Element;
-export interface MenuSectionProps<T> extends AriaMenuSectionProps<T> {
-    title?: string;
-}
-/** Menu items grouped under a heading */
-export declare function MenuSection<T extends object>({ title, items, children, ...props }: MenuSectionProps<T>): import("react").JSX.Element;
+/** Menu items grouped under a Header, which goes first inside it */
+export declare function MenuSection<T extends object>(props: MenuSectionProps<T>): import("react").JSX.Element;
 export declare function MenuSeparator(): import("react").JSX.Element;

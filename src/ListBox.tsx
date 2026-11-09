@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react';
-import { Collection, Header, ListBox as AriaListBox, ListBoxItem as AriaListBoxItem, type ListBoxItemProps, type ListBoxProps, ListBoxSection as AriaListBoxSection, type SectionProps, composeRenderProps } from 'react-aria-components';
+import { ListBox as AriaListBox, ListBoxItem as AriaListBoxItem, type ListBoxItemProps, type ListBoxProps, ListBoxSection as AriaListBoxSection, type ListBoxSectionProps, composeRenderProps } from 'react-aria-components';
 import { Check } from './glyphs.js';
+
+export type { ListBoxSectionProps };
 import { composeClassName, tv } from './tv.js';
 
 /** A list of options, as in a select or combo box */
@@ -39,21 +40,12 @@ export function ListBoxItem(props: ListBoxItemProps) {
 	);
 }
 
-/** A heading within a list or menu */
-export function SectionHeader({ children }: { children: ReactNode }) {
-	return <Header className="px-3 pt-2 pb-1 font-mono text-label text-muted">{children}</Header>;
-}
+// Shared by list box and menu sections
+export const section = tv({
+	base: 'not-first:mt-1.5 not-first:border-t not-first:border-ink/8 not-first:pt-1.5',
+});
 
-export interface ListBoxSectionProps<T> extends SectionProps<T> {
-	title?: string;
-}
-
-/** Options grouped under a heading */
-export function ListBoxSection<T extends object>({ title, items, children, ...props }: ListBoxSectionProps<T>) {
-	return (
-		<AriaListBoxSection {...props} className="not-first:mt-1.5 not-first:border-t not-first:border-ink/8 not-first:pt-1.5">
-			{title && <SectionHeader>{title}</SectionHeader>}
-			<Collection items={items}>{children}</Collection>
-		</AriaListBoxSection>
-	);
+/** Options grouped under a Header, which goes first inside it */
+export function ListBoxSection<T extends object>(props: ListBoxSectionProps<T>) {
+	return <AriaListBoxSection {...props} className={section({ className: props.className })} />;
 }
