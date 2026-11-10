@@ -1,0 +1,798 @@
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+import "tokens/lengths.elyx" as l
+import "components/elevation.elyx" as elevation
+import "components/text.elyx" as styles
+
+// The colour roles, elevation, type, corners and spacing together, as the components use them. Switch the theme to
+// see them in the dark, and the pointer to coarse to see control text as it is on a touch screen
+file {}
+
+layers = frame {
+  title: "Layers",
+  caption: "From the page up: ground, panel, raised, floating, overlay and inverse, with tints mixed from each layer’s bleed",
+  left: 0px,
+  top: 0px,
+  width: 880px,
+  height: 520px,
+  fill: c.colors.ground,
+  children: [panel, page, menu, toast],
+
+  panel = frame {
+    left: 0px,
+    top: 0px,
+    width: 240px,
+    height: 100%,
+    layout: {direction: .column, item-gap: l.lengths.spacing-2},
+    fill: c.colors.panel,
+    padding: l.lengths.spacing-6,
+    children: [panelTitle, panelText, rows],
+
+    panelTitle = text : styles.body {
+      contents: "Panel",
+      font-style: "Medium"
+    }
+
+    panelText = text : styles.label {
+      width: 100%,
+      contents: "An area on the page, such as a tool’s side panel",
+      fill[0].color: c.colors.muted
+    }
+
+    rows = frame {
+      width: 100%,
+      layout: {direction: .column, item-gap: l.lengths.spacing-0-5},
+      children: [hoveredRow, row],
+
+      hoveredRow = frame {
+        width: 100%,
+        layout: {direction: .row},
+        fill: c.tints.panel-8,
+        corner-radius: l.lengths.radius-lg,
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: hoveredRowLabel,
+
+        hoveredRowLabel = text : styles.control {
+          contents: "Hovered row, panel-8"
+        }
+      }
+
+      row = frame {
+        width: 100%,
+        layout: {direction: .row},
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: rowLabel,
+
+        rowLabel = text : styles.control {
+          contents: "Row"
+        }
+      }
+    }
+  }
+
+  page = frame {
+    left: 288px,
+    top: 32px,
+    width: 280px,
+    layout: {direction: .column, item-gap: l.lengths.spacing-5},
+    overflow: .visible,
+    children: [pageTitle, buttons, field, invalid, toggle, toolbar],
+
+    pageTitle = text : styles.body {
+      contents: "Ground",
+      font-style: "Medium"
+    }
+
+    buttons = frame {
+      layout: {item-gap: l.lengths.spacing-2},
+      overflow: .visible,
+      children: [solid, plain, quiet],
+
+      solid = frame {
+        layout: {direction: .row},
+        fill: c.colors.ink,
+        corner-radius: l.lengths.radius-lg,
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: solidLabel,
+
+        solidLabel = text : styles.control {
+          contents: "Solid",
+          font-style: "Medium",
+          fill[0].color: c.colors.paper
+        }
+      }
+
+      plain = frame : elevation.raised {
+        width: .auto,
+        height: .auto,
+        padding-top: l.lengths.spacing-1-5,
+        padding-left: l.lengths.spacing-3,
+        padding-bottom: l.lengths.spacing-1-5,
+        padding-right: l.lengths.spacing-3,
+        layout.align-items: .center,
+        overrides: [insert(plainLabel, after = .nil)],
+
+        plainLabel = text : styles.control {
+          contents: "Plain",
+          font-style: "Medium"
+        }
+      }
+
+      quiet = frame {
+        layout: {direction: .row},
+        fill: c.tints.ground-4,
+        corner-radius: l.lengths.radius-lg,
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: quietLabel,
+
+        quietLabel = text : styles.control {
+          contents: "Quiet, hovered",
+          font-style: "Medium"
+        }
+      }
+    }
+
+    field = frame : elevation.raised {
+      width: 100%,
+      height: .auto,
+      padding-top: l.lengths.spacing-1-5,
+      padding-left: l.lengths.spacing-3,
+      padding-bottom: l.lengths.spacing-1-5,
+      padding-right: l.lengths.spacing-3,
+      layout.align-items: .center,
+      overrides: [insert(fieldText, after = .nil)],
+
+      fieldText = text : styles.control {
+        contents: "Your email",
+        fill[0].color: c.colors.muted
+      }
+    }
+
+    invalid = frame {
+      width: 100%,
+      layout: {direction: .column, item-gap: l.lengths.spacing-1-5},
+      overflow: .visible,
+      children: [invalidField, invalidMessage],
+
+      invalidField = frame : elevation.invalid {
+        width: 100%,
+        height: .auto,
+        padding-top: l.lengths.spacing-1-5,
+        padding-left: l.lengths.spacing-3,
+        padding-bottom: l.lengths.spacing-1-5,
+        padding-right: l.lengths.spacing-3,
+        layout.align-items: .center,
+        overrides: [insert(invalidText, after = .nil)],
+
+        invalidText = text : styles.control {
+          contents: "steve@"
+        }
+      }
+
+      invalidMessage = text : styles.label {
+        contents: "Enter an email address",
+        fill[0].color: c.colors.danger
+      }
+    }
+
+    toggle = frame {
+      layout: {direction: .row},
+      fill: c.tints.ground-8,
+      corner-radius: l.lengths.radius-lg,
+      overflow: .visible,
+      padding: l.lengths.spacing-0-5,
+      children: [day, week, month],
+
+      day = frame {
+        layout: {direction: .row},
+        padding: [l.lengths.spacing-1, l.lengths.spacing-2-5],
+        children: dayLabel,
+
+        dayLabel = text : styles.control {
+          contents: "Day",
+          font-style: "Medium",
+          fill[0].color: c.colors.muted
+        }
+      }
+
+      week = frame : elevation.raised {
+        width: .auto,
+        height: .auto,
+        corner-radius: l.lengths.radius-md,
+        padding-top: l.lengths.spacing-1,
+        padding-left: l.lengths.spacing-2-5,
+        padding-bottom: l.lengths.spacing-1,
+        padding-right: l.lengths.spacing-2-5,
+        layout.align-items: .center,
+        overrides: [insert(weekLabel, after = .nil)],
+
+        weekLabel = text : styles.control {
+          contents: "Week",
+          font-style: "Medium"
+        }
+      }
+
+      month = frame {
+        layout: {direction: .row},
+        padding: [l.lengths.spacing-1, l.lengths.spacing-2-5],
+        children: monthLabel,
+
+        monthLabel = text : styles.control {
+          contents: "Month",
+          font-style: "Medium",
+          fill[0].color: c.colors.muted
+        }
+      }
+    }
+
+    toolbar = frame : elevation.floating {
+      width: .auto,
+      height: .auto,
+      padding-top: l.lengths.spacing-1,
+      padding-left: l.lengths.spacing-1,
+      padding-bottom: l.lengths.spacing-1,
+      padding-right: l.lengths.spacing-1,
+      layout.item-gap: l.lengths.spacing-1,
+      overrides: [insert(undo, after = .nil), insert(redo, after = undo)],
+
+      undo = frame {
+        layout: {direction: .row},
+        fill: c.tints.overlay-4,
+        corner-radius: l.lengths.radius-lg,
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: undoLabel,
+
+        undoLabel = text : styles.control {
+          contents: "Undo, hovered",
+          font-style: "Medium"
+        }
+      }
+
+      redo = frame {
+        layout: {direction: .row},
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: redoLabel,
+
+        redoLabel = text : styles.control {
+          contents: "Redo",
+          font-style: "Medium"
+        }
+      }
+    }
+  }
+
+  menu = frame : elevation.overlay {
+    left: 616px,
+    top: 32px,
+    width: 216px,
+    height: .auto,
+    padding-top: l.lengths.spacing-1,
+    padding-left: l.lengths.spacing-1,
+    padding-bottom: l.lengths.spacing-1,
+    padding-right: l.lengths.spacing-1,
+    layout.direction: .column,
+    overrides: [
+      insert(cut, after = .nil),
+      insert(copy, after = cut),
+      insert(paste, after = copy)
+    ],
+
+    cut = frame {
+      width: 100%,
+      layout: {direction: .row},
+      padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+      children: cutLabel,
+
+      cutLabel = text : styles.control {
+        contents: "Cut"
+      }
+    }
+
+    copy = frame {
+      width: 100%,
+      layout: {direction: .row},
+      fill: c.tints.overlay-8,
+      corner-radius: l.lengths.radius-sm,
+      padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+      children: copyLabel,
+
+      copyLabel = text : styles.control {
+        contents: "Copy, overlay-8"
+      }
+    }
+
+    paste = frame {
+      width: 100%,
+      layout: {direction: .row},
+      padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+      children: pasteLabel,
+
+      pasteLabel = text : styles.control {
+        contents: "Paste"
+      }
+    }
+  }
+
+  toast = frame : elevation.overlay {
+    left: 616px,
+    top: 400px,
+    width: 216px,
+    height: .auto,
+    padding-top: l.lengths.spacing-3,
+    padding-left: l.lengths.spacing-4,
+    padding-bottom: l.lengths.spacing-3,
+    padding-right: l.lengths.spacing-4,
+    fill[0].color: c.colors.inverse,
+    layout.direction: .column,
+    layout.item-gap: l.lengths.spacing-0-5,
+    overrides: [
+      insert(toastTitle, after = .nil),
+      insert(toastText, after = toastTitle)
+    ],
+
+    toastTitle = text : styles.body {
+      contents: "Export ready",
+      font-style: "Medium",
+      fill[0].color: c.colors.paper
+    }
+
+    toastText = text : styles.label {
+      opacity: 0.7,
+      contents: "On inverse, with paper text",
+      fill[0].color: c.colors.paper
+    }
+  }
+}
+
+typeSpecimen = frame {
+  title: "Type",
+  caption: "Elza Round Variable, with Auger Mono for section headers. In the pointer=coarse context, control text is 16",
+  left: 0px,
+  top: 624px,
+  width: 880px,
+  layout: {direction: .column, item-gap: l.lengths.spacing-5},
+  fill: c.colors.ground,
+  padding: l.lengths.spacing-8,
+  children: [titleRow, bodyRow, controlRow, labelRow, headerRow],
+
+  titleRow = frame {
+    width: 100%,
+    layout: {align-items: .center, item-gap: l.lengths.spacing-6},
+    children: [titleName, titleSample],
+
+    titleName = text : styles.label {
+      width: 120px,
+      contents: "Title, medium",
+      font-family: f.fonts.mono,
+      fill[0].color: c.colors.muted
+    }
+
+    titleSample = text : styles.title {
+      contents: "Export your favicons",
+      font-style: "Medium"
+    }
+  }
+
+  bodyRow = frame {
+    width: 100%,
+    layout: {align-items: .center, item-gap: l.lengths.spacing-6},
+    children: [bodyName, bodySample],
+
+    bodyName = text : styles.label {
+      width: 120px,
+      contents: "Body",
+      font-family: f.fonts.mono,
+      fill[0].color: c.colors.muted
+    }
+
+    bodySample = text : styles.body {
+      contents: "Each output uses the artwork drawn closest above its size."
+    }
+  }
+
+  controlRow = frame {
+    width: 100%,
+    layout: {align-items: .center, item-gap: l.lengths.spacing-6},
+    children: [controlName, controlMedium, controlRegular],
+
+    controlName = text : styles.label {
+      width: 120px,
+      contents: "Control",
+      font-family: f.fonts.mono,
+      fill[0].color: c.colors.muted
+    }
+
+    controlMedium = text : styles.control {
+      contents: "Schedule call",
+      font-style: "Medium"
+    }
+
+    controlRegular = text : styles.control {
+      contents: "Your email address"
+    }
+  }
+
+  labelRow = frame {
+    width: 100%,
+    layout: {align-items: .center, item-gap: l.lengths.spacing-6},
+    children: [labelName, labelSample],
+
+    labelName = text : styles.label {
+      width: 120px,
+      font-family: f.fonts.mono,
+      fill[0].color: c.colors.muted
+    }
+
+    labelSample = text : styles.label {
+      contents: "We’ll only use it to reply to you.",
+      fill[0].color: c.colors.muted
+    }
+  }
+
+  headerRow = frame {
+    width: 100%,
+    layout: {align-items: .center, item-gap: l.lengths.spacing-6},
+    children: [headerName, headerSample],
+
+    headerName = text : styles.label {
+      width: 120px,
+      contents: "Label, mono",
+      font-family: f.fonts.mono,
+      fill[0].color: c.colors.muted
+    }
+
+    headerSample = text : styles.label {
+      contents: "Recent files",
+      font-family: f.fonts.mono,
+      fill[0].color: c.colors.muted
+    }
+  }
+}
+
+lengthsSpecimen = frame {
+  title: "Corners and spacing",
+  caption: "From lengths.elyx, named as in Tailwind, so radius-lg is rounded-lg and spacing-3 is p-3 or gap-3",
+  left: 0px,
+  top: 968px,
+  width: 880px,
+  layout: {direction: .column, item-gap: l.lengths.spacing-8},
+  fill: c.colors.ground,
+  padding: l.lengths.spacing-8,
+  children: [cornersRow, spacingRow],
+
+  cornersRow = frame {
+    width: 100%,
+    layout: {item-gap: l.lengths.spacing-6},
+    children: [cornersName, corners],
+
+    cornersName = text : styles.label {
+      width: 120px,
+      contents: "Corners",
+      font-family: f.fonts.mono,
+      fill[0].color: c.colors.muted
+    }
+
+    corners = frame {
+      layout: {item-gap: l.lengths.spacing-6},
+      children: [corner4, corner6, corner8, corner12, corner24],
+
+      corner4 = frame {
+        width: 112px,
+        layout: {direction: .column, item-gap: l.lengths.spacing-2},
+        children: [cornerShape, cornerToken, cornerUse],
+
+        cornerShape = frame {
+          width: 64px,
+          height: 64px,
+          fill: c.tints.ground-8,
+          corner-radius: l.lengths.radius-sm
+        }
+
+        cornerToken = text : styles.label {
+          contents: "radius-sm",
+          font-family: f.fonts.mono
+        }
+
+        cornerUse = text : styles.label {
+          width: 100%,
+          contents: "4px: options, menu items and focus rings",
+          fill[0].color: c.colors.muted
+        }
+      }
+
+      corner6 = frame : corner4 {
+        cornerShape {
+          corner-radius: l.lengths.radius-md
+        }
+
+        cornerToken {
+          contents: "radius-md"
+        }
+
+        cornerUse {
+          contents: "6px: toggles and checkboxes"
+        }
+      }
+
+      corner8 = frame : corner4 {
+        cornerShape {
+          corner-radius: l.lengths.radius-lg
+        }
+
+        cornerToken {
+          contents: "radius-lg"
+        }
+
+        cornerUse {
+          contents: "8px: most things, from buttons to popovers"
+        }
+      }
+
+      corner12 = frame : corner4 {
+        cornerShape {
+          corner-radius: l.lengths.radius-xl
+        }
+
+        cornerToken {
+          contents: "radius-xl"
+        }
+
+        cornerUse {
+          contents: "12px: floating toolbars"
+        }
+      }
+
+      corner24 = frame : corner4 {
+        cornerShape {
+          corner-radius: l.lengths.radius-3xl
+        }
+
+        cornerToken {
+          contents: "radius-3xl"
+        }
+
+        cornerUse {
+          contents: "24px: dialogs and sheets"
+        }
+      }
+    }
+  }
+
+  spacingRow = frame {
+    width: 100%,
+    layout: {item-gap: l.lengths.spacing-6},
+    children: [spacingName, steps],
+
+    spacingName = text : styles.label {
+      width: 120px,
+      contents: "Spacing",
+      font-family: f.fonts.mono,
+      fill[0].color: c.colors.muted
+    }
+
+    steps = frame {
+      layout: {direction: .column, item-gap: l.lengths.spacing-2},
+      children: [
+        space2,
+        space4,
+        space6,
+        space8,
+        space10,
+        space12,
+        space14,
+        space16,
+        space20,
+        space24,
+        space32,
+        space40,
+        space48,
+        space64
+      ],
+
+      space2 = frame {
+        layout: {align-items: .center, item-gap: l.lengths.spacing-4},
+        children: [spaceToken, spaceValue, spaceBar],
+
+        spaceToken = text : styles.label {
+          width: 96px,
+          contents: "spacing-0-5",
+          font-family: f.fonts.mono
+        }
+
+        spaceValue = text : styles.label {
+          width: 32px,
+          contents: "2px",
+          fill[0].color: c.colors.muted
+        }
+
+        spaceBar = frame {
+          width: l.lengths.spacing-0-5,
+          height: 12px,
+          fill: c.tints.ground-24
+        }
+      }
+
+      space4 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-1
+        }
+
+        spaceToken {
+          contents: "spacing-1"
+        }
+
+        spaceValue {
+          contents: "4px"
+        }
+      }
+
+      space6 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-1-5
+        }
+
+        spaceToken {
+          contents: "spacing-1-5"
+        }
+
+        spaceValue {
+          contents: "6px"
+        }
+      }
+
+      space8 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-2
+        }
+
+        spaceToken {
+          contents: "spacing-2"
+        }
+
+        spaceValue {
+          contents: "8px"
+        }
+      }
+
+      space10 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-2-5
+        }
+
+        spaceToken {
+          contents: "spacing-2-5"
+        }
+
+        spaceValue {
+          contents: "10px"
+        }
+      }
+
+      space12 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-3
+        }
+
+        spaceToken {
+          contents: "spacing-3"
+        }
+
+        spaceValue {
+          contents: "12px"
+        }
+      }
+
+      space14 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-3-5
+        }
+
+        spaceToken {
+          contents: "spacing-3-5"
+        }
+
+        spaceValue {
+          contents: "14px"
+        }
+      }
+
+      space16 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-4
+        }
+
+        spaceToken {
+          contents: "spacing-4"
+        }
+
+        spaceValue {
+          contents: "16px"
+        }
+      }
+
+      space20 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-5
+        }
+
+        spaceToken {
+          contents: "spacing-5"
+        }
+
+        spaceValue {
+          contents: "20px"
+        }
+      }
+
+      space24 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-6
+        }
+
+        spaceToken {
+          contents: "spacing-6"
+        }
+
+        spaceValue {
+          contents: "24px"
+        }
+      }
+
+      space32 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-8
+        }
+
+        spaceToken {
+          contents: "spacing-8"
+        }
+
+        spaceValue {
+          contents: "32px"
+        }
+      }
+
+      space40 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-10
+        }
+
+        spaceToken {
+          contents: "spacing-10"
+        }
+
+        spaceValue {
+          contents: "40px"
+        }
+      }
+
+      space48 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-12
+        }
+
+        spaceToken {
+          contents: "spacing-12"
+        }
+
+        spaceValue {
+          contents: "48px"
+        }
+      }
+
+      space64 = frame : space2 {
+        spaceBar {
+          width: l.lengths.spacing-16
+        }
+
+        spaceToken {
+          contents: "spacing-16"
+        }
+
+        spaceValue {
+          contents: "64px"
+        }
+      }
+    }
+  }
+}

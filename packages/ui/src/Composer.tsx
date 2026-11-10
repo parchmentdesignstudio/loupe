@@ -5,8 +5,10 @@ import { tv } from './tv.js';
 
 const composer = tv({
 	slots: {
-		group: 'flex items-end gap-2 rounded-[1.25rem] bg-paper py-2 pr-2 pl-4 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]',
-		input: 'min-w-0 flex-1 bg-transparent py-2 text-base text-ink outline-none placeholder:text-muted',
+		group: 'flex items-end gap-2 rounded-lg bg-raised py-2 pr-3.5 pl-3 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]',
+		input: 'min-w-0 flex-1 bg-transparent py-2 text-control leading-6 text-ink outline-none placeholder:text-muted',
+		// Centres the send button on the line of text
+		send: 'mb-1.5',
 	},
 	variants: {
 		isFocusWithin: {
@@ -51,7 +53,7 @@ export function Composer({ label, placeholder, submitLabel = 'Send', submitIcon,
 			<AriaTextField aria-label={label} value={message} onChange={setMessage} isDisabled={isDisabled}>
 				<Group className={(state) => slots.group(state)}>
 					<Input placeholder={placeholder} className={slots.input()} />
-					<Button type="submit" aria-label={submitLabel} shape="circle" size="small" isDisabled={isDisabled || empty}>
+					<Button type="submit" aria-label={submitLabel} shape="circle" size="small" isDisabled={isDisabled || empty} className={slots.send()}>
 						{submitIcon}
 					</Button>
 				</Group>

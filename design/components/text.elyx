@@ -1,0 +1,52 @@
+import "tokens/typography.elyx" as t
+import "tokens/fonts.elyx" as f
+import "tokens/colors.elyx" as base
+
+// Parchment’s text styles: a text layer per text-* utility, in ink, with its size and leading from typography.elyx and
+// its family from fonts.elyx. Instance one, then set its contents, and its colour or weight where the design needs them.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+file {}
+
+export body = text {
+  caption: "Running text. A toast’s title sets it in Medium",
+  left: 0px,
+  top: 0px,
+  fill: base.colors.ink,
+  contents: "Body",
+  font-size: t.typography.text-size,
+  font-family: f.fonts.face,
+  line-height: t.typography.text-leading
+}
+
+export control = text {
+  caption: "Buttons, fields, labels, options and tabs. Buttons, selects, tabs, toggles, navigation links and a chosen option set it in Medium",
+  left: 208px,
+  top: 0px,
+  fill: base.colors.ink,
+  contents: "Control",
+  font-size: t.typography.control-size,
+  font-family: f.fonts.face,
+  line-height: t.typography.control-leading
+}
+
+export label = text {
+  caption: "Descriptions, errors, tags, tooltips and a toast’s message. Section headers set it in Auger Mono",
+  left: 416px,
+  top: 0px,
+  fill: base.colors.ink,
+  contents: "Label",
+  font-size: t.typography.label-size,
+  font-family: f.fonts.face,
+  line-height: t.typography.label-leading
+}
+
+export title = text {
+  caption: "Dialog headings, set in Medium",
+  left: 624px,
+  top: 0px,
+  fill: base.colors.ink,
+  contents: "Title",
+  font-size: t.typography.title-size,
+  font-family: f.fonts.face,
+  line-height: t.typography.title-leading
+}

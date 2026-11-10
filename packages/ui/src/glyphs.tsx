@@ -14,6 +14,12 @@ export const Dash = ({ className = glyph }: { className?: string }) => (
 	</svg>
 );
 
+export const Plus = ({ className = glyph }: { className?: string }) => (
+	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
+		<path d="M8 4v8M4 8h8" strokeLinecap="round" />
+	</svg>
+);
+
 export const ChevronDown = ({ className = glyph }: { className?: string }) => (
 	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
 		<path d="m4 6 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
@@ -29,5 +35,12 @@ export const ChevronRight = ({ className = glyph }: { className?: string }) => (
 export const Cross = ({ className = glyph }: { className?: string }) => (
 	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
 		<path d="m4.5 4.5 7 7m0-7-7 7" strokeLinecap="round" />
+	</svg>
+);
+
+export const MagnifyingGlass = ({ className = glyph }: { className?: string }) => (
+	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
+		<circle cx="7" cy="7" r="4.25" />
+		<path d="m10 10 3 3" strokeLinecap="round" />
 	</svg>
 );

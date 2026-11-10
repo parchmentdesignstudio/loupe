@@ -1,0 +1,9 @@
+// Parchment’s families, by the names they have on the desktop, which is where Elyx finds them once they’re activated
+// in Adobe Fonts.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+file {}
+
+export fonts = tokens {
+  face: "Elza Round Variable",
+  mono: "Auger Mono"
+}

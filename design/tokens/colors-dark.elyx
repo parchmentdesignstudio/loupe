@@ -1,0 +1,81 @@
+import "./colors.elyx" as base
+
+// The dark values of colors.elyx. Every role is here, even one that only names another, as a role colors.elyx
+// gives keeps its light value in the dark. Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+@context(theme="dark")
+file {}
+
+export dark-colors = tokens : base.colors {
+  // The roles, each light-dark(light, dark). The dark mode inverts the light one: the ground takes ink's
+  // teal, and ink takes the ground's cream
+  ink: base.colors.cream-95,
+  muted: base.colors.cream-80,
+  danger: base.colors.red-81,
+  // Marks on ink, such as a solid button's text or a checkbox's tick
+  paper: base.colors.teal-20,
+  // The layers, from the page up. In the light, panel, raised and overlay are all white, and shadows part them.
+  // In the dark, each is lighter than the one below
+  ground: base.colors.teal-20,
+  // An area on the page, such as a tool's side panel
+  panel: base.colors.teal-25,
+  // A control's fill, such as a button's, a field's or a checkbox's
+  raised: base.colors.teal-29,
+  // What raised turns on hover
+  surface: base.colors.teal-35,
+  // Popovers, menus, dialogs, sheets and floating toolbars
+  overlay: base.colors.teal-32,
+  // Ink as a surface, such as a toast or a tooltip, with paper text
+  inverse: ink,
+  // A switch's handle and a slider's thumb, which stay lighter than their track
+  knob: base.colors.cream-80,
+  // Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
+  // ink would grey the cream ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
+  // as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on
+  ground-bleed: base.colors.teal-95,
+  panel-bleed: base.colors.teal-95,
+  raised-bleed: base.colors.teal-95,
+  overlay-bleed: base.colors.teal-95,
+  inverse-bleed: base.colors.umber-30,
+  bleed: ground-bleed,
+  // Behind a sheet
+  scrim: opacity(base.colors.black, 48%),
+  // Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
+  // drops warm the cream in the light, as the tints do
+  edge: opacity(bleed, 8%),
+  drop-raised: opacity(base.colors.black, 24%),
+  drop-floating: opacity(base.colors.black, 32%),
+  drop-overlay: opacity(base.colors.black, 48%)
+}
+
+export dark-tints = tokens : base.tints {
+  ground-4: opacity(dark-colors.ground-bleed, 4%),
+  ground-8: opacity(dark-colors.ground-bleed, 8%),
+  ground-12: opacity(dark-colors.ground-bleed, 12%),
+  ground-16: opacity(dark-colors.ground-bleed, 16%),
+  ground-24: opacity(dark-colors.ground-bleed, 24%),
+  ground-32: opacity(dark-colors.ground-bleed, 32%),
+  panel-4: opacity(dark-colors.panel-bleed, 4%),
+  panel-8: opacity(dark-colors.panel-bleed, 8%),
+  panel-12: opacity(dark-colors.panel-bleed, 12%),
+  panel-16: opacity(dark-colors.panel-bleed, 16%),
+  panel-24: opacity(dark-colors.panel-bleed, 24%),
+  panel-32: opacity(dark-colors.panel-bleed, 32%),
+  raised-4: opacity(dark-colors.raised-bleed, 4%),
+  raised-8: opacity(dark-colors.raised-bleed, 8%),
+  raised-12: opacity(dark-colors.raised-bleed, 12%),
+  raised-16: opacity(dark-colors.raised-bleed, 16%),
+  raised-24: opacity(dark-colors.raised-bleed, 24%),
+  raised-32: opacity(dark-colors.raised-bleed, 32%),
+  overlay-4: opacity(dark-colors.overlay-bleed, 4%),
+  overlay-8: opacity(dark-colors.overlay-bleed, 8%),
+  overlay-12: opacity(dark-colors.overlay-bleed, 12%),
+  overlay-16: opacity(dark-colors.overlay-bleed, 16%),
+  overlay-24: opacity(dark-colors.overlay-bleed, 24%),
+  overlay-32: opacity(dark-colors.overlay-bleed, 32%),
+  inverse-4: opacity(dark-colors.inverse-bleed, 4%),
+  inverse-8: opacity(dark-colors.inverse-bleed, 8%),
+  inverse-12: opacity(dark-colors.inverse-bleed, 12%),
+  inverse-16: opacity(dark-colors.inverse-bleed, 16%),
+  inverse-24: opacity(dark-colors.inverse-bleed, 24%),
+  inverse-32: opacity(dark-colors.inverse-bleed, 32%)
+}

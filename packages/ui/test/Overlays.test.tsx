@@ -89,6 +89,15 @@ describe('Menu', () => {
 	});
 });
 
+const sendTooltip = (showArrow?: boolean) => (
+	<TooltipTrigger>
+		<Button shape="circle" aria-label="Send">
+			<svg aria-hidden="true" />
+		</Button>
+		<Tooltip showArrow={showArrow}>Send message</Tooltip>
+	</TooltipTrigger>
+);
+
 describe('Tooltip', () => {
 	it('shows for keyboard focus and describes its control', async () => {
 		const user = userEvent.setup();
@@ -104,5 +113,14 @@ describe('Tooltip', () => {
 		const tooltip = await screen.findByRole('tooltip');
 		expect(tooltip.textContent).toContain('Send message');
 		expect(screen.getByRole('button').getAttribute('aria-describedby')).toBe(tooltip.id);
+	});
+
+	it('points at its control only with showArrow', async () => {
+		const user = userEvent.setup();
+		const { rerender } = render(sendTooltip());
+		await user.tab();
+		expect((await screen.findByRole('tooltip')).querySelector('svg')).toBeNull();
+		rerender(sendTooltip(true));
+		expect(screen.getByRole('tooltip').querySelector('svg')).not.toBeNull();
 	});
 });

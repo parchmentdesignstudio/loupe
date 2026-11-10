@@ -8,13 +8,13 @@ export function ListBox(props) {
 }
 // One option in a list or menu. Keyboard and pointer both move the highlight, so focus shows as a fill
 export const option = tv({
-    base: 'group flex cursor-default items-center gap-3 rounded-xl px-3 py-2 text-body text-ink outline-0 select-none forced-color-adjust-none',
+    base: 'group flex cursor-default items-center gap-3 rounded-sm px-3 py-1.5 text-control text-ink outline-0 select-none forced-color-adjust-none',
     variants: {
         isFocused: {
-            true: 'bg-ink/6 forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]',
+            true: 'bg-bleed/8 forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]',
         },
         isPressed: {
-            true: 'bg-ink/10',
+            true: 'bg-bleed/12',
         },
         isDisabled: {
             true: 'opacity-40',
@@ -28,7 +28,7 @@ export function ListBoxItem(props) {
 }
 // Shared by list box and menu sections
 export const section = tv({
-    base: 'not-first:mt-1.5 not-first:border-t not-first:border-ink/8 not-first:pt-1.5',
+    base: 'not-first:mt-1.5 not-first:border-t not-first:border-bleed/8 not-first:pt-1.5',
 });
 /** Options grouped under a Header, which goes first inside it */
 export function ListBoxSection(props) {

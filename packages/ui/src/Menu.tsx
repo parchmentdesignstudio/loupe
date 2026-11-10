@@ -15,7 +15,7 @@ export interface MenuProps<T> extends AriaMenuProps<T> {
 export function Menu<T extends object>({ placement, ...props }: MenuProps<T>) {
 	return (
 		<Popover placement={placement} className="min-w-52">
-			<AriaMenu {...props} className="max-h-[inherit] overflow-auto p-1.5 outline-0" />
+			<AriaMenu {...props} className="max-h-[inherit] overflow-auto p-1 outline-0" />
 		</Popover>
 	);
 }
@@ -42,7 +42,7 @@ export function MenuItem({ variant, ...props }: MenuItemProps) {
 			{composeRenderProps(props.children, (children, { selectionMode, isSelected, hasSubmenu }) => (
 				<>
 					{selectionMode !== 'none' && <span className="flex size-4 shrink-0">{isSelected && <Check />}</span>}
-					<span className="flex min-w-0 flex-1 items-center gap-2 truncate">{children}</span>
+					<span className="flex min-w-0 flex-1 items-center gap-2 truncate [&>kbd]:ms-auto [&>kbd]:ps-4">{children}</span>
 					{hasSubmenu && <ChevronRight className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" />}
 				</>
 			))}
@@ -56,5 +56,5 @@ export function MenuSection<T extends object>(props: MenuSectionProps<T>) {
 }
 
 export function MenuSeparator() {
-	return <Separator className="mx-3 my-1.5 border-b border-ink/8" />;
+	return <Separator className="mx-3 my-1.5 border-b border-bleed/8" />;
 }

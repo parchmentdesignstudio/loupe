@@ -7,9 +7,9 @@ import { Popover } from './Popover.js';
 import { composeClassName, tv } from './tv.js';
 const combo = tv({
     slots: {
-        group: 'flex min-h-11 items-center rounded-2xl bg-paper pr-1.5 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]',
-        input: 'min-w-0 flex-1 bg-transparent py-2.5 pl-4 text-base text-ink outline-none placeholder:text-muted',
-        button: 'flex size-8 shrink-0 cursor-default items-center justify-center rounded-full text-muted outline-0 data-[hovered]:bg-ink/5 data-[pressed]:bg-ink/10',
+        group: 'flex items-center rounded-lg bg-raised [--bleed:var(--raised-bleed)] pr-1 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]',
+        input: 'min-w-0 flex-1 bg-transparent py-1.5 pl-3 text-control text-ink outline-none placeholder:text-muted',
+        button: 'flex shrink-0 cursor-default items-center justify-center rounded-full p-1 text-muted outline-0 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
     },
     variants: {
         isFocusWithin: {
@@ -17,7 +17,7 @@ const combo = tv({
             true: { group: 'outline-2' },
         },
         isInvalid: {
-            true: { group: 'outline-danger shadow-[0_0_0_1px_var(--color-danger)]' },
+            true: { group: 'outline-danger shadow-invalid' },
         },
         isDisabled: {
             true: { group: 'opacity-50' },

@@ -66,12 +66,13 @@ describe('Button', () => {
 				</Button>
 			</>,
 		);
-		const [medium, small] = screen.getAllByRole('button');
-		expect(medium.className).toContain('size-10');
-		expect(medium.className).toContain('px-0');
-		expect(medium.className).not.toContain('px-4');
-		expect(small.className).toContain('size-9');
-		expect(small.className).not.toContain('px-3.5');
+		const [medium, small] = screen.getAllByRole('button').map((button) => button.className.split(' '));
+		expect(medium).toContain('rounded-full');
+		expect(small).toContain('rounded-full');
+		expect(medium).toEqual(expect.arrayContaining(['px-2', 'py-1.5']));
+		expect(medium).not.toContain('px-3');
+		expect(small).toEqual(expect.arrayContaining(['px-1.5', 'py-1']));
+		expect(small).not.toContain('px-2.5');
 	});
 
 	it('keeps text-body and text-ink apart when merging', () => {

@@ -1,0 +1,21 @@
+import "./typography-coarse.elyx" as coarse
+
+// Parchment’s type: the sizes the text components use, in points, and their leadings, as multiples of the size.
+// fonts.elyx names the families. typography-coarse.elyx holds the sizes in the pointer=coarse context.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+file {}
+
+@variants(coarse.coarse-typography)
+export typography = tokens {
+  text-size: 15,
+  text-leading: 1.4,
+  // Text in buttons, fields, labels, options and tabs, on a 20px line at either size. A control's padding adds to
+  // the line, so 6px above and below makes it 32px tall, and an icon in a control sits on the line as text does
+  control-size: 13,
+  // 20px in the CSS, and a multiple of control-size here, as Elyx takes line height
+  control-leading: 1.54,
+  label-size: 12,
+  label-leading: 1.35,
+  title-size: 20,
+  title-leading: 1.1
+}

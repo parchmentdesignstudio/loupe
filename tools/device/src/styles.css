@@ -1,10 +1,8 @@
 @import "tailwindcss";
+@import "@parchment/ui/tokens.css";
 
 /* mcknny’s tokens, from its src/styles/properties.css */
 @theme {
-  --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-body: elza-round-variable, var(--font-system);
-
   --color-avocado: oklch(57.5% 0.137842 120.7);
   /* Avocado, darker, so small white text on it reaches 4.5:1 */
   --color-avocado-dark: oklch(47% 0.12 120.7);
@@ -44,14 +42,33 @@
   --ease-smooth: cubic-bezier(.45, 0, .25, 1);
 }
 
+/* In the dark, device keeps mcknny’s olive and pearl over @parchment/ui’s teal, for now */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: var(--color-pearl);
+    --muted: color-mix(in oklab, var(--color-pearl) 60%, transparent);
+    --paper: var(--color-olive-975);
+    --ground: var(--color-olive-1000);
+    --panel: var(--color-olive-975);
+    --raised: var(--color-olive-975);
+    --overlay: var(--color-olive-975);
+    --surface: var(--color-olive-950);
+    --ground-bleed: var(--color-pearl);
+    --panel-bleed: var(--color-pearl);
+    --raised-bleed: var(--color-pearl);
+    --overlay-bleed: var(--color-pearl);
+  }
+}
+
 :root {
   color-scheme: light dark;
   font-feature-settings: "liga";
   interpolate-size: allow-keywords;
 }
 
-[class*="rounded"],
-[class*="rounded"]:before,
-[class*="rounded"]:after {
+/* Circles stay round, such as @parchment/ui’s circle buttons */
+[class*="rounded"]:not([class*="rounded-full"]),
+[class*="rounded"]:not([class*="rounded-full"]):before,
+[class*="rounded"]:not([class*="rounded-full"]):after {
   corner-shape: squircle;
 }

@@ -1,0 +1,189 @@
+import "tokens/colors.elyx" as base
+import "tokens/lengths.elyx" as l
+
+// Parchment’s elevation: a frame per shadow, with the fill and corners it goes with. Instance one and give it a size
+// and contents. Each shadow is a soft drop and a 1px edge, in colours from colors.elyx, so it follows the theme.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+file {}
+
+export raised = frame {
+  caption: "Buttons, chips and fields",
+  left: 0px,
+  top: 0px,
+  width: 160px,
+  height: 96px,
+  fill: base.colors.raised,
+  shadow: [
+    {
+      drop-shadow: {
+        color: base.colors.drop-raised,
+        offset: point(0px, 3px),
+        blur-radius: 6px,
+        spread: -3px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-raised,
+        offset: point(0px, 2px),
+        blur-radius: 4px,
+        spread: -2px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-raised,
+        offset: point(0px, 1px),
+        blur-radius: 3px,
+        spread: -1.5px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-raised,
+        offset: point(0px, 1px),
+        blur-radius: 1px,
+        spread: -0.5px
+      }
+    },
+    {drop-shadow: {color: base.colors.edge, spread: 1px}}
+  ],
+  corner-radius: l.lengths.radius-lg,
+  slot: .true
+}
+
+export floating = frame {
+  caption: "Floating toolbars",
+  left: 208px,
+  top: 0px,
+  width: 160px,
+  height: 96px,
+  fill: base.colors.overlay,
+  shadow: [
+    {
+      drop-shadow: {
+        color: base.colors.drop-floating,
+        offset: point(0px, 12px),
+        blur-radius: 24px,
+        spread: -12px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-floating,
+        offset: point(0px, 6px),
+        blur-radius: 12px,
+        spread: -6px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-floating,
+        offset: point(0px, 3px),
+        blur-radius: 6px,
+        spread: -3px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-floating,
+        offset: point(0px, 2px),
+        blur-radius: 4px,
+        spread: -2px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-floating,
+        offset: point(0px, 1px),
+        blur-radius: 3px,
+        spread: -1.5px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-floating,
+        offset: point(0px, 1px),
+        blur-radius: 1px,
+        spread: -0.5px
+      }
+    },
+    {drop-shadow: {color: base.colors.edge, spread: 1px}}
+  ],
+  corner-radius: l.lengths.radius-xl,
+  slot: .true
+}
+
+export overlay = frame {
+  caption: "Popovers and menus. Dialogs and sheets round to radius-3xl",
+  left: 416px,
+  top: 0px,
+  width: 160px,
+  height: 96px,
+  fill: base.colors.overlay,
+  shadow: [
+    {
+      drop-shadow: {
+        color: base.colors.drop-overlay,
+        offset: point(0px, 12px),
+        blur-radius: 32px,
+        spread: -24px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-overlay,
+        offset: point(0px, 8px),
+        blur-radius: 16px,
+        spread: -12px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-overlay,
+        offset: point(0px, 3px),
+        blur-radius: 6px,
+        spread: -3px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-overlay,
+        offset: point(0px, 2px),
+        blur-radius: 4px,
+        spread: -2px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-overlay,
+        offset: point(0px, 1px),
+        blur-radius: 3px,
+        spread: -1.5px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-overlay,
+        offset: point(0px, 1px),
+        blur-radius: 1px,
+        spread: -0.5px
+      }
+    },
+    {drop-shadow: {color: base.colors.edge, spread: 1px}}
+  ],
+  corner-radius: l.lengths.radius-lg,
+  slot: .true
+}
+
+export invalid = frame {
+  caption: "A field whose value is wrong",
+  left: 624px,
+  top: 0px,
+  width: 160px,
+  height: 96px,
+  fill: base.colors.raised,
+  shadow: {drop-shadow: {color: base.colors.danger, spread: 1px}},
+  corner-radius: l.lengths.radius-lg,
+  slot: .true
+}

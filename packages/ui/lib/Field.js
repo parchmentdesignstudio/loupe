@@ -4,7 +4,7 @@ import { composeClassName, tv } from './tv.js';
 // The parts every field shares, so a select reads like a text field
 export const field = tv({
     slots: {
-        label: 'w-fit cursor-default font-mono text-label text-ink',
+        label: 'w-fit cursor-default text-control text-ink',
         description: 'text-label text-muted',
         error: 'text-label text-danger',
     },

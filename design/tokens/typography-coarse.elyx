@@ -1,0 +1,13 @@
+import "./typography.elyx" as base
+
+// The type in the pointer=coarse context: 16px on touch screens, as iOS zooms into a field with smaller text. The line
+// stays 20px, so controls keep their height.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+@context(pointer="coarse")
+file {}
+
+export coarse-typography = tokens : base.typography {
+  control-size: 16,
+  // Still 20px, as a multiple of control-size
+  control-leading: 1.25
+}

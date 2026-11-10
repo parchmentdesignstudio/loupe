@@ -7,7 +7,7 @@ export declare const popover: import("tailwind-variants").TVReturnType<{
     isExiting: {
         true: string;
     };
-}, undefined, "rounded-2xl bg-paper text-ink shadow-overlay outline-0", undefined, undefined, undefined>;
+}, undefined, "rounded-lg bg-overlay [--bleed:var(--overlay-bleed)] text-ink shadow-overlay outline-0", undefined, undefined, undefined>;
 export interface PopoverProps extends Omit<AriaPopoverProps, 'children'> {
     /** Points back at what opened it, for a popover that isn't a list */
     showArrow?: boolean;

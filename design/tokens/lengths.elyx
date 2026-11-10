@@ -1,0 +1,33 @@
+// Parchment’s lengths: the corners and the steps of the spacing, in pixels, named as in Tailwind, so radius-lg is
+// rounded-lg and spacing-3 is p-3.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+file {}
+
+export lengths = tokens {
+  // Most things round to 8px. A corner inside a rounded container is the container's less the space between them,
+  // so the two curves stay parallel: an option or menu item 4px into its 8px popover rounds to 4px, a toggle 2px
+  // into its 8px track rounds to 6px, as a checkbox does, and a toolbar holding 8px buttons 4px in rounds to 12px.
+  // The focus ring around a link or tab rounds to 4px too, and dialogs and sheets to 24px
+  radius-sm: 4,
+  radius-md: 6,
+  radius-lg: 8,
+  radius-xl: 12,
+  radius-3xl: 24,
+  // Space comes in 4px steps, with half steps up to 16px, then 20, 24, 32, 40, 48 and 64px. A 32px control pads its
+  // text 6px above and below, and 12px at the sides
+  // Named for Tailwind’s steps, so spacing-3 is p-3 or gap-3, and spacing-1-5 is p-1.5
+  spacing-0-5: 2,
+  spacing-1: 4,
+  spacing-1-5: 6,
+  spacing-2: 8,
+  spacing-2-5: 10,
+  spacing-3: 12,
+  spacing-3-5: 14,
+  spacing-4: 16,
+  spacing-5: 20,
+  spacing-6: 24,
+  spacing-8: 32,
+  spacing-10: 40,
+  spacing-12: 48,
+  spacing-16: 64
+}

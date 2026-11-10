@@ -12,9 +12,9 @@ export declare const option: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "group flex cursor-default items-center gap-3 rounded-xl px-3 py-2 text-body text-ink outline-0 select-none forced-color-adjust-none", undefined, undefined, undefined>;
+}, undefined, "group flex cursor-default items-center gap-3 rounded-sm px-3 py-1.5 text-control text-ink outline-0 select-none forced-color-adjust-none", undefined, undefined, undefined>;
 /** An option with its text as children. It's ticked when selected */
 export declare function ListBoxItem(props: ListBoxItemProps): import("react").JSX.Element;
-export declare const section: import("tailwind-variants").TVReturnType<{}, undefined, "not-first:mt-1.5 not-first:border-t not-first:border-ink/8 not-first:pt-1.5", undefined, undefined, undefined>;
+export declare const section: import("tailwind-variants").TVReturnType<{}, undefined, "not-first:mt-1.5 not-first:border-t not-first:border-bleed/8 not-first:pt-1.5", undefined, undefined, undefined>;
 /** Options grouped under a Header, which goes first inside it */
 export declare function ListBoxSection<T extends object>(props: ListBoxSectionProps<T>): import("react").JSX.Element;

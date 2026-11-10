@@ -74,6 +74,7 @@ Screens are sized in points, and the inspector says what to capture each one at.
 | `src/editor/overlay.tsx` | The grid, columns, guides, selection and snap lines, drawn at the screen’s size |
 | `src/editor/export.ts` | The PNG, drawn as the canvas shows it |
 | `src/ui/icon.tsx` | Loupe’s icons, with Lucide standing in for those it doesn’t have yet |
+| `src/ui/controls.tsx` | The few controls Loupe’s `packages/ui` doesn’t have yet, as the toolbar and inspector take the rest from it |
 
 To add a device, list it in `models.ts` with its screen size in points, then give it a spec in `frames.ts`: a phone, tablet, laptop or display, with its screen’s corner radius and bezel.
 

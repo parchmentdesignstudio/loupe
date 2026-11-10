@@ -4,7 +4,7 @@ import { Button } from './Button.js';
 import { Sheet, SheetTrigger } from './Sheet.js';
 import { tv } from './tv.js';
 const navigation = tv({
-    base: 'flex flex-col gap-6 max-md:hidden md:sticky md:top-0 md:h-dvh md:w-60 md:shrink-0 md:overflow-y-auto md:border-r md:border-ink/8 md:px-3 md:py-6',
+    base: 'flex flex-col gap-6 max-md:hidden md:sticky md:top-0 md:h-dvh md:w-60 md:shrink-0 md:overflow-y-auto md:border-r md:border-bleed/8 md:px-3 md:py-6',
 });
 /** A page’s navigation: a column beside the page on wider screens, and a sheet behind a button on phones */
 export function Navigation({ className, children, ...props }) {

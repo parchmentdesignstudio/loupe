@@ -1,0 +1,10 @@
+{
+  "assets": { "include": ["assets"] },
+  "canvasColor": { "file": "tokens/colors.elyx", "token": "colors.ground" },
+  "color": { "encoding": "hex" },
+  "dependencies": {
+    "ui": "../packages/ui",
+    "icons": "../packages/icons"
+  },
+  "files": { "exclude": ["elyx_deps"] }
+}

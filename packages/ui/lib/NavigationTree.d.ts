@@ -17,7 +17,7 @@ export declare const navigationTreeLink: import("tailwind-variants").TVReturnTyp
     isDisabled: {
         true: string;
     };
-}, undefined, "block rounded-lg px-3 py-1.5 text-body text-ink", {
+}, undefined, "block rounded-lg px-3 py-1.5 text-control font-medium text-ink", {
     isFocusVisible: {
         false: string;
         true: string;

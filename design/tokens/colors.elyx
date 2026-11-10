@@ -1,0 +1,101 @@
+import "./colors-dark.elyx" as dark
+
+// Parchment’s colours: the palette, and the roles components use. colors-dark.elyx holds the roles’ dark values.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+file {}
+
+@variants(dark.dark-colors)
+export colors = tokens {
+  // The palette: the raw colours, named by hue and lightness, so teal-29 is oklch(0.29 …). The further apart
+  // two numbers, the stronger the contrast. Components use the roles below rather than these
+  white: .white,
+  black: .black,
+  cream-98: #fbf6ef,
+  cream-95: #f3eee6,
+  cream-80: #c3bdb4,
+  umber-30: #3d2a08,
+  teal-95: #d8f5f8,
+  teal-50: #5b6668,
+  teal-35: #2e3e40,
+  teal-32: #273638,
+  teal-29: #1f2f31,
+  teal-25: #172426,
+  teal-20: #0e1819,
+  red-81: #ffa699,
+  red-50: #b3261e,
+  // The roles, each light-dark(light, dark). The dark mode inverts the light one: the ground takes ink's
+  // teal, and ink takes the ground's cream
+  ink: teal-29,
+  muted: teal-50,
+  danger: red-50,
+  // Marks on ink, such as a solid button's text or a checkbox's tick
+  paper: white,
+  // The layers, from the page up. In the light, panel, raised and overlay are all white, and shadows part them.
+  // In the dark, each is lighter than the one below
+  ground: cream-98,
+  // An area on the page, such as a tool's side panel
+  panel: white,
+  // A control's fill, such as a button's, a field's or a checkbox's
+  raised: white,
+  // What raised turns on hover
+  surface: cream-98,
+  // Popovers, menus, dialogs, sheets and floating toolbars
+  overlay: white,
+  // Ink as a surface, such as a toast or a tooltip, with paper text
+  inverse: ink,
+  // A switch's handle and a slider's thumb, which stay lighter than their track
+  knob: white,
+  // Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
+  // ink would grey the cream ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
+  // as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on
+  ground-bleed: umber-30,
+  panel-bleed: teal-29,
+  raised-bleed: teal-29,
+  overlay-bleed: teal-29,
+  inverse-bleed: white,
+  bleed: ground-bleed,
+  // Behind a sheet
+  scrim: opacity(teal-29, 32%),
+  // Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
+  // drops warm the cream in the light, as the tints do
+  edge: opacity(bleed, 8%),
+  drop-raised: opacity(bleed, 8%),
+  drop-floating: opacity(bleed, 16%),
+  drop-overlay: opacity(bleed, 24%)
+}
+
+// A tint is a layer’s bleed at 4, 8, 12, 16, 24 or 32%, named for the layer it sits on, such as overlay-8 for a
+// hovered menu item
+@variants(dark.dark-tints)
+export tints = tokens {
+  ground-4: opacity(colors.ground-bleed, 4%),
+  ground-8: opacity(colors.ground-bleed, 8%),
+  ground-12: opacity(colors.ground-bleed, 12%),
+  ground-16: opacity(colors.ground-bleed, 16%),
+  ground-24: opacity(colors.ground-bleed, 24%),
+  ground-32: opacity(colors.ground-bleed, 32%),
+  panel-4: opacity(colors.panel-bleed, 4%),
+  panel-8: opacity(colors.panel-bleed, 8%),
+  panel-12: opacity(colors.panel-bleed, 12%),
+  panel-16: opacity(colors.panel-bleed, 16%),
+  panel-24: opacity(colors.panel-bleed, 24%),
+  panel-32: opacity(colors.panel-bleed, 32%),
+  raised-4: opacity(colors.raised-bleed, 4%),
+  raised-8: opacity(colors.raised-bleed, 8%),
+  raised-12: opacity(colors.raised-bleed, 12%),
+  raised-16: opacity(colors.raised-bleed, 16%),
+  raised-24: opacity(colors.raised-bleed, 24%),
+  raised-32: opacity(colors.raised-bleed, 32%),
+  overlay-4: opacity(colors.overlay-bleed, 4%),
+  overlay-8: opacity(colors.overlay-bleed, 8%),
+  overlay-12: opacity(colors.overlay-bleed, 12%),
+  overlay-16: opacity(colors.overlay-bleed, 16%),
+  overlay-24: opacity(colors.overlay-bleed, 24%),
+  overlay-32: opacity(colors.overlay-bleed, 32%),
+  inverse-4: opacity(colors.inverse-bleed, 4%),
+  inverse-8: opacity(colors.inverse-bleed, 8%),
+  inverse-12: opacity(colors.inverse-bleed, 12%),
+  inverse-16: opacity(colors.inverse-bleed, 16%),
+  inverse-24: opacity(colors.inverse-bleed, 24%),
+  inverse-32: opacity(colors.inverse-bleed, 32%)
+}

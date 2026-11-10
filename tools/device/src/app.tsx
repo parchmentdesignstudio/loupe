@@ -18,7 +18,7 @@ export function App() {
   }, [])
 
   return (
-    <div className="flex h-full flex-col select-none [&_input]:select-text">
+    <div className="flex h-full flex-col text-control select-none [&_input]:select-text">
       <Toolbar />
       <div className="flex min-h-0 flex-1">
         <main className="flex min-w-0 flex-1">
@@ -27,7 +27,7 @@ export function App() {
         {inspector && (
           <aside
             aria-label="Inspector"
-            className="w-64 shrink-0 overflow-y-auto overscroll-contain border-l border-olive-150 bg-white dark:border-olive-900 dark:bg-olive-975"
+            className="w-72 shrink-0 overflow-y-auto overscroll-contain border-l border-bleed/8 bg-panel [--bleed:var(--panel-bleed)]"
           >
             <Inspector />
           </aside>

@@ -6,19 +6,20 @@ import { ListBox } from './ListBox.js';
 import { Popover } from './Popover.js';
 import { composeClassName, focusRing, tv } from './tv.js';
 
-// Looks like a text field, but it's a button, so its ring shows for keyboard focus only
+// Looks like a text field, but it's a button, so its text is medium like a button's, and its ring shows for keyboard
+// focus only. The chevron sits 8px in, as a circle button's icon does
 export const trigger = tv({
 	extend: focusRing,
-	base: 'flex min-h-11 w-full cursor-default items-center gap-2 rounded-2xl bg-paper py-2.5 pr-3 pl-4 text-left text-base text-ink shadow-raised outline-offset-0 [-webkit-tap-highlight-color:transparent]',
+	base: 'flex w-full cursor-default items-center gap-2 rounded-lg bg-raised py-1.5 pr-2 pl-3 text-left text-control font-medium text-ink shadow-raised outline-offset-0 [-webkit-tap-highlight-color:transparent]',
 	variants: {
 		isHovered: {
 			true: 'bg-surface',
 		},
 		isInvalid: {
-			true: 'shadow-[0_0_0_1px_var(--color-danger)]',
+			true: 'shadow-invalid',
 		},
 		isDisabled: {
-			true: 'bg-paper opacity-50',
+			true: 'bg-raised opacity-50',
 		},
 	},
 });

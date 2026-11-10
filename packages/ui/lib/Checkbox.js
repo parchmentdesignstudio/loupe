@@ -4,8 +4,9 @@ import { Description, FieldError, Label } from './Field.js';
 import { Check, Dash } from './glyphs.js';
 import { composeClassName, focusRing, tv } from './tv.js';
 // A choice and its label. The label is part of what's pressed, so it's a large target
+// Relative, so React Aria's hidden input stays inside the label. Otherwise focusing it can scroll the whole page
 export const choice = tv({
-    base: 'group flex cursor-default items-center gap-3 py-1 text-body text-ink [-webkit-tap-highlight-color:transparent]',
+    base: 'group relative flex cursor-default items-center gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]',
     variants: {
         isDisabled: {
             true: 'opacity-40',
@@ -17,7 +18,7 @@ export const box = tv({
     base: 'flex size-5 shrink-0 items-center justify-center rounded-md transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none',
     variants: {
         isSelected: {
-            false: 'bg-paper text-transparent shadow-raised',
+            false: 'bg-raised text-transparent shadow-raised',
             true: 'bg-ink text-paper',
         },
         isHovered: {
@@ -33,7 +34,7 @@ export const box = tv({
     compoundVariants: [
         { isSelected: false, isHovered: true, class: 'bg-surface' },
         { isSelected: true, isHovered: true, class: 'bg-ink/88' },
-        { isSelected: false, isInvalid: true, class: 'shadow-[0_0_0_1px_var(--color-danger)]' },
+        { isSelected: false, isInvalid: true, class: 'shadow-invalid' },
         { isSelected: true, isInvalid: true, class: 'bg-danger' },
     ],
 });
