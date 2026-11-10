@@ -4,7 +4,7 @@ export { DialogTrigger } from 'react-aria-components';
 /** What a Modal or Popover holds. Give it a DialogHeading, or an aria-label */
 export declare function Dialog(props: DialogProps): import("react").JSX.Element;
 export declare function DialogHeading(props: HeadingProps): import("react").JSX.Element;
-/** The dialog's actions, at its foot. A Button with slot="close" closes it */
+/** The dialog's actions, in a footer flush to its edges. A Button with slot="close" closes it */
 export declare function DialogActions({ children }: {
     children: ReactNode;
 }): import("react").JSX.Element;

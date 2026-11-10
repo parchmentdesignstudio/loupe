@@ -1,6 +1,7 @@
 import { StrictMode, useEffect, useRef, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Navigation, NavigationTree, NavigationTreeHeader, NavigationTreeItem, NavigationTreeItemContent, NavigationTreeSection } from '../src/index.js';
+import { ParchmentLogo } from './logo.js';
 import { type Entry, library } from './stories.js';
 
 const entries = library.flatMap((group) => group.components);
@@ -15,7 +16,10 @@ const useAddress = () => useSyncExternalStore(subscribe, () => window.location.h
 function Sidebar({ current }: { current: string }) {
 	return (
 		<Navigation aria-label="Components">
-			<p className="px-3 font-medium">Parchment UI</p>
+			<p className="flex items-center gap-1.5 px-3 font-medium">
+				<ParchmentLogo size={16} />
+				loupe/ui
+			</p>
 			<NavigationTree aria-label="Components" selectedRoute={`#/${current}`}>
 				<NavigationTreeItem id="all" href="#/" textValue="All components">
 					<NavigationTreeItemContent>All components</NavigationTreeItemContent>
@@ -39,7 +43,7 @@ function Stories({ entry, heading: Heading }: { entry: Entry; heading: 'h2' | 'h
 	return entry.stories.map((story) => (
 		<section key={story.name} className="flex flex-col gap-3">
 			<Heading className="font-mono text-label text-muted">{story.name}</Heading>
-			<div className="flex flex-wrap items-center gap-3 rounded-xl border border-ink/8 p-6">
+			<div className="flex flex-wrap items-center gap-3 rounded-lg border border-bleed/8 p-6">
 				<story.render />
 			</div>
 		</section>
@@ -63,7 +67,10 @@ function Overview() {
 	return (
 		<>
 			<header className="flex flex-col gap-2">
-				<h1 className="text-title font-medium">Parchment UI</h1>
+				<h1 className="flex items-center gap-1.5 text-title font-medium">
+					<ParchmentLogo size={24} />
+					loupe/ui
+				</h1>
 				<p className="text-muted">Each component in its states. Tab through to see the focus rings.</p>
 			</header>
 			{entries.map((entry) => (
@@ -82,7 +89,7 @@ function Preview() {
 	const shown = useRef(address);
 
 	useEffect(() => {
-		document.title = entry ? `${entry.name} · Parchment UI` : 'Parchment UI';
+		document.title = entry ? `${entry.name} · loupe/ui` : 'loupe/ui';
 	}, [entry]);
 
 	useEffect(() => {

@@ -5,12 +5,12 @@ import { focusRing, tv } from './tv.js';
 const toggle = tv({
 	slots: {
 		track: 'flex h-6 w-10 shrink-0 items-center rounded-full p-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none',
-		handle: 'size-5 rounded-full bg-paper shadow-raised transition-[translate,scale] duration-200 ease-out motion-reduce:transition-none',
+		handle: 'size-5 rounded-full bg-knob shadow-raised transition-[translate,scale,background-color] duration-200 ease-out motion-reduce:transition-none',
 	},
 	variants: {
 		isSelected: {
-			false: { track: 'bg-ink/15' },
-			true: { track: 'bg-ink', handle: 'translate-x-4' },
+			false: { track: 'bg-bleed/16' },
+			true: { track: 'bg-ink', handle: 'translate-x-4 bg-paper' },
 		},
 		isHovered: {
 			true: '',
@@ -20,7 +20,7 @@ const toggle = tv({
 		},
 	},
 	compoundVariants: [
-		{ isSelected: false, isHovered: true, class: { track: 'bg-ink/25' } },
+		{ isSelected: false, isHovered: true, class: { track: 'bg-bleed/24' } },
 		{ isSelected: true, isHovered: true, class: { track: 'bg-ink/88' } },
 	],
 });

@@ -6,8 +6,8 @@ import { createTV, extendTailwindMerge, type TWMergeConfig } from 'tailwind-vari
 const twMergeConfig = {
 	extend: {
 		theme: {
-			text: ['body', 'label', 'title'],
-			shadow: ['raised', 'overlay'],
+			text: ['body', 'control', 'label', 'title'],
+			shadow: ['raised', 'floating', 'overlay', 'invalid'],
 		},
 	},
 } satisfies TWMergeConfig;

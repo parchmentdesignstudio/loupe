@@ -11,7 +11,7 @@ export declare const trigger: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "flex min-h-11 w-full cursor-default items-center gap-2 rounded-2xl bg-paper py-2.5 pr-3 pl-4 text-left text-base text-ink shadow-raised outline-offset-0 [-webkit-tap-highlight-color:transparent]", {
+}, undefined, "flex w-full cursor-default items-center gap-2 rounded-lg bg-raised py-1.5 pr-2 pl-3 text-left text-control font-medium text-ink shadow-raised outline-offset-0 [-webkit-tap-highlight-color:transparent]", {
     isFocusVisible: {
         false: string;
         true: string;

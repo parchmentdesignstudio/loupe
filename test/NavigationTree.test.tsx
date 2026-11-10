@@ -4,9 +4,9 @@ import { describe, expect, it } from 'vitest';
 import { NavigationTree, NavigationTreeHeader, NavigationTreeItem, NavigationTreeItemContent, NavigationTreeSection } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
 
-function Services() {
+function Services({ route = '#website' }: { route?: string }) {
 	return (
-		<NavigationTree aria-label="Services" selectedRoute="#website">
+		<NavigationTree aria-label="Services" selectedRoute={route}>
 			<NavigationTreeItem id="all" href="#all" textValue="All services">
 				<NavigationTreeItemContent>All services</NavigationTreeItemContent>
 			</NavigationTreeItem>
@@ -54,6 +54,28 @@ describe('NavigationTree', () => {
 		await user.tab();
 		const link = screen.getByRole('link', { name: 'Website' });
 		expect(link.className).toContain('outline-2');
+	});
+
+	it('shows a pressed link as the current page straight away, then follows selectedRoute', async () => {
+		const user = userEvent.setup();
+		const { rerender } = render(<Services />);
+		const identity = screen.getByRole('link', { name: 'Brand identity' });
+		await user.click(identity);
+		// Before the app moves selectedRoute, so the pressed link doesn't drop back to its hover fill
+		expect(identity.getAttribute('aria-current')).toBe('page');
+		expect(screen.getByRole('link', { name: 'Website' }).hasAttribute('aria-current')).toBe(false);
+		rerender(<Services route="#all" />);
+		expect(screen.getByRole('link', { name: 'All services' }).getAttribute('aria-current')).toBe('page');
+		expect(identity.hasAttribute('aria-current')).toBe(false);
+	});
+
+	it('leaves the current page alone for a link opened elsewhere, with a modifier key', async () => {
+		const user = userEvent.setup();
+		render(<Services />);
+		await user.keyboard('{Meta>}');
+		await user.click(screen.getByRole('link', { name: 'Brand identity' }));
+		await user.keyboard('{/Meta}');
+		expect(screen.getByRole('link', { name: 'Website' }).getAttribute('aria-current')).toBe('page');
 	});
 
 	it('has nothing for axe to flag', async () => {

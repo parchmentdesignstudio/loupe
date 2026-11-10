@@ -7,7 +7,6 @@ export declare const button: import("tailwind-variants").TVReturnType<{
         quiet: string;
     };
     shape: {
-        pill: string;
         circle: string;
     };
     size: {
@@ -23,7 +22,7 @@ export declare const button: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "inline-flex shrink-0 cursor-default items-center justify-center gap-2 rounded-full leading-none font-medium transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none", {
+}, undefined, "inline-flex shrink-0 cursor-default items-center justify-center gap-2 rounded-lg text-control font-medium [&>svg]:my-[calc((1lh-1rem)/2)] transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

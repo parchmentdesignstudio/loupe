@@ -5,7 +5,7 @@ export declare const choice: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "group flex cursor-default items-center gap-3 py-1 text-body text-ink [-webkit-tap-highlight-color:transparent]", undefined, undefined, undefined>;
+}, undefined, "group relative flex cursor-default items-center gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]", undefined, undefined, undefined>;
 export declare const box: import("tailwind-variants").TVReturnType<{
     isSelected: {
         false: string;

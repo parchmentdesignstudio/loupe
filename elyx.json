@@ -1,0 +1,7 @@
+{
+  "exports": {
+    "./components/*": "./elyx/*"
+  },
+  "codeComponents": { "root": "./elyx/CodeLayerRoot.tsx#CodeLayerRoot" },
+  "files": { "exclude": ["lib", "test", "preview", "elyx/compiled", "elyx/vite.config.ts"] }
+}

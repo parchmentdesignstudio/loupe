@@ -11,7 +11,7 @@ export declare const input: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "min-h-11 w-full rounded-2xl bg-paper px-4 py-2.5 text-base text-ink shadow-raised outline-offset-0 outline-ink placeholder:text-muted forced-colors:outline-[Highlight]", undefined, undefined, undefined>;
+}, undefined, "w-full rounded-lg bg-raised px-3 py-1.5 text-control text-ink shadow-raised outline-offset-0 outline-ink placeholder:text-muted forced-colors:outline-[Highlight]", undefined, undefined, undefined>;
 export interface TextFieldProps extends AriaTextFieldProps, FieldTextProps {
     placeholder?: string;
     /** Several lines, in a text area that grows taller by dragging */
