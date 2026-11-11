@@ -120,8 +120,8 @@ export colors = tokens {
   // drops warm the cream in the light, as the tints do
   edge: opacity(bleed, 8%),
   drop-raised: opacity(bleed, 8%),
-  drop-floating: opacity(bleed, 16%),
-  drop-overlay: opacity(bleed, 24%)
+  drop-floating: opacity(bleed, 8%),
+  drop-overlay: opacity(bleed, 8%)
 }
 
 // A tint is a layer’s bleed at 4, 8, 12, 16, 24 or 32%, named for the layer it sits on, such as overlay-8 for a
