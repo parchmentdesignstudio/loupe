@@ -7,8 +7,8 @@ file {}
 @variants(dark.dark-colors)
 export colors = tokens {
   // The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
-  // two numbers, the stronger the contrast. Parchment's own are cream-99, blush-95, pine-26, rust-60 and lime-91,
-  // and the rest are worked out from them. Components use the roles below rather than these
+  // two numbers, the stronger the contrast. Components use the roles below rather than these. First Parchment's
+  // own, cream-99, blush-95, pine-26, rust-60 and lime-91, with the colours the roles work out from them
   white: .white,
   black: .black,
   cream-99: #fffdf8,
@@ -27,6 +27,58 @@ export colors = tokens {
   pine-20: #081a14,
   red-81: #ffa699,
   red-50: #b3261e,
+  // Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet
+  red-87: #f9c7c8,
+  red-67: #f75860,
+  red-35: #720006,
+  orange-89: #f9d2c7,
+  orange-72: #f77a58,
+  orange-41: #852106,
+  yellow-91: #fedf95,
+  yellow-76: #e7a221,
+  yellow-40: #713501,
+  green-89: #cbe996,
+  green-68: #6dac0d,
+  green-46: #196a06,
+  teal-88: #aae4dd,
+  teal-69: #05b59d,
+  teal-48: #026e60,
+  sky-85: #a8d6f4,
+  sky-69: #34a3ea,
+  sky-37: #03436c,
+  blue-82: #b1c2f5,
+  blue-56: #3b65eb,
+  blue-29: #0b2167,
+  violet-82: #cfb8f5,
+  violet-54: #743ff2,
+  violet-27: #250969,
+  pink-87: #f5c1df,
+  pink-70: #f162af,
+  pink-33: #64093a,
+  // Greys for the cream ground, in the light yellow's hue. As they darken they warm towards the yellow's mid and
+  // gain a little chroma, as the ground's bleed does, so they stay warm rather than dull
+  sand-97: #f7f5f0,
+  sand-94: #edebe5,
+  sand-90: #e0ded7,
+  sand-84: #cecac3,
+  sand-76: #b5b1a7,
+  sand-66: #979187,
+  sand-56: #7b7468,
+  sand-46: #5f5749,
+  sand-36: #453c2d,
+  sand-26: #2c2213,
+  // Neutral greys for white, at sand's steps. On the layer each is for, 56 and darker pass 4.5:1 for text, and 66
+  // and darker 3:1 for a control's edge
+  grey-97: .whitesmoke,
+  grey-94: #ebebeb,
+  grey-90: #dedede,
+  grey-84: #cacaca,
+  grey-76: #b1b1b1,
+  grey-66: #929292,
+  grey-56: #747474,
+  grey-46: #585858,
+  grey-36: #3d3d3d,
+  grey-26: #242424,
   // The roles, each light-dark(light, dark). The dark mode inverts the light one: the ground takes ink's
   // pine, and ink takes the ground's cream
   ink: pine-26,

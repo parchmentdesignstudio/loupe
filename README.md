@@ -140,7 +140,9 @@ A dialog or sheet with a field puts focus in the first one: give it `autoFocus`,
 
 Dark mode follows the system, with no toggle. Each colour is a role set with `light-dark()`, so the tokens alone give a site both modes. To keep a site light, set `color-scheme: light` on `:root`, and `scheme-light` or `scheme-dark` sets one for part of a page. `light-dark()` needs Safari 17.5 or later.
 
-`tokens.css` has two tiers. The palette holds the raw colours, named by hue and lightness, so `pine-26` is `oklch(0.26 …)`. Parchment’s own five are `cream-99`, `blush-95`, `pine-26`, `rust-60` and `lime-91`, and the rest are worked out from them. The roles are what components use, and each points at one palette colour in the light and another in the dark.
+`tokens.css` has two tiers. The palette holds the raw colours, named by hue and lightness, so `pine-26` is `oklch(0.26 …)`, and the further apart two numbers, the stronger the contrast. Parchment’s own five are `cream-99`, `blush-95`, `pine-26`, `rust-60` and `lime-91`, and the roles work out the rest of their colours from them. The roles are what components use, and each points at one palette colour in the light and another in the dark.
+
+The palette also has nine hues, `red`, `orange`, `yellow`, `green`, `teal`, `sky`, `blue`, `violet` and `pink`, each light, mid and dark, such as `teal-88`, `teal-69` and `teal-48`. Two greys come at the same ten steps, from 97 to 26: `sand` for the cream ground, in the light yellow’s hue, warming a little as it darkens, and `grey`, a neutral one for white. On the layer each is for, 56 and darker pass 4.5:1 for text, and 66 and darker 3:1 for a control’s edge. No role uses them yet, so take one as it is, as in `var(--sand-56)`. The preview’s Colour page shows the whole palette.
 
 | Role | What it’s for |
 |---|---|
@@ -222,7 +224,7 @@ Import `tv` from `src/tv.ts` rather than tailwind-variants itself. It teaches th
 
 | Command | What it does |
 |---|---|
-| `pnpm ui` | The preview page, every component in its states, at localhost:5199 |
+| `pnpm ui` | The preview page, the palette and every component in its states, at localhost:5199 |
 | `pnpm test` | Vitest across the workspace, with an axe check for each component, then a check that the Elyx tokens match `tokens.css` |
 | `pnpm lint` | oxlint, with the accessibility rules on. The icons package and device aren’t linted yet |
 | `pnpm --filter @parchment/ui build` | Builds `lib`, which is committed so releases can install it |

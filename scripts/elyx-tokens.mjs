@@ -40,8 +40,19 @@ const styles = {
   title: 'Dialog headings, set in Medium',
 }
 
-// Colours Elyx writes by name
-const named = { '#ffffff': '.white', '#000000': '.black' }
+// Colours Elyx writes by name, as it does any hex with a CSS name. These are the greys, which a neutral in the palette
+// can land on, as grey-97 does on whitesmoke
+const named = {
+  '#ffffff': '.white',
+  '#f5f5f5': '.whitesmoke',
+  '#dcdcdc': '.gainsboro',
+  '#d3d3d3': '.lightgray',
+  '#c0c0c0': '.silver',
+  '#a9a9a9': '.darkgray',
+  '#808080': '.gray',
+  '#696969': '.dimgray',
+  '#000000': '.black',
+}
 
 // The inside of each block the selector opens, in order
 function blocks(selector) {
