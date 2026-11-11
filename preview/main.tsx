@@ -6,6 +6,9 @@ import { type Entry, library } from './stories.js';
 
 const entries = library.flatMap((group) => group.components);
 
+// All components leaves out the foundations, such as colour, which export nothing
+const components = entries.filter((entry) => entry.exports);
+
 const subscribe = (onChange: () => void) => {
 	window.addEventListener('hashchange', onChange);
 	return () => window.removeEventListener('hashchange', onChange);
@@ -43,7 +46,7 @@ function Stories({ entry, heading: Heading }: { entry: Entry; heading: 'h2' | 'h
 	return entry.stories.map((story) => (
 		<section key={story.name} className="flex flex-col gap-3">
 			<Heading className="font-mono text-label text-muted">{story.name}</Heading>
-			<div className="flex flex-wrap items-center gap-3 rounded-lg border border-bleed/8 p-6">
+			<div className={['flex flex-wrap items-center gap-3 rounded-lg border border-bleed/8 p-6', story.box].filter(Boolean).join(' ')}>
 				<story.render />
 			</div>
 		</section>
@@ -56,7 +59,7 @@ function ComponentPage({ entry }: { entry: Entry }) {
 			<header className="flex flex-col gap-2">
 				<h1 className="text-title font-medium">{entry.name}</h1>
 				<p className="text-muted">{entry.description}</p>
-				<code className="font-mono text-label text-muted">{`import { ${entry.exports.join(', ')} } from '@parchment/ui'`}</code>
+				<code className="font-mono text-label text-muted">{entry.exports ? `import { ${entry.exports.join(', ')} } from '@parchment/ui'` : entry.usage}</code>
 			</header>
 			<Stories entry={entry} heading="h2" />
 		</>
@@ -73,7 +76,7 @@ function Overview() {
 				</h1>
 				<p className="text-muted">Each component in its states. Tab through to see the focus rings.</p>
 			</header>
-			{entries.map((entry) => (
+			{components.map((entry) => (
 				<section key={entry.id} className="flex flex-col gap-6">
 					<h2 className="text-title font-medium">{entry.name}</h2>
 					<Stories entry={entry} heading="h3" />

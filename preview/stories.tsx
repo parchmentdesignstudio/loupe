@@ -75,10 +75,13 @@ import {
 	isFileDropItem,
 } from '../src/index.js';
 import { ParchmentLogo } from './logo.js';
+import { hexOf } from './palette.js';
 
 export interface Story {
 	name: string;
 	render: () => ReactNode;
+	/** Classes for the box it sits in, such as the layer a colour is for */
+	box?: string;
 }
 
 export interface Entry {
@@ -86,7 +89,9 @@ export interface Entry {
 	id: string;
 	name: string;
 	description: ReactNode;
-	exports: string[];
+	/** What a component page imports. A foundation, such as colour, has none, and says how a site uses it in `usage` */
+	exports?: string[];
+	usage?: string;
 	stories: Story[];
 }
 
@@ -372,7 +377,111 @@ function AreaAndHue() {
 	);
 }
 
+// Parchment’s five, with the role each makes
+const brand = [
+	{ name: 'cream-99', role: 'ground' },
+	{ name: 'blush-95', role: 'surface' },
+	{ name: 'pine-26', role: 'ink' },
+	{ name: 'rust-60', role: 'accent' },
+	{ name: 'lime-91', role: 'highlight' },
+];
+
+// Each hue’s light, mid and dark, in the order of Steve’s palette
+const hues = {
+	red: [87, 67, 35],
+	orange: [89, 72, 41],
+	yellow: [91, 76, 40],
+	green: [89, 68, 46],
+	teal: [88, 69, 48],
+	sky: [85, 69, 37],
+	blue: [82, 56, 29],
+	violet: [82, 54, 27],
+	pink: [87, 70, 33],
+};
+
+const greySteps = [97, 94, 90, 84, 76, 66, 56, 46, 36, 26];
+
+// What the roles take besides the five, by hue, such as the dark mode’s layers and danger’s reds
+const derived = [
+	['white', 'black'],
+	['cream-95', 'cream-80', 'umber-30'],
+	['pine-95', 'pine-50', 'pine-35', 'pine-32', 'pine-29', 'pine-20'],
+	['red-81', 'red-50'],
+];
+
+function Swatch({ name, label = name, role }: { name: string; label?: string; role?: string }) {
+	const hex = hexOf(name);
+	return (
+		<div className="flex flex-col gap-1.5 font-mono text-label">
+			<ColorSwatch color={hex} className="size-13" />
+			<p className="flex flex-col">
+				<span>{label}</span>
+				<span className="text-muted">{hex}</span>
+				{role && <span className="text-muted">{role}</span>}
+			</p>
+		</div>
+	);
+}
+
+function Hues() {
+	return (
+		<div className="flex flex-wrap gap-x-1.5 gap-y-6">
+			{Object.entries(hues).map(([hue, steps]) => (
+				<div key={hue} className="flex flex-col gap-3">
+					<p className="font-mono text-label">{hue}</p>
+					{steps.map((step) => (
+						<Swatch key={step} name={`${hue}-${step}`} label={String(step)} />
+					))}
+				</div>
+			))}
+		</div>
+	);
+}
+
+function Greys({ name }: { name: string }) {
+	return (
+		<div className="flex flex-wrap gap-x-1.5 gap-y-4">
+			{greySteps.map((step) => (
+				<Swatch key={step} name={`${name}-${step}`} label={String(step)} />
+			))}
+		</div>
+	);
+}
+
+function Derived() {
+	return (
+		<div className="flex flex-wrap gap-x-6 gap-y-4">
+			{derived.map((names) => (
+				<div key={names[0]} className="flex gap-1.5">
+					{names.map((name) => (
+						<Swatch key={name} name={name} />
+					))}
+				</div>
+			))}
+		</div>
+	);
+}
+
 export const library: Group[] = [
+	{
+		name: 'Foundations',
+		components: [
+			{
+				id: 'colour',
+				name: 'Colour',
+				description:
+					'The palette, named by hue and lightness, so the further apart two numbers, the stronger the contrast. Components use roles made from Parchment’s own, and the hues and greys are there for designs to draw on. On the layer each grey is for, 56 and darker pass 4.5:1 for text, and 66 and darker 3:1 for a control’s edge',
+				usage: 'var(--teal-48)',
+				stories: [
+					{ name: 'Parchment’s own', render: () => brand.map(({ name, role }) => <Swatch key={name} name={name} role={role} />) },
+					{ name: 'Nine hues, each light, mid and dark', render: Hues },
+					{ name: 'Sand, for the cream ground', render: () => <Greys name="sand" />, box: 'scheme-light bg-ground text-ink' },
+					{ name: 'Grey, for white', render: () => <Greys name="grey" />, box: 'scheme-light bg-panel text-ink [--bleed:var(--panel-bleed)]' },
+					{ name: 'Worked out for the roles', render: Derived },
+				],
+			},
+		],
+	},
 	{
 		name: 'Actions',
 		components: [

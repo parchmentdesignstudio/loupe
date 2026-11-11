@@ -12,7 +12,7 @@ What `@parchment/ui` is missing, found by building the device and favicon tools 
 
 Steve’s priority on 10 November was shadows, layered transparency for dark mode, and the palette. The roles, layers, tints, shadows and palette are in, under Done. What’s left:
 
-- **Palette:** `highlight`, the light accent, is on no component yet.
+- **Palette:** `highlight`, the light accent, is on no component yet, and no role uses the hues or greys.
 - **Device:** its dark mode keeps mcknny’s olive for now, through its own variables.
 - **Elyx:**
   - Colours, type, shadows, corners and spacing are tokens there.
@@ -105,4 +105,5 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
     - Corners and spacing are tokens. `tokens.css` sets the five corners and the spacing step under Tailwind’s names, so the classes didn’t change, and Elyx gets them in `lengths.elyx`, with a token for each of 14 spacing steps. The elevation components’ corners are bound to them, and so is everything on `foundations.elyx`, which now matches the code’s toggle track, floating toolbar, menu and navigation rows, and adds a specimen. `pnpm test` fails when a component uses a corner or step with no token.
     - Menus, selects and combo boxes pad their options 4px, in place of 6px, so the options’ 4px corners run parallel to the popover’s 8px ones.
     - The palette is Steve’s five: `cream-99` (`#fffdf8`) is the ground, `blush-95` (`#f5ebe6`) what a raised control turns on hover, `pine-26` (`#0c2920`) ink, and `rust-60` (`#c76024`) and `lime-91` (`#ceeea7`) the new `accent` and `highlight`. A solid button takes the accent, and `void` takes the ink solid had. The dark mode’s layers move from teal to pine at the same lightness, and its panel is the light mode’s ink.
+    - Steve’s nine hues are in the palette, each light, mid and dark, with two greys at ten steps: `sand` for the cream ground, in the light yellow’s hue and gaining a little chroma as it darkens, and `grey` for white. The preview has a Colour page, under Foundations, which reads the palette from `tokens.css`.
 - **Checkbox, Radio and Switch:** the hidden input could scroll the whole page from inside a scrolling panel. Their label is now `relative` (9 November)
