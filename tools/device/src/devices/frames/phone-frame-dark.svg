@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="936" fill="none" viewBox="0 0 440 936">
+  <path fill="color(display-p3 .9474 .9569 .9373)" d="M4 125.8c0-43.684 0-65.526 8.502-82.211A78 78 0 0 1 46.589 9.5C63.274 1 85.116 1 128.8 1h182.4c43.684 0 65.526 0 82.211 8.501a78 78 0 0 1 34.088 34.088C436 60.274 436 82.116 436 125.8v684.4c0 43.684 0 65.526-8.501 82.211a78 78 0 0 1-34.088 34.088C376.726 935 354.884 935 311.2 935H128.8c-43.684 0-65.526 0-82.211-8.501a78 78 0 0 1-34.087-34.088C4 875.726 4 853.884 4 810.2z"/>
+  <!-- The inner shadow Figma drew with a filter, a 2px white rim inside the edge, drawn instead, so Safari draws it crisply at any size -->
+  <path d="M4 125.8c0-43.684 0-65.526 8.502-82.211A78 78 0 0 1 46.589 9.5C63.274 1 85.116 1 128.8 1h182.4c43.684 0 65.526 0 82.211 8.501a78 78 0 0 1 34.088 34.088C436 60.274 436 82.116 436 125.8v684.4c0 43.684 0 65.526-8.501 82.211a78 78 0 0 1-34.088 34.088C376.726 935 354.884 935 311.2 935H128.8c-43.684 0-65.526 0-82.211-8.501a78 78 0 0 1-34.087-34.088C4 875.726 4 853.884 4 810.2z" stroke="#fff" stroke-width="4" clip-path="url(#rim)"/>
+  <path fill="color(display-p3 .6575 .6745 .6392)" fill-opacity=".32" d="M429 834h7v6h-7zM4 834h7v6H4zM4 95h7v6H4zm425 0h7v6h-7z"/>
+  <rect width="420" height="922" x="10" y="7" fill="color(display-p3 .1255 .1255 .1255)" rx="72"/>
+  <path fill="url(#h)" d="M1 261a2 2 0 0 1 2-2h1v68H3a2 2 0 0 1-2-2z"/>
+  <path fill="color(display-p3 .585 .6039 .5647)" fill-opacity=".4" d="M4 259h1v68H4z"/>
+  <path fill="url(#i)" d="M1 190a2 2 0 0 1 2-2h1v40H3a2 2 0 0 1-2-2z"/>
+  <path fill="color(display-p3 .585 .6039 .5647)" fill-opacity=".4" d="M5 188H4v40h1z"/>
+  <path fill="url(#j)" d="M436 324h1a2 2 0 0 1 2 2v94a2 2 0 0 1-2 2h-1z"/>
+  <path fill="color(display-p3 .585 .6039 .5647)" fill-opacity=".4" d="M435 324h1v98h-1z"/>
+  <path fill="url(#k)" d="M1 348a2 2 0 0 1 2-2h1v68H3a2 2 0 0 1-2-2z"/>
+  <path fill="color(display-p3 .585 .6039 .5647)" fill-opacity=".4" d="M4 346h1v68H4z"/>
+  <defs>
+    <clipPath id="rim">
+      <path d="M4 125.8c0-43.684 0-65.526 8.502-82.211A78 78 0 0 1 46.589 9.5C63.274 1 85.116 1 128.8 1h182.4c43.684 0 65.526 0 82.211 8.501a78 78 0 0 1 34.088 34.088C436 60.274 436 82.116 436 125.8v684.4c0 43.684 0 65.526-8.501 82.211a78 78 0 0 1-34.088 34.088C376.726 935 354.884 935 311.2 935H128.8c-43.684 0-65.526 0-82.211-8.501a78 78 0 0 1-34.087-34.088C4 875.726 4 853.884 4 810.2z"/>
+    </clipPath>
+    <linearGradient id="h" x1="2.5" x2="2.5" y1="327" y2="259" gradientUnits="userSpaceOnUse">
+      <stop offset=".06" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+      <stop offset=".145" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".215" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".527" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".794" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+      <stop offset=".85" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".91" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset="1" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+    </linearGradient>
+    <linearGradient id="i" x1="2.5" x2="2.5" y1="228" y2="188" gradientUnits="userSpaceOnUse">
+      <stop offset=".06" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+      <stop offset=".145" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".215" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".527" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".794" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+      <stop offset=".85" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".91" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset="1" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+    </linearGradient>
+    <linearGradient id="j" x1="437.5" x2="437.5" y1="422" y2="324" gradientUnits="userSpaceOnUse">
+      <stop offset=".06" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+      <stop offset=".145" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".215" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".527" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".794" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+      <stop offset=".85" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".91" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset="1" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+    </linearGradient>
+    <linearGradient id="k" x1="2.5" x2="2.5" y1="414" y2="346" gradientUnits="userSpaceOnUse">
+      <stop offset=".06" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+      <stop offset=".145" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".215" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".527" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".794" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+      <stop offset=".85" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset=".91" stop-color="color(display-p3 .949 .9569 .9373)"/>
+      <stop offset="1" stop-color="color(display-p3 .8706 .8784 .8588)"/>
+    </linearGradient>
+  </defs>
+</svg>
