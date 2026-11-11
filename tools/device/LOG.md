@@ -101,3 +101,15 @@ Asked for: the toolbars, shortcuts, fill and screenshot picker moved onto the co
 - Another colour opens a `ColorArea`, a hue `ColorSlider` and a hex `ColorField` in a `Popover`, in place of the browser’s colour picker. The colour chosen fills its square, ringed as a chosen preset is
 - The screenshot’s thumbnail and Choose are each a `Button` in a `FileTrigger`. Double-clicking a device still picks a file, as before
 - Still local: a device’s position and size, and the inspector’s sections and notes
+
+### 8. Option-click to the code
+
+10 November 2026 · Trying
+
+Asked for: a way to Option-click something on the page and open where it’s written, to edit it.
+
+- Holding Option outlines what’s under the pointer and names where it’s used, then after ⇧ where its component draws it, such as `<Icon> toolbar.tsx:24   ⇧ <LoupeIcon> icon.tsx:51`
+- Option-click opens the first in Nova at that line, and Option-Shift-click the second. The click does nothing else, so a button isn’t pressed
+- Option-dragging a device still duplicates it, as from 3px it’s a drag
+- Loupe’s components arrive built, so the inside of a `Button` opens from `packages/ui`’s preview, not here
+- It’s `scripts/locate.mjs`, a Vite plugin shared with that preview and the favicon tool, and only runs in `pnpm dev`
