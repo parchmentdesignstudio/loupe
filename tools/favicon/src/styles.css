@@ -4,12 +4,3 @@
 @theme {
   --breakpoint-wide: 68.75rem;
 }
-
-/* Dark mode comes from @parchment/ui and follows the system. data-theme on <html> sets one */
-:root[data-theme="light"] {
-  color-scheme: light;
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-}

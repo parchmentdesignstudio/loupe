@@ -1,4 +1,4 @@
-import { Button, Keyboard, Menu, MenuItem, MenuTrigger, Separator, ToggleButton, ToggleButtonGroup, Toolbar as Bar, type TooltipProps } from '@parchment/ui'
+import { type Appearance, Button, Keyboard, Menu, MenuItem, MenuTrigger, Separator, ToggleButton, ToggleButtonGroup, Toolbar as Bar, type TooltipProps, useAppearance } from '@parchment/ui'
 import { useState } from 'react'
 import type { Theme } from '../devices/models'
 import { cx, WithTooltip } from '../ui/controls'
@@ -165,12 +165,39 @@ function Export() {
   )
 }
 
+/** The tool’s own light or dark, or the system’s. The theme toggle beside it sets the devices’ */
+function AppearanceMenu() {
+  const [appearance, setAppearance] = useAppearance()
+  return (
+    <MenuTrigger>
+      <WithTooltip tooltip="Appearance" placement="bottom">
+        <Button variant="quiet" shape="circle" aria-label="Appearance">
+          <Icon name={appearance === 'dark' ? 'moon' : appearance === 'light' ? 'sun-max' : 'sun-horizon'} />
+        </Button>
+      </WithTooltip>
+      <Menu
+        placement="bottom end"
+        selectionMode="single"
+        selectedKeys={[appearance]}
+        onSelectionChange={(keys) => {
+          const [next] = keys as Set<Appearance>
+          if (next) setAppearance(next)
+        }}
+      >
+        <MenuItem id="light">Light</MenuItem>
+        <MenuItem id="auto">Auto</MenuItem>
+        <MenuItem id="dark">Dark</MenuItem>
+      </Menu>
+    </MenuTrigger>
+  )
+}
+
 export function Toolbar() {
   const inspector = useStore((state) => state.settings.inspector)
   const theme = useStore((state) => state.doc.theme)
 
   return (
-    <header className="flex h-12 shrink-0 items-center gap-1 border-b border-bleed/8 bg-panel px-2 [--bleed:var(--panel-bleed)]">
+    <header className="flex h-12 shrink-0 items-center gap-1 px-2">
       <h1 className="px-2 font-medium">Device</h1>
       <Separator orientation="vertical" />
       <Bar aria-label="Editing" className="flex-1">
@@ -201,6 +228,7 @@ export function Toolbar() {
         <Zoom />
         <Separator />
         <Export />
+        <AppearanceMenu />
         <WithTooltip tooltip="Inspector" placement="bottom">
           <ToggleButton aria-label="Inspector" isSelected={inspector} onChange={() => actions.toggle('inspector')}>
             <Icon name="sidebar-right" />

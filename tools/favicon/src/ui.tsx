@@ -4,7 +4,7 @@ import { field, isFileDropItem, type DropZoneProps } from '@parchment/ui'
 export const fieldLabel = field().label()
 
 /** The checkerboard behind artwork, so transparency shows */
-export const checker = 'bg-[repeating-conic-gradient(color-mix(in_oklab,var(--bleed)_8%,var(--paper))_0_25%,var(--paper)_0_50%)] bg-size-[12px_12px]'
+export const checker = 'bg-[repeating-conic-gradient(color-mix(in_oklab,var(--bleed)_8%,var(--color-paper))_0_25%,var(--color-paper)_0_50%)] bg-size-[12px_12px]'
 
 type DropEvent = Parameters<NonNullable<DropZoneProps['onDrop']>>[0]
 

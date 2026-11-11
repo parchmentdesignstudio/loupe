@@ -17,14 +17,6 @@ export raised = frame {
     {
       drop-shadow: {
         color: base.colors.drop-raised,
-        offset: point(0px, 3px),
-        blur-radius: 6px,
-        spread: -3px
-      }
-    },
-    {
-      drop-shadow: {
-        color: base.colors.drop-raised,
         offset: point(0px, 2px),
         blur-radius: 4px,
         spread: -2px
@@ -43,10 +35,10 @@ export raised = frame {
         color: base.colors.drop-raised,
         offset: point(0px, 1px),
         blur-radius: 1px,
-        spread: -0.5px
+        spread: -1px
       }
     },
-    {drop-shadow: {color: base.colors.edge, spread: 1px}}
+    {drop-shadow: {color: base.colors.edge, spread: 0.5px}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true

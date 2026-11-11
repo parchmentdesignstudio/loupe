@@ -108,7 +108,7 @@ function Frame({ output, width, mask, isZoomed }: { output: Output; width: numbe
     <span className={slots.base()}>
       <canvas ref={useFrame(output.id)} width={output.w} height={output.h} style={{ width }} className={slots.canvas()} />
       {mask === 'maskable' && (
-        <span className="pointer-events-none absolute inset-[10%] rounded-full shadow-[0_0_0_999px_color-mix(in_oklab,var(--paper)_55%,transparent)] outline outline-ink outline-dashed" />
+        <span className="pointer-events-none absolute inset-[10%] rounded-full shadow-[0_0_0_999px_color-mix(in_oklab,var(--color-paper)_55%,transparent)] outline outline-ink outline-dashed" />
       )}
     </span>
   )
@@ -136,7 +136,7 @@ function HeadCode({ code }: { code: string }) {
     <section className="flex flex-col gap-2.5">
       <div className="flex items-center justify-between gap-2">
         <h2 className={heading}>HTML</h2>
-        <Button variant="plain" size="small" onPress={copy}>
+        <Button variant="tertiary" size="small" onPress={copy}>
           {label}
         </Button>
       </div>

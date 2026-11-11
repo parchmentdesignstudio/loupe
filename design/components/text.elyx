@@ -13,9 +13,9 @@ export body = text {
   top: 0px,
   fill: base.colors.ink,
   contents: "Body",
-  font-size: t.typography.text-size,
-  font-family: f.fonts.face,
-  line-height: t.typography.text-leading
+  font-size: t.typography.text-body,
+  font-family: f.fonts.sans,
+  line-height: t.typography.text-body-line-height
 }
 
 export control = text {
@@ -24,9 +24,9 @@ export control = text {
   top: 0px,
   fill: base.colors.ink,
   contents: "Control",
-  font-size: t.typography.control-size,
-  font-family: f.fonts.face,
-  line-height: t.typography.control-leading
+  font-size: t.typography.text-control,
+  font-family: f.fonts.sans,
+  line-height: t.typography.text-control-line-height
 }
 
 export label = text {
@@ -35,9 +35,9 @@ export label = text {
   top: 0px,
   fill: base.colors.ink,
   contents: "Label",
-  font-size: t.typography.label-size,
-  font-family: f.fonts.face,
-  line-height: t.typography.label-leading
+  font-size: t.typography.text-label,
+  font-family: f.fonts.sans,
+  line-height: t.typography.text-label-line-height
 }
 
 export title = text {
@@ -46,7 +46,7 @@ export title = text {
   top: 0px,
   fill: base.colors.ink,
   contents: "Title",
-  font-size: t.typography.title-size,
-  font-family: f.fonts.face,
-  line-height: t.typography.title-leading
+  font-size: t.typography.text-title,
+  font-family: f.fonts.sans,
+  line-height: t.typography.text-title-line-height
 }

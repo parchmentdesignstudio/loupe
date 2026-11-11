@@ -195,7 +195,7 @@ import { Button, Chip, ChipGroup } from '@parchment/ui'
 </ChipGroup>
 ```
 
-To change a token, set its variable on `:root`, such as `--text-size`. A colour takes both modes, as in `--ink: light-dark(var(--pine-20), var(--cream-99))`, or one value for both. The type is Elza Round Variable, with Auger Mono for small labels, both from Adobe Fonts: load a kit with both, or set `--face` and `--mono` to your own.
+Each token is one of Tailwind’s own variables, set once in `tokens.css`, so `--color-ink` is `bg-ink` and `text-ink`, and `--text-label` is `text-label`. To change one, set its variable on `:root`, such as `--text-body`. A colour takes both modes, as in `--color-ink: light-dark(var(--color-pine-20), var(--color-cream-99))`, or one value for both. The type is Elza Round Variable, with Auger Mono for small labels, both from Adobe Fonts: load a kit with both, or set `--font-sans` and `--font-mono` to your own.
 
 ### Writing a component
 
@@ -218,7 +218,7 @@ export function Chip(props: ChipProps) {
 }
 ```
 
-Import `tv` from `src/tv.ts` rather than tailwind-variants itself. It teaches the merge the tokens’ names, so `text-body` (a size) and `text-ink` (a colour) don’t cancel each other out. Text in a control, from a button’s to a field’s and its label, is `text-control`: 13px with a mouse or trackpad, and 16px on a touch screen, where iOS zooms into a field with smaller text. Change `--control-size` to change it everywhere. It sits on `--control-leading`, a fixed 20px rather than a multiple, so a control keeps its height at either size. A 16px line, to match an icon, would be too tight for 16px text, and Chrome ignores a field’s line when it’s no taller than the text. Instead, a control that can hold just an icon gives the icon the line’s height, as `Button` and `ToggleButton` do with `[&>svg]:my-[calc((1lh-1rem)/2)]`.
+Import `tv` from `src/tv.ts` rather than tailwind-variants itself. It teaches the merge the tokens’ names, so `text-body` (a size) and `text-ink` (a colour) don’t cancel each other out. Text in a control, from a button’s to a field’s and its label, is `text-control`: 13px with a mouse or trackpad, and 16px on a touch screen, where iOS zooms into a field with smaller text. Change `--text-control` to change it everywhere. It sits on `--text-control--line-height`, a fixed 20px rather than a multiple, so a control keeps its height at either size. A 16px line, to match an icon, would be too tight for 16px text, and Chrome ignores a field’s line when it’s no taller than the text. Instead, a control that can hold just an icon gives the icon the line’s height, as `Button` and `ToggleButton` do with `[&>svg]:my-[calc((1lh-1rem)/2)]`.
 
 ### Checks
 

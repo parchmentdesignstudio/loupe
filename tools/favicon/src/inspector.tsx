@@ -77,12 +77,12 @@ export function Inspector({ output, art, setArt, onSave }: InspectorProps) {
       )}
       <div className="flex flex-wrap gap-2">
         {!isIos && art.overrides[output.id] && (
-          <Button variant="plain" size="small" onPress={reset}>
+          <Button variant="tertiary" size="small" onPress={reset}>
             Reset
           </Button>
         )}
         {!output.id.startsWith('favicon') && (
-          <Button variant="plain" size="small" onPress={() => onSave(fileName)}>
+          <Button variant="tertiary" size="small" onPress={() => onSave(fileName)}>
             Save {fileName}
           </Button>
         )}

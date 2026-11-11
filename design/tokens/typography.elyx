@@ -7,15 +7,15 @@ file {}
 
 @variants(coarse.coarse-typography)
 export typography = tokens {
-  text-size: 15,
-  text-leading: 1.4,
+  text-body: 15,
+  text-body-line-height: 1.4,
   // Text in buttons, fields, labels, options and tabs, on a 20px line at either size. A control's padding adds to
   // the line, so 6px above and below makes it 32px tall, and an icon in a control sits on the line as text does
-  control-size: 13,
-  // 20px in the CSS, and a multiple of control-size here, as Elyx takes line height
-  control-leading: 1.54,
-  label-size: 12,
-  label-leading: 1.35,
-  title-size: 20,
-  title-leading: 1.1
+  text-control: 13,
+  // 20px in the CSS, and a multiple of text-control here, as Elyx takes line height
+  text-control-line-height: 1.54,
+  text-label: 12,
+  text-label-line-height: 1.35,
+  text-title: 20,
+  text-title-line-height: 1.1
 }

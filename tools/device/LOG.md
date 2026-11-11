@@ -113,3 +113,24 @@ Asked for: a way to Option-click something on the page and open where it’s wri
 - Option-dragging a device still duplicates it, as from 3px it’s a drag
 - Loupe’s components arrive built, so the inside of a `Button` opens from `packages/ui`’s preview, not here
 - It’s `scripts/locate.mjs`, a Vite plugin shared with that preview and the favicon tool, and only runs in `pnpm dev`
+
+### 9. The library’s backgrounds and theme
+
+11 November 2026 · Trying
+
+Asked for: the new look and feel of `packages/ui`’s preview, for the backgrounds and the theme.
+
+- The canvas is a card: panel, with `rounded-xl` and the library’s raised shadow, on the ground. The toolbar and the inspector sit on the ground round it, without a panel or dividing lines
+- Light and dark are the library’s throughout. The olive and pearl in the dark, the workspace colour, and the rulers’ and overlay’s own colours give way to its ground, panel, bleed and muted, so a dark system now gets its pine, as 6 had it in the light only. The rulers read the tokens as they draw
+- An Appearance menu by Export sets light, dark or the system’s for the tool, kept between visits, as the preview’s Appearance does. The Light and Dark beside Zoom still set the devices’ own theme
+- Kept: mcknny’s avocado, thulian and tango for the selection, gaps and guides, as they mark the canvas rather than colour the tool. Thulian is in oklch now, the same colour
+- Repeats: the theme toggle and the Appearance menu both say light and dark, for the devices and the tool
+
+### 10. The library’s tokens by their Tailwind names
+
+11 November 2026 · Settled
+
+Asked for, in `packages/ui`: each token set once, as Tailwind’s own variable, rather than a Tailwind name pointing at a second one.
+
+- The rulers read `--color-panel` and `--color-muted` rather than `--panel` and `--muted`, as the short names are gone
+- The overlay’s labels on thulian and tango are `text-pine-26`, now the palette has utilities, rather than `text-(color:--pine-26)`. The same colour

@@ -1,5 +1,6 @@
 import { Button, DropZone, Link, ToastQueue, ToastRegion } from '@parchment/ui'
 import { useEffect, useState } from 'react'
+import { AppearanceMenu } from './appearance'
 import { Canvas } from './canvas'
 import { exportZip, saveOutput } from './files'
 import { draw } from './frames'
@@ -86,8 +87,8 @@ export function App() {
   const output = outputs.find((each) => each.id === selected) ?? outputs[0]
 
   return (
-    <div className="flex flex-col before:fixed before:inset-x-0 before:top-0 before:z-10 before:h-[env(safe-area-inset-top,0px)] before:bg-panel md:grid md:h-full md:grid-cols-[280px_minmax(0,1fr)] md:grid-rows-[auto_minmax(0,1fr)_auto] md:before:hidden wide:grid-cols-[300px_minmax(0,1fr)_260px] wide:grid-rows-[auto_minmax(0,1fr)]">
-      <header className={`sticky top-[env(safe-area-inset-top,0px)] z-5 flex items-center justify-between gap-4 border-b border-bleed/8 bg-panel py-3 [--bleed:var(--panel-bleed)] md:static md:col-span-full ${gutter}`}>
+    <div className="flex flex-col before:fixed before:inset-x-0 before:top-0 before:z-10 before:h-[env(safe-area-inset-top,0px)] before:bg-ground md:grid md:h-full md:grid-cols-[280px_minmax(0,1fr)] md:grid-rows-[auto_minmax(0,1fr)_auto] md:before:hidden wide:grid-cols-[300px_minmax(0,1fr)_260px] wide:grid-rows-[auto_minmax(0,1fr)]">
+      <header className={`sticky top-[env(safe-area-inset-top,0px)] z-5 flex items-center justify-between gap-4 bg-ground py-3 md:static md:col-span-full ${gutter}`}>
         <h1 className="text-title font-medium">Favicon</h1>
         <div className="flex items-center gap-4">
           <nav>
@@ -96,14 +97,16 @@ export function App() {
           <Button isPending={isExporting} onPress={startExport}>
             Export zip
           </Button>
+          <AppearanceMenu />
         </div>
       </header>
 
-      <aside aria-label="Sources" className="relative order-2 border-t border-bleed/8 bg-panel [--bleed:var(--panel-bleed)] md:order-none md:col-start-1 md:row-span-2 md:row-start-2 md:overflow-y-auto md:border-t-0 md:border-r wide:row-span-1">
+      <aside aria-label="Sources" className="relative order-2 border-t border-bleed/8 md:order-none md:col-start-1 md:row-span-2 md:row-start-2 md:overflow-y-auto md:border-t-0 wide:row-span-1">
         <Sources art={art} site={site} setArt={setArt} setSite={setSite} onAdd={add} />
       </aside>
 
-      <main className="relative order-1 md:col-start-2 md:row-start-2 md:overflow-auto">
+      {/* The canvas is a card on the ground, as the library’s preview has its pages, with the columns beside it */}
+      <main className="relative order-1 bg-panel [--bleed:var(--panel-bleed)] md:col-start-2 md:row-start-2 md:mr-2 md:mb-2 md:overflow-auto md:rounded-xl md:shadow-raised wide:mr-0">
         <DropZone
           variant="quiet"
           aria-label="Drop artwork onto the canvas"
@@ -116,7 +119,7 @@ export function App() {
 
       <aside
         aria-label="Selected output"
-        className={`relative order-1 flex flex-col gap-4 border-t border-bleed/8 bg-panel py-4.5 [--bleed:var(--panel-bleed)] md:col-start-2 md:row-start-3 md:max-h-[40vh] md:overflow-y-auto wide:col-start-3 wide:row-start-2 wide:max-h-none wide:border-t-0 wide:border-l ${gutter}`}
+        className={`relative order-1 flex flex-col gap-4 py-4.5 md:col-start-2 md:row-start-3 md:max-h-[40vh] md:overflow-y-auto wide:col-start-3 wide:row-start-2 wide:max-h-none ${gutter}`}
       >
         <Inspector output={output} art={art} setArt={setArt} onSave={(filename) => void saveOutput(output, filename, art, notify)} />
       </aside>

@@ -34,7 +34,7 @@ export function Navigation({ className, children, ...props }: NavigationProps) {
 			</nav>
 			<div className="px-4 pt-4 md:hidden">
 				<SheetTrigger isOpen={isOpen} onOpenChange={setOpen}>
-					<Button variant="plain">{props['aria-label']}</Button>
+					<Button variant="tertiary">{props['aria-label']}</Button>
 					<Sheet position="start" aria-label={props['aria-label']}>
 						<nav {...props} ref={closeOnLink} className="flex flex-col gap-6">
 							{children}

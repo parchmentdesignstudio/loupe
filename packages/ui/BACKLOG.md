@@ -73,7 +73,7 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 
 ## Questions for Steve
 
-- Control text is on trial at 13px, and 16px on touch screens, through `--control-size` (10 November). Keep it, or try another size?
+- Control text is on trial at 13px, and 16px on touch screens, through `--text-control` (10 November). Keep it, or try another size?
 - White on the accent, `#c76024`, is 4.1:1, under the 4.5:1 AA asks of 13px text such as a button’s. `#bf5819`, a shade darker, makes 4.5:1. Keep it, or darken it?
 - In the dark, the accent stays `#c76024` with dark text, at 4.4:1. The palette’s brighter `#e46f1e` would make 5.6:1 there. Worth it?
 - `blush-95`, the palette’s surface, is what a raised control turns on hover. Should side panels and cards take it too, through `panel`, which is white?
@@ -101,7 +101,7 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
     - Favicon’s dark mode is the library’s. Device keeps its olive.
     - `pnpm elyx:tokens` writes the colours, tints and shadows into the Elyx project, and `design/foundations.elyx` shows them together.
     - Type in Elyx: the sizes and leadings as tokens, with control text at 16 in the `pointer=coarse` context, the families by their desktop names, and a text component per text style. `foundations.elyx` sets its text in them, and adds a type specimen.
-    - Control text sits on one 20px line, `--control-leading`, at either size, in place of a 16px line for buttons and a 20px one for fields. Every 32px control pads 6px above and below, and an icon in a button or toggle sits on the line, so the padding is the same with text, an icon or both. Options and navigation links are 32px too. Elyx has the line as a multiple of the control size for each pointer, so its controls are 32px, as in code.
+    - Control text sits on one 20px line, `--text-control--line-height`, at either size, in place of a 16px line for buttons and a 20px one for fields. Every 32px control pads 6px above and below, and an icon in a button or toggle sits on the line, so the padding is the same with text, an icon or both. Options and navigation links are 32px too. Elyx has the line as a multiple of the control size for each pointer, so its controls are 32px, as in code.
     - Corners and spacing are tokens. `tokens.css` sets the five corners and the spacing step under Tailwind’s names, so the classes didn’t change, and Elyx gets them in `lengths.elyx`, with a token for each of 14 spacing steps. The elevation components’ corners are bound to them, and so is everything on `foundations.elyx`, which now matches the code’s toggle track, floating toolbar, menu and navigation rows, and adds a specimen. `pnpm test` fails when a component uses a corner or step with no token.
     - Menus, selects and combo boxes pad their options 4px, in place of 6px, so the options’ 4px corners run parallel to the popover’s 8px ones.
     - The palette is Steve’s five: `cream-99` (`#fffdf8`) is the ground, `blush-95` (`#f5ebe6`) what a raised control turns on hover, `pine-26` (`#0c2920`) ink, and `rust-60` (`#c76024`) and `lime-91` (`#ceeea7`) the new `accent` and `highlight`. A solid button takes the accent, and `void` takes the ink solid had. The dark mode’s layers move from teal to pine at the same lightness, and its panel is the light mode’s ink.

@@ -6,8 +6,8 @@ import "./colors.elyx" as base
 file {}
 
 export dark-colors = tokens : base.colors {
-  // The roles, each light-dark(light, dark). The dark mode inverts the light one: the ground takes ink's
-  // pine, and ink takes the ground's cream
+  // The roles components use, each light-dark(light, dark). The dark mode inverts the light one: the ground
+  // takes ink's pine, and ink takes the ground's cream
   ink: base.colors.cream-95,
   muted: base.colors.cream-80,
   danger: base.colors.red-81,
@@ -17,8 +17,8 @@ export dark-colors = tokens : base.colors {
   accent: base.colors.rust-60,
   // The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on
   highlight: opacity(base.colors.lime-91, 24%),
-  // The layers, from the page up. In the light, panel, raised and overlay are all white, and shadows part them.
-  // In the dark, each is lighter than the one below, and the panel is the light mode's ink
+  // The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
+  // overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel is the light mode's ink
   ground: base.colors.pine-20,
   // An area on the page, such as a tool's side panel
   panel: base.colors.pine-26,
@@ -32,8 +32,10 @@ export dark-colors = tokens : base.colors {
   inverse: ink,
   // A switch's handle and a slider's thumb, which stay lighter than their track
   knob: base.colors.cream-80,
+  // Behind a sheet
+  scrim: opacity(base.colors.black, 48%),
   // Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
-  // ink would grey the cream ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
+  // ink would grey the linen ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
   // as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on
   ground-bleed: base.colors.pine-95,
   panel-bleed: base.colors.pine-95,
@@ -41,11 +43,9 @@ export dark-colors = tokens : base.colors {
   overlay-bleed: base.colors.pine-95,
   inverse-bleed: base.colors.umber-30,
   bleed: ground-bleed,
-  // Behind a sheet
-  scrim: opacity(base.colors.black, 48%),
   // Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
-  // drops warm the cream in the light, as the tints do
-  edge: opacity(bleed, 8%),
+  // drops take the ground's hue in the light, as the tints do
+  edge: opacity(bleed, 20%),
   drop-raised: opacity(base.colors.black, 24%),
   drop-floating: opacity(base.colors.black, 32%),
   drop-overlay: opacity(base.colors.black, 48%)

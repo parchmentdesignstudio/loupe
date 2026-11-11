@@ -4,6 +4,6 @@
 file {}
 
 export fonts = tokens {
-  face: "Elza Round Variable",
+  sans: "Elza Round Variable",
   mono: "Auger Mono"
 }

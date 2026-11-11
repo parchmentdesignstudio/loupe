@@ -1,10 +1,12 @@
+import type { ReactNode } from 'react';
 import { type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
 export declare const button: import("tailwind-variants").TVReturnType<{
     variant: {
-        solid: string;
-        void: string;
-        plain: string;
+        primary: string[];
+        secondary: string[];
+        tertiary: string;
+        outline: string;
         quiet: string;
     };
     shape: {
@@ -13,6 +15,12 @@ export declare const button: import("tailwind-variants").TVReturnType<{
     size: {
         medium: string;
         small: string;
+    };
+    hasStart: {
+        true: string;
+    };
+    hasEnd: {
+        true: string;
     };
     isHovered: {
         true: string;
@@ -23,7 +31,7 @@ export declare const button: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "inline-flex shrink-0 cursor-default items-center justify-center gap-2 rounded-lg text-control font-medium [&>svg]:my-[calc((1lh-1rem)/2)] transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none", {
+}, undefined, string[], {
     isFocusVisible: {
         false: string;
         true: string;
@@ -35,6 +43,10 @@ export declare const button: import("tailwind-variants").TVReturnType<{
     };
 }, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
 export interface ButtonProps extends AriaButtonProps, Pick<VariantProps<typeof button>, 'variant' | 'shape' | 'size'> {
+    /** An icon before the label, on the left in a left-to-right language */
+    start?: ReactNode;
+    /** An icon after the label, on the right in a left-to-right language */
+    end?: ReactNode;
 }
-/** A button for any action. A circle holds just an icon, so it needs an aria-label */
-export declare function Button({ variant, shape, size, ...props }: ButtonProps): import("react").JSX.Element;
+/** A button for any action, with an icon at the start or end if it helps. A circle holds just an icon, so it needs an aria-label */
+export declare function Button({ variant, shape, size, start, end, ...props }: ButtonProps): import("react").JSX.Element;

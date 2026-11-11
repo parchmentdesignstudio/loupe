@@ -21,5 +21,5 @@ export function Navigation({ className, children, ...props }) {
         nav.addEventListener('click', close);
         return () => nav.removeEventListener('click', close);
     }, []);
-    return (_jsxs(_Fragment, { children: [_jsx("nav", { ...props, className: navigation({ className }), children: children }), _jsx("div", { className: "px-4 pt-4 md:hidden", children: _jsxs(SheetTrigger, { isOpen: isOpen, onOpenChange: setOpen, children: [_jsx(Button, { variant: "plain", children: props['aria-label'] }), _jsx(Sheet, { position: "start", "aria-label": props['aria-label'], children: _jsx("nav", { ...props, ref: closeOnLink, className: "flex flex-col gap-6", children: children }) })] }) })] }));
+    return (_jsxs(_Fragment, { children: [_jsx("nav", { ...props, className: navigation({ className }), children: children }), _jsx("div", { className: "px-4 pt-4 md:hidden", children: _jsxs(SheetTrigger, { isOpen: isOpen, onOpenChange: setOpen, children: [_jsx(Button, { variant: "tertiary", children: props['aria-label'] }), _jsx(Sheet, { position: "start", "aria-label": props['aria-label'], children: _jsx("nav", { ...props, ref: closeOnLink, className: "flex flex-col gap-6", children: children }) })] }) })] }));
 }

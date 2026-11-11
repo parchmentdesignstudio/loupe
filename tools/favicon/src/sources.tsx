@@ -40,7 +40,7 @@ export function Sources({ art, site, setArt, setSite, onAdd }: SourcesProps) {
       <DropZone variant="quiet" aria-label="Drop artwork" onDrop={(event) => void filesFrom(event).then((files) => onAdd(files, 'artwork'))} className={section}>
         <SectionHead title="Artwork">
           <FileTrigger acceptedFileTypes={['.svg', 'image/svg+xml', 'image/png', 'image/jpeg', 'image/webp']} allowsMultiple onSelect={(files) => onAdd(files, 'artwork')}>
-            <Button variant="plain" size="small">
+            <Button variant="tertiary" size="small">
               Add
             </Button>
           </FileTrigger>
@@ -88,7 +88,7 @@ export function Sources({ art, site, setArt, setSite, onAdd }: SourcesProps) {
       <DropZone variant="quiet" aria-label="Drop an Open Graph image" onDrop={(event) => void filesFrom(event).then((files) => onAdd(files, 'og'))} className={section}>
         <SectionHead title="Open Graph image">
           <FileTrigger acceptedFileTypes={['image/*', '.svg']} onSelect={(files) => onAdd(files, 'og')}>
-            <Button variant="plain" size="small">
+            <Button variant="tertiary" size="small">
               Choose
             </Button>
           </FileTrigger>
@@ -113,7 +113,7 @@ export function Sources({ art, site, setArt, setSite, onAdd }: SourcesProps) {
       <DropZone variant="quiet" aria-label="Drop iOS layers" onDrop={(event) => void filesFrom(event).then((files) => onAdd(files, 'layers'))} className={section}>
         <SectionHead title="iOS layers">
           <FileTrigger acceptedFileTypes={['.svg', 'image/svg+xml', 'image/png']} allowsMultiple onSelect={(files) => onAdd(files, 'layers')}>
-            <Button variant="plain" size="small">
+            <Button variant="tertiary" size="small">
               Add
             </Button>
           </FileTrigger>

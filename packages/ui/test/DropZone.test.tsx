@@ -36,7 +36,7 @@ describe('DropZone', () => {
 		const { container } = render(
 			<DropZone label="Drop artwork">
 				<FileTrigger acceptedFileTypes={['image/svg+xml']} onSelect={onSelect}>
-					<Button variant="plain">Choose files</Button>
+					<Button variant="tertiary">Choose files</Button>
 				</FileTrigger>
 			</DropZone>,
 		);
@@ -54,7 +54,7 @@ describe('DropZone', () => {
 			<>
 				<DropZone label="Drop artwork">
 					<FileTrigger>
-						<Button variant="plain">Choose files</Button>
+						<Button variant="tertiary">Choose files</Button>
 					</FileTrigger>
 				</DropZone>
 				<DropZone variant="quiet" aria-label="Drop artwork onto the canvas">

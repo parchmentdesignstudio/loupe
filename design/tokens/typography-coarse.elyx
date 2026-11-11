@@ -7,7 +7,7 @@ import "./typography.elyx" as base
 file {}
 
 export coarse-typography = tokens : base.typography {
-  control-size: 16,
-  // Still 20px, as a multiple of control-size
-  control-leading: 1.25
+  text-control: 16,
+  // Still 20px, as a multiple of text-control
+  text-control-line-height: 1.25
 }

@@ -131,7 +131,7 @@ function Screen({ device }: { device: Device }) {
       <div className="flex items-center gap-3">
         <FileTrigger acceptedFileTypes={['image/*']} onSelect={choose}>
           <Button
-            variant="plain"
+            variant="tertiary"
             aria-label={url ? 'Replace the screenshot' : 'Choose a screenshot'}
             className={({ isHovered }) => cx('grid place-items-center overflow-hidden p-0 text-muted', 'h-16', isHovered ? 'bg-bleed/12' : 'bg-bleed/8')}
             style={{ aspectRatio: `${size.width} / ${size.height}`, maxWidth: 112 }}
@@ -141,7 +141,7 @@ function Screen({ device }: { device: Device }) {
         </FileTrigger>
         <div className="flex flex-col items-start gap-1.5">
           <FileTrigger acceptedFileTypes={['image/*']} onSelect={choose}>
-            <Button variant="plain" size="small">{url ? 'Replace…' : 'Choose…'}</Button>
+            <Button variant="tertiary" size="small">{url ? 'Replace…' : 'Choose…'}</Button>
           </FileTrigger>
           {device.screen && (
             <Button variant="quiet" size="small" onPress={() => actions.updateDevices([device.id], () => ({ screen: null }))}>Remove</Button>
@@ -261,7 +261,7 @@ function AnotherColour({ custom, start }: { custom: string | null; start: string
     <DialogTrigger>
       <WithTooltip tooltip="Another colour">
         <Button
-          variant="plain"
+          variant="tertiary"
           aria-label={label}
           className={cx(
             'relative aspect-square size-auto w-full p-0 text-muted outline-offset-4',

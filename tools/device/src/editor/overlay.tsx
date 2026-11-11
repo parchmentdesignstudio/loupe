@@ -95,12 +95,12 @@ export function Overlay() {
         <path
           d={`M0 0H${W}V${H}H0Z M${board.x} ${board.y}h${board.width}v${board.height}h${-board.width}Z`}
           fillRule="evenodd"
-          className="fill-workspace/80 dark:fill-dark-workspace/80"
+          className="fill-panel/80"
         />
-        <rect {...board} className="fill-none stroke-olive-300 dark:stroke-olive-700" />
+        <rect {...board} className="fill-none stroke-bleed/24" />
 
-        {grid.minor && <path d={grid.minor} className="stroke-olive-500/25" />}
-        {grid.major && <path d={grid.major} className="stroke-olive-500/50" />}
+        {grid.minor && <path d={grid.minor} className="stroke-bleed/12" />}
+        {grid.major && <path d={grid.major} className="stroke-bleed/24" />}
 
         {settings.columns.visible &&
           columnEdges(doc.artboard, settings.columns).map((column) => (
@@ -160,7 +160,7 @@ export function Overlay() {
       </svg>
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden text-[11px] font-medium tabular-nums">
-        <span className="absolute whitespace-nowrap text-olive-975/60 dark:text-pearl/60" style={{ left: board.x, top: board.y - 22 }}>
+        <span className="absolute whitespace-nowrap text-muted" style={{ left: board.x, top: board.y - 22 }}>
           Artboard <span className="opacity-70">{doc.artboard.width} × {doc.artboard.height}</span>
         </span>
 
@@ -178,7 +178,7 @@ export function Overlay() {
             ? { left: middle, top: at + 6, translate: '-50% 0' }
             : { left: at + 6, top: middle, translate: '0 -50%' }
           return (
-            <Label key={index} className="bg-thulian text-olive-975" style={style}>
+            <Label key={index} className="bg-thulian text-pine-26" style={style}>
               {format(gap.to - gap.from)}
             </Label>
           )
@@ -186,7 +186,7 @@ export function Overlay() {
 
         {guide && (
           <Label
-            className="bg-tango text-olive-975"
+            className="bg-tango text-pine-26"
             style={guide.axis === 'x' ? { left: sx(guide.value) + 6, top: 26 } : { left: 26, top: sy(guide.value) + 6 }}
           >
             {format(guide.value)}

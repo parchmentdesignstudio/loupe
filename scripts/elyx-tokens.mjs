@@ -143,9 +143,13 @@ function colour(value) {
   }
 }
 
+// The colours and type are Tailwind’s variables in @theme static, and the bleeds and shadows’ colours sit in :root.
+// Elyx names a colour without Tailwind’s prefix, so --color-pine-26 is pine-26
+const unprefix = (text) => text.replaceAll('--color-', '--')
+const themeTokens = declarations(block('@theme static'))
 const palette = []
 const roles = []
-for (const declaration of declarations(block(':root'))) {
+for (const declaration of [...themeTokens, ...declarations(block(':root'))].map((item) => ({ ...item, name: unprefix(`--${item.name}`).slice(2), value: unprefix(item.value) }))) {
   const value = colour(declaration.value)
   if (!value) continue
   known.add(declaration.name)
@@ -160,13 +164,12 @@ const write = (value, prefix = '') => {
   return value.amount ? `opacity(${name}, ${value.amount}%)` : name
 }
 
-const theme = declarations(block('@theme inline'))
-const shadows = theme
+const shadows = declarations(block('@theme inline'))
   .filter(({ name }) => name.startsWith('shadow-'))
   .map(({ name, value }) => {
     const level = levels[name.slice('shadow-'.length)]
     if (!level) throw new Error(`Add --${name} to the levels in scripts/elyx-tokens.mjs`)
-    const drops = split(value).map((layer) => {
+    const drops = split(unprefix(value)).map((layer) => {
       const [, lengths, colourName] = /^(.*) var\(--([\w-]+)\)$/.exec(layer)
       if (!known.has(colourName)) throw new Error(`--${name} uses --${colourName}, which isn’t a colour in :root`)
       const [x, y, blur = 0, spread = 0] = lengths.split(/\s+/).map(parseFloat)
@@ -180,9 +183,9 @@ const shadows = theme
     return { name: name.slice('shadow-'.length), ...level, shadow: drops.length === 1 ? drops[0] : drops.toReversed() }
   })
 
-// The type: the sizes and leadings the text-* utilities point at, in points and as multiples of the size, and the
-// families behind font-*
-const variable = (value) => /^var\(--([\w-]+)\)$/.exec(value.trim())?.[1]
+// The type: each text-* size in points and its line height as a multiple of the size, and the families behind font-*.
+// Elyx can’t take Tailwind’s double dash, so --text-label--line-height is text-label-line-height
+const typeName = (name) => name.replace('--', '-')
 // Elyx keeps a number to two decimal places, and rounds a line to the nearest pixel
 const round = (value) => Number(value.toFixed(2))
 const number = (value) => {
@@ -190,22 +193,21 @@ const number = (value) => {
   if (!amount) throw new Error(`${value} isn’t a size or a multiple, which Elyx takes as a number`)
   return String(round(parseFloat(amount) * (unit === 'rem' ? 16 : 1)))
 }
-const textStyles = theme
-  .filter(({ name }) => name.startsWith('text-') && !name.includes('--'))
-  .map(({ name, value }) => {
+const typeDeclarations = themeTokens.filter(({ name }) => name.startsWith('text-')).map((declaration) => ({ ...declaration, name: typeName(declaration.name) }))
+const typeNames = new Set(typeDeclarations.map(({ name }) => name))
+const textStyles = typeDeclarations
+  .filter(({ name }) => !name.endsWith('-line-height'))
+  .map(({ name }) => {
     const style = name.slice('text-'.length)
     if (!styles[style]) throw new Error(`Add --${name} to the styles in scripts/elyx-tokens.mjs`)
-    const leading = theme.find((declaration) => declaration.name === `${name}--line-height`)
-    return { name: style, caption: styles[style], size: variable(value), leading: leading && variable(leading.value) }
+    const leading = `${name}-line-height`
+    return { name: style, caption: styles[style], size: name, leading: typeNames.has(leading) ? leading : undefined }
   })
-const rootDeclarations = declarations(block(':root'))
-// A leading is a multiple of the size, or a fixed line, such as control text’s 20px. Elyx takes line height only as a
-// multiple, so a fixed line becomes one: the line over its text style’s size, in each context
+// A line height is a multiple of the size, or a fixed line, such as control text’s 20px. Elyx takes line height only
+// as a multiple, so a fixed line becomes one: the line over its text style’s size, in each context
 const lineHeights = textStyles
-  .filter(({ leading }) => /(?:rem|px)$/.test(rootDeclarations.find(({ name }) => name === leading)?.value.trim() ?? ''))
+  .filter(({ leading }) => /(?:rem|px)$/.test(typeDeclarations.find(({ name }) => name === leading)?.value.trim() ?? ''))
   .map(({ size, leading }) => ({ name: leading, size }))
-const typeNames = new Set(textStyles.flatMap(({ size, leading }) => [size, leading]))
-const typeDeclarations = rootDeclarations.filter(({ name }) => typeNames.has(name))
 // The type in points and multiples, with a context’s changes on top
 const typeValues = (changes = []) => {
   const values = new Map([...typeDeclarations, ...changes].map(({ name, value }) => [name, Number(number(value))]))
@@ -218,15 +220,14 @@ const typography = typeDeclarations.map((declaration) => {
   const comment = line ? [...declaration.comment, `${number(declaration.value)}px in the CSS, and a multiple of ${line.size} here, as Elyx takes line height`] : declaration.comment
   return { ...declaration, comment, value: String(baseType.get(declaration.name)) }
 })
-const fontUtilities = new Map(theme.filter(({ name }) => name.startsWith('font-')).map(({ name, value }) => [variable(value), name]))
-const fonts = rootDeclarations
-  .filter(({ name }) => fontUtilities.has(name))
+const fonts = themeTokens
+  .filter(({ name }) => name.startsWith('font-'))
   .map((declaration) => {
     const first = split(declaration.value)[0].replace(/['"]/g, '')
     if (!families[first]) throw new Error(`Add ${first}’s desktop name to the families in scripts/elyx-tokens.mjs`)
-    return { ...declaration, value: `"${families[first]}"` }
+    return { ...declaration, name: declaration.name.slice('font-'.length), value: `"${families[first]}"` }
   })
-const face = [...fontUtilities].find(([, utility]) => utility === 'font-sans')?.[0]
+const face = 'sans'
 
 // The corners and spacing, in pixels: each --radius-* as it is, and --spacing at each step, named for Tailwind’s, so
 // spacing-1-5 is p-1.5. Elyx keeps a length token as a number, as it does the type
@@ -245,7 +246,7 @@ for (const level of Object.values(levels)) {
 
 // A media query that changes the type, such as control text on touch screens, becomes a context of its own
 const contexts = [...css.matchAll(/(?:\/\*((?:[^*]|\*(?!\/))*)\*\/\s*)?@media \(([\w-]+): ([\w-]+)\) \{/g)].map(([, note, feature, choice]) => {
-  const changes = declarations(block(`@media (${feature}: ${choice})`))
+  const changes = declarations(block(`@media (${feature}: ${choice})`)).map((change) => ({ ...change, name: typeName(change.name) }))
   for (const { name } of changes) {
     if (!typeNames.has(name)) throw new Error(`--${name} changes in @media (${feature}: ${choice}), and only the type carries into Elyx as a context`)
   }
