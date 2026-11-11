@@ -88,7 +88,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 
 | Component | What it’s for |
 |---|---|
-| `Button` | Any action, as solid, plain or quiet, and a circle for an icon |
+| `Button` | Any action, as solid in the accent, void in ink, plain or quiet, and a circle for an icon |
 | `Chip`, `ChipGroup` | Suggestions to tap |
 | `Toolbar` | Controls in a row, such as an editor’s tools: one Tab stop, with the arrow keys between them |
 | `Separator` | A line between groups of controls, or sections of a panel. In a toolbar it stands upright |
@@ -140,13 +140,15 @@ A dialog or sheet with a field puts focus in the first one: give it `autoFocus`,
 
 Dark mode follows the system, with no toggle. Each colour is a role set with `light-dark()`, so the tokens alone give a site both modes. To keep a site light, set `color-scheme: light` on `:root`, and `scheme-light` or `scheme-dark` sets one for part of a page. `light-dark()` needs Safari 17.5 or later.
 
-`tokens.css` has two tiers. The palette holds the raw colours, named by hue and lightness, so `teal-29` is `oklch(0.29 …)`. The roles are what components use, and each points at one palette colour in the light and another in the dark.
+`tokens.css` has two tiers. The palette holds the raw colours, named by hue and lightness, so `pine-26` is `oklch(0.26 …)`. Parchment’s own five are `cream-99`, `blush-95`, `pine-26`, `rust-60` and `lime-91`, and the rest are worked out from them. The roles are what components use, and each points at one palette colour in the light and another in the dark.
 
 | Role | What it’s for |
 |---|---|
 | `ink`, `muted` | Text, and quieter text |
 | `danger` | Errors, and the ring on a field whose value is wrong |
-| `paper` | Marks on ink, such as a solid button’s text or a checkbox’s tick |
+| `paper` | Marks on ink or the accent, such as a button’s text or a checkbox’s tick |
+| `accent` | What a page leads with, such as a solid button. It stays rust in the dark |
+| `highlight` | The light accent, a fill behind ink to mark something out |
 | `ground` | The page |
 | `panel` | An area on the page, such as a tool’s side panel |
 | `raised` | A control’s fill, such as a button’s, a field’s or a checkbox’s, which turns `surface` on hover |
@@ -191,7 +193,7 @@ import { Button, Chip, ChipGroup } from '@parchment/ui'
 </ChipGroup>
 ```
 
-To change a token, set its variable on `:root`, such as `--text-size`. A colour takes both modes, as in `--ink: light-dark(var(--teal-25), var(--cream-98))`, or one value for both. The type is Elza Round Variable, with Auger Mono for small labels, both from Adobe Fonts: load a kit with both, or set `--face` and `--mono` to your own.
+To change a token, set its variable on `:root`, such as `--text-size`. A colour takes both modes, as in `--ink: light-dark(var(--pine-20), var(--cream-99))`, or one value for both. The type is Elza Round Variable, with Auger Mono for small labels, both from Adobe Fonts: load a kit with both, or set `--face` and `--mono` to your own.
 
 ### Writing a component
 

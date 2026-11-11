@@ -7,8 +7,10 @@ export const button = tv({
 	extend: focusRing,
 	base: 'inline-flex shrink-0 cursor-default items-center justify-center gap-2 rounded-lg text-control font-medium [&>svg]:my-[calc((1lh-1rem)/2)] transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none',
 	variants: {
+		// Solid is the accent, for what a page leads with. Void is ink, for where the accent is too loud
 		variant: {
-			solid: 'bg-ink text-paper',
+			solid: 'bg-accent text-paper',
+			void: 'bg-ink text-paper',
 			plain: 'bg-raised text-ink shadow-raised',
 			quiet: 'text-ink',
 		},
@@ -32,7 +34,8 @@ export const button = tv({
 		},
 	},
 	compoundVariants: [
-		{ variant: 'solid', isHovered: true, class: 'bg-ink/88' },
+		{ variant: 'solid', isHovered: true, class: 'bg-accent/88' },
+		{ variant: 'void', isHovered: true, class: 'bg-ink/88' },
 		{ variant: 'plain', isHovered: true, class: 'bg-surface' },
 		{ variant: 'quiet', isHovered: true, class: 'bg-bleed/4' },
 		// After the sizes' padding: a circle pads its icon evenly, counting the line it sits on, so it stays round

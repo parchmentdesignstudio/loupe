@@ -86,17 +86,31 @@ layers = frame {
     buttons = frame {
       layout: {item-gap: l.lengths.spacing-2},
       overflow: .visible,
-      children: [solid, plain, quiet],
+      children: [solid, void, plain, quiet],
 
       solid = frame {
         layout: {direction: .row},
-        fill: c.colors.ink,
+        fill: c.colors.accent,
         corner-radius: l.lengths.radius-lg,
         padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
         children: solidLabel,
 
         solidLabel = text : styles.control {
           contents: "Solid",
+          font-style: "Medium",
+          fill[0].color: c.colors.paper
+        }
+      }
+
+      void = frame {
+        layout: {direction: .row},
+        fill: c.colors.ink,
+        corner-radius: l.lengths.radius-lg,
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: voidLabel,
+
+        voidLabel = text : styles.control {
+          contents: "Void",
           font-style: "Medium",
           fill[0].color: c.colors.paper
         }

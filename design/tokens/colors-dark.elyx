@@ -7,23 +7,27 @@ file {}
 
 export dark-colors = tokens : base.colors {
   // The roles, each light-dark(light, dark). The dark mode inverts the light one: the ground takes ink's
-  // teal, and ink takes the ground's cream
+  // pine, and ink takes the ground's cream
   ink: base.colors.cream-95,
   muted: base.colors.cream-80,
   danger: base.colors.red-81,
-  // Marks on ink, such as a solid button's text or a checkbox's tick
-  paper: base.colors.teal-20,
+  // Marks on ink or the accent, such as a button's text or a checkbox's tick
+  paper: base.colors.pine-20,
+  // What a page leads with, such as a solid button. It stays rust in the dark, where paper turns dark
+  accent: base.colors.rust-60,
+  // The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on
+  highlight: opacity(base.colors.lime-91, 24%),
   // The layers, from the page up. In the light, panel, raised and overlay are all white, and shadows part them.
-  // In the dark, each is lighter than the one below
-  ground: base.colors.teal-20,
+  // In the dark, each is lighter than the one below, and the panel is the light mode's ink
+  ground: base.colors.pine-20,
   // An area on the page, such as a tool's side panel
-  panel: base.colors.teal-25,
+  panel: base.colors.pine-26,
   // A control's fill, such as a button's, a field's or a checkbox's
-  raised: base.colors.teal-29,
+  raised: base.colors.pine-29,
   // What raised turns on hover
-  surface: base.colors.teal-35,
+  surface: base.colors.pine-35,
   // Popovers, menus, dialogs, sheets and floating toolbars
-  overlay: base.colors.teal-32,
+  overlay: base.colors.pine-32,
   // Ink as a surface, such as a toast or a tooltip, with paper text
   inverse: ink,
   // A switch's handle and a slider's thumb, which stay lighter than their track
@@ -31,10 +35,10 @@ export dark-colors = tokens : base.colors {
   // Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
   // ink would grey the cream ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
   // as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on
-  ground-bleed: base.colors.teal-95,
-  panel-bleed: base.colors.teal-95,
-  raised-bleed: base.colors.teal-95,
-  overlay-bleed: base.colors.teal-95,
+  ground-bleed: base.colors.pine-95,
+  panel-bleed: base.colors.pine-95,
+  raised-bleed: base.colors.pine-95,
+  overlay-bleed: base.colors.pine-95,
   inverse-bleed: base.colors.umber-30,
   bleed: ground-bleed,
   // Behind a sheet

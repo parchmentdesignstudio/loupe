@@ -42,7 +42,7 @@
   --ease-smooth: cubic-bezier(.45, 0, .25, 1);
 }
 
-/* In the dark, device keeps mcknny’s olive and pearl over @parchment/ui’s teal, for now */
+/* In the dark, device keeps mcknny’s olive and pearl over @parchment/ui’s pine, for now */
 @media (prefers-color-scheme: dark) {
   :root {
     --ink: var(--color-pearl);

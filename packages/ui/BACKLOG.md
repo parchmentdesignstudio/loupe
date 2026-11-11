@@ -10,9 +10,9 @@ What `@parchment/ui` is missing, found by building the device and favicon tools 
 
 ## Foundations, next
 
-Steve’s priority on 10 November was shadows, layered transparency for dark mode, and the palette. The roles, layers, tints and shadows are in, under Done. What’s left:
+Steve’s priority on 10 November was shadows, layered transparency for dark mode, and the palette. The roles, layers, tints, shadows and palette are in, under Done. What’s left:
 
-- **Palette:** the raw colours are Steve’s to settle. The roles carry a change through, and `pnpm elyx:tokens` carries it into Elyx.
+- **Palette:** `highlight`, the light accent, is on no component yet.
 - **Device:** its dark mode keeps mcknny’s olive for now, through its own variables.
 - **Elyx:**
   - Colours, type, shadows, corners and spacing are tokens there.
@@ -74,6 +74,10 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 ## Questions for Steve
 
 - Control text is on trial at 13px, and 16px on touch screens, through `--control-size` (10 November). Keep it, or try another size?
+- White on the accent, `#c76024`, is 4.1:1, under the 4.5:1 AA asks of 13px text such as a button’s. `#bf5819`, a shade darker, makes 4.5:1. Keep it, or darken it?
+- In the dark, the accent stays `#c76024` with dark text, at 4.4:1. The palette’s brighter `#e46f1e` would make 5.6:1 there. Worth it?
+- `blush-95`, the palette’s surface, is what a raised control turns on hover. Should side panels and cards take it too, through `panel`, which is white?
+- Where should `highlight` go first: the current page in a `NavigationTree`, a chosen tag, or selected text?
 - The library adds about 100 kB, gzipped, to a tool. Device went from 442 to 767 kB before gzip, then 861 kB (251 kB gzipped) with the colour components. Fine for tools, and worth watching for sites
 
 ## Good to know
@@ -100,4 +104,5 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
     - Control text sits on one 20px line, `--control-leading`, at either size, in place of a 16px line for buttons and a 20px one for fields. Every 32px control pads 6px above and below, and an icon in a button or toggle sits on the line, so the padding is the same with text, an icon or both. Options and navigation links are 32px too. Elyx has the line as a multiple of the control size for each pointer, so its controls are 32px, as in code.
     - Corners and spacing are tokens. `tokens.css` sets the five corners and the spacing step under Tailwind’s names, so the classes didn’t change, and Elyx gets them in `lengths.elyx`, with a token for each of 14 spacing steps. The elevation components’ corners are bound to them, and so is everything on `foundations.elyx`, which now matches the code’s toggle track, floating toolbar, menu and navigation rows, and adds a specimen. `pnpm test` fails when a component uses a corner or step with no token.
     - Menus, selects and combo boxes pad their options 4px, in place of 6px, so the options’ 4px corners run parallel to the popover’s 8px ones.
+    - The palette is Steve’s five: `cream-99` (`#fffdf8`) is the ground, `blush-95` (`#f5ebe6`) what a raised control turns on hover, `pine-26` (`#0c2920`) ink, and `rust-60` (`#c76024`) and `lime-91` (`#ceeea7`) the new `accent` and `highlight`. A solid button takes the accent, and `void` takes the ink solid had. The dark mode’s layers move from teal to pine at the same lightness, and its panel is the light mode’s ink.
 - **Checkbox, Radio and Switch:** the hidden input could scroll the whole page from inside a scrolling panel. Their label is now `relative` (9 November)

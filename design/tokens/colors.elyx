@@ -6,39 +6,47 @@ file {}
 
 @variants(dark.dark-colors)
 export colors = tokens {
-  // The palette: the raw colours, named by hue and lightness, so teal-29 is oklch(0.29 …). The further apart
-  // two numbers, the stronger the contrast. Components use the roles below rather than these
+  // The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
+  // two numbers, the stronger the contrast. Parchment's own are cream-99, blush-95, pine-26, rust-60 and lime-91,
+  // and the rest are worked out from them. Components use the roles below rather than these
   white: .white,
   black: .black,
-  cream-98: #fbf6ef,
+  cream-99: #fffdf8,
   cream-95: #f3eee6,
   cream-80: #c3bdb4,
   umber-30: #3d2a08,
-  teal-95: #d8f5f8,
-  teal-50: #5b6668,
-  teal-35: #2e3e40,
-  teal-32: #273638,
-  teal-29: #1f2f31,
-  teal-25: #172426,
-  teal-20: #0e1819,
+  blush-95: #f5ebe6,
+  rust-60: #c76024,
+  lime-91: #ceeea7,
+  pine-95: #ccfbe9,
+  pine-50: #566861,
+  pine-35: #254137,
+  pine-32: #1f3930,
+  pine-29: #183129,
+  pine-26: #0c2920,
+  pine-20: #081a14,
   red-81: #ffa699,
   red-50: #b3261e,
   // The roles, each light-dark(light, dark). The dark mode inverts the light one: the ground takes ink's
-  // teal, and ink takes the ground's cream
-  ink: teal-29,
-  muted: teal-50,
+  // pine, and ink takes the ground's cream
+  ink: pine-26,
+  muted: pine-50,
   danger: red-50,
-  // Marks on ink, such as a solid button's text or a checkbox's tick
+  // Marks on ink or the accent, such as a button's text or a checkbox's tick
   paper: white,
+  // What a page leads with, such as a solid button. It stays rust in the dark, where paper turns dark
+  accent: rust-60,
+  // The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on
+  highlight: lime-91,
   // The layers, from the page up. In the light, panel, raised and overlay are all white, and shadows part them.
-  // In the dark, each is lighter than the one below
-  ground: cream-98,
+  // In the dark, each is lighter than the one below, and the panel is the light mode's ink
+  ground: cream-99,
   // An area on the page, such as a tool's side panel
   panel: white,
   // A control's fill, such as a button's, a field's or a checkbox's
   raised: white,
   // What raised turns on hover
-  surface: cream-98,
+  surface: blush-95,
   // Popovers, menus, dialogs, sheets and floating toolbars
   overlay: white,
   // Ink as a surface, such as a toast or a tooltip, with paper text
@@ -49,13 +57,13 @@ export colors = tokens {
   // ink would grey the cream ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
   // as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on
   ground-bleed: umber-30,
-  panel-bleed: teal-29,
-  raised-bleed: teal-29,
-  overlay-bleed: teal-29,
+  panel-bleed: pine-26,
+  raised-bleed: pine-26,
+  overlay-bleed: pine-26,
   inverse-bleed: white,
   bleed: ground-bleed,
   // Behind a sheet
-  scrim: opacity(teal-29, 32%),
+  scrim: opacity(pine-26, 32%),
   // Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
   // drops warm the cream in the light, as the tints do
   edge: opacity(bleed, 8%),
