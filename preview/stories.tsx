@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import { RouterProvider, parseColor } from 'react-aria-components';
+import { type IconSize, type IconVariant, iconNames } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import {
 	Button,
@@ -26,6 +27,7 @@ import {
 	DisclosureHeader,
 	DisclosurePanel,
 	DropZone,
+	EmptyState,
 	FileTrigger,
 	GridList,
 	GridListHeader,
@@ -93,6 +95,8 @@ export interface Entry {
 	exports?: string[];
 	usage?: string;
 	stories: Story[];
+	/** For an area of loupe with nothing in it yet, shown in place of the stories */
+	empty?: () => ReactNode;
 }
 
 export interface Group {
@@ -179,7 +183,7 @@ function Editing({ className }: { className?: string }) {
 function EditMenu() {
 	return (
 		<MenuTrigger>
-			<Button variant="plain">Edit</Button>
+			<Button variant="tertiary">Edit</Button>
 			<Menu>
 				<MenuItem textValue="Undo">
 					Undo
@@ -324,7 +328,7 @@ function DroppingFiles() {
 			className="w-full"
 		>
 			<FileTrigger acceptedFileTypes={['image/svg+xml', 'image/png']} allowsMultiple onSelect={(files) => setNames([...(files ?? [])].map((file) => file.name))}>
-				<Button variant="plain" size="small">
+				<Button variant="tertiary" size="small">
 					Choose files
 				</Button>
 			</FileTrigger>
@@ -353,7 +357,7 @@ function ChoosingFiles() {
 	return (
 		<>
 			<FileTrigger acceptedFileTypes={['image/svg+xml', 'image/png']} allowsMultiple onSelect={(files) => setNames([...(files ?? [])].map((file) => file.name))}>
-				<Button variant="plain">Choose artwork</Button>
+				<Button variant="tertiary">Choose artwork</Button>
 			</FileTrigger>
 			<p className="font-mono text-label text-muted">{names.length > 0 ? names.join(', ') : 'Nothing chosen yet'}</p>
 		</>
@@ -379,7 +383,7 @@ function AreaAndHue() {
 
 // Parchment’s five, with the role each makes
 const brand = [
-	{ name: 'cream-99', role: 'ground' },
+	{ name: 'cream-99' },
 	{ name: 'blush-95', role: 'surface' },
 	{ name: 'pine-26', role: 'ink' },
 	{ name: 'rust-60', role: 'accent' },
@@ -401,9 +405,10 @@ const hues = {
 
 const greySteps = [97, 94, 90, 84, 76, 66, 56, 46, 36, 26];
 
-// What the roles take besides the five, by hue, such as the dark mode’s layers and danger’s reds
+// What the roles take besides the five, by hue, such as the light mode’s ground, the dark mode’s layers and danger’s reds
 const derived = [
 	['white', 'black'],
+	['linen-99', 'linen-97', 'linen-30'],
 	['cream-95', 'cream-80', 'umber-30'],
 	['pine-95', 'pine-50', 'pine-35', 'pine-32', 'pine-29', 'pine-20'],
 	['red-81', 'red-50'],
@@ -452,7 +457,7 @@ function Derived() {
 	return (
 		<div className="flex flex-wrap gap-x-6 gap-y-4">
 			{derived.map((names) => (
-				<div key={names[0]} className="flex gap-1.5">
+				<div key={names[0]} className="flex flex-wrap gap-x-1.5 gap-y-4">
 					{names.map((name) => (
 						<Swatch key={name} name={name} />
 					))}
@@ -464,14 +469,14 @@ function Derived() {
 
 export const library: Group[] = [
 	{
-		name: 'Foundations',
+		name: 'Tokens',
 		components: [
 			{
 				id: 'colour',
 				name: 'Colour',
 				description:
 					'The palette, named by hue and lightness, so the further apart two numbers, the stronger the contrast. Components use roles made from Parchment’s own, and the hues and greys are there for designs to draw on. On the layer each grey is for, 56 and darker pass 4.5:1 for text, and 66 and darker 3:1 for a control’s edge',
-				usage: 'var(--teal-48)',
+				usage: 'var(--color-teal-48)',
 				stories: [
 					{ name: 'Parchment’s own', render: () => brand.map(({ name, role }) => <Swatch key={name} name={name} role={role} />) },
 					{ name: 'Nine hues, each light, mid and dark', render: Hues },
@@ -488,17 +493,35 @@ export const library: Group[] = [
 			{
 				id: 'button',
 				name: 'Button',
-				description: 'Any action, as solid in the accent, void in ink, plain or quiet, and a circle for an icon',
+				description: 'Any action, as primary in yellow, secondary in sage, tertiary in white, outline or quiet, with an icon at either end, and a circle for just an icon',
 				exports: ['Button'],
 				stories: [
 					{
-						name: 'Solid, void, plain and quiet',
+						name: 'Primary, secondary, tertiary, outline and quiet',
 						render: () => (
 							<>
 								<Button>Schedule call</Button>
-								<Button variant="void">Book a visit</Button>
-								<Button variant="plain">Send an email</Button>
+								<Button variant="secondary">Book a visit</Button>
+								<Button variant="tertiary">Send an email</Button>
+								<Button variant="outline">Call back</Button>
 								<Button variant="quiet">Not now</Button>
+							</>
+						),
+					},
+					{
+						name: 'With an icon at the start or end',
+						render: () => (
+							<>
+								<Button start={<Icon name="plus" />}>New project</Button>
+								<Button variant="secondary" end={<Icon name="arrow-right" />}>
+									Continue
+								</Button>
+								<Button variant="tertiary" start={<Icon name="envelope" />}>
+									Send an email
+								</Button>
+								<Button variant="outline" size="small" end={<Icon name="chevron-down" />}>
+									Sort by
+								</Button>
 							</>
 						),
 					},
@@ -506,7 +529,7 @@ export const library: Group[] = [
 						name: 'Circle',
 						render: () => (
 							<>
-								<Button variant="plain" shape="circle" aria-label="Send">
+								<Button variant="tertiary" shape="circle" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 								<Button shape="circle" size="small" aria-label="Send">
@@ -587,7 +610,7 @@ export const library: Group[] = [
 						name: 'In a tooltip',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="plain" shape="circle" aria-label="Undo">
+								<Button variant="tertiary" shape="circle" aria-label="Undo">
 									<Icon name="arrow-uturn-left" />
 								</Button>
 								<Tooltip>
@@ -1017,6 +1040,35 @@ export const library: Group[] = [
 					{ name: 'Removing', render: RemovingTags },
 				],
 			},
+			{
+				id: 'empty-state',
+				name: 'Empty state',
+				description: 'Where there’s nothing to show yet: what will be here, and the first step to fill it. Its title isn’t a heading, so it sits in a list or under a page’s own',
+				exports: ['EmptyState'],
+				stories: [
+					{
+						name: 'With a first step',
+						render: () => (
+							<EmptyState
+								icon={<Icon name="note-text-badge-plus" />}
+								title="No briefs yet"
+								actions={<Button start={<Icon name="plus" />}>New brief</Button>}
+								className="w-full"
+							>
+								A brief sets out what a project is for, so start one before the first call
+							</EmptyState>
+						),
+					},
+					{
+						name: 'Just saying so',
+						render: () => (
+							<EmptyState title="No matches" className="w-full">
+								Try fewer words, or check the spelling
+							</EmptyState>
+						),
+					},
+				],
+			},
 		],
 	},
 	{
@@ -1054,14 +1106,14 @@ export const library: Group[] = [
 						name: 'Modal',
 						render: () => (
 							<DialogTrigger>
-								<Button variant="plain">Rename project</Button>
+								<Button variant="tertiary">Rename project</Button>
 								<Modal>
 									<Dialog>
 										<DialogHeading>Rename project</DialogHeading>
 										<DialogClose />
 										<TextField label="Name" defaultValue="Loupe" autoFocus className="mt-4" />
 										<DialogActions>
-											<Button slot="close" variant="plain">
+											<Button slot="close" variant="tertiary">
 												Cancel
 											</Button>
 											<Button slot="close">Save</Button>
@@ -1083,13 +1135,13 @@ export const library: Group[] = [
 						name: 'From the bottom',
 						render: () => (
 							<SheetTrigger>
-								<Button variant="plain">Rename project</Button>
+								<Button variant="tertiary">Rename project</Button>
 								<Sheet>
 									<DialogHeading>Rename project</DialogHeading>
 									<DialogClose />
 									<TextField label="Name" defaultValue="Loupe" autoFocus className="mt-4" />
 									<DialogActions>
-										<Button slot="close" variant="plain">
+										<Button slot="close" variant="tertiary">
 											Cancel
 										</Button>
 										<Button slot="close">Save</Button>
@@ -1102,7 +1154,7 @@ export const library: Group[] = [
 						name: 'From the start edge',
 						render: () => (
 							<SheetTrigger>
-								<Button variant="plain">Share</Button>
+								<Button variant="tertiary">Share</Button>
 								<Sheet position="start">
 									<DialogHeading className="text-body">Share link</DialogHeading>
 									<DialogClose />
@@ -1123,7 +1175,7 @@ export const library: Group[] = [
 						name: 'Beside its button',
 						render: () => (
 							<DialogTrigger>
-								<Button variant="plain">Share</Button>
+								<Button variant="tertiary">Share</Button>
 								<Popover className="w-64">
 									<Dialog>
 										<DialogHeading className="text-body">Share link</DialogHeading>
@@ -1137,7 +1189,7 @@ export const library: Group[] = [
 						name: 'With an arrow',
 						render: () => (
 							<DialogTrigger>
-								<Button variant="plain">Share</Button>
+								<Button variant="tertiary">Share</Button>
 								<Popover showArrow className="w-64">
 									<Dialog>
 										<DialogHeading className="text-body">Share link</DialogHeading>
@@ -1159,7 +1211,7 @@ export const library: Group[] = [
 						name: 'Actions',
 						render: () => (
 							<MenuTrigger>
-								<Button variant="plain">Project</Button>
+								<Button variant="tertiary">Project</Button>
 								<Menu>
 									<MenuSection>
 										<Header>Project</Header>
@@ -1199,7 +1251,7 @@ export const library: Group[] = [
 						name: 'On a circle button',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="plain" shape="circle" aria-label="Send">
+								<Button variant="tertiary" shape="circle" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 								<Tooltip>Send message</Tooltip>
@@ -1210,7 +1262,7 @@ export const library: Group[] = [
 						name: 'With an arrow',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="plain" shape="circle" aria-label="Send">
+								<Button variant="tertiary" shape="circle" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 								<Tooltip showArrow>Send message</Tooltip>
@@ -1229,7 +1281,7 @@ export const library: Group[] = [
 						name: 'With a title',
 						render: () => (
 							<>
-								<Button variant="plain" onPress={() => toasts.add({ title: 'Link copied' })}>
+								<Button variant="tertiary" onPress={() => toasts.add({ title: 'Link copied' })}>
 									Copy link
 								</Button>
 								<ToastRegion queue={toasts} />
@@ -1239,7 +1291,7 @@ export const library: Group[] = [
 					{
 						name: 'With a description',
 						render: () => (
-							<Button variant="plain" onPress={() => toasts.add({ title: 'Export ready', description: 'favicon.zip is in your downloads, with all 16 files.' })}>
+							<Button variant="tertiary" onPress={() => toasts.add({ title: 'Export ready', description: 'favicon.zip is in your downloads, with all 16 files.' })}>
 								Export
 							</Button>
 						),
@@ -1416,5 +1468,69 @@ export const library: Group[] = [
 				],
 			},
 		],
+	},
+];
+
+// The guides: a dotted cross through the middle of each square, light enough to sit behind the icon, and the edge of the
+// icon's own canvas around it
+const cross = [
+	'before:absolute before:inset-x-0 before:top-1/2 before:border-t before:border-dashed before:border-bleed/12',
+	'after:absolute after:inset-y-0 after:left-1/2 after:border-l after:border-dashed after:border-bleed/12',
+].join(' ');
+
+// Every icon in a set, each in a square on a grid of hairlines, with the guides to turn off. Its name shows on hover,
+// and is its label for a screen reader
+function Icons({ variant, size }: { variant: IconVariant; size: IconSize }) {
+	const [hasGuides, setGuides] = useState(true);
+	return (
+		<div className="flex w-full flex-col gap-4">
+			<Switch isSelected={hasGuides} onChange={setGuides}>
+				Guides
+			</Switch>
+			<ul className="grid grid-cols-[repeat(auto-fill,minmax(3rem,1fr))] border-t border-l border-bleed/8">
+				{iconNames({ variant, size }).map((name) => (
+					<li key={name} title={name} className={`relative flex aspect-square items-center justify-center border-r border-b border-bleed/8 ${hasGuides ? cross : ''}`}>
+						<span className={`relative z-1 ${hasGuides ? 'outline outline-bleed/12' : ''}`}>
+							<Icon name={name} variant={variant} size={size} label={name} className="block" />
+						</span>
+					</li>
+				))}
+			</ul>
+		</div>
+	);
+}
+
+// The rest of loupe beside the components. Each has its own page, and shows an empty state until there's something in it
+export const areas: Entry[] = [
+	{
+		id: 'blocks',
+		name: 'Blocks',
+		description: 'Components put together into the pieces a site repeats',
+		stories: [],
+		empty: () => (
+			<EmptyState icon={<Icon name="square-on-square" />} title="No blocks yet">
+				Pieces made from the components, such as a sign-up form or a project card, go here once two or three are worth sharing
+			</EmptyState>
+		),
+	},
+	{
+		id: 'icons',
+		name: 'Icons',
+		description: 'Solid icons, drawn in Sketch. Each is named for what it draws, not what it’s for',
+		usage: "<Icon name=\"plus\" variant=\"solid\" size={16} /> from '@parchment/icons/react'",
+		stories: [
+			{ name: 'Solid, 16px', render: () => <Icons variant="solid" size={16} /> },
+		],
+	},
+	{
+		id: 'skills',
+		name: 'Skills',
+		description: 'What an agent needs to know to build with loupe',
+		stories: [],
+		empty: () => (
+			<EmptyState icon={<Icon name="books-vertical" />} title="No skills yet">
+				Which component, variant and token to use, written from the code, go here, to be shipped as a plugin
+			</EmptyState>
+		),
 	},
 ];

@@ -20,7 +20,7 @@ function hex(l: number, c: number, h: number) {
 const number = (part: string) => (part.endsWith('%') ? parseFloat(part) / 100 : parseFloat(part));
 
 const palette = new Map(
-	[...tokens.matchAll(/--([\w-]+):\s*oklch\(([^)]*)\);/g)].map(([, name, value]) => {
+	[...tokens.matchAll(/--color-([\w-]+):\s*oklch\(([^)]*)\);/g)].map(([, name, value]) => {
 		const [l, c, h] = value.trim().split(/\s+/).map(number);
 		return [name, hex(l, c, h)];
 	}),
@@ -29,6 +29,6 @@ const palette = new Map(
 /** A palette colour’s hex, such as #0c2920 for pine-26 */
 export function hexOf(name: string) {
 	const value = palette.get(name);
-	if (!value) throw new Error(`--${name} isn’t in tokens.css`);
+	if (!value) throw new Error(`--color-${name} isn’t in tokens.css`);
 	return value;
 }

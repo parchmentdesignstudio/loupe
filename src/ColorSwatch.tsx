@@ -9,7 +9,7 @@ export const colorSwatch = tv({
 });
 
 /** A checkerboard for a see-through colour to go over, as a background image in 8px squares */
-export const checkerboard = 'repeating-conic-gradient(color-mix(in oklab, var(--ink) 12%, var(--paper)) 0 25%, var(--paper) 0 50%)';
+export const checkerboard = 'repeating-conic-gradient(color-mix(in oklab, var(--color-ink) 12%, var(--color-paper)) 0 25%, var(--color-paper) 0 50%)';
 
 // React Aria paints only the colour, so it goes over the checkerboard, which shows through where it's see-through
 /** A colour on its own, named for screen readers, such as dark cyan */

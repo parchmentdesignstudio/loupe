@@ -5,7 +5,7 @@ import { Button } from '../lib/Button.js';
 export function Tooltip({ label = 'Undo', buttonLabel = 'Edit', showArrow = false }: { label?: string; buttonLabel?: string; showArrow?: boolean }) {
 	return (
 		<TooltipTrigger isOpen>
-			<Button variant="plain">{buttonLabel}</Button>
+			<Button variant="tertiary">{buttonLabel}</Button>
 			<UiTooltip showArrow={showArrow}>{label}</UiTooltip>
 		</TooltipTrigger>
 	);

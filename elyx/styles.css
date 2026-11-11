@@ -6,10 +6,10 @@
 
 @layer base {
 	body {
-		background: var(--ground);
-		color: var(--ink);
-		font-family: var(--face);
-		font-size: var(--text-size);
-		line-height: var(--text-leading);
+		background: var(--color-ground);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		font-size: var(--text-body);
+		line-height: var(--text-body--line-height);
 	}
 }

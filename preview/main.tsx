@@ -1,13 +1,35 @@
-import { StrictMode, useEffect, useRef, useSyncExternalStore } from 'react';
+import { StrictMode, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Navigation, NavigationTree, NavigationTreeHeader, NavigationTreeItem, NavigationTreeItemContent, NavigationTreeSection } from '../src/index.js';
+import { Breadcrumb, Breadcrumbs } from 'react-aria-components';
+import { Icon } from '@parchment/icons/react';
+import manifest from '../package.json?raw';
+import {
+	Button,
+	Link,
+	Navigation,
+	NavigationTree,
+	NavigationTreeHeader,
+	NavigationTreeItem,
+	NavigationTreeItemContent,
+	NavigationTreeSection,
+	Sheet,
+	SheetTrigger,
+	Tooltip,
+	TooltipTrigger,
+} from '../src/index.js';
+import { Contents, ContentsMenu, type Heading } from './contents.js';
+import { Inspector } from './inspector.js';
 import { ParchmentLogo } from './logo.js';
-import { type Entry, library } from './stories.js';
+import { Search, SearchButton } from './search.js';
+import { Appearance, Settings, remember, remembered } from './settings.js';
+import { type Entry, areas, library } from './stories.js';
 
-const entries = library.flatMap((group) => group.components);
+const entries = [...areas, ...library.flatMap((group) => group.components)];
 
-// All components leaves out the foundations, such as colour, which export nothing
+// All components leaves out the tokens, such as colour, which export nothing
 const components = entries.filter((entry) => entry.exports);
+
+const groups = new Map(library.flatMap((group) => group.components.map((entry) => [entry.id, group.name])));
 
 const subscribe = (onChange: () => void) => {
 	window.addEventListener('hashchange', onChange);
@@ -16,80 +38,202 @@ const subscribe = (onChange: () => void) => {
 
 const useAddress = () => useSyncExternalStore(subscribe, () => window.location.hash.replace(/^#\/?/, ''));
 
-function Sidebar({ current }: { current: string }) {
+const { version } = JSON.parse(manifest) as { version: string };
+
+// A component page has its code beside it, and so does colour, with its roles. The other areas of loupe don't
+const hasCode = (entry?: Entry) => entry != null && (entry.exports != null || entry.id === 'colour');
+
+function Tree({ current }: { current: string }) {
 	return (
-		<Navigation aria-label="Components">
-			<p className="flex items-center gap-1.5 px-3 font-medium">
-				<ParchmentLogo size={16} />
-				loupe/ui
-			</p>
-			<NavigationTree aria-label="Components" selectedRoute={`#/${current}`}>
+		<NavigationTree aria-label="Components" selectedRoute={`#/${current}`}>
+			<NavigationTreeSection id="loupe">
+				<NavigationTreeHeader>Loupe</NavigationTreeHeader>
 				<NavigationTreeItem id="all" href="#/" textValue="All components">
 					<NavigationTreeItemContent>All components</NavigationTreeItemContent>
 				</NavigationTreeItem>
-				{library.map((group) => (
-					<NavigationTreeSection key={group.name} id={group.name}>
-						<NavigationTreeHeader>{group.name}</NavigationTreeHeader>
-						{group.components.map((entry) => (
-							<NavigationTreeItem key={entry.id} id={entry.id} href={`#/${entry.id}`} textValue={entry.name}>
-								<NavigationTreeItemContent>{entry.name}</NavigationTreeItemContent>
-							</NavigationTreeItem>
-						))}
-					</NavigationTreeSection>
+				{areas.map((area) => (
+					<NavigationTreeItem key={area.id} id={area.id} href={`#/${area.id}`} textValue={area.name}>
+						<NavigationTreeItemContent>{area.name}</NavigationTreeItemContent>
+					</NavigationTreeItem>
 				))}
-			</NavigationTree>
-		</Navigation>
+			</NavigationTreeSection>
+			{library.map((group) => (
+				<NavigationTreeSection key={group.name} id={group.name}>
+					<NavigationTreeHeader>{group.name}</NavigationTreeHeader>
+					{group.components.map((entry) => (
+						<NavigationTreeItem key={entry.id} id={entry.id} href={`#/${entry.id}`} textValue={entry.name}>
+							<NavigationTreeItemContent>{entry.name}</NavigationTreeItemContent>
+						</NavigationTreeItem>
+					))}
+				</NavigationTreeSection>
+			))}
+		</NavigationTree>
+	);
+}
+
+function Sidebar({ current }: { current: string }) {
+	// Navigation has its own button for phones, which the phone bar takes the place of
+	return (
+		<div className="contents max-md:hidden">
+			<Navigation aria-label="Components" className="md:border-r-0">
+				{/* As tall as the page's bar and level with it, so the logo lines up with the breadcrumbs */}
+				<p className="-mt-4 flex h-12 shrink-0 items-center gap-1.5 px-3 font-medium">
+					<ParchmentLogo size={16} />
+					loupe/ui
+				</p>
+				<Tree current={current} />
+			</Navigation>
+		</div>
+	);
+}
+
+// Three dots, as the icons have no ellipsis yet
+function More() {
+	return (
+		<svg viewBox="0 0 16 16" className="size-4 fill-current" aria-hidden>
+			<circle cx="3" cy="8" r="1.5" />
+			<circle cx="8" cy="8" r="1.5" />
+			<circle cx="13" cy="8" r="1.5" />
+		</svg>
+	);
+}
+
+// On phones, the library's name and version, with search and the components
+function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void }) {
+	const [isOpen, setOpen] = useState(false);
+	// Choosing a page closes the sheet, to show it
+	const [shown, setShown] = useState(current);
+	if (shown !== current) {
+		setShown(current);
+		setOpen(false);
+	}
+	return (
+		<header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-3 shadow-[0_.5px_color-mix(in_oklab,var(--bleed)_8%,transparent)] bg-panel px-4 [--bleed:var(--panel-bleed)] md:hidden">
+			<div className="flex items-center gap-2.5">
+				<Link href="#/" className="flex items-center gap-1.5 font-medium no-underline">
+					<ParchmentLogo size={16} />
+					loupe/ui
+				</Link>
+				<span className="rounded-full bg-bleed/8 px-2 py-0.5 font-mono text-label text-muted">v{version}</span>
+			</div>
+			<div className="-mr-1.5 flex items-center gap-1">
+				<SearchButton onPress={onSearch} />
+				<SheetTrigger isOpen={isOpen} onOpenChange={setOpen}>
+					<Button variant="quiet" shape="circle" size="small" aria-label="Components">
+						<More />
+					</Button>
+					<Sheet position="end" aria-label="Components">
+						<div className="flex flex-col gap-6">
+							<Tree current={current} />
+							<div className="px-3">
+								<Appearance />
+							</div>
+						</div>
+					</Sheet>
+				</SheetTrigger>
+			</div>
+		</header>
+	);
+}
+
+// Where the page sits in the library, with its sections where there's no room for their column, and the search and settings
+function Bar({ entry, headings, isOpen, onToggle, onSearch }: { entry?: Entry; headings: Heading[]; isOpen: boolean; onToggle: () => void; onSearch: () => void }) {
+	const trail = entry ? [groups.get(entry.id), entry.name].filter((name) => name != null) : ['All components'];
+	const label = isOpen ? 'Hide settings' : 'Show settings';
+	return (
+		<div className="sticky top-14 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-bleed/8 bg-panel px-4 md:top-0 md:px-5">
+			<div className="flex min-w-0 items-center gap-2">
+				{/* Below the stories here, so the code is one of the places to jump to */}
+				{headings.length > 0 && <ContentsMenu headings={hasCode(entry) ? [...headings, { id: 'code', name: 'Code' }] : headings} />}
+				<Breadcrumbs className="flex min-w-0 items-center gap-1.5 text-control leading-none">
+					{['loupe/ui', ...trail].map((name, index, all) => (
+						// On phones the bar above has the library's name
+						<Breadcrumb key={`${index}${name}`} className="flex min-w-0 items-center gap-1.5 text-muted first:max-md:hidden font-medium">
+							{index === 0 ? (
+								<Link href="#/" className="text-muted no-underline hover:text-ink">
+									{name}
+								</Link>
+							) : (
+								<span className="truncate aria-[current=page]:text-ink" aria-current={index === all.length - 1 ? 'page' : undefined}>
+									{name}
+								</span>
+							)}
+							{index < all.length - 1 && <Icon name="chevron-right" className="shrink-0 size-2 opacity-48" />}
+						</Breadcrumb>
+					))}
+				</Breadcrumbs>
+			</div>
+			<div className="-mr-1.5 flex items-center gap-1 max-md:hidden">
+				<TooltipTrigger>
+					<SearchButton onPress={onSearch} />
+					<Tooltip>Search ⌘K</Tooltip>
+				</TooltipTrigger>
+				<TooltipTrigger>
+					<Button variant="quiet" shape="circle" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
+						<Icon name={isOpen ? 'sidebar-right' : 'sidebar-right-closed'} />
+					</Button>
+					<Tooltip>{label}</Tooltip>
+				</TooltipTrigger>
+			</div>
+		</div>
 	);
 }
 
 function Stories({ entry, heading: Heading }: { entry: Entry; heading: 'h2' | 'h3' }) {
-	return entry.stories.map((story) => (
-		<section key={story.name} className="flex flex-col gap-3">
-			<Heading className="font-mono text-label text-muted">{story.name}</Heading>
-			<div className={['flex flex-wrap items-center gap-3 rounded-lg border border-bleed/8 p-6', story.box].filter(Boolean).join(' ')}>
+	if (entry.empty) return <div className="rounded-lg border border-bleed/8">{entry.empty()}</div>;
+	return entry.stories.map((story, index) => (
+		<section key={story.name} id={`${entry.id}-${index}`} className="flex scroll-mt-28 md:scroll-mt-18 flex-col gap-3">
+			<Heading className="font-sans text-label text-muted">{story.name}</Heading>
+			<div className={['flex flex-wrap items-center gap-2 border-y border-bleed/8 py-6', story.box].filter(Boolean).join(' ')}>
 				<story.render />
 			</div>
 		</section>
 	));
 }
 
-function ComponentPage({ entry }: { entry: Entry }) {
-	return (
-		<>
-			<header className="flex flex-col gap-2">
-				<h1 className="text-title font-medium">{entry.name}</h1>
-				<p className="text-muted">{entry.description}</p>
+// The page's name and what it is, above the stories, so the columns beside them start level with the first
+function Title({ entry }: { entry?: Entry }) {
+	return entry ? (
+		<header className="flex flex-col gap-2">
+			<h1 className="text-title font-medium">{entry.name}</h1>
+			<p className="text-muted">{entry.description}</p>
+			{(entry.exports || entry.usage) && (
 				<code className="font-mono text-label text-muted">{entry.exports ? `import { ${entry.exports.join(', ')} } from '@parchment/ui'` : entry.usage}</code>
-			</header>
-			<Stories entry={entry} heading="h2" />
-		</>
+			)}
+		</header>
+	) : (
+		<header className="flex flex-col gap-2">
+			<h1 className="flex items-center gap-1.5 text-title font-medium">
+				<ParchmentLogo size={24} />
+				loupe/ui
+			</h1>
+			<p className="text-muted">Each component in its states. Tab through to see the focus rings.</p>
+		</header>
 	);
 }
 
 function Overview() {
-	return (
-		<>
-			<header className="flex flex-col gap-2">
-				<h1 className="flex items-center gap-1.5 text-title font-medium">
-					<ParchmentLogo size={24} />
-					loupe/ui
-				</h1>
-				<p className="text-muted">Each component in its states. Tab through to see the focus rings.</p>
-			</header>
-			{components.map((entry) => (
-				<section key={entry.id} className="flex flex-col gap-6">
-					<h2 className="text-title font-medium">{entry.name}</h2>
-					<Stories entry={entry} heading="h3" />
-				</section>
-			))}
-		</>
-	);
+	return components.map((entry) => (
+		<section key={entry.id} id={entry.id} className="flex scroll-mt-28 md:scroll-mt-18 flex-col gap-6">
+			<h2 className="text-title font-medium">{entry.name}</h2>
+			<Stories entry={entry} heading="h3" />
+		</section>
+	));
 }
 
 function Preview() {
 	const address = useAddress();
 	const entry = entries.find((item) => item.id === address);
 	const shown = useRef(address);
+	const scroller = useRef<HTMLDivElement>(null);
+	const [isOpen, setOpen] = useState(() => remembered<string>('settings', 'closed') === 'open');
+	const [isSearching, setSearching] = useState(false);
+	const search = useCallback(() => setSearching(true), []);
+
+	const headings = useMemo<Heading[]>(
+		() => (entry ? entry.stories.map((story, index) => ({ id: `${entry.id}-${index}`, name: story.name })) : components.map(({ id, name }) => ({ id, name }))),
+		[entry],
+	);
 
 	useEffect(() => {
 		document.title = entry ? `${entry.name} · loupe/ui` : 'loupe/ui';
@@ -99,14 +243,46 @@ function Preview() {
 		if (shown.current === address) return;
 		shown.current = address;
 		window.scrollTo(0, 0);
+		scroller.current?.scrollTo(0, 0);
 	}, [address]);
+
+	const toggle = () => {
+		setOpen(!isOpen);
+		remember('settings', isOpen ? 'closed' : 'open');
+	};
 
 	return (
 		<div className="font-sans text-body text-ink md:flex">
 			<Sidebar current={entry ? entry.id : ''} />
-			<main className="min-w-0 flex-1 px-4 py-10 md:px-10">
-				<div className="mx-auto flex max-w-[40rem] flex-col gap-10">{entry ? <ComponentPage entry={entry} /> : <Overview />}</div>
-			</main>
+			<PhoneBar current={entry ? entry.id : ''} onSearch={search} />
+			{/* On wider screens the page is a card that scrolls inside, so the contents and the code stay beside the stories */}
+			<div
+				ref={scroller}
+				className={[
+					'min-w-0 flex-1 bg-panel md:my-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-raised',
+					isOpen ? '' : 'md:mr-2',
+				].join(' ')}
+			>
+				{/* The card's own bleed, so lines inside suit white rather than cream, while its shadow keeps the ground's */}
+				<div className="flex min-h-full flex-col [--bleed:var(--panel-bleed)]">
+					<Bar entry={entry} headings={headings} isOpen={isOpen} onToggle={toggle} onSearch={search} />
+					{/* On wide screens a grid: the title over the stories, with the contents beside them from the top, and the code from the first story down */}
+					<main className={['flex-1 xl:grid xl:items-start', hasCode(entry) ? 'xl:grid-cols-[13rem_minmax(0,1fr)_20rem]' : 'xl:grid-cols-[13rem_minmax(0,1fr)]'].join(' ')}>
+						<div className="px-4 pt-10 pb-10 md:px-10 xl:col-start-2">
+							<div className="mx-auto max-w-[40rem]">
+								<Title entry={entry} />
+							</div>
+						</div>
+						{headings.length > 0 && <Contents key={`contents-${address}`} headings={headings} scroller={scroller} />}
+						<div className="min-w-0 px-4 pb-10 md:px-10 xl:col-start-2 xl:row-start-2">
+							<div className="mx-auto flex max-w-[40rem] flex-col gap-10">{entry ? <Stories entry={entry} heading="h2" /> : <Overview />}</div>
+						</div>
+						{entry && <Inspector key={`code-${entry.id}`} entry={entry} />}
+					</main>
+				</div>
+			</div>
+			{isOpen && <Settings />}
+			<Search isOpen={isSearching} onOpenChange={setSearching} />
 		</div>
 	);
 }

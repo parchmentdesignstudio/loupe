@@ -2,9 +2,6 @@ import type { ReactNode } from 'react';
 import { type SelectProps as AriaSelectProps } from 'react-aria-components';
 import { type FieldTextProps } from './Field.js';
 export declare const trigger: import("tailwind-variants").TVReturnType<{
-    isHovered: {
-        true: string;
-    };
     isInvalid: {
         true: string;
     };

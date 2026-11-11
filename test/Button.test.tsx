@@ -37,7 +37,10 @@ describe('Button', () => {
 		);
 		await user.click(screen.getByRole('button'));
 		expect(onPress).not.toHaveBeenCalled();
-		expect(screen.getByRole('button').className).toContain('opacity-40');
+		const { className } = screen.getByRole('button');
+		expect(className).toContain('text-muted');
+		expect(className).toContain('shadow-none');
+		expect(className).not.toContain('opacity-40');
 	});
 
 	it('merges a className over its own classes, as a string or a function of its state', () => {
@@ -53,6 +56,23 @@ describe('Button', () => {
 		expect(wide.className).toContain('px-6');
 		expect(wide.className).not.toContain('px-4');
 		expect(wider.className).toContain('px-8');
+	});
+
+	it('puts an icon at the start or end, and pads that side less', () => {
+		render(
+			<>
+				<Button start={<svg data-testid="plus" aria-hidden="true" />}>New project</Button>
+				<Button size="small" end={<svg data-testid="arrow" aria-hidden="true" />}>
+					Continue
+				</Button>
+			</>,
+		);
+		const [start, end] = screen.getAllByRole('button');
+		expect(start.firstElementChild).toBe(screen.getByTestId('plus'));
+		expect(start.textContent).toBe('New project');
+		expect(start.className.split(' ')).toContain('ps-2.5');
+		expect(end.lastElementChild).toBe(screen.getByTestId('arrow'));
+		expect(end.className.split(' ')).toContain('pe-2');
 	});
 
 	it('keeps a circle round at either size', () => {
@@ -75,30 +95,30 @@ describe('Button', () => {
 		expect(small).not.toContain('px-2.5');
 	});
 
-	it('fills solid with the accent and void with ink', () => {
+	it('fills primary with yellow and secondary with sage', () => {
 		render(
 			<>
 				<Button>Schedule call</Button>
-				<Button variant="void">Book a visit</Button>
+				<Button variant="secondary">Book a visit</Button>
 			</>,
 		);
-		const [accent, ink] = screen.getAllByRole('button').map((button) => button.className.split(' '));
-		expect(accent).toEqual(expect.arrayContaining(['bg-accent', 'text-paper']));
-		expect(ink).toEqual(expect.arrayContaining(['bg-ink', 'text-paper']));
-		expect(ink).not.toContain('bg-accent');
+		const [primary, secondary] = screen.getAllByRole('button').map((button) => button.className.split(' '));
+		expect(primary).toEqual(expect.arrayContaining(['[--fill:oklch(0.865_0.159_87.4)]', 'text-pine-26']));
+		expect(secondary).toEqual(expect.arrayContaining(['[--fill:oklch(0.807_0.019_175.2)]', 'text-pine-26']));
+		expect(secondary).not.toContain('[--fill:oklch(0.865_0.159_87.4)]');
 	});
 
 	it('keeps text-body and text-ink apart when merging', () => {
 		render(<Button className="text-body">Schedule call</Button>);
 		expect(screen.getByRole('button').className).toContain('text-body');
-		expect(screen.getByRole('button').className).toContain('text-paper');
+		expect(screen.getByRole('button').className).toContain('text-pine-26');
 	});
 
 	it('has nothing for axe to flag', async () => {
 		const { container } = render(
 			<>
 				<Button>Schedule call</Button>
-				<Button variant="plain" shape="circle" aria-label="Email Steve">
+				<Button variant="tertiary" shape="circle" aria-label="Email Steve">
 					<svg aria-hidden="true" />
 				</Button>
 			</>,

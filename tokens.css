@@ -4,39 +4,145 @@
    The @source line has Tailwind read the components' classes from the package */
 @source "./lib";
 
+/* The colours and type, as Tailwind's own variables, so each value is set once, beside its dark one: --color-ink is
+   bg-ink and text-ink, and --text-label is text-label. Static, so every variable is written out, for CSS and inline
+   styles that read one by name, such as var(--color-paper) */
+@theme static {
+	/* The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
+	   two numbers, the stronger the contrast. Components use the roles below rather than these, though each is a
+	   utility too, as in bg-teal-48. First Parchment's own, cream-99, blush-95, pine-26, rust-60 and lime-91, with
+	   the colours the roles work out from them */
+	--color-white: oklch(1 0 0);
+	--color-black: oklch(0 0 0);
+	--color-cream-99: oklch(0.994 0.007 88.6);
+	--color-cream-95: oklch(0.95 0.011 76.6);
+	--color-cream-80: oklch(0.8 0.014 76.6);
+	--color-umber-30: oklch(0.3 0.055 77);
+	/* A paler, greyer cream for the light mode's ground and panels, so white controls stand out on them, and a
+	   dark in its hue for their tints and lines */
+	--color-linen-99: oklch(0.986 0.002 67.8);
+	--color-linen-97: oklch(0.973 0.004 91.4);
+	--color-linen-30: oklch(0.3 0.024 91.4);
+	--color-blush-95: oklch(0.947 0.013 48.6);
+	--color-rust-60: oklch(0.605 0.149 46.9);
+	--color-lime-91: oklch(0.909 0.099 127.9);
+	--color-pine-95: oklch(0.95 0.054 169.9);
+	--color-pine-50: oklch(0.5 0.025 169.9);
+	--color-pine-35: oklch(0.35 0.038 169.9);
+	--color-pine-32: oklch(0.32 0.036 169.9);
+	--color-pine-29: oklch(0.29 0.035 169.9);
+	--color-pine-26: oklch(0.256 0.039 169.9);
+	--color-pine-20: oklch(0.2 0.027 169.9);
+	--color-red-81: oklch(0.81 0.108 28.7);
+	--color-red-50: oklch(0.501 0.178 28.7);
+	/* Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet */
+	--color-red-87: oklch(0.874 0.057 17);
+	--color-red-67: oklch(0.675 0.194 21.2);
+	--color-red-35: oklch(0.347 0.1416 27.3);
+	--color-orange-89: oklch(0.894 0.047 36.3);
+	--color-orange-72: oklch(0.718 0.161 36.2);
+	--color-orange-41: oklch(0.409 0.139 34.6);
+	--color-yellow-91: oklch(0.913 0.099 87.7);
+	--color-yellow-76: oklch(0.76 0.1517 76.4);
+	--color-yellow-40: oklch(0.402 0.102 52.7);
+	--color-green-89: oklch(0.893 0.112 124.8);
+	--color-green-68: oklch(0.676 0.1817 131.1);
+	--color-green-46: oklch(0.459 0.147 140.9);
+	--color-teal-88: oklch(0.877 0.06 186.9);
+	--color-teal-69: oklch(0.6923 0.1262 178.66);
+	--color-teal-48: oklch(0.482 0.087 179.9);
+	--color-sky-85: oklch(0.854 0.064 237.1);
+	--color-sky-69: oklch(0.686 0.1427 241.9);
+	--color-sky-37: oklch(0.37 0.091 244.9);
+	--color-blue-82: oklch(0.819 0.075 270.3);
+	--color-blue-56: oklch(0.557 0.208 266.3);
+	--color-blue-29: oklch(0.286 0.125 265.3);
+	--color-violet-82: oklch(0.823 0.088 301.8);
+	--color-violet-54: oklch(0.543 0.247 288.9);
+	--color-violet-27: oklch(0.27 0.146 284.1);
+	--color-pink-87: oklch(0.866 0.071 343.1);
+	--color-pink-70: oklch(0.699 0.193 349.8);
+	--color-pink-33: oklch(0.335 0.128 354.9);
+	/* Greys for the cream ground, in the light yellow's hue. As they darken they warm towards the yellow's mid and
+	   gain a little chroma, as the ground's bleed does, so they stay warm rather than dull */
+	--color-sand-97: oklch(0.97 0.007 87.7);
+	--color-sand-94: oklch(0.94 0.008 87.2);
+	--color-sand-90: oklch(0.9 0.009 86.6);
+	--color-sand-84: oklch(0.84 0.011 85.6);
+	--color-sand-76: oklch(0.76 0.014 84.4);
+	--color-sand-66: oklch(0.66 0.017 82.8);
+	--color-sand-56: oklch(0.56 0.02 81.2);
+	--color-sand-46: oklch(0.46 0.024 79.6);
+	--color-sand-36: oklch(0.36 0.027 78);
+	--color-sand-26: oklch(0.26 0.03 76.4);
+	/* Neutral greys for white, at sand's steps. On the layer each is for, 56 and darker pass 4.5:1 for text, and 66
+	   and darker 3:1 for a control's edge */
+	--color-grey-97: oklch(0.97 0 0);
+	--color-grey-94: oklch(0.94 0 0);
+	--color-grey-90: oklch(0.9 0 0);
+	--color-grey-84: oklch(0.84 0 0);
+	--color-grey-76: oklch(0.76 0 0);
+	--color-grey-66: oklch(0.66 0 0);
+	--color-grey-56: oklch(0.56 0 0);
+	--color-grey-46: oklch(0.46 0 0);
+	--color-grey-36: oklch(0.36 0 0);
+	--color-grey-26: oklch(0.26 0 0);
+
+	/* The roles components use, each light-dark(light, dark). The dark mode inverts the light one: the ground
+	   takes ink's pine, and ink takes the ground's cream */
+	--color-ink: light-dark(var(--color-pine-26), var(--color-cream-95));
+	--color-muted: light-dark(var(--color-pine-50), var(--color-cream-80));
+	--color-danger: light-dark(var(--color-red-50), var(--color-red-81));
+	/* Marks on ink or the accent, such as a button's text or a checkbox's tick */
+	--color-paper: light-dark(var(--color-white), var(--color-pine-20));
+	/* What a page leads with, such as a solid button. It stays rust in the dark, where paper turns dark */
+	--color-accent: var(--color-rust-60);
+	/* The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on */
+	--color-highlight: light-dark(var(--color-lime-91), color-mix(in oklab, var(--color-lime-91) 24%, transparent));
+
+	/* The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
+	   overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel is the light mode's ink */
+	--color-ground: light-dark(var(--color-linen-97), var(--color-pine-20));
+	/* An area on the page, such as a tool's side panel */
+	--color-panel: light-dark(var(--color-linen-99), var(--color-pine-26));
+	/* A control's fill, such as a button's, a field's or a checkbox's */
+	--color-raised: light-dark(var(--color-white), var(--color-pine-29));
+	/* What raised turns on hover */
+	--color-surface: light-dark(var(--color-blush-95), var(--color-pine-35));
+	/* Popovers, menus, dialogs, sheets and floating toolbars */
+	--color-overlay: light-dark(var(--color-white), var(--color-pine-32));
+	/* Ink as a surface, such as a toast or a tooltip, with paper text */
+	--color-inverse: var(--color-ink);
+	/* A switch's handle and a slider's thumb, which stay lighter than their track */
+	--color-knob: light-dark(var(--color-white), var(--color-cream-80));
+	/* Behind a sheet */
+	--color-scrim: light-dark(color-mix(in oklab, var(--color-pine-26) 32%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
+
+	--font-sans: elza-round-variable, 'Helvetica Neue', Arial, sans-serif;
+	--font-mono: auger-mono, 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
+	--text-body: 0.9375rem;
+	--text-body--line-height: 1.4;
+	/* Text in buttons, fields, labels, options and tabs, on a 20px line at either size. A control's padding adds to
+	   the line, so 6px above and below makes it 32px tall, and an icon in a control sits on the line as text does */
+	--text-control: 0.8125rem;
+	--text-control--line-height: 1.25rem;
+	--text-label: 0.75rem;
+	--text-label--line-height: 1.35;
+	--text-title: 1.25rem;
+	--text-title--line-height: 1.1;
+}
+
+/* What reads a variable a layer or component sets for itself, such as --bleed and a button's --edge. Inline, so
+   Tailwind writes the value into each utility, and the variable is read where the utility is used rather than on :root */
 @theme inline {
-	--color-ink: var(--ink);
-	--color-muted: var(--muted);
-	--color-danger: var(--danger);
-	--color-paper: var(--paper);
-	--color-accent: var(--accent);
-	--color-highlight: var(--highlight);
-	--color-ground: var(--ground);
-	--color-panel: var(--panel);
-	--color-raised: var(--raised);
-	--color-surface: var(--surface);
-	--color-overlay: var(--overlay);
-	--color-inverse: var(--inverse);
-	--color-knob: var(--knob);
 	--color-bleed: var(--bleed);
-	--color-scrim: var(--scrim);
-	--font-sans: var(--face);
-	--font-mono: var(--mono);
-	--text-body: var(--text-size);
-	--text-body--line-height: var(--text-leading);
-	--text-control: var(--control-size);
-	--text-control--line-height: var(--control-leading);
-	--text-label: var(--label-size);
-	--text-label--line-height: var(--label-leading);
-	--text-title: var(--title-size);
-	--text-title--line-height: var(--title-leading);
 	/* A level for controls, one for floating toolbars and one for overlays, each a soft drop and a 1px edge.
-	   The geometry is the same in both modes, and the colours come from the roles below */
-	--shadow-raised: 0 0 0 1px var(--edge), 0 1px 1px -.5px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised), 0 3px 6px -3px var(--drop-raised);
+	   The geometry is the same in both modes, and the colours come from :root, below */
+	--shadow-raised: 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
 	--shadow-floating: 0 0 0 1px var(--edge), 0 1px 1px -.5px var(--drop-floating), 0 1px 3px -1.5px var(--drop-floating), 0 2px 4px -2px var(--drop-floating), 0 3px 6px -3px var(--drop-floating), 0 6px 12px -6px var(--drop-floating), 0 12px 24px -12px var(--drop-floating);
 	--shadow-overlay: 0 0 0 1px var(--edge), 0 1px 1px -.5px var(--drop-overlay), 0 1px 3px -1.5px var(--drop-overlay), 0 2px 4px -2px var(--drop-overlay), 0 3px 6px -3px var(--drop-overlay), 0 8px 16px -12px var(--drop-overlay), 0 12px 32px -24px var(--drop-overlay);
 	/* In place of a field's shadow when what's in it is wrong */
-	--shadow-invalid: 0 0 0 1px var(--danger);
+	--shadow-invalid: 0 0 0 1px var(--color-danger);
 }
 
 /* Corners and spacing, under Tailwind's own names, so rounded-lg and p-3 are Parchment's */
@@ -119,145 +225,28 @@
 	:root {
 		color-scheme: light dark;
 
-		/* The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
-		   two numbers, the stronger the contrast. Components use the roles below rather than these. First Parchment's
-		   own, cream-99, blush-95, pine-26, rust-60 and lime-91, with the colours the roles work out from them */
-		--white: oklch(1 0 0);
-		--black: oklch(0 0 0);
-		--cream-99: oklch(0.994 0.007 88.6);
-		--cream-95: oklch(0.95 0.011 76.6);
-		--cream-80: oklch(0.8 0.014 76.6);
-		--umber-30: oklch(0.3 0.055 77);
-		--blush-95: oklch(0.947 0.013 48.6);
-		--rust-60: oklch(0.605 0.149 46.9);
-		--lime-91: oklch(0.909 0.099 127.9);
-		--pine-95: oklch(0.95 0.054 169.9);
-		--pine-50: oklch(0.5 0.025 169.9);
-		--pine-35: oklch(0.35 0.038 169.9);
-		--pine-32: oklch(0.32 0.036 169.9);
-		--pine-29: oklch(0.29 0.035 169.9);
-		--pine-26: oklch(0.256 0.039 169.9);
-		--pine-20: oklch(0.2 0.027 169.9);
-		--red-81: oklch(0.81 0.108 28.7);
-		--red-50: oklch(0.501 0.178 28.7);
-		/* Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet */
-		--red-87: oklch(0.874 0.057 17);
-		--red-67: oklch(0.675 0.194 21.2);
-		--red-35: oklch(0.347 0.1416 27.3);
-		--orange-89: oklch(0.894 0.047 36.3);
-		--orange-72: oklch(0.718 0.161 36.2);
-		--orange-41: oklch(0.409 0.139 34.6);
-		--yellow-91: oklch(0.913 0.099 87.7);
-		--yellow-76: oklch(0.76 0.1517 76.4);
-		--yellow-40: oklch(0.402 0.102 52.7);
-		--green-89: oklch(0.893 0.112 124.8);
-		--green-68: oklch(0.676 0.1817 131.1);
-		--green-46: oklch(0.459 0.147 140.9);
-		--teal-88: oklch(0.877 0.06 186.9);
-		--teal-69: oklch(0.6923 0.1262 178.66);
-		--teal-48: oklch(0.482 0.087 179.9);
-		--sky-85: oklch(0.854 0.064 237.1);
-		--sky-69: oklch(0.686 0.1427 241.9);
-		--sky-37: oklch(0.37 0.091 244.9);
-		--blue-82: oklch(0.819 0.075 270.3);
-		--blue-56: oklch(0.557 0.208 266.3);
-		--blue-29: oklch(0.286 0.125 265.3);
-		--violet-82: oklch(0.823 0.088 301.8);
-		--violet-54: oklch(0.543 0.247 288.9);
-		--violet-27: oklch(0.27 0.146 284.1);
-		--pink-87: oklch(0.866 0.071 343.1);
-		--pink-70: oklch(0.699 0.193 349.8);
-		--pink-33: oklch(0.335 0.128 354.9);
-		/* Greys for the cream ground, in the light yellow's hue. As they darken they warm towards the yellow's mid and
-		   gain a little chroma, as the ground's bleed does, so they stay warm rather than dull */
-		--sand-97: oklch(0.97 0.007 87.7);
-		--sand-94: oklch(0.94 0.008 87.2);
-		--sand-90: oklch(0.9 0.009 86.6);
-		--sand-84: oklch(0.84 0.011 85.6);
-		--sand-76: oklch(0.76 0.014 84.4);
-		--sand-66: oklch(0.66 0.017 82.8);
-		--sand-56: oklch(0.56 0.02 81.2);
-		--sand-46: oklch(0.46 0.024 79.6);
-		--sand-36: oklch(0.36 0.027 78);
-		--sand-26: oklch(0.26 0.03 76.4);
-		/* Neutral greys for white, at sand's steps. On the layer each is for, 56 and darker pass 4.5:1 for text, and 66
-		   and darker 3:1 for a control's edge */
-		--grey-97: oklch(0.97 0 0);
-		--grey-94: oklch(0.94 0 0);
-		--grey-90: oklch(0.9 0 0);
-		--grey-84: oklch(0.84 0 0);
-		--grey-76: oklch(0.76 0 0);
-		--grey-66: oklch(0.66 0 0);
-		--grey-56: oklch(0.56 0 0);
-		--grey-46: oklch(0.46 0 0);
-		--grey-36: oklch(0.36 0 0);
-		--grey-26: oklch(0.26 0 0);
-
-		/* The roles, each light-dark(light, dark). The dark mode inverts the light one: the ground takes ink's
-		   pine, and ink takes the ground's cream */
-		--ink: light-dark(var(--pine-26), var(--cream-95));
-		--muted: light-dark(var(--pine-50), var(--cream-80));
-		--danger: light-dark(var(--red-50), var(--red-81));
-		/* Marks on ink or the accent, such as a button's text or a checkbox's tick */
-		--paper: light-dark(var(--white), var(--pine-20));
-		/* What a page leads with, such as a solid button. It stays rust in the dark, where paper turns dark */
-		--accent: var(--rust-60);
-		/* The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on */
-		--highlight: light-dark(var(--lime-91), color-mix(in oklab, var(--lime-91) 24%, transparent));
-
-		/* The layers, from the page up. In the light, panel, raised and overlay are all white, and shadows part them.
-		   In the dark, each is lighter than the one below, and the panel is the light mode's ink */
-		--ground: light-dark(var(--cream-99), var(--pine-20));
-		/* An area on the page, such as a tool's side panel */
-		--panel: light-dark(var(--white), var(--pine-26));
-		/* A control's fill, such as a button's, a field's or a checkbox's */
-		--raised: light-dark(var(--white), var(--pine-29));
-		/* What raised turns on hover */
-		--surface: light-dark(var(--blush-95), var(--pine-35));
-		/* Popovers, menus, dialogs, sheets and floating toolbars */
-		--overlay: light-dark(var(--white), var(--pine-32));
-		/* Ink as a surface, such as a toast or a tooltip, with paper text */
-		--inverse: var(--ink);
-		/* A switch's handle and a slider's thumb, which stay lighter than their track */
-		--knob: light-dark(var(--white), var(--cream-80));
-
 		/* Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
-		   ink would grey the cream ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
+		   ink would grey the linen ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
 		   as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on */
-		--ground-bleed: light-dark(var(--umber-30), var(--pine-95));
-		--panel-bleed: light-dark(var(--pine-26), var(--pine-95));
-		--raised-bleed: light-dark(var(--pine-26), var(--pine-95));
-		--overlay-bleed: light-dark(var(--pine-26), var(--pine-95));
-		--inverse-bleed: light-dark(var(--white), var(--umber-30));
+		--ground-bleed: light-dark(var(--color-linen-30), var(--color-pine-95));
+		--panel-bleed: light-dark(var(--color-linen-30), var(--color-pine-95));
+		--raised-bleed: light-dark(var(--color-pine-26), var(--color-pine-95));
+		--overlay-bleed: light-dark(var(--color-pine-26), var(--color-pine-95));
+		--inverse-bleed: light-dark(var(--color-white), var(--color-umber-30));
 		--bleed: var(--ground-bleed);
-		/* Behind a sheet */
-		--scrim: light-dark(color-mix(in oklab, var(--pine-26) 32%, transparent), color-mix(in oklab, var(--black) 48%, transparent));
 
 		/* Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
-		   drops warm the cream in the light, as the tints do */
-		--edge: color-mix(in oklab, var(--bleed) 8%, transparent);
-		--drop-raised: light-dark(color-mix(in oklab, var(--bleed) 8%, transparent), color-mix(in oklab, var(--black) 24%, transparent));
-		--drop-floating: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), color-mix(in oklab, var(--black) 32%, transparent));
-		--drop-overlay: light-dark(color-mix(in oklab, var(--bleed) 24%, transparent), color-mix(in oklab, var(--black) 48%, transparent));
-
-		--face: elza-round-variable, 'Helvetica Neue', Arial, sans-serif;
-		--mono: auger-mono, 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
-		--text-size: 0.9375rem;
-		--text-leading: 1.4;
-		/* Text in buttons, fields, labels, options and tabs, on a 20px line at either size. A control's padding adds to
-		   the line, so 6px above and below makes it 32px tall, and an icon in a control sits on the line as text does */
-		--control-size: 0.8125rem;
-		--control-leading: 1.25rem;
-		--label-size: 0.75rem;
-		--label-leading: 1.35;
-		--title-size: 1.25rem;
-		--title-leading: 1.1;
+		   drops take the ground's hue in the light, as the tints do */
+		--edge: color-mix(in oklab, var(--bleed) 20%, transparent);
+		--drop-raised: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
+		--drop-floating: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
+		--drop-overlay: light-dark(color-mix(in oklab, var(--bleed) 24%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 	}
 
 	/* 16px on touch screens, as iOS zooms into a field with smaller text. The line stays 20px, so controls keep their height */
 	@media (pointer: coarse) {
 		:root {
-			--control-size: 1rem;
+			--text-control: 1rem;
 		}
 	}
 
