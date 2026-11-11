@@ -464,7 +464,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     :root {
-      --drop-floating: color-mix(in oklab, var(--bleed) 16%, transparent);
+      --drop-floating: color-mix(in oklab, var(--bleed) 8%, transparent);
     }
   }
 
@@ -474,7 +474,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     :root {
-      --drop-overlay: color-mix(in oklab, var(--bleed) 24%, transparent);
+      --drop-overlay: color-mix(in oklab, var(--bleed) 8%, transparent);
     }
   }
 
