@@ -355,15 +355,15 @@ function ChoosingFiles() {
 	);
 }
 
-// Parchment’s cream, its canvas with the jasmine over it, the jasmine and peach, then muted and ink
-const palette = ['#fbf6ef', '#faf2da', '#f8de7e', '#f6a57f', '#5b6668', '#1f2f31'];
+// Parchment’s cream, blush, lime and rust, then muted and ink
+const palette = ['#fffdf8', '#f5ebe6', '#ceeea7', '#c76024', '#566861', '#0c2920'];
 
 // An artboard’s fills, as the device tool offers them: none, white, greys, cream and ink
 const fills = ['#0000', '#ffffff', '#f4f5f1', '#dfe2da', '#fbf6ef', '#1f2f31'];
 
 // One colour shared by the area and the slider, so moving the hue recolours the area
 function AreaAndHue() {
-	const [color, setColor] = useState(() => parseColor('#f6a57f').toFormat('hsb'));
+	const [color, setColor] = useState(() => parseColor('#c76024').toFormat('hsb'));
 	return (
 		<div className="flex w-56 flex-col gap-3">
 			<ColorArea aria-label="Colour" value={color} onChange={setColor} xChannel="saturation" yChannel="brightness" />
@@ -379,14 +379,15 @@ export const library: Group[] = [
 			{
 				id: 'button',
 				name: 'Button',
-				description: 'Any action, as solid, plain or quiet, and a circle for an icon',
+				description: 'Any action, as solid in the accent, void in ink, plain or quiet, and a circle for an icon',
 				exports: ['Button'],
 				stories: [
 					{
-						name: 'Solid, plain and quiet',
+						name: 'Solid, void, plain and quiet',
 						render: () => (
 							<>
 								<Button>Schedule call</Button>
+								<Button variant="void">Book a visit</Button>
 								<Button variant="plain">Send an email</Button>
 								<Button variant="quiet">Not now</Button>
 							</>
@@ -743,8 +744,8 @@ export const library: Group[] = [
 						name: 'Side by side',
 						render: () => (
 							<div className="grid w-full max-w-sm grid-cols-2 gap-2.5">
-								<ColorPicker label="Background" defaultValue="#fbf6ef" />
-								<ColorPicker label="Theme" defaultValue="#1f2f31" />
+								<ColorPicker label="Background" defaultValue="#fffdf8" />
+								<ColorPicker label="Theme" defaultValue="#0c2920" />
 							</div>
 						),
 					},
@@ -759,7 +760,7 @@ export const library: Group[] = [
 					{
 						name: 'Parchment’s palette',
 						render: () => (
-							<ColorSwatchPicker aria-label="Colour" defaultValue="#f8de7e">
+							<ColorSwatchPicker aria-label="Colour" defaultValue="#c76024">
 								{palette.map((color) => (
 									<ColorSwatchPickerItem key={color} color={color} />
 								))}
@@ -795,8 +796,8 @@ export const library: Group[] = [
 				description: 'One channel of a colour along a track, such as its hue or opacity',
 				exports: ['ColorSlider'],
 				stories: [
-					{ name: 'Hue', render: () => <ColorSlider colorSpace="hsb" channel="hue" defaultValue="#f6a57f" className="w-64" /> },
-					{ name: 'Opacity', render: () => <ColorSlider label="Opacity" channel="alpha" defaultValue="#1f2f31" className="w-64" /> },
+					{ name: 'Hue', render: () => <ColorSlider colorSpace="hsb" channel="hue" defaultValue="#c76024" className="w-64" /> },
+					{ name: 'Opacity', render: () => <ColorSlider label="Opacity" channel="alpha" defaultValue="#0c2920" className="w-64" /> },
 				],
 			},
 			{
@@ -804,7 +805,7 @@ export const library: Group[] = [
 				name: 'Colour field',
 				description: 'A colour typed as its hex',
 				exports: ['ColorField'],
-				stories: [{ name: 'Hex', render: () => <ColorField label="Theme colour" description="Browsers tint their toolbar with it" defaultValue="#1f2f31" className="w-56" /> }],
+				stories: [{ name: 'Hex', render: () => <ColorField label="Theme colour" description="Browsers tint their toolbar with it" defaultValue="#0c2920" className="w-56" /> }],
 			},
 		],
 	},

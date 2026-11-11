@@ -3,6 +3,7 @@ import type { VariantProps } from 'tailwind-variants';
 export declare const button: import("tailwind-variants").TVReturnType<{
     variant: {
         solid: string;
+        void: string;
         plain: string;
         quiet: string;
     };

@@ -9,6 +9,8 @@
 	--color-muted: var(--muted);
 	--color-danger: var(--danger);
 	--color-paper: var(--paper);
+	--color-accent: var(--accent);
+	--color-highlight: var(--highlight);
 	--color-ground: var(--ground);
 	--color-panel: var(--panel);
 	--color-raised: var(--raised);
@@ -117,43 +119,51 @@
 	:root {
 		color-scheme: light dark;
 
-		/* The palette: the raw colours, named by hue and lightness, so teal-29 is oklch(0.29 …). The further apart
-		   two numbers, the stronger the contrast. Components use the roles below rather than these */
+		/* The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
+		   two numbers, the stronger the contrast. Parchment's own are cream-99, blush-95, pine-26, rust-60 and lime-91,
+		   and the rest are worked out from them. Components use the roles below rather than these */
 		--white: oklch(1 0 0);
 		--black: oklch(0 0 0);
-		--cream-98: oklch(0.975 0.011 76.6);
+		--cream-99: oklch(0.994 0.007 88.6);
 		--cream-95: oklch(0.95 0.011 76.6);
 		--cream-80: oklch(0.8 0.014 76.6);
 		--umber-30: oklch(0.3 0.055 77);
-		--teal-95: oklch(0.95 0.03 205.7);
-		--teal-50: oklch(0.502 0.014 209.8);
-		--teal-35: oklch(0.35 0.021 205.7);
-		--teal-32: oklch(0.32 0.02 205.7);
-		--teal-29: oklch(0.292 0.022 205.7);
-		--teal-25: oklch(0.25 0.018 205.7);
-		--teal-20: oklch(0.2 0.015 205.7);
+		--blush-95: oklch(0.947 0.013 48.6);
+		--rust-60: oklch(0.605 0.149 46.9);
+		--lime-91: oklch(0.909 0.099 127.9);
+		--pine-95: oklch(0.95 0.054 169.9);
+		--pine-50: oklch(0.5 0.025 169.9);
+		--pine-35: oklch(0.35 0.038 169.9);
+		--pine-32: oklch(0.32 0.036 169.9);
+		--pine-29: oklch(0.29 0.035 169.9);
+		--pine-26: oklch(0.256 0.039 169.9);
+		--pine-20: oklch(0.2 0.027 169.9);
 		--red-81: oklch(0.81 0.108 28.7);
 		--red-50: oklch(0.501 0.178 28.7);
 
 		/* The roles, each light-dark(light, dark). The dark mode inverts the light one: the ground takes ink's
-		   teal, and ink takes the ground's cream */
-		--ink: light-dark(var(--teal-29), var(--cream-95));
-		--muted: light-dark(var(--teal-50), var(--cream-80));
+		   pine, and ink takes the ground's cream */
+		--ink: light-dark(var(--pine-26), var(--cream-95));
+		--muted: light-dark(var(--pine-50), var(--cream-80));
 		--danger: light-dark(var(--red-50), var(--red-81));
-		/* Marks on ink, such as a solid button's text or a checkbox's tick */
-		--paper: light-dark(var(--white), var(--teal-20));
+		/* Marks on ink or the accent, such as a button's text or a checkbox's tick */
+		--paper: light-dark(var(--white), var(--pine-20));
+		/* What a page leads with, such as a solid button. It stays rust in the dark, where paper turns dark */
+		--accent: var(--rust-60);
+		/* The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on */
+		--highlight: light-dark(var(--lime-91), color-mix(in oklab, var(--lime-91) 24%, transparent));
 
 		/* The layers, from the page up. In the light, panel, raised and overlay are all white, and shadows part them.
-		   In the dark, each is lighter than the one below */
-		--ground: light-dark(var(--cream-98), var(--teal-20));
+		   In the dark, each is lighter than the one below, and the panel is the light mode's ink */
+		--ground: light-dark(var(--cream-99), var(--pine-20));
 		/* An area on the page, such as a tool's side panel */
-		--panel: light-dark(var(--white), var(--teal-25));
+		--panel: light-dark(var(--white), var(--pine-26));
 		/* A control's fill, such as a button's, a field's or a checkbox's */
-		--raised: light-dark(var(--white), var(--teal-29));
+		--raised: light-dark(var(--white), var(--pine-29));
 		/* What raised turns on hover */
-		--surface: light-dark(var(--cream-98), var(--teal-35));
+		--surface: light-dark(var(--blush-95), var(--pine-35));
 		/* Popovers, menus, dialogs, sheets and floating toolbars */
-		--overlay: light-dark(var(--white), var(--teal-32));
+		--overlay: light-dark(var(--white), var(--pine-32));
 		/* Ink as a surface, such as a toast or a tooltip, with paper text */
 		--inverse: var(--ink);
 		/* A switch's handle and a slider's thumb, which stay lighter than their track */
@@ -162,14 +172,14 @@
 		/* Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
 		   ink would grey the cream ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
 		   as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on */
-		--ground-bleed: light-dark(var(--umber-30), var(--teal-95));
-		--panel-bleed: light-dark(var(--teal-29), var(--teal-95));
-		--raised-bleed: light-dark(var(--teal-29), var(--teal-95));
-		--overlay-bleed: light-dark(var(--teal-29), var(--teal-95));
+		--ground-bleed: light-dark(var(--umber-30), var(--pine-95));
+		--panel-bleed: light-dark(var(--pine-26), var(--pine-95));
+		--raised-bleed: light-dark(var(--pine-26), var(--pine-95));
+		--overlay-bleed: light-dark(var(--pine-26), var(--pine-95));
 		--inverse-bleed: light-dark(var(--white), var(--umber-30));
 		--bleed: var(--ground-bleed);
 		/* Behind a sheet */
-		--scrim: light-dark(color-mix(in oklab, var(--teal-29) 32%, transparent), color-mix(in oklab, var(--black) 48%, transparent));
+		--scrim: light-dark(color-mix(in oklab, var(--pine-26) 32%, transparent), color-mix(in oklab, var(--black) 48%, transparent));
 
 		/* Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
 		   drops warm the cream in the light, as the tints do */

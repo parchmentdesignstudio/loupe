@@ -338,42 +338,56 @@
     color-scheme: light dark;
     --white: oklch(100% 0 0);
     --black: oklch(0% 0 0);
-    --cream-98: oklch(97.5% .011 76.6);
+    --cream-99: oklch(99.4% .007 88.6);
     --cream-95: oklch(95% .011 76.6);
     --cream-80: oklch(80% .014 76.6);
     --umber-30: oklch(30% .055 77);
-    --teal-95: oklch(95% .03 205.7);
-    --teal-50: oklch(50.2% .014 209.8);
-    --teal-35: oklch(35% .021 205.7);
-    --teal-32: oklch(32% .02 205.7);
-    --teal-29: oklch(29.2% .022 205.7);
-    --teal-25: oklch(25% .018 205.7);
-    --teal-20: oklch(20% .015 205.7);
+    --blush-95: oklch(94.7% .013 48.6);
+    --rust-60: oklch(60.5% .149 46.9);
+    --lime-91: oklch(90.9% .099 127.9);
+    --pine-95: oklch(95% .054 169.9);
+    --pine-50: oklch(50% .025 169.9);
+    --pine-35: oklch(35% .038 169.9);
+    --pine-32: oklch(32% .036 169.9);
+    --pine-29: oklch(29% .035 169.9);
+    --pine-26: oklch(25.6% .039 169.9);
+    --pine-20: oklch(20% .027 169.9);
     --red-81: oklch(81% .108 28.7);
     --red-50: oklch(50.1% .178 28.7);
-    --ink: var(--teal-29);
-    --muted: var(--teal-50);
+    --ink: var(--pine-26);
+    --muted: var(--pine-50);
     --danger: var(--red-50);
     --paper: var(--white);
-    --ground: var(--cream-98);
-    --panel: var(--white);
-    --raised: var(--white);
-    --surface: var(--cream-98);
-    --overlay: var(--white);
-    --inverse: var(--ink);
-    --knob: var(--white);
-    --ground-bleed: var(--umber-30);
-    --panel-bleed: var(--teal-29);
-    --raised-bleed: var(--teal-29);
-    --overlay-bleed: var(--teal-29);
-    --inverse-bleed: var(--white);
-    --bleed: var(--ground-bleed);
-    --scrim: var(--teal-29);
+    --accent: var(--rust-60);
+    --highlight: var(--lime-91);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     :root {
-      --scrim: color-mix(in oklab, var(--teal-29) 32%, transparent);
+      --highlight: var(--lime-91);
+    }
+  }
+
+  :root {
+    --ground: var(--cream-99);
+    --panel: var(--white);
+    --raised: var(--white);
+    --surface: var(--blush-95);
+    --overlay: var(--white);
+    --inverse: var(--ink);
+    --knob: var(--white);
+    --ground-bleed: var(--umber-30);
+    --panel-bleed: var(--pine-26);
+    --raised-bleed: var(--pine-26);
+    --overlay-bleed: var(--pine-26);
+    --inverse-bleed: var(--white);
+    --bleed: var(--ground-bleed);
+    --scrim: var(--pine-26);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    :root {
+      --scrim: color-mix(in oklab, var(--pine-26) 32%, transparent);
     }
   }
 
@@ -1170,6 +1184,16 @@
     border-color: var(--color-white);
   }
 
+  .bg-accent, .bg-accent\/88 {
+    background-color: var(--accent);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-accent\/88 {
+      background-color: color-mix(in oklab, var(--accent) 88%, transparent);
+    }
+  }
+
   .bg-bleed\/4 {
     background-color: var(--bleed);
   }
@@ -1310,10 +1334,6 @@
 
   .p-1 {
     padding: var(--spacing);
-  }
-
-  .p-1\.5 {
-    padding: calc(var(--spacing) * 1.5);
   }
 
   .p-2 {

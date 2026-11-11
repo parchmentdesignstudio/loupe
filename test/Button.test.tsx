@@ -75,6 +75,19 @@ describe('Button', () => {
 		expect(small).not.toContain('px-2.5');
 	});
 
+	it('fills solid with the accent and void with ink', () => {
+		render(
+			<>
+				<Button>Schedule call</Button>
+				<Button variant="void">Book a visit</Button>
+			</>,
+		);
+		const [accent, ink] = screen.getAllByRole('button').map((button) => button.className.split(' '));
+		expect(accent).toEqual(expect.arrayContaining(['bg-accent', 'text-paper']));
+		expect(ink).toEqual(expect.arrayContaining(['bg-ink', 'text-paper']));
+		expect(ink).not.toContain('bg-accent');
+	});
+
 	it('keeps text-body and text-ink apart when merging', () => {
 		render(<Button className="text-body">Schedule call</Button>);
 		expect(screen.getByRole('button').className).toContain('text-body');
