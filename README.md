@@ -1,15 +1,24 @@
 # Loupe
 
-Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. Each part is its own package under `packages/`, and tools for making things sit under `tools/`.
+Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. Each part is its own package under `packages/`, tools for making things sit under `tools/`, and page templates will sit under `templates/`.
 
 | Package | What it is |
 |---|---|
+| `@parchment/tokens` | Colour, type, spacing, radius, shadow and motion (planned) |
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
 | `@parchment/ui` | Accessible React components, built on React Aria |
 
 | Tool | What it does |
 |---|---|
 | `tools/site-icons` | Makes the favicons, app icons and Open Graph image a site needs |
+
+## Tokens
+
+Planned. The primitives every other part draws from: colour, type, spacing, radius, shadow and motion. They’ll live in `packages/tokens` as plain CSS variables with a Tailwind `@theme` file over them, so an Astro site or a tool can use them without React. `@parchment/ui` will import them rather than define its own, and the tokens now in `packages/ui/tokens.css` move across.
+
+## Templates
+
+Planned. Whole pages and sections, such as an article, a landing page or a pricing table, built from the components. Each one is a folder under `templates/`, so it can depend on `@parchment/ui` and change at its own pace without a release of the components.
 
 ## Icons
 
