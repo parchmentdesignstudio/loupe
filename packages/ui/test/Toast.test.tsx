@@ -24,6 +24,19 @@ describe('Toast', () => {
 		await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
 	});
 
+	it('runs its action, then closes', async () => {
+		const user = userEvent.setup();
+		const onAction = vi.fn();
+		const queue = new ToastQueue();
+		render(<ToastRegion queue={queue} />);
+		act(() => {
+			queue.add({ title: 'Project archived', action: { label: 'Undo', onAction } }, { timeout: 0 });
+		});
+		await user.click(screen.getByRole('button', { name: 'Undo' }));
+		expect(onAction).toHaveBeenCalledOnce();
+		await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+	});
+
 	it('closes itself after five seconds, even when asked for less', () => {
 		vi.useFakeTimers();
 		const queue = new ToastQueue();

@@ -4,7 +4,7 @@ import { choice } from './Checkbox.js';
 import { focusRing, tv } from './tv.js';
 const toggle = tv({
     slots: {
-        track: 'flex h-6 w-10 shrink-0 items-center rounded-full p-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none',
+        track: 'my-[calc((1lh-1.5rem)/2)] flex h-6 w-10 shrink-0 items-center rounded-full p-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none',
         handle: 'size-5 rounded-full bg-knob shadow-raised transition-[translate,scale,background-color] duration-200 ease-out motion-reduce:transition-none',
     },
     variants: {

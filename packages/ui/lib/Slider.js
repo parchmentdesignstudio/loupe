@@ -7,8 +7,8 @@ import { focusRing, tv } from './tv.js';
 const slider = tv({
     slots: {
         base: 'flex flex-col gap-1.5',
-        header: 'flex items-baseline justify-between gap-3',
-        output: 'ms-auto text-control text-muted tabular-nums',
+        header: 'flex flex-wrap items-baseline justify-between gap-x-3',
+        output: 'ms-auto text-control whitespace-nowrap text-muted tabular-nums',
         track: 'relative',
         rail: 'absolute rounded-full bg-bleed/12',
         fill: 'rounded-full bg-ink',

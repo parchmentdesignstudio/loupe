@@ -19,6 +19,8 @@ import { composeClassName, focusRing, tv } from './tv.js';
 export interface ToastMessage {
 	title: ReactNode;
 	description?: ReactNode;
+	/** A button beside the message, such as Undo, which closes the toast once pressed */
+	action?: { label: ReactNode; onAction: () => void };
 }
 
 type ToastQueueOptions = NonNullable<ConstructorParameters<typeof AriaToastQueue>[0]>;
@@ -107,9 +109,22 @@ const surface = tv({
 	},
 });
 
+const action = tv({
+	extend: focusRing,
+	base: '-my-0.5 shrink-0 cursor-default rounded-md px-2 py-1 text-control font-medium text-paper outline-paper transition-[background-color] duration-150 ease-out motion-reduce:transition-none',
+	variants: {
+		isHovered: {
+			true: 'bg-bleed/12',
+		},
+		isPressed: {
+			true: 'bg-bleed/16',
+		},
+	},
+});
+
 const close = tv({
 	extend: focusRing,
-	base: '-my-0.5 flex shrink-0 cursor-default items-center justify-center rounded-full p-1 text-paper/70 outline-paper transition-[background-color,color] duration-150 ease-out motion-reduce:transition-none',
+	base: '-my-0.5 flex shrink-0 cursor-default items-center justify-center rounded-md p-1 text-paper/70 outline-paper transition-[background-color,color] duration-150 ease-out motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'bg-bleed/12 text-paper',
@@ -132,23 +147,34 @@ export function Toast<T>({ children, ...props }: ToastProps<T>) {
 	const isExiting = useSyncExternalStore(queue?.subscribeToExits ?? noExits, () => queue?.isExiting(key) ?? false, () => false);
 	const ref = useRef<HTMLDivElement>(null);
 	useSlide(ref);
-	const { title, description } = content as ToastMessage;
+	const message = content as ToastMessage;
 	return (
 		<AriaToast {...props} ref={ref} data-exiting={isExiting || undefined} className={composeRenderProps(props.className, (className, state) => surface({ ...state, isExiting, className }))}>
 			<ToastContent className="flex min-w-0 flex-1 flex-col gap-0.5">
 				{children ?? (
 					<>
 						<Text slot="title" className="text-body font-medium">
-							{title}
+							{message.title}
 						</Text>
-						{description && (
+						{message.description && (
 							<Text slot="description" className="text-label text-paper/70">
-								{description}
+								{message.description}
 							</Text>
 						)}
 					</>
 				)}
 			</ToastContent>
+			{children == null && message.action && (
+				<Button
+					onPress={() => {
+						message.action?.onAction();
+						queue?.close(key);
+					}}
+					className={(state) => action(state)}
+				>
+					{message.action.label}
+				</Button>
+			)}
 			<Button slot="close" className={(state) => close(state)}>
 				<Cross />
 			</Button>

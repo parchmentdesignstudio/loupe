@@ -52,7 +52,8 @@ export function Contents({ headings, scroller }: { headings: Heading[]; scroller
 						<Link
 							onPress={() => jump(heading.id)}
 							aria-current={heading.id === current ? 'location' : undefined}
-							className="cursor-default no-underline hover:text-ink aria-[current]:font-normal aria-[current]:text-ink"
+							// A small ghost button on hover. The padding is taken back by a negative margin, so the fill grows outwards and nothing moves
+							className="-mx-2 -my-1 flex cursor-default rounded-md px-2 py-1 no-underline transition-[background-color,color] duration-150 ease-out hover:bg-bleed/4 hover:text-ink data-[pressed]:bg-bleed/8 aria-[current]:font-normal aria-[current]:text-ink motion-reduce:transition-none"
 						>
 							{heading.name}
 						</Link>
@@ -67,7 +68,7 @@ export function Contents({ headings, scroller }: { headings: Heading[]; scroller
 export function ContentsMenu({ headings }: { headings: Heading[] }) {
 	return (
 		<MenuTrigger>
-			<Button variant="quiet" shape="circle" size="small" aria-label="On this page" className="-ml-1.5 xl:hidden">
+			<Button variant="ghost" shape="circle" size="small" aria-label="On this page" className="-ml-1.5 xl:hidden">
 				<Icon name="text-alignleft" />
 			</Button>
 			<Menu items={headings} onAction={(id) => jump(String(id))} placement="bottom start">

@@ -39,12 +39,12 @@ function UndoRedo({ placement }: { placement: Placement }) {
   return (
     <>
       <WithTooltip tooltip="Undo" shortcut="⌘Z" placement={placement}>
-        <Button variant="quiet" shape="circle" aria-label="Undo" isDisabled={!canUndo} onPress={undo}>
+        <Button variant="ghost" shape="circle" aria-label="Undo" isDisabled={!canUndo} onPress={undo}>
           <Icon name="arrow-uturn-left" />
         </Button>
       </WithTooltip>
       <WithTooltip tooltip="Redo" shortcut="⇧⌘Z" placement={placement}>
-        <Button variant="quiet" shape="circle" aria-label="Redo" isDisabled={!canRedo} onPress={redo}>
+        <Button variant="ghost" shape="circle" aria-label="Redo" isDisabled={!canRedo} onPress={redo}>
           <Icon name="arrow-uturn-right" />
         </Button>
       </WithTooltip>
@@ -99,12 +99,12 @@ function Zoom() {
   return (
     <div className="flex items-center">
       <WithTooltip tooltip="Zoom out" shortcut="⌘−" placement="bottom">
-        <Button variant="quiet" shape="circle" aria-label="Zoom out" onPress={() => actions.zoomStep(-1)}>
+        <Button variant="ghost" shape="circle" aria-label="Zoom out" onPress={() => actions.zoomStep(-1)}>
           <Icon name="minus" />
         </Button>
       </WithTooltip>
       <MenuTrigger>
-        <Button variant="quiet" aria-label={`Zoom, ${percent}%`}>
+        <Button variant="ghost" aria-label={`Zoom, ${percent}%`}>
           <span className="w-10 text-center tabular-nums">{percent}%</span>
         </Button>
         <Menu placement="bottom">
@@ -125,7 +125,7 @@ function Zoom() {
         </Menu>
       </MenuTrigger>
       <WithTooltip tooltip="Zoom in" shortcut="⌘+" placement="bottom">
-        <Button variant="quiet" shape="circle" aria-label="Zoom in" onPress={() => actions.zoomStep(1)}>
+        <Button variant="ghost" shape="circle" aria-label="Zoom in" onPress={() => actions.zoomStep(1)}>
           <Icon name="plus" />
         </Button>
       </WithTooltip>
@@ -171,7 +171,7 @@ function AppearanceMenu() {
   return (
     <MenuTrigger>
       <WithTooltip tooltip="Appearance" placement="bottom">
-        <Button variant="quiet" shape="circle" aria-label="Appearance">
+        <Button variant="ghost" shape="circle" aria-label="Appearance">
           <Icon name={appearance === 'dark' ? 'moon' : appearance === 'light' ? 'sun-max' : 'sun-horizon'} />
         </Button>
       </WithTooltip>
@@ -255,7 +255,7 @@ export function FloatingToolbar() {
         <Tools placement="top" />
         <Separator />
         <WithTooltip tooltip={`${name}, ${screen.width} × ${screen.height}`} placement="top">
-          <Button variant="quiet" onPress={() => actions.addDefaultDevice()}>
+          <Button variant="ghost" onPress={() => actions.addDefaultDevice()}>
             <Icon name="plus" />
             Add device
           </Button>

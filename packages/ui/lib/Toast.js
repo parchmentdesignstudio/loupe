@@ -81,9 +81,21 @@ const surface = tv({
         },
     },
 });
+const action = tv({
+    extend: focusRing,
+    base: '-my-0.5 shrink-0 cursor-default rounded-md px-2 py-1 text-control font-medium text-paper outline-paper transition-[background-color] duration-150 ease-out motion-reduce:transition-none',
+    variants: {
+        isHovered: {
+            true: 'bg-bleed/12',
+        },
+        isPressed: {
+            true: 'bg-bleed/16',
+        },
+    },
+});
 const close = tv({
     extend: focusRing,
-    base: '-my-0.5 flex shrink-0 cursor-default items-center justify-center rounded-full p-1 text-paper/70 outline-paper transition-[background-color,color] duration-150 ease-out motion-reduce:transition-none',
+    base: '-my-0.5 flex shrink-0 cursor-default items-center justify-center rounded-md p-1 text-paper/70 outline-paper transition-[background-color,color] duration-150 ease-out motion-reduce:transition-none',
     variants: {
         isHovered: {
             true: 'bg-bleed/12 text-paper',
@@ -100,8 +112,11 @@ export function Toast({ children, ...props }) {
     const isExiting = useSyncExternalStore(queue?.subscribeToExits ?? noExits, () => queue?.isExiting(key) ?? false, () => false);
     const ref = useRef(null);
     useSlide(ref);
-    const { title, description } = content;
-    return (_jsxs(AriaToast, { ...props, ref: ref, "data-exiting": isExiting || undefined, className: composeRenderProps(props.className, (className, state) => surface({ ...state, isExiting, className })), children: [_jsx(ToastContent, { className: "flex min-w-0 flex-1 flex-col gap-0.5", children: children ?? (_jsxs(_Fragment, { children: [_jsx(Text, { slot: "title", className: "text-body font-medium", children: title }), description && (_jsx(Text, { slot: "description", className: "text-label text-paper/70", children: description }))] })) }), _jsx(Button, { slot: "close", className: (state) => close(state), children: _jsx(Cross, {}) })] }));
+    const message = content;
+    return (_jsxs(AriaToast, { ...props, ref: ref, "data-exiting": isExiting || undefined, className: composeRenderProps(props.className, (className, state) => surface({ ...state, isExiting, className })), children: [_jsx(ToastContent, { className: "flex min-w-0 flex-1 flex-col gap-0.5", children: children ?? (_jsxs(_Fragment, { children: [_jsx(Text, { slot: "title", className: "text-body font-medium", children: message.title }), message.description && (_jsx(Text, { slot: "description", className: "text-label text-paper/70", children: message.description }))] })) }), children == null && message.action && (_jsx(Button, { onPress: () => {
+                    message.action?.onAction();
+                    queue?.close(key);
+                }, className: (state) => action(state), children: message.action.label })), _jsx(Button, { slot: "close", className: (state) => close(state), children: _jsx(Cross, {}) })] }));
 }
 const region = 'fixed bottom-[max(--spacing(4),env(safe-area-inset-bottom,0px))] left-1/2 z-60 flex -translate-x-1/2 flex-col-reverse items-center gap-2 rounded-lg outline-offset-4 outline-ink data-[focus-visible]:outline-2';
 /** Where a queue's toasts show: the bottom of the screen, newest lowest, above everything. Render one for the app */

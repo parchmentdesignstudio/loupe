@@ -40,7 +40,7 @@ export function Sources({ art, site, setArt, setSite, onAdd }: SourcesProps) {
       <DropZone variant="quiet" aria-label="Drop artwork" onDrop={(event) => void filesFrom(event).then((files) => onAdd(files, 'artwork'))} className={section}>
         <SectionHead title="Artwork">
           <FileTrigger acceptedFileTypes={['.svg', 'image/svg+xml', 'image/png', 'image/jpeg', 'image/webp']} allowsMultiple onSelect={(files) => onAdd(files, 'artwork')}>
-            <Button variant="tertiary" size="small">
+            <Button variant="secondary" size="small">
               Add
             </Button>
           </FileTrigger>
@@ -88,7 +88,7 @@ export function Sources({ art, site, setArt, setSite, onAdd }: SourcesProps) {
       <DropZone variant="quiet" aria-label="Drop an Open Graph image" onDrop={(event) => void filesFrom(event).then((files) => onAdd(files, 'og'))} className={section}>
         <SectionHead title="Open Graph image">
           <FileTrigger acceptedFileTypes={['image/*', '.svg']} onSelect={(files) => onAdd(files, 'og')}>
-            <Button variant="tertiary" size="small">
+            <Button variant="secondary" size="small">
               Choose
             </Button>
           </FileTrigger>
@@ -113,7 +113,7 @@ export function Sources({ art, site, setArt, setSite, onAdd }: SourcesProps) {
       <DropZone variant="quiet" aria-label="Drop iOS layers" onDrop={(event) => void filesFrom(event).then((files) => onAdd(files, 'layers'))} className={section}>
         <SectionHead title="iOS layers">
           <FileTrigger acceptedFileTypes={['.svg', 'image/svg+xml', 'image/png']} allowsMultiple onSelect={(files) => onAdd(files, 'layers')}>
-            <Button variant="tertiary" size="small">
+            <Button variant="secondary" size="small">
               Add
             </Button>
           </FileTrigger>
@@ -225,7 +225,7 @@ function Row({ source, actions, children }: { source: Source; actions: ReactNode
 function IconButton({ icon, label, tooltip = label, ...props }: Omit<ButtonProps, 'children'> & { icon: IconName; label: string; tooltip?: string }) {
   return (
     <TooltipTrigger delay={300}>
-      <Button variant="quiet" shape="circle" size="small" aria-label={label} {...props}>
+      <Button variant="ghost" shape="circle" size="small" aria-label={label} {...props}>
         <Icon name={icon} />
       </Button>
       <Tooltip>{tooltip}</Tooltip>

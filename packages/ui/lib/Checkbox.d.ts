@@ -5,7 +5,7 @@ export declare const choice: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "group relative flex cursor-default items-center gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]", undefined, undefined, undefined>;
+}, undefined, "group relative flex cursor-default items-start gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]", undefined, undefined, undefined>;
 export declare const box: import("tailwind-variants").TVReturnType<{
     isSelected: {
         false: string;
@@ -20,7 +20,7 @@ export declare const box: import("tailwind-variants").TVReturnType<{
     isInvalid: {
         true: string;
     };
-}, undefined, "flex size-5 shrink-0 items-center justify-center rounded-md transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none", {
+}, undefined, "my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-md transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

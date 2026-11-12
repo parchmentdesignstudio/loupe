@@ -6,7 +6,7 @@ import { composeClassName, focusRing, tv } from './tv.js';
 
 const dot = tv({
 	extend: focusRing,
-	base: 'flex size-5 shrink-0 items-center justify-center rounded-full transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none',
+	base: 'my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-full transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none',
 	variants: {
 		isSelected: {
 			false: 'bg-raised shadow-raised',

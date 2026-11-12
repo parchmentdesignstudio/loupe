@@ -13,7 +13,7 @@ export dark-colors = tokens : base.colors {
   danger: base.colors.red-81,
   // Marks on ink or the accent, such as a button's text or a checkbox's tick
   paper: base.colors.pine-20,
-  // What a page leads with, such as a solid button. It stays rust in the dark, where paper turns dark
+  // What a page leads with, in rust rather than a button’s marigold. It stays rust in the dark, where paper turns dark
   accent: base.colors.rust-60,
   // The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on
   highlight: opacity(base.colors.lime-91, 24%),
@@ -45,7 +45,7 @@ export dark-colors = tokens : base.colors {
   bleed: ground-bleed,
   // Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
   // drops take the ground's hue in the light, as the tints do
-  edge: opacity(bleed, 20%),
+  edge: opacity(bleed, 12%),
   drop-raised: opacity(base.colors.black, 24%),
   drop-floating: opacity(base.colors.black, 32%),
   drop-overlay: opacity(base.colors.black, 48%)

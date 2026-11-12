@@ -2,17 +2,20 @@ import { useEffect } from 'react';
 import { Autocomplete, useFilter } from 'react-aria-components';
 import { Icon } from '@parchment/icons/react';
 import { Button, Dialog, ListBox, ListBoxItem, Modal, SearchField } from '../src/index.js';
-import { areas, library } from './stories.js';
+import { href } from './routes.js';
+import { areas, blocks, library } from './stories.js';
 
 const pages = [
-	...areas.map((area) => ({ id: area.id, name: area.name, group: 'Loupe' })),
-	...library.flatMap((group) => group.components.map((entry) => ({ id: entry.id, name: entry.name, group: group.name }))),
+	{ id: '#/ui', name: 'All components', group: 'Loupe' },
+	...areas.map((area) => ({ id: href(area), name: area.name, group: 'Loupe' })),
+	...blocks.map((entry) => ({ id: href(entry), name: entry.name, group: 'Blocks' })),
+	...library.flatMap((group) => group.components.map((entry) => ({ id: href(entry), name: entry.name, group: group.name }))),
 ];
 
 /** Opens the search, with a press or ⌘K */
 export function SearchButton({ onPress }: { onPress: () => void }) {
 	return (
-		<Button variant="quiet" shape="circle" size="small" aria-label="Search" onPress={onPress}>
+		<Button variant="ghost" shape="circle" size="small" aria-label="Search" onPress={onPress}>
 			<Icon name="magnifyingglass" />
 		</Button>
 	);
@@ -43,7 +46,7 @@ export function Search({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange
 							aria-label="Pages"
 							items={pages}
 							onAction={(id) => {
-								window.location.hash = `#/${id}`;
+								window.location.hash = String(id);
 								close();
 							}}
 							renderEmptyState={() => <p className="px-3 py-1.5 text-control text-muted">Nothing called that</p>}

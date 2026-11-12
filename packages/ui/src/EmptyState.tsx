@@ -4,7 +4,7 @@ import { tv } from './tv.js';
 export const emptyState = tv({
 	slots: {
 		base: 'flex flex-col items-center gap-4 px-6 py-12 text-center',
-		// A raised tile, like a tertiary button, so the icon reads as the thing that'll be here
+		// A raised tile, like a secondary button, so the icon reads as the thing that'll be here
 		icon: 'flex size-10 items-center justify-center rounded-xl bg-raised text-muted shadow-raised',
 		text: 'flex max-w-[36ch] flex-col gap-1',
 		title: 'font-medium text-ink',

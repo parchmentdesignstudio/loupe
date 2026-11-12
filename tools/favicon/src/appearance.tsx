@@ -7,7 +7,7 @@ export function AppearanceMenu() {
   return (
     <MenuTrigger>
       <TooltipTrigger>
-        <Button variant="quiet" shape="circle" aria-label="Appearance">
+        <Button variant="ghost" shape="circle" aria-label="Appearance">
           <Icon name={appearance === 'dark' ? 'moon' : appearance === 'light' ? 'sun-max' : 'sun-horizon'} />
         </Button>
         <Tooltip>Appearance</Tooltip>

@@ -79,7 +79,7 @@ Asked for: the arrange panel to go.
 Asked for: the toolbar, inspector and menus rebuilt with Loupe’s own components from `packages/ui`, used as they are, to find what the library is missing. The canvas, devices, frames and export stay as they were.
 
 - Select and pan, the theme, orientation, status bar and layout are each a `ToggleButtonGroup`. Snapping, grid, columns and rulers are one group that takes several at once, and the inspector button is a `ToggleButton`
-- Undo, redo, zooming out and in, and the arrange buttons are quiet circle `Button`s, with a `Tooltip` for the name and shortcut that `title` gave before. Add device, Choose, Remove and Clear are `Button`s too
+- Undo, redo, zooming out and in, and the arrange buttons are ghost circle `Button`s, with a `Tooltip` for the name and shortcut that `title` gave before. Add device, Choose, Remove and Clear are `Button`s too
 - Zoom and export open a `Menu` from a `MenuTrigger`, rather than the browser’s popover
 - The model and the artboard’s size are a `Select`, with the models under a heading for each kind. A mix of models shows Mixed, and a size that isn’t one of the presets shows Custom
 - The artboard’s size, the gap, the grid and the columns are `NumberField`s, with a label above each and buttons to step it. The checkboxes are `Switch`es, as each takes effect at once
@@ -134,3 +134,12 @@ Asked for, in `packages/ui`: each token set once, as Tailwind’s own variable, 
 
 - The rulers read `--color-panel` and `--color-muted` rather than `--panel` and `--muted`, as the short names are gone
 - The overlay’s labels on thulian and tango are `text-pine-26`, now the palette has utilities, rather than `text-(color:--pine-26)`. The same colour
+
+### 11. The library’s button variants renamed
+
+12 November 2026 · Settled
+
+Asked for, in `packages/ui`: buttons named primary, secondary, accent, outline and ghost.
+
+- The inspector’s white raised button for choosing a screen, tertiary before, is `secondary`. It looks the same
+- The toolbar and inspector’s bare buttons, quiet before, are `ghost`. They look the same

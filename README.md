@@ -88,7 +88,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 
 | Component | What it’s for |
 |---|---|
-| `Button` | Any action, as solid in the accent, void in ink, plain or quiet, and a circle for an icon |
+| `Button` | Any action, as primary in marigold, secondary in white, accent in slate, outline or ghost, with an icon at either end, and a circle for an icon |
 | `Chip`, `ChipGroup` | Suggestions to tap |
 | `Toolbar` | Controls in a row, such as an editor’s tools: one Tab stop, with the arrow keys between them |
 | `Separator` | A line between groups of controls, or sections of a panel. In a toolbar it stands upright |

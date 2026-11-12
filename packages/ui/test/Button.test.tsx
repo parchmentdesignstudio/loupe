@@ -68,11 +68,13 @@ describe('Button', () => {
 			</>,
 		);
 		const [start, end] = screen.getAllByRole('button');
-		expect(start.firstElementChild).toBe(screen.getByTestId('plus'));
+		expect(start.firstElementChild?.firstElementChild).toBe(screen.getByTestId('plus'));
 		expect(start.textContent).toBe('New project');
-		expect(start.className.split(' ')).toContain('ps-2.5');
-		expect(end.lastElementChild).toBe(screen.getByTestId('arrow'));
-		expect(end.className.split(' ')).toContain('pe-2');
+		// The label carries 4px each side, so the icon's side pads only the button's 8px (6px small)
+		expect(start.className.split(' ')).toContain('px-2');
+		expect(start.querySelector('span span')?.className.split(' ')).toContain('px-1');
+		expect(end.firstElementChild?.lastElementChild).toBe(screen.getByTestId('arrow'));
+		expect(end.className.split(' ')).toContain('px-1.5');
 	});
 
 	it('keeps a circle round at either size', () => {
@@ -95,17 +97,17 @@ describe('Button', () => {
 		expect(small).not.toContain('px-2.5');
 	});
 
-	it('fills primary with yellow and secondary with sage', () => {
+	it('fills primary with marigold and accent with slate', () => {
 		render(
 			<>
 				<Button>Schedule call</Button>
-				<Button variant="secondary">Book a visit</Button>
+				<Button variant="accent">Book a visit</Button>
 			</>,
 		);
-		const [primary, secondary] = screen.getAllByRole('button').map((button) => button.className.split(' '));
-		expect(primary).toEqual(expect.arrayContaining(['[--fill:oklch(0.865_0.159_87.4)]', 'text-pine-26']));
-		expect(secondary).toEqual(expect.arrayContaining(['[--fill:oklch(0.807_0.019_175.2)]', 'text-pine-26']));
-		expect(secondary).not.toContain('[--fill:oklch(0.865_0.159_87.4)]');
+		const [primary, accent] = screen.getAllByRole('button').map((button) => button.className.split(' '));
+		expect(primary).toEqual(expect.arrayContaining(['[--fill:oklch(0.834_0.153_85.6)]', 'text-pine-26']));
+		expect(accent).toEqual(expect.arrayContaining(['[--fill:oklch(0.858_0.027_196.7)]', 'text-pine-26']));
+		expect(accent).not.toContain('[--fill:oklch(0.834_0.153_85.6)]');
 	});
 
 	it('keeps text-body and text-ink apart when merging', () => {
@@ -118,7 +120,7 @@ describe('Button', () => {
 		const { container } = render(
 			<>
 				<Button>Schedule call</Button>
-				<Button variant="tertiary" shape="circle" aria-label="Email Steve">
+				<Button variant="secondary" shape="circle" aria-label="Email Steve">
 					<svg aria-hidden="true" />
 				</Button>
 			</>,

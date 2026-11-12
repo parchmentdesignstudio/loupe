@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Button, ComboBox as AriaComboBox, type ComboBoxProps as AriaComboBoxProps, Group, Input } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, Label } from './Field.js';
+import { Description, FieldError, type FieldTextProps, Label, readOnly } from './Field.js';
 import { ChevronDown } from './glyphs.js';
 import { ListBox } from './ListBox.js';
 import { Popover } from './Popover.js';
@@ -8,9 +8,9 @@ import { composeClassName, tv } from './tv.js';
 
 const combo = tv({
 	slots: {
-		group: 'flex items-center rounded-lg bg-raised [--bleed:var(--raised-bleed)] pr-1 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]',
+		group: ['flex items-center rounded-lg bg-raised [--bleed:var(--raised-bleed)] pr-1 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]', readOnly],
 		input: 'min-w-0 flex-1 bg-transparent py-1.5 pl-3 text-control text-ink outline-none placeholder:text-muted',
-		button: 'flex shrink-0 cursor-default items-center justify-center rounded-full p-1 text-muted outline-0 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
+		button: 'flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
 	},
 	variants: {
 		isFocusWithin: {
@@ -49,7 +49,7 @@ export function ComboBox<T extends object>({ label, description, errorMessage, p
 						</Group>
 						{description && <Description>{description}</Description>}
 						<FieldError>{errorMessage}</FieldError>
-						<Popover className="min-w-(--trigger-width)">
+						<Popover className="max-w-[max(var(--trigger-width),20rem)] min-w-(--trigger-width)">
 							<ListBox>{children}</ListBox>
 						</Popover>
 					</>

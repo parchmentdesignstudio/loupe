@@ -83,40 +83,92 @@ layers = frame {
       font-style: "Medium"
     }
 
+    // Primary in marigold and accent in slate, as Button.tsx draws them: a fill 4% lighter at the top, a rim a sixth
+    // darker as the 1px edge, a lighter line inside it and a bevel. The fills are a trial in code, so they're hex here
+    // until they're tokens. Secondary is the button elevation, outline its edge alone, and ghost bare until hovered
     buttons = frame {
-      layout: {item-gap: l.lengths.spacing-2},
+      width: 100%,
+      layout: {
+        item-gap: l.lengths.spacing-2,
+        wrap: .true,
+        line-gap: l.lengths.spacing-2
+      },
       overflow: .visible,
-      children: [solid, void, plain, quiet],
+      children: [primary, secondary, accent, outline, ghost],
 
-      solid = frame {
+      primary = frame {
         layout: {direction: .row},
-        fill: c.colors.accent,
+        fill: {
+          linear-gradient: {
+            angle: 180deg,
+            stops: [stop(0%, #f6c348), stop(100%, #f5c03b)]
+          }
+        },
+        shadow: [
+          {
+            drop-shadow: {
+              color: c.colors.drop-raised,
+              offset: point(0px, 2px),
+              blur-radius: 4px,
+              spread: -2px
+            }
+          },
+          {
+            drop-shadow: {
+              color: c.colors.drop-raised,
+              offset: point(0px, 1px),
+              blur-radius: 3px,
+              spread: -1.5px
+            }
+          },
+          {
+            drop-shadow: {
+              color: c.colors.drop-raised,
+              offset: point(0px, 1px),
+              blur-radius: 1px,
+              spread: -1px
+            }
+          },
+          {drop-shadow: {color: #da8a00, spread: 1px}},
+          {inner-shadow: {color: #f8cd6f, spread: 1px}},
+          {
+            inner-shadow: {
+              color: #f8cd6f,
+              offset: point(0px, 1px),
+              blur-radius: 1px,
+              spread: -0.5px
+            }
+          },
+          {
+            inner-shadow: {
+              color: #f8cd6f,
+              offset: point(0px, 1px),
+              blur-radius: 3px,
+              spread: -1.5px
+            }
+          },
+          {
+            inner-shadow: {
+              color: #da8a0033,
+              offset: point(0px, -1px),
+              blur-radius: 3px,
+              spread: -1.5px
+            }
+          }
+        ],
         corner-radius: l.lengths.radius-lg,
+        overflow: .visible,
         padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
-        children: solidLabel,
+        children: primaryLabel,
 
-        solidLabel = text : styles.control {
-          contents: "Solid",
+        primaryLabel = text : styles.control {
+          contents: "Primary",
           font-style: "Medium",
-          fill[0].color: c.colors.paper
+          fill[0].color: c.colors.pine-26
         }
       }
 
-      void = frame {
-        layout: {direction: .row},
-        fill: c.colors.ink,
-        corner-radius: l.lengths.radius-lg,
-        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
-        children: voidLabel,
-
-        voidLabel = text : styles.control {
-          contents: "Void",
-          font-style: "Medium",
-          fill[0].color: c.colors.paper
-        }
-      }
-
-      plain = frame : elevation.raised {
+      secondary = frame : elevation.button {
         width: .auto,
         height: .auto,
         padding-top: l.lengths.spacing-1-5,
@@ -124,23 +176,109 @@ layers = frame {
         padding-bottom: l.lengths.spacing-1-5,
         padding-right: l.lengths.spacing-3,
         layout.align-items: .center,
-        overrides: [insert(plainLabel, after = .nil)],
+        overrides: [insert(secondaryLabel, after = .nil)],
 
-        plainLabel = text : styles.control {
-          contents: "Plain",
+        secondaryLabel = text : styles.control {
+          contents: "Secondary",
           font-style: "Medium"
         }
       }
 
-      quiet = frame {
+      accent = frame {
+        layout: {direction: .row},
+        fill: {
+          linear-gradient: {
+            angle: 180deg,
+            stops: [stop(0%, #c0d8d8), stop(100%, #bdd6d6)]
+          }
+        },
+        shadow: [
+          {
+            drop-shadow: {
+              color: c.colors.drop-raised,
+              offset: point(0px, 2px),
+              blur-radius: 4px,
+              spread: -2px
+            }
+          },
+          {
+            drop-shadow: {
+              color: c.colors.drop-raised,
+              offset: point(0px, 1px),
+              blur-radius: 3px,
+              spread: -1.5px
+            }
+          },
+          {
+            drop-shadow: {
+              color: c.colors.drop-raised,
+              offset: point(0px, 1px),
+              blur-radius: 1px,
+              spread: -1px
+            }
+          },
+          {drop-shadow: {color: #95aaaa, spread: 1px}},
+          {inner-shadow: {color: #cadede, spread: 1px}},
+          {
+            inner-shadow: {
+              color: #cadede,
+              offset: point(0px, 1px),
+              blur-radius: 1px,
+              spread: -0.5px
+            }
+          },
+          {
+            inner-shadow: {
+              color: #cadede,
+              offset: point(0px, 1px),
+              blur-radius: 3px,
+              spread: -1.5px
+            }
+          },
+          {
+            inner-shadow: {
+              color: #95aaaa33,
+              offset: point(0px, -1px),
+              blur-radius: 3px,
+              spread: -1.5px
+            }
+          }
+        ],
+        corner-radius: l.lengths.radius-lg,
+        overflow: .visible,
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: accentLabel,
+
+        accentLabel = text : styles.control {
+          contents: "Accent",
+          font-style: "Medium",
+          fill[0].color: c.colors.pine-26
+        }
+      }
+
+      outline = frame {
+        layout: {direction: .row},
+        border: {color: c.colors.edge, position: .outside},
+        corner-radius: l.lengths.radius-lg,
+        overflow: .visible,
+        padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
+        children: outlineLabel,
+
+        outlineLabel = text : styles.control {
+          contents: "Outline",
+          font-style: "Medium"
+        }
+      }
+
+      ghost = frame {
         layout: {direction: .row},
         fill: c.tints.ground-4,
         corner-radius: l.lengths.radius-lg,
         padding: [l.lengths.spacing-1-5, l.lengths.spacing-3],
-        children: quietLabel,
+        children: ghostLabel,
 
-        quietLabel = text : styles.control {
-          contents: "Quiet, hovered",
+        ghostLabel = text : styles.control {
+          contents: "Ghost, hovered",
           font-style: "Medium"
         }
       }

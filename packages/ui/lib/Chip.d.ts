@@ -9,7 +9,7 @@ export declare const chip: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "inline-flex cursor-default items-center rounded-lg bg-raised px-3 py-1.5 text-control text-ink shadow-raised transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none", {
+}, undefined, "inline-flex cursor-default items-center gap-1.5 rounded-lg bg-raised px-3 py-1.5 text-control text-ink shadow-raised transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

@@ -136,7 +136,7 @@ function HeadCode({ code }: { code: string }) {
     <section className="flex flex-col gap-2.5">
       <div className="flex items-center justify-between gap-2">
         <h2 className={heading}>HTML</h2>
-        <Button variant="tertiary" size="small" onPress={copy}>
+        <Button variant="secondary" size="small" onPress={copy}>
           {label}
         </Button>
       </div>

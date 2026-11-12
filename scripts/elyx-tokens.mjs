@@ -22,7 +22,9 @@ const steps = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 10, 12, 16]
 
 // The fill and corners each shadow goes with in the components, and what it’s for
 const levels = {
-  raised: { fill: 'raised', corners: 'radius-lg', caption: 'Buttons, chips and fields' },
+  raised: { fill: 'raised', corners: 'radius-lg', caption: 'Chips, fields and containers' },
+  button: { fill: 'raised', corners: 'radius-lg', caption: 'Buttons, raised with a 1px edge' },
+  'button-lifted': { fill: 'raised', corners: 'radius-lg', caption: 'A button hovered, lifted a little' },
   floating: { fill: 'overlay', corners: 'radius-xl', caption: 'Floating toolbars' },
   overlay: { fill: 'overlay', corners: 'radius-lg', caption: 'Popovers and menus. Dialogs and sheets round to radius-3xl' },
   invalid: { fill: 'raised', corners: 'radius-lg', caption: 'A field whose value is wrong' },

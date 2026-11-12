@@ -6,7 +6,8 @@ import { tv } from './tv.js';
 
 export { DialogTrigger } from 'react-aria-components';
 
-const dialog = tv({ base: 'relative max-h-[inherit] overflow-auto p-6 outline-0 [[data-placement]>&]:p-4' });
+// In a popover the padding is 16px, not 24px. DialogActions reads it to sit flush to the edges either way
+const dialog = tv({ base: 'relative max-h-[inherit] overflow-auto rounded-[inherit] p-(--dialog-padding) outline-0 [--dialog-padding:--spacing(6)] [[data-placement]>&]:[--dialog-padding:--spacing(4)]' });
 const heading = tv({ base: 'pr-10 text-title font-medium text-balance text-ink' });
 
 /** What a Modal or Popover holds. Give it a DialogHeading, or an aria-label */
@@ -20,14 +21,14 @@ export function DialogHeading(props: HeadingProps) {
 
 /** The dialog's actions, in a footer flush to its edges. A Button with slot="close" closes it */
 export function DialogActions({ children }: { children: ReactNode }) {
-	// The negative margins undo the dialog's 24px padding
-	return <div className="-mx-6 mt-6 -mb-6 flex flex-wrap justify-end gap-2 bg-ground px-6 py-4">{children}</div>;
+	// The negative margins undo the padding of the dialog or sheet it's in
+	return <div className="-mx-(--dialog-padding) mt-(--dialog-padding) -mb-(--dialog-padding) flex flex-wrap justify-end gap-2 bg-panel shadow-[inset_0_.5px_var(--color-scrim)] px-(--dialog-padding) py-4">{children}</div>;
 }
 
 /** A close button for a dialog's corner */
 export function DialogClose({ label = 'Close' }: { label?: string }) {
 	return (
-		<Button slot="close" variant="quiet" shape="circle" size="small" aria-label={label} className="absolute top-5 right-5">
+		<Button slot="close" variant="ghost" shape="circle" size="small" aria-label={label} className="absolute top-5 right-5">
 			<Cross />
 		</Button>
 	);
@@ -36,7 +37,7 @@ export function DialogClose({ label = 'Close' }: { label?: string }) {
 const modal = tv({
 	slots: {
 		overlay: 'fixed inset-0 z-50 flex min-h-full items-center justify-center bg-ground/88 p-4',
-		panel: 'max-h-full w-full overflow-hidden rounded-3xl bg-overlay [--bleed:var(--overlay-bleed)] text-ink shadow-overlay',
+		panel: 'max-h-full w-full overflow-hidden rounded-xl bg-overlay [--bleed:var(--overlay-bleed)] text-ink shadow-overlay',
 	},
 	variants: {
 		size: {

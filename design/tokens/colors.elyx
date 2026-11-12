@@ -92,7 +92,7 @@ export colors = tokens {
   danger: red-50,
   // Marks on ink or the accent, such as a button's text or a checkbox's tick
   paper: white,
-  // What a page leads with, such as a solid button. It stays rust in the dark, where paper turns dark
+  // What a page leads with, in rust rather than a button’s marigold. It stays rust in the dark, where paper turns dark
   accent: rust-60,
   // The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on
   highlight: lime-91,
@@ -124,10 +124,10 @@ export colors = tokens {
   bleed: ground-bleed,
   // Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
   // drops take the ground's hue in the light, as the tints do
-  edge: opacity(bleed, 20%),
+  edge: opacity(bleed, 12%),
   drop-raised: opacity(bleed, 12%),
-  drop-floating: opacity(bleed, 16%),
-  drop-overlay: opacity(bleed, 24%)
+  drop-floating: opacity(bleed, 12%),
+  drop-overlay: opacity(bleed, 12%)
 }
 
 // A tint is a layer’s bleed at 4, 8, 12, 16, 24 or 32%, named for the layer it sits on, such as overlay-8 for a

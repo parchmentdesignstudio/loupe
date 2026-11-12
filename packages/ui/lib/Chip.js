@@ -3,7 +3,7 @@ import { Button as AriaButton, composeRenderProps, Group } from 'react-aria-comp
 import { composeClassName, focusRing, tv } from './tv.js';
 export const chip = tv({
     extend: focusRing,
-    base: 'inline-flex cursor-default items-center rounded-lg bg-raised px-3 py-1.5 text-control text-ink shadow-raised transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none',
+    base: 'inline-flex cursor-default items-center gap-1.5 rounded-lg bg-raised px-3 py-1.5 text-control text-ink shadow-raised transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none',
     variants: {
         isHovered: {
             true: 'bg-surface',

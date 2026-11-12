@@ -1,14 +1,14 @@
 import { Button, Group, Input, NumberField as AriaNumberField, type NumberFieldProps as AriaNumberFieldProps } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, Label } from './Field.js';
+import { Description, FieldError, type FieldTextProps, Label, readOnly } from './Field.js';
 import { Dash, Plus } from './glyphs.js';
 import { composeClassName, tv } from './tv.js';
 
 // Sized like a text field, with its steppers inside as the combo box has its button
 const numberField = tv({
 	slots: {
-		group: 'flex items-center rounded-lg bg-raised [--bleed:var(--raised-bleed)] pr-1 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]',
+		group: ['flex items-center rounded-lg bg-raised [--bleed:var(--raised-bleed)] pr-1 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]', readOnly],
 		input: 'min-w-0 flex-1 bg-transparent py-1.5 pl-3 text-control text-ink tabular-nums outline-none placeholder:text-muted',
-		stepper: 'flex shrink-0 cursor-default items-center justify-center rounded-full p-1 text-muted outline-0 data-[disabled]:opacity-40 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
+		stepper: 'flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[disabled]:opacity-40 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
 	},
 	variants: {
 		isFocusWithin: {
