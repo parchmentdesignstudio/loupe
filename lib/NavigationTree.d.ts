@@ -17,7 +17,7 @@ export declare const navigationTreeLink: import("tailwind-variants").TVReturnTyp
     isDisabled: {
         true: string;
     };
-}, undefined, "block rounded-lg px-3 py-1.5 text-control font-medium text-ink", {
+}, undefined, "flex items-center gap-2 rounded-lg px-3 py-1.5 text-control font-medium text-ink", {
     isFocusVisible: {
         false: string;
         true: string;
@@ -28,5 +28,8 @@ export declare const navigationTreeLink: import("tailwind-variants").TVReturnTyp
         true: string;
     };
 }, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
-/** An item’s text, inside the link React Aria gives each item */
+/**
+ * An item’s text, inside the link React Aria gives each item. Each level in steps in by 12px, and an item with pages
+ * under it has a chevron that turns as it opens
+ */
 export declare function NavigationTreeItemContent({ children }: NavigationTreeItemContentProps): import("react").JSX.Element;

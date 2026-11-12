@@ -4,23 +4,19 @@ import type { VariantProps } from 'tailwind-variants';
 export declare const button: import("tailwind-variants").TVReturnType<{
     variant: {
         primary: string[];
-        secondary: string[];
-        tertiary: string;
+        secondary: string;
+        accent: string[];
+        danger: string[];
         outline: string;
-        quiet: string;
+        ghost: string;
     };
     shape: {
         circle: string;
+        square: string;
     };
     size: {
         medium: string;
         small: string;
-    };
-    hasStart: {
-        true: string;
-    };
-    hasEnd: {
-        true: string;
     };
     isHovered: {
         true: string;
@@ -47,6 +43,9 @@ export interface ButtonProps extends AriaButtonProps, Pick<VariantProps<typeof b
     start?: ReactNode;
     /** An icon after the label, on the right in a left-to-right language */
     end?: ReactNode;
+    /** Shows a spinner in place of the label while what it started is under way, such as a save. It can still be focused, but
+     * not pressed, and a screen reader hears it’s busy */
+    isPending?: boolean;
 }
-/** A button for any action, with an icon at the start or end if it helps. A circle holds just an icon, so it needs an aria-label */
+/** A button for any action, with an icon at the start or end if it helps. A circle or square holds just an icon, so it needs an aria-label. isPending spins while its action runs */
 export declare function Button({ variant, shape, size, start, end, ...props }: ButtonProps): import("react").JSX.Element;

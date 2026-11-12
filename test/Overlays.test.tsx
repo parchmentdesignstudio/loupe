@@ -13,7 +13,7 @@ function RenameDialog() {
 					<DialogHeading>Rename project</DialogHeading>
 					<DialogClose />
 					<DialogActions>
-						<Button slot="close" variant="tertiary">
+						<Button slot="close" variant="secondary">
 							Cancel
 						</Button>
 					</DialogActions>

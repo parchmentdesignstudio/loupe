@@ -5,9 +5,10 @@ import { Check, Dash } from './glyphs.js';
 import { composeClassName, focusRing, tv } from './tv.js';
 
 // A choice and its label. The label is part of what's pressed, so it's a large target
-// Relative, so React Aria's hidden input stays inside the label. Otherwise focusing it can scroll the whole page
+// Relative, so React Aria's hidden input stays inside the label. Otherwise focusing it can scroll the whole page. The box
+// centres on the label's first line, so it stays put when the label wraps
 export const choice = tv({
-	base: 'group relative flex cursor-default items-center gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]',
+	base: 'group relative flex cursor-default items-start gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]',
 	variants: {
 		isDisabled: {
 			true: 'opacity-40',
@@ -17,7 +18,7 @@ export const choice = tv({
 
 export const box = tv({
 	extend: focusRing,
-	base: 'flex size-5 shrink-0 items-center justify-center rounded-md transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none',
+	base: 'my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-md transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none',
 	variants: {
 		isSelected: {
 			false: 'bg-raised text-transparent shadow-raised',

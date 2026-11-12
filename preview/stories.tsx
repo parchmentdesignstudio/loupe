@@ -3,6 +3,8 @@ import { RouterProvider, parseColor } from 'react-aria-components';
 import { type IconSize, type IconVariant, iconNames } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import {
+	Breadcrumb,
+	Breadcrumbs,
 	Button,
 	Checkbox,
 	CheckboxGroup,
@@ -28,6 +30,8 @@ import {
 	DisclosurePanel,
 	DropZone,
 	EmptyState,
+	FileList,
+	FileListItem,
 	FileTrigger,
 	GridList,
 	GridListHeader,
@@ -49,8 +53,11 @@ import {
 	NavigationTreeItem,
 	NavigationTreeItemContent,
 	NavigationTreeSection,
+	Meter,
 	NumberField,
 	Popover,
+	ProgressBar,
+	ProgressCircle,
 	Radio,
 	RadioGroup,
 	SearchField,
@@ -77,6 +84,50 @@ import {
 	isFileDropItem,
 } from '../src/index.js';
 import { ParchmentLogo } from './logo.js';
+import { AppIcons, BrandButtons, Cards, Crops, Curls, Lockups, OnColour, Pairings, Palette, ProjectCards, System } from './brand.js';
+import { AvatarGroups, AvatarPlayground, AvatarSizes, AvatarsInText, PeopleAndOrganisations } from './playgrounds/avatar.js';
+import { ButtonPlayground } from './playgrounds/button.js';
+import { CalendarPlayground, PickADay, TwoMonths, WeekendsUnavailable } from './playgrounds/calendar.js';
+import { DateAndTime, DateFieldPlayground, DateFieldStates } from './playgrounds/date-field.js';
+import { DatePickerPlayground, PickADate, PickADateAndTime, PickARange } from './playgrounds/date-picker.js';
+import { CheckboxPlayground } from './playgrounds/checkbox.js';
+import { ChipPlayground } from './playgrounds/chip.js';
+import { ColorAreaPlayground } from './playgrounds/color-area.js';
+import { ColorFieldPlayground } from './playgrounds/color-field.js';
+import { ColorPickerPlayground } from './playgrounds/color-picker.js';
+import { ColorSliderPlayground } from './playgrounds/color-slider.js';
+import { ColorSwatchPickerPlayground } from './playgrounds/color-swatch-picker.js';
+import { ComboBoxPlayground } from './playgrounds/combo-box.js';
+import { ComposerPlayground } from './playgrounds/composer.js';
+import { DialogPlayground } from './playgrounds/dialog.js';
+import { DisclosurePlayground } from './playgrounds/disclosure.js';
+import { DropZonePlayground, FileStates, UploadingFiles } from './playgrounds/drop-zone.js';
+import { EmptyStatePlayground } from './playgrounds/empty-state.js';
+import { FileTriggerPlayground } from './playgrounds/file-trigger.js';
+import { GridListPlayground } from './playgrounds/grid-list.js';
+import { KeyboardPlayground } from './playgrounds/keyboard.js';
+import { LinkPlayground } from './playgrounds/link.js';
+import { MenuPlayground } from './playgrounds/menu.js';
+import { NavigationTreePlayground } from './playgrounds/navigation-tree.js';
+import { NavigationPlayground } from './playgrounds/navigation.js';
+import { BreadcrumbsPlayground } from './playgrounds/breadcrumbs.js';
+import { NumberFieldPlayground } from './playgrounds/number-field.js';
+import { PopoverPlayground } from './playgrounds/popover.js';
+import { ProgressBarPlayground, Saving } from './playgrounds/progress-bar.js';
+import { RadioGroupPlayground } from './playgrounds/radio-group.js';
+import { SearchFieldPlayground } from './playgrounds/search-field.js';
+import { SelectPlayground } from './playgrounds/select.js';
+import { SheetPlayground } from './playgrounds/sheet.js';
+import { SliderPlayground } from './playgrounds/slider.js';
+import { SwitchPlayground } from './playgrounds/switch.js';
+import { EmptyTable, InvoicesTable, LoadingMoreTable, MembersTable, TablePlayground } from './playgrounds/table.js';
+import { TabsPlayground } from './playgrounds/tabs.js';
+import { TagGroupPlayground } from './playgrounds/tag-group.js';
+import { TextFieldPlayground } from './playgrounds/text-field.js';
+import { ToastPlayground } from './playgrounds/toast.js';
+import { ToggleButtonGroupPlayground } from './playgrounds/toggle-button-group.js';
+import { ToolbarPlayground } from './playgrounds/toolbar.js';
+import { TooltipPlayground } from './playgrounds/tooltip.js';
 import { hexOf } from './palette.js';
 
 export interface Story {
@@ -87,7 +138,7 @@ export interface Story {
 }
 
 export interface Entry {
-	/** The page’s address, as in #/text-field */
+	/** The page’s name in its address, as text-field in #/ui/text-field */
 	id: string;
 	name: string;
 	description: ReactNode;
@@ -140,7 +191,7 @@ function Editing({ className }: { className?: string }) {
 			</ToggleButtonGroup>
 			<Separator />
 			<TooltipTrigger delay={300}>
-				<Button variant="quiet" shape="circle" aria-label="Undo">
+				<Button variant="ghost" shape="circle" aria-label="Undo">
 					<Icon name="arrow-uturn-left" />
 				</Button>
 				<Tooltip>
@@ -149,7 +200,7 @@ function Editing({ className }: { className?: string }) {
 				</Tooltip>
 			</TooltipTrigger>
 			<TooltipTrigger delay={300}>
-				<Button variant="quiet" shape="circle" aria-label="Redo">
+				<Button variant="ghost" shape="circle" aria-label="Redo">
 					<Icon name="arrow-uturn-right" />
 				</Button>
 				<Tooltip>
@@ -159,7 +210,7 @@ function Editing({ className }: { className?: string }) {
 			</TooltipTrigger>
 			<Separator />
 			<MenuTrigger>
-				<Button variant="quiet" aria-label={`Zoom, ${zoom}%`}>
+				<Button variant="ghost" aria-label={`Zoom, ${zoom}%`}>
 					<span className="tabular-nums">{zoom}%</span>
 				</Button>
 				<Menu placement="bottom" onAction={(key) => setZoom(key === 'fit' ? 64 : Number(key))}>
@@ -183,7 +234,7 @@ function Editing({ className }: { className?: string }) {
 function EditMenu() {
 	return (
 		<MenuTrigger>
-			<Button variant="tertiary">Edit</Button>
+			<Button variant="secondary">Edit</Button>
 			<Menu>
 				<MenuItem textValue="Undo">
 					Undo
@@ -320,20 +371,26 @@ function RemovingTags() {
 }
 
 function DroppingFiles() {
-	const [names, setNames] = useState<string[]>([]);
+	const [files, setFiles] = useState<File[]>([]);
 	return (
-		<DropZone
-			label="Drop an SVG or a large PNG"
-			onDrop={(event) => setNames(event.items.filter(isFileDropItem).map((item) => item.name))}
-			className="w-full"
-		>
-			<FileTrigger acceptedFileTypes={['image/svg+xml', 'image/png']} allowsMultiple onSelect={(files) => setNames([...(files ?? [])].map((file) => file.name))}>
-				<Button variant="tertiary" size="small">
-					Choose files
-				</Button>
-			</FileTrigger>
-			{names.length > 0 && <p className="font-mono text-ink">{names.join(', ')}</p>}
-		</DropZone>
+		<div className="flex w-full flex-col gap-3">
+			<DropZone
+				label="Drop an SVG or a large PNG"
+				onDrop={async (event) => setFiles(await Promise.all(event.items.filter(isFileDropItem).map((item) => item.getFile())))}
+				className="w-full"
+			>
+				<FileTrigger acceptedFileTypes={['image/svg+xml', 'image/png']} allowsMultiple onSelect={(chosen) => setFiles([...(chosen ?? [])])}>
+					<Button variant="secondary" size="small">
+						Choose files
+					</Button>
+				</FileTrigger>
+			</DropZone>
+			<FileList aria-label="Chosen files">
+				{files.map((file, index) => (
+					<FileListItem key={index} id={index} file={file} onRemove={() => setFiles((list) => list.filter((other) => other !== file))} />
+				))}
+			</FileList>
+		</div>
 	);
 }
 
@@ -357,7 +414,7 @@ function ChoosingFiles() {
 	return (
 		<>
 			<FileTrigger acceptedFileTypes={['image/svg+xml', 'image/png']} allowsMultiple onSelect={(files) => setNames([...(files ?? [])].map((file) => file.name))}>
-				<Button variant="tertiary">Choose artwork</Button>
+				<Button variant="secondary">Choose artwork</Button>
 			</FileTrigger>
 			<p className="font-mono text-label text-muted">{names.length > 0 ? names.join(', ') : 'Nothing chosen yet'}</p>
 		</>
@@ -493,18 +550,19 @@ export const library: Group[] = [
 			{
 				id: 'button',
 				name: 'Button',
-				description: 'Any action, as primary in yellow, secondary in sage, tertiary in white, outline or quiet, with an icon at either end, and a circle for just an icon',
+				description: 'Any action, as primary in marigold, secondary in white, accent in slate, outline or ghost, with an icon at either end, and a circle for just an icon',
 				exports: ['Button'],
 				stories: [
+					{ name: 'Build one', render: ButtonPlayground },
 					{
-						name: 'Primary, secondary, tertiary, outline and quiet',
+						name: 'Primary, secondary, accent, outline and ghost',
 						render: () => (
 							<>
 								<Button>Schedule call</Button>
-								<Button variant="secondary">Book a visit</Button>
-								<Button variant="tertiary">Send an email</Button>
+								<Button variant="secondary">Send an email</Button>
+								<Button variant="accent">Book a visit</Button>
 								<Button variant="outline">Call back</Button>
-								<Button variant="quiet">Not now</Button>
+								<Button variant="ghost">Not now</Button>
 							</>
 						),
 					},
@@ -513,10 +571,10 @@ export const library: Group[] = [
 						render: () => (
 							<>
 								<Button start={<Icon name="plus" />}>New project</Button>
-								<Button variant="secondary" end={<Icon name="arrow-right" />}>
+								<Button variant="accent" end={<Icon name="arrow-right" />}>
 									Continue
 								</Button>
-								<Button variant="tertiary" start={<Icon name="envelope" />}>
+								<Button variant="secondary" start={<Icon name="envelope" />}>
 									Send an email
 								</Button>
 								<Button variant="outline" size="small" end={<Icon name="chevron-down" />}>
@@ -529,13 +587,13 @@ export const library: Group[] = [
 						name: 'Circle',
 						render: () => (
 							<>
-								<Button variant="tertiary" shape="circle" aria-label="Send">
+								<Button variant="secondary" shape="circle" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 								<Button shape="circle" size="small" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
-								<Button variant="quiet" shape="circle" size="small" aria-label="Send">
+								<Button variant="ghost" shape="circle" size="small" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 							</>
@@ -550,6 +608,7 @@ export const library: Group[] = [
 				description: 'Suggestions to tap',
 				exports: ['Chip', 'ChipGroup'],
 				stories: [
+					{ name: 'Build one', render: ChipPlayground },
 					{
 						name: 'In a group',
 						render: () => (
@@ -568,23 +627,24 @@ export const library: Group[] = [
 				description: 'Controls in a row, such as an editor’s tools. It’s one Tab stop, with the arrow keys between its controls, and a Separator stands upright in it',
 				exports: ['Toolbar', 'Separator'],
 				stories: [
+					{ name: 'Build one', render: ToolbarPlayground },
 					{ name: 'Tools, history and zoom', render: () => <Editing /> },
 					{ name: 'Floating', render: () => <Editing className="rounded-xl bg-overlay p-1 shadow-floating [--bleed:var(--overlay-bleed)]" /> },
 					{
 						name: 'In a column',
 						render: () => (
 							<Toolbar aria-label="Tools" orientation="vertical" className="rounded-xl bg-overlay p-1 shadow-floating [--bleed:var(--overlay-bleed)]">
-								<Button variant="quiet" shape="circle" aria-label="Select">
+								<Button variant="ghost" shape="circle" aria-label="Select">
 									<Icon name="cursorarrow" />
 								</Button>
-								<Button variant="quiet" shape="circle" aria-label="Pan">
+								<Button variant="ghost" shape="circle" aria-label="Pan">
 									<Icon name="arrow-up-and-down-and-arrow-left-and-right" />
 								</Button>
 								<Separator />
-								<Button variant="quiet" shape="circle" aria-label="Undo">
+								<Button variant="ghost" shape="circle" aria-label="Undo">
 									<Icon name="arrow-uturn-left" />
 								</Button>
-								<Button variant="quiet" shape="circle" aria-label="Redo">
+								<Button variant="ghost" shape="circle" aria-label="Redo">
 									<Icon name="arrow-uturn-right" />
 								</Button>
 							</Toolbar>
@@ -598,6 +658,7 @@ export const library: Group[] = [
 				description: 'A keyboard shortcut, in a sentence, a tooltip or at the end of a menu item',
 				exports: ['Keyboard'],
 				stories: [
+					{ name: 'Build one', render: KeyboardPlayground },
 					{
 						name: 'In a sentence',
 						render: () => (
@@ -610,7 +671,7 @@ export const library: Group[] = [
 						name: 'In a tooltip',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="tertiary" shape="circle" aria-label="Undo">
+								<Button variant="secondary" shape="circle" aria-label="Undo">
 									<Icon name="arrow-uturn-left" />
 								</Button>
 								<Tooltip>
@@ -638,6 +699,7 @@ export const library: Group[] = [
 				),
 				exports: ['TextField'],
 				stories: [
+					{ name: 'Build one', render: TextFieldPlayground },
 					{ name: 'With a description', render: () => <TextField label="Your name" placeholder="Sam Smith" description="As you’d like Steve to say it" className="w-full" /> },
 					{ name: 'Invalid', render: () => <TextField label="Email" defaultValue="sam@" isInvalid errorMessage="Enter an email address" className="w-full" /> },
 					{ name: 'Multiline', render: () => <TextField label="What are you working on?" placeholder="A few lines is plenty" multiline className="w-full" /> },
@@ -649,6 +711,7 @@ export const library: Group[] = [
 				description: 'A number, typed or stepped with the arrow keys and its buttons',
 				exports: ['NumberField'],
 				stories: [
+					{ name: 'Build one', render: NumberFieldPlayground },
 					{
 						name: 'Within limits',
 						render: () => <NumberField label="Width" description="In pixels, from 320 to 3840" defaultValue={1440} minValue={320} maxValue={3840} step={10} formatOptions={{ useGrouping: false }} className="w-56" />,
@@ -665,6 +728,7 @@ export const library: Group[] = [
 				description: 'Searching, with a button that clears what’s typed. Escape clears it too',
 				exports: ['SearchField'],
 				stories: [
+					{ name: 'Build one', render: SearchFieldPlayground },
 					{ name: 'Without a label', render: () => <SearchField aria-label="Search projects" placeholder="Search projects" className="w-64" /> },
 					{ name: 'Filtering a list', render: FindingTypefaces },
 				],
@@ -675,6 +739,7 @@ export const library: Group[] = [
 				description: 'A number between two limits, dragged or moved with the arrow keys. Two values make a range',
 				exports: ['Slider'],
 				stories: [
+					{ name: 'Build one', render: SliderPlayground },
 					{
 						name: 'As a percentage',
 						render: () => <Slider label="Padding" defaultValue={0.12} minValue={0} maxValue={0.4} step={0.01} formatOptions={{ style: 'percent' }} className="w-64" />,
@@ -709,7 +774,8 @@ export const library: Group[] = [
 				name: 'Composer',
 				description: 'A message field with its send button',
 				exports: ['Composer'],
-				stories: [{ name: 'Sending', render: Sending }],
+				stories: [
+					{ name: 'Build one', render: ComposerPlayground },{ name: 'Sending', render: Sending }],
 			},
 		],
 	},
@@ -722,6 +788,7 @@ export const library: Group[] = [
 				description: 'Ticking any number of options',
 				exports: ['Checkbox', 'CheckboxGroup'],
 				stories: [
+					{ name: 'Build one', render: CheckboxPlayground },
 					{
 						name: 'In a group',
 						render: () => (
@@ -744,6 +811,7 @@ export const library: Group[] = [
 				description: 'Choosing one option',
 				exports: ['RadioGroup', 'Radio'],
 				stories: [
+					{ name: 'Build one', render: RadioGroupPlayground },
 					{
 						name: 'With a disabled option',
 						render: () => (
@@ -765,6 +833,7 @@ export const library: Group[] = [
 				description: 'A setting that takes effect straight away',
 				exports: ['Switch'],
 				stories: [
+					{ name: 'Build one', render: SwitchPlayground },
 					{ name: 'On', render: () => <Switch defaultSelected>Send me the newsletter</Switch> },
 					{ name: 'Disabled', render: () => <Switch isDisabled>Disabled</Switch> },
 				],
@@ -775,6 +844,7 @@ export const library: Group[] = [
 				description: 'A few options side by side, as a segmented control. A fill slides to the one you choose',
 				exports: ['ToggleButtonGroup', 'ToggleButton'],
 				stories: [
+					{ name: 'Build one', render: ToggleButtonGroupPlayground },
 					{
 						name: 'One choice',
 						render: () => (
@@ -818,6 +888,7 @@ export const library: Group[] = [
 				description: 'Choosing one option from a list that opens',
 				exports: ['Select', 'ListBoxItem', 'ListBoxSection'],
 				stories: [
+					{ name: 'Build one', render: SelectPlayground },
 					{
 						name: 'Options',
 						render: () => (
@@ -851,6 +922,7 @@ export const library: Group[] = [
 				description: 'Typing to filter a list of options',
 				exports: ['ComboBox', 'ListBoxItem'],
 				stories: [
+					{ name: 'Build one', render: ComboBoxPlayground },
 					{
 						name: 'Filtering',
 						render: () => (
@@ -859,6 +931,41 @@ export const library: Group[] = [
 							</ComboBox>
 						),
 					},
+				],
+			},
+			{
+				id: 'date-field',
+				name: 'Date field',
+				description: 'A date or time typed a part at a time, in the order the reader’s locale writes it',
+				exports: ['DateField', 'TimeField'],
+				stories: [
+					{ name: 'Build one', render: DateFieldPlayground },
+					{ name: 'Date and time', render: DateAndTime },
+					{ name: 'States', render: DateFieldStates },
+				],
+			},
+			{
+				id: 'date-picker',
+				name: 'Date picker',
+				description: 'A date or a range of dates, typed or picked from a calendar that opens below the field',
+				exports: ['DatePicker', 'DateRangePicker'],
+				stories: [
+					{ name: 'Build one', render: DatePickerPlayground },
+					{ name: 'A date', render: PickADate },
+					{ name: 'A range', render: PickARange },
+					{ name: 'A date and time, on weekdays', render: PickADateAndTime },
+				],
+			},
+			{
+				id: 'calendar',
+				name: 'Calendar',
+				description: 'A month of days to pick a date or a range from, on its own or in a date picker',
+				exports: ['Calendar', 'RangeCalendar'],
+				stories: [
+					{ name: 'Build one', render: CalendarPlayground },
+					{ name: 'A date', render: PickADay },
+					{ name: 'Weekends unavailable', render: WeekendsUnavailable },
+					{ name: 'A range across two months', render: TwoMonths },
 				],
 			},
 		],
@@ -872,6 +979,7 @@ export const library: Group[] = [
 				description: 'A colour, shown as a swatch and its hex, that opens an area, a hue slider and a hex field',
 				exports: ['ColorPicker'],
 				stories: [
+					{ name: 'Build one', render: ColorPickerPlayground },
 					{
 						name: 'Side by side',
 						render: () => (
@@ -889,6 +997,7 @@ export const library: Group[] = [
 				description: 'A colour picked from a few set ones',
 				exports: ['ColorSwatchPicker', 'ColorSwatchPickerItem', 'ColorSwatch'],
 				stories: [
+					{ name: 'Build one', render: ColorSwatchPickerPlayground },
 					{
 						name: 'Parchment’s palette',
 						render: () => (
@@ -920,7 +1029,8 @@ export const library: Group[] = [
 				name: 'Colour area',
 				description: 'Two channels of a colour at once, such as saturation across and brightness up',
 				exports: ['ColorArea'],
-				stories: [{ name: 'With a hue slider', render: AreaAndHue }],
+				stories: [
+					{ name: 'Build one', render: ColorAreaPlayground },{ name: 'With a hue slider', render: AreaAndHue }],
 			},
 			{
 				id: 'color-slider',
@@ -928,6 +1038,7 @@ export const library: Group[] = [
 				description: 'One channel of a colour along a track, such as its hue or opacity',
 				exports: ['ColorSlider'],
 				stories: [
+					{ name: 'Build one', render: ColorSliderPlayground },
 					{ name: 'Hue', render: () => <ColorSlider colorSpace="hsb" channel="hue" defaultValue="#c76024" className="w-64" /> },
 					{ name: 'Opacity', render: () => <ColorSlider label="Opacity" channel="alpha" defaultValue="#0c2920" className="w-64" /> },
 				],
@@ -937,7 +1048,8 @@ export const library: Group[] = [
 				name: 'Colour field',
 				description: 'A colour typed as its hex',
 				exports: ['ColorField'],
-				stories: [{ name: 'Hex', render: () => <ColorField label="Theme colour" description="Browsers tint their toolbar with it" defaultValue="#0c2920" className="w-56" /> }],
+				stories: [
+					{ name: 'Build one', render: ColorFieldPlayground },{ name: 'Hex', render: () => <ColorField label="Theme colour" description="Browsers tint their toolbar with it" defaultValue="#0c2920" className="w-56" /> }],
 			},
 		],
 	},
@@ -950,6 +1062,7 @@ export const library: Group[] = [
 				description: 'Items to choose or act on, as rows or as tiles, which can hold buttons of their own',
 				exports: ['GridList', 'GridListItem', 'GridListSection', 'GridListHeader'],
 				stories: [
+					{ name: 'Build one', render: GridListPlayground },
 					{
 						name: 'Rows',
 						render: () => (
@@ -960,7 +1073,7 @@ export const library: Group[] = [
 											<span className="font-medium">{project.name}</span>
 											<span className="text-label text-muted">{project.detail}</span>
 										</span>
-										<Button variant="quiet" size="small">
+										<Button variant="ghost" size="small">
 											Open
 										</Button>
 									</GridListItem>
@@ -1020,11 +1133,25 @@ export const library: Group[] = [
 				],
 			},
 			{
+				id: 'table',
+				name: 'Table',
+				description: 'Rows of records under sortable columns, such as customers, invoices or members, with rows to choose, open or act on',
+				exports: ['Table', 'TableHeader', 'Column', 'TableBody', 'Row', 'Cell', 'RowActions', 'TableLoadMore'],
+				stories: [
+					{ name: 'Build one', render: TablePlayground },
+					{ name: 'Members', render: MembersTable },
+					{ name: 'Invoices', render: InvoicesTable },
+					{ name: 'Empty', render: EmptyTable },
+					{ name: 'Loading more as it scrolls', render: LoadingMoreTable },
+				],
+			},
+			{
 				id: 'tag-group',
 				name: 'Tag group',
 				description: 'Short labels to choose from or remove, such as sizes or filters',
 				exports: ['TagGroup', 'Tag'],
 				stories: [
+					{ name: 'Build one', render: TagGroupPlayground },
 					{
 						name: 'Choosing',
 						render: () => (
@@ -1041,11 +1168,25 @@ export const library: Group[] = [
 				],
 			},
 			{
+				id: 'avatar',
+				name: 'Avatar',
+				description: 'A person, round, or an organisation or project, square, as a photo or their initials on a tint. A group overlaps them and counts the rest',
+				exports: ['Avatar', 'AvatarGroup'],
+				stories: [
+					{ name: 'Build one', render: AvatarPlayground },
+					{ name: 'Sizes, with initials and with a photo', render: AvatarSizes },
+					{ name: 'People and organisations', render: PeopleAndOrganisations },
+					{ name: 'In a group', render: AvatarGroups },
+					{ name: 'Beside text, on a 20px line', render: AvatarsInText },
+				],
+			},
+			{
 				id: 'empty-state',
 				name: 'Empty state',
 				description: 'Where there’s nothing to show yet: what will be here, and the first step to fill it. Its title isn’t a heading, so it sits in a list or under a page’s own',
 				exports: ['EmptyState'],
 				stories: [
+					{ name: 'Build one', render: EmptyStatePlayground },
 					{
 						name: 'With a first step',
 						render: () => (
@@ -1078,10 +1219,13 @@ export const library: Group[] = [
 				id: 'drop-zone',
 				name: 'Drop zone',
 				description: 'Somewhere to drop files, or paste them, with a file trigger to choose them instead',
-				exports: ['DropZone', 'FileTrigger', 'isFileDropItem'],
+				exports: ['DropZone', 'FileTrigger', 'FileList', 'FileListItem', 'isFileDropItem'],
 				stories: [
+					{ name: 'Build one', render: DropZonePlayground },
 					{ name: 'Dashed', render: DroppingFiles },
 					{ name: 'Quiet, for a panel', render: DroppingQuietly },
+					{ name: 'Uploading what’s dropped', render: UploadingFiles },
+					{ name: 'Each state of a file', render: FileStates },
 				],
 			},
 			{
@@ -1089,7 +1233,54 @@ export const library: Group[] = [
 				name: 'File trigger',
 				description: 'Opens the file picker from the button inside it',
 				exports: ['FileTrigger'],
-				stories: [{ name: 'Choosing artwork', render: ChoosingFiles }],
+				stories: [
+					{ name: 'Build one', render: FileTriggerPlayground },{ name: 'Choosing artwork', render: ChoosingFiles }],
+			},
+		],
+	},
+	{
+		name: 'Status',
+		components: [
+			{
+				id: 'progress-bar',
+				name: 'Progress bar',
+				description: 'How far along something is, as a bar or a ring, or a spinner when there’s no telling. A meter shows a quantity within limits the same way',
+				exports: ['ProgressBar', 'ProgressCircle', 'Meter'],
+				stories: [
+					{ name: 'Build one', render: ProgressBarPlayground },
+					{
+						name: 'With a label and value',
+						render: () => (
+							<div className="flex w-full max-w-md flex-col gap-6">
+								<ProgressBar label="Uploading artwork" value={45} />
+								<ProgressBar label="Exporting icons" value={3} maxValue={8} valueLabel="3 of 8 files" />
+								<ProgressBar label="Preparing the download" isIndeterminate />
+							</div>
+						),
+					},
+					{
+						name: 'In a row, without a label',
+						render: () => (
+							<div className="flex w-full max-w-md flex-col gap-3">
+								<ProgressBar aria-label="Uploading brief.pdf" value={72} />
+								<ProgressBar aria-label="Uploading fonts.zip" isIndeterminate />
+							</div>
+						),
+					},
+					{
+						name: 'Spinners and rings',
+						render: () => (
+							<div className="flex items-center gap-6">
+								<ProgressCircle aria-label="Loading" isIndeterminate />
+								<ProgressCircle aria-label="Loading projects" isIndeterminate size="large" />
+								<ProgressCircle aria-label="Syncing" value={30} />
+								<ProgressCircle aria-label="Syncing" value={70} size="large" />
+							</div>
+						),
+					},
+					{ name: 'A button while it saves', render: Saving },
+					{ name: 'A meter', render: () => <Meter label="Storage" value={7.2} maxValue={10} valueLabel="7.2 of 10 GB" className="w-full max-w-md" /> },
+				],
 			},
 		],
 	},
@@ -1102,18 +1293,19 @@ export const library: Group[] = [
 				description: 'A dialog over the page',
 				exports: ['DialogTrigger', 'Modal', 'Dialog', 'DialogHeading', 'DialogActions', 'DialogClose'],
 				stories: [
+					{ name: 'Build one', render: DialogPlayground },
 					{
 						name: 'Modal',
 						render: () => (
 							<DialogTrigger>
-								<Button variant="tertiary">Rename project</Button>
+								<Button variant="secondary">Rename project</Button>
 								<Modal>
 									<Dialog>
 										<DialogHeading>Rename project</DialogHeading>
 										<DialogClose />
 										<TextField label="Name" defaultValue="Loupe" autoFocus className="mt-4" />
 										<DialogActions>
-											<Button slot="close" variant="tertiary">
+											<Button slot="close" variant="secondary">
 												Cancel
 											</Button>
 											<Button slot="close">Save</Button>
@@ -1131,17 +1323,18 @@ export const library: Group[] = [
 				description: 'A panel that slides in from an edge of the screen, and swipes back out',
 				exports: ['SheetTrigger', 'Sheet'],
 				stories: [
+					{ name: 'Build one', render: SheetPlayground },
 					{
 						name: 'From the bottom',
 						render: () => (
 							<SheetTrigger>
-								<Button variant="tertiary">Rename project</Button>
+								<Button variant="secondary">Rename project</Button>
 								<Sheet>
 									<DialogHeading>Rename project</DialogHeading>
 									<DialogClose />
 									<TextField label="Name" defaultValue="Loupe" autoFocus className="mt-4" />
 									<DialogActions>
-										<Button slot="close" variant="tertiary">
+										<Button slot="close" variant="secondary">
 											Cancel
 										</Button>
 										<Button slot="close">Save</Button>
@@ -1154,7 +1347,7 @@ export const library: Group[] = [
 						name: 'From the start edge',
 						render: () => (
 							<SheetTrigger>
-								<Button variant="tertiary">Share</Button>
+								<Button variant="secondary">Share</Button>
 								<Sheet position="start">
 									<DialogHeading className="text-body">Share link</DialogHeading>
 									<DialogClose />
@@ -1171,11 +1364,12 @@ export const library: Group[] = [
 				description: 'A dialog beside what opened it',
 				exports: ['DialogTrigger', 'Popover', 'Dialog', 'DialogHeading'],
 				stories: [
+					{ name: 'Build one', render: PopoverPlayground },
 					{
 						name: 'Beside its button',
 						render: () => (
 							<DialogTrigger>
-								<Button variant="tertiary">Share</Button>
+								<Button variant="secondary">Share</Button>
 								<Popover className="w-64">
 									<Dialog>
 										<DialogHeading className="text-body">Share link</DialogHeading>
@@ -1189,7 +1383,7 @@ export const library: Group[] = [
 						name: 'With an arrow',
 						render: () => (
 							<DialogTrigger>
-								<Button variant="tertiary">Share</Button>
+								<Button variant="secondary">Share</Button>
 								<Popover showArrow className="w-64">
 									<Dialog>
 										<DialogHeading className="text-body">Share link</DialogHeading>
@@ -1207,11 +1401,12 @@ export const library: Group[] = [
 				description: 'Actions in a list that opens',
 				exports: ['MenuTrigger', 'Menu', 'MenuItem', 'MenuSection', 'MenuSeparator'],
 				stories: [
+					{ name: 'Build one', render: MenuPlayground },
 					{
 						name: 'Actions',
 						render: () => (
 							<MenuTrigger>
-								<Button variant="tertiary">Project</Button>
+								<Button variant="secondary">Project</Button>
 								<Menu>
 									<MenuSection>
 										<Header>Project</Header>
@@ -1229,7 +1424,7 @@ export const library: Group[] = [
 						name: 'Single selection',
 						render: () => (
 							<MenuTrigger>
-								<Button variant="quiet">Sort by</Button>
+								<Button variant="ghost">Sort by</Button>
 								<Menu selectionMode="single" defaultSelectedKeys={['updated']}>
 									<MenuItem id="name">Name</MenuItem>
 									<MenuItem id="updated">Last updated</MenuItem>
@@ -1247,11 +1442,12 @@ export const library: Group[] = [
 				description: 'A short label for a control, on hover and keyboard focus',
 				exports: ['TooltipTrigger', 'Tooltip'],
 				stories: [
+					{ name: 'Build one', render: TooltipPlayground },
 					{
 						name: 'On a circle button',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="tertiary" shape="circle" aria-label="Send">
+								<Button variant="secondary" shape="circle" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 								<Tooltip>Send message</Tooltip>
@@ -1262,7 +1458,7 @@ export const library: Group[] = [
 						name: 'With an arrow',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="tertiary" shape="circle" aria-label="Send">
+								<Button variant="secondary" shape="circle" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 								<Tooltip showArrow>Send message</Tooltip>
@@ -1277,11 +1473,12 @@ export const library: Group[] = [
 				description: 'A short message at the bottom of the screen, such as an export finishing, that closes itself',
 				exports: ['ToastQueue', 'ToastRegion', 'Toast'],
 				stories: [
+					{ name: 'Build one', render: ToastPlayground },
 					{
 						name: 'With a title',
 						render: () => (
 							<>
-								<Button variant="tertiary" onPress={() => toasts.add({ title: 'Link copied' })}>
+								<Button variant="secondary" onPress={() => toasts.add({ title: 'Link copied' })}>
 									Copy link
 								</Button>
 								<ToastRegion queue={toasts} />
@@ -1291,7 +1488,7 @@ export const library: Group[] = [
 					{
 						name: 'With a description',
 						render: () => (
-							<Button variant="tertiary" onPress={() => toasts.add({ title: 'Export ready', description: 'favicon.zip is in your downloads, with all 16 files.' })}>
+							<Button variant="secondary" onPress={() => toasts.add({ title: 'Export ready', description: 'favicon.zip is in your downloads, with all 16 files.' })}>
 								Export
 							</Button>
 						),
@@ -1308,7 +1505,53 @@ export const library: Group[] = [
 				name: 'Navigation',
 				description: 'A page’s navigation: a column beside the page on wider screens, and a sheet behind a button on phones. This sidebar is one, so narrow the window to see its sheet',
 				exports: ['Navigation'],
-				stories: [],
+				stories: [
+					{ name: 'Build one', render: NavigationPlayground },],
+			},
+			{
+				id: 'breadcrumbs',
+				name: 'Breadcrumbs',
+				description: 'Where a page sits in a site, as a trail of links up to it. When the trail won’t fit, the crumbs in the middle fold into an ellipsis that opens a menu of them. The bar above this page is one',
+				exports: ['Breadcrumbs', 'Breadcrumb'],
+				stories: [
+					{ name: 'Build one', render: BreadcrumbsPlayground },
+					{
+						name: 'A trail',
+						render: () => (
+							<Breadcrumbs>
+								<Breadcrumb href="#/ui">ui</Breadcrumb>
+								<Breadcrumb>Navigation</Breadcrumb>
+								<Breadcrumb>Breadcrumbs</Breadcrumb>
+							</Breadcrumbs>
+						),
+					},
+					{
+						name: 'Folded to fit',
+						render: () => (
+							<div className="w-full max-w-72">
+								<Breadcrumbs>
+									{['Parchment', 'Clients', 'Hartley & Webb', 'Projects', 'Brand identity', 'Logo'].map((name) => (
+										<Breadcrumb key={name} href="#/ui/breadcrumbs">
+											{name}
+										</Breadcrumb>
+									))}
+								</Breadcrumbs>
+							</div>
+						),
+					},
+					{
+						name: 'No more than three',
+						render: () => (
+							<Breadcrumbs maxVisible={3}>
+								{['Parchment', 'Clients', 'Hartley & Webb', 'Projects', 'Website'].map((name) => (
+									<Breadcrumb key={name} href="#/ui/breadcrumbs">
+										{name}
+									</Breadcrumb>
+								))}
+							</Breadcrumbs>
+						),
+					},
+				],
 			},
 			{
 				id: 'link',
@@ -1316,11 +1559,12 @@ export const library: Group[] = [
 				description: 'A link to another page, or a place on this one',
 				exports: ['Link'],
 				stories: [
+					{ name: 'Build one', render: LinkPlayground },
 					{
 						name: 'In a sentence',
 						render: () => (
 							<p>
-								Anyone with the <Link href="#/link">link</Link> can view this project.
+								Anyone with the <Link href="#/ui/link">link</Link> can view this project.
 							</p>
 						),
 					},
@@ -1328,7 +1572,7 @@ export const library: Group[] = [
 						name: 'Current page',
 						render: () =>
 							services.map((service) => (
-								<Link key={service.id} href="#/link" aria-current={service.id === 'website' ? 'page' : undefined}>
+								<Link key={service.id} href="#/ui/link" aria-current={service.id === 'website' ? 'page' : undefined}>
 									{service.name}
 								</Link>
 							)),
@@ -1336,7 +1580,7 @@ export const library: Group[] = [
 					{
 						name: 'Disabled',
 						render: () => (
-							<Link href="#/link" isDisabled>
+							<Link href="#/ui/link" isDisabled>
 								Disabled
 							</Link>
 						),
@@ -1348,7 +1592,8 @@ export const library: Group[] = [
 				name: 'Navigation tree',
 				description: 'Links to the pages of a site or tool, in sections, with the current page marked',
 				exports: ['NavigationTree', 'NavigationTreeSection', 'NavigationTreeHeader', 'NavigationTreeItem', 'NavigationTreeItemContent'],
-				stories: [{ name: 'Current page', render: CurrentPage }],
+				stories: [
+					{ name: 'Build one', render: NavigationTreePlayground },{ name: 'Current page', render: CurrentPage }],
 			},
 			{
 				id: 'disclosure',
@@ -1356,6 +1601,7 @@ export const library: Group[] = [
 				description: 'A heading that shows or hides what’s under it',
 				exports: ['DisclosureGroup', 'Disclosure', 'DisclosureHeader', 'DisclosurePanel'],
 				stories: [
+					{ name: 'Build one', render: DisclosurePlayground },
 					{
 						name: 'Medium, in a group',
 						render: () => (
@@ -1383,10 +1629,10 @@ export const library: Group[] = [
 									<DisclosureHeader className="px-3 font-mono text-label font-normal text-muted">Pickers</DisclosureHeader>
 									<DisclosurePanel>
 										<NavigationTree aria-label="Pickers">
-											<NavigationTreeItem id="select" href="#/select" textValue="Select">
+											<NavigationTreeItem id="select" href="#/ui/select" textValue="Select">
 												<NavigationTreeItemContent>Select</NavigationTreeItemContent>
 											</NavigationTreeItem>
-											<NavigationTreeItem id="combo-box" href="#/combo-box" textValue="Combo box">
+											<NavigationTreeItem id="combo-box" href="#/ui/combo-box" textValue="Combo box">
 												<NavigationTreeItemContent>Combo box</NavigationTreeItemContent>
 											</NavigationTreeItem>
 										</NavigationTree>
@@ -1396,13 +1642,13 @@ export const library: Group[] = [
 									<DisclosureHeader className="px-3 font-mono text-label font-normal text-muted">Overlays</DisclosureHeader>
 									<DisclosurePanel>
 										<NavigationTree aria-label="Overlays">
-											<NavigationTreeItem id="dialog" href="#/dialog" textValue="Dialog">
+											<NavigationTreeItem id="dialog" href="#/ui/dialog" textValue="Dialog">
 												<NavigationTreeItemContent>Dialog</NavigationTreeItemContent>
 											</NavigationTreeItem>
-											<NavigationTreeItem id="sheet" href="#/sheet" textValue="Sheet">
+											<NavigationTreeItem id="sheet" href="#/ui/sheet" textValue="Sheet">
 												<NavigationTreeItemContent>Sheet</NavigationTreeItemContent>
 											</NavigationTreeItem>
-											<NavigationTreeItem id="popover" href="#/popover" textValue="Popover">
+											<NavigationTreeItem id="popover" href="#/ui/popover" textValue="Popover">
 												<NavigationTreeItemContent>Popover</NavigationTreeItemContent>
 											</NavigationTreeItem>
 										</NavigationTree>
@@ -1430,6 +1676,7 @@ export const library: Group[] = [
 				description: 'Panels of content, one shown at a time, picked from a row of tabs. A bar slides to the one you pick',
 				exports: ['Tabs', 'TabList', 'Tab', 'TabPanel'],
 				stories: [
+					{ name: 'Build one', render: TabsPlayground },
 					{
 						name: 'In a row',
 						render: () => (
@@ -1500,6 +1747,9 @@ function Icons({ variant, size }: { variant: IconVariant; size: IconSize }) {
 	);
 }
 
+// Pieces made from the components, each with its own page under Blocks, as #/blocks/sign-up-form
+export const blocks: Entry[] = [];
+
 // The rest of loupe beside the components. Each has its own page, and shows an empty state until there's something in it
 export const areas: Entry[] = [
 	{
@@ -1520,6 +1770,25 @@ export const areas: Entry[] = [
 		usage: "<Icon name=\"plus\" variant=\"solid\" size={16} /> from '@parchment/icons/react'",
 		stories: [
 			{ name: 'Solid, 16px', render: () => <Icons variant="solid" size={16} /> },
+		],
+	},
+	// A scratch page for colours with the mark, to drop along with brand.tsx if it isn't kept
+	{
+		id: 'brand',
+		name: 'Brand',
+		description: 'Colours to try with the mark, before any of them are settled. Hover a pairing to see its contrast',
+		stories: [
+			{ name: 'Colours', render: Palette },
+			{ name: 'As a system', render: System },
+			{ name: 'As an app icon', render: AppIcons },
+			{ name: 'Each hue with itself and pine', render: Pairings },
+			{ name: 'Cards', render: Cards },
+			{ name: 'Cropped', render: Crops },
+			{ name: 'With the name', render: Lockups },
+			{ name: 'Curls', render: Curls },
+			{ name: 'Components on colour', render: OnColour },
+			{ name: 'Buttons in each brand colour', render: BrandButtons },
+			{ name: 'Cards with a button', render: ProjectCards },
 		],
 	},
 	{

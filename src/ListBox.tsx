@@ -1,4 +1,5 @@
 import { ListBox as AriaListBox, ListBoxItem as AriaListBoxItem, type ListBoxItemProps, type ListBoxProps, ListBoxSection as AriaListBoxSection, type ListBoxSectionProps, composeRenderProps } from 'react-aria-components';
+import { Children, type ReactNode } from 'react';
 import { Check } from './glyphs.js';
 
 export type { ListBoxSectionProps };
@@ -25,6 +26,11 @@ export const option = tv({
 	},
 });
 
+// Text runs straight in a flex row can't take an ellipsis, so each gets a span that can, beside any icon
+export function truncateText(children: ReactNode) {
+	return Children.map(children, (child) => (typeof child === 'string' || typeof child === 'number' ? <span className="min-w-0 truncate">{child}</span> : child));
+}
+
 /** An option with its text as children. It's ticked when selected */
 export function ListBoxItem(props: ListBoxItemProps) {
 	const textValue = props.textValue ?? (typeof props.children === 'string' ? props.children : undefined);
@@ -32,7 +38,7 @@ export function ListBoxItem(props: ListBoxItemProps) {
 		<AriaListBoxItem {...props} textValue={textValue} className={composeRenderProps(props.className, (className, state) => option({ ...state, className }))}>
 			{composeRenderProps(props.children, (children, { isSelected }) => (
 				<>
-					<span className="flex min-w-0 flex-1 items-center gap-2 truncate group-data-[selected]:font-medium">{children}</span>
+					<span className="flex min-w-0 flex-1 items-center gap-2 group-data-[selected]:font-medium">{truncateText(children)}</span>
 					{isSelected && <Check />}
 				</>
 			))}

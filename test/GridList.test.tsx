@@ -8,7 +8,7 @@ const projects = (
 	<GridList aria-label="Projects" selectionMode="single">
 		<GridListItem id="parchment" textValue="Parchment">
 			Parchment
-			<Button variant="quiet" size="small">
+			<Button variant="ghost" size="small">
 				Open
 			</Button>
 		</GridListItem>

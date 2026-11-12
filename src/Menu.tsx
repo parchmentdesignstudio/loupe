@@ -1,6 +1,6 @@
 import { Menu as AriaMenu, MenuItem as AriaMenuItem, type MenuItemProps as AriaMenuItemProps, type MenuProps as AriaMenuProps, MenuSection as AriaMenuSection, type MenuSectionProps, Separator, composeRenderProps } from 'react-aria-components';
 import { Check, ChevronRight } from './glyphs.js';
-import { option, section } from './ListBox.js';
+import { option, section, truncateText } from './ListBox.js';
 import { Popover, type PopoverProps } from './Popover.js';
 import { tv } from './tv.js';
 
@@ -42,7 +42,7 @@ export function MenuItem({ variant, ...props }: MenuItemProps) {
 			{composeRenderProps(props.children, (children, { selectionMode, isSelected, hasSubmenu }) => (
 				<>
 					{selectionMode !== 'none' && <span className="flex size-4 shrink-0">{isSelected && <Check />}</span>}
-					<span className="flex min-w-0 flex-1 items-center gap-2 truncate [&>kbd]:ms-auto [&>kbd]:ps-4">{children}</span>
+					<span className="flex min-w-0 flex-1 items-center gap-2 [&>kbd]:ms-auto [&>kbd]:shrink-0">{truncateText(children)}</span>
 					{hasSubmenu && <ChevronRight className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" />}
 				</>
 			))}

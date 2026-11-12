@@ -8,7 +8,7 @@ const setup = () => {
 	const onSubmit = vi.fn();
 	const user = userEvent.setup();
 	render(<Composer label="Your message" placeholder="Tell me what you’re working on" submitIcon={<svg aria-hidden="true" />} onSubmit={onSubmit} />);
-	return { onSubmit, user, field: screen.getByRole('textbox', { name: 'Your message' }) as HTMLInputElement, send: screen.getByRole('button', { name: 'Send' }) };
+	return { onSubmit, user, field: screen.getByRole('textbox', { name: 'Your message' }) as HTMLTextAreaElement, send: screen.getByRole('button', { name: 'Send' }) };
 };
 
 describe('Composer', () => {
@@ -24,6 +24,25 @@ describe('Composer', () => {
 		await user.type(field, 'Rework my site');
 		await user.click(send);
 		expect(onSubmit).toHaveBeenCalledWith('Rework my site');
+	});
+
+	it('starts a new line with Shift-Enter', async () => {
+		const { onSubmit, user, field } = setup();
+		await user.type(field, 'Line one{Shift>}{Enter}{/Shift}Line two{Enter}');
+		expect(onSubmit).toHaveBeenCalledWith('Line one\nLine two');
+	});
+
+	it('leaves a controlled value for its owner to clear', async () => {
+		const onSubmit = vi.fn();
+		const onChange = vi.fn();
+		const user = userEvent.setup();
+		render(<Composer label="Your message" submitIcon={<svg aria-hidden="true" />} value="A draft" onChange={onChange} onSubmit={onSubmit} />);
+		const field = screen.getByRole('textbox', { name: 'Your message' }) as HTMLTextAreaElement;
+		await user.type(field, '!');
+		expect(onChange).toHaveBeenCalledWith('A draft!');
+		await user.type(field, '{Enter}');
+		expect(onSubmit).toHaveBeenCalledWith('A draft');
+		expect(field.value).toBe('A draft');
 	});
 
 	it('won’t send an empty message', async () => {

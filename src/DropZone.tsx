@@ -1,8 +1,27 @@
-import type { ReactNode } from 'react';
-import { DropZone as AriaDropZone, type DropZoneProps as AriaDropZoneProps, Text, composeRenderProps } from 'react-aria-components';
+import { type ReactNode, createContext, useContext } from 'react';
+import {
+	DropZone as AriaDropZone,
+	type DropZoneProps as AriaDropZoneProps,
+	type DragTypes,
+	type DropOperation,
+	FileTrigger as AriaFileTrigger,
+	type FileTriggerProps,
+	ButtonContext,
+	Text,
+	composeRenderProps,
+} from 'react-aria-components';
 import { focusRing, tv } from './tv.js';
 
-export { FileTrigger, isFileDropItem, type FileTriggerProps } from 'react-aria-components';
+export { isFileDropItem, type FileTriggerProps } from 'react-aria-components';
+
+// A FileTrigger in a DropZone offers the same types the zone takes
+const AcceptedContext = createContext<string[] | undefined>(undefined);
+
+/** Opens the file picker from the Button inside it. In a DropZone, it takes the zone's acceptedFileTypes unless given its own */
+export function FileTrigger(props: FileTriggerProps) {
+	const accepted = useContext(AcceptedContext);
+	return <AriaFileTrigger acceptedFileTypes={accepted} {...props} />;
+}
 
 // Relative, so React Aria's hidden drop button stays inside. Otherwise focusing it can scroll the whole page
 export const dropZone = tv({
@@ -36,17 +55,26 @@ export interface DropZoneProps extends AriaDropZoneProps {
 	variant?: 'dashed' | 'quiet';
 	/** What to drop here, shown in the zone and read out for its drop button. A quiet zone takes an aria-label instead */
 	label?: ReactNode;
+	/** The types it takes, as an input's accept has them: image/png, image/* or .pdf. A drag of anything else isn't
+	 * taken, and a FileTrigger inside offers only these */
+	acceptedFileTypes?: string[];
 }
 
 /** Somewhere to drop files, or paste them from its drop button. A FileTrigger inside offers the file picker too */
-export function DropZone({ variant, label, ...props }: DropZoneProps) {
+export function DropZone({ variant, label, acceptedFileTypes, ...props }: DropZoneProps) {
+	// A drag only says what type each file is, image/png say, so an extension such as .pdf can't be checked until the
+	// drop. With one in the list, any drag is taken
+	const types = acceptedFileTypes?.some((type) => type.startsWith('.')) ? undefined : acceptedFileTypes;
+	const getDropOperation = props.getDropOperation ?? (types ? (dragTypes: DragTypes, allowed: DropOperation[]) => (dragTypes.has(types) ? allowed[0] : 'cancel') : undefined);
 	return (
-		<AriaDropZone {...props} className={composeRenderProps(props.className, (className, state) => dropZone({ ...state, variant, className }))}>
+		<AriaDropZone {...props} getDropOperation={getDropOperation} className={composeRenderProps(props.className, (className, state) => dropZone({ ...state, variant, className }))}>
 			{composeRenderProps(props.children, (children) => (
-				<>
-					{label != null && <Text slot="label">{label}</Text>}
-					{children}
-				</>
+				<AcceptedContext.Provider value={acceptedFileTypes}>
+					{/* A quiet zone has no visible label, and an empty one would still be read out */}
+					{variant !== 'quiet' && label != null && label !== '' && <Text slot="label">{label}</Text>}
+					{/* Disabled, the zone disables the buttons in it too, such as a FileTrigger's */}
+					{props.isDisabled ? <ButtonContext.Provider value={{ isDisabled: true }}>{children}</ButtonContext.Provider> : children}
+				</AcceptedContext.Provider>
 			))}
 		</AriaDropZone>
 	);

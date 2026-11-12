@@ -30,11 +30,14 @@ const tabs = tv({
 	},
 });
 
+// A row of tabs scrolls sideways when there are too many. A border would scroll out of view with them, so the line is a
+// background, and 4px of padding round the tabs keeps their focus rings from being clipped
 const tabList = tv({
 	base: 'flex border-bleed/8',
 	variants: {
 		orientation: {
-			horizontal: 'gap-6 border-b',
+			horizontal:
+				'-mx-1 -mt-1 gap-6 overflow-x-auto bg-[linear-gradient(color-mix(in_oklab,var(--color-bleed)_8%,transparent))] bg-size-[calc(100%-0.5rem)_1px] bg-position-[0.25rem_100%] bg-no-repeat px-1 pt-1 pb-1 [scrollbar-width:none]',
 			vertical: 'shrink-0 flex-col border-s',
 		},
 	},
@@ -62,12 +65,12 @@ const tab = tv({
 });
 
 // React Aria moves the bar to the chosen tab by its translate and size, so those are what transition. It covers the
-// list's line, half on it and half inside
+// list's line, half on it and half above
 const indicator = tv({
 	base: 'absolute rounded-full bg-ink transition-[translate,width,height] duration-250 ease-in-out motion-reduce:transition-none',
 	variants: {
 		orientation: {
-			horizontal: '-bottom-px start-0 h-0.5 w-full',
+			horizontal: '-bottom-1 start-0 h-0.5 w-full',
 			vertical: '-start-px top-0 h-full w-0.5',
 		},
 	},

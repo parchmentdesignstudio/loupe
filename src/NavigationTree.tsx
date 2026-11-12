@@ -13,6 +13,7 @@ import {
 	type NavigationTreeSectionProps,
 	type PressEvent,
 } from 'react-aria-components';
+import { ChevronRight } from './glyphs.js';
 import { header } from './Header.js';
 import { composeClassName, focusRing, tv } from './tv.js';
 
@@ -61,7 +62,7 @@ export function NavigationTreeItem<T extends object>(props: NavigationTreeItemPr
 // The link fills its row, so the row's states are the link's: hovered, the current page and the focus ring
 export const navigationTreeLink = tv({
 	extend: focusRing,
-	base: 'block rounded-lg px-3 py-1.5 text-control font-medium text-ink',
+	base: 'flex items-center gap-2 rounded-lg px-3 py-1.5 text-control font-medium text-ink',
 	variants: {
 		isHovered: {
 			true: 'bg-bleed/4',
@@ -78,14 +79,22 @@ export const navigationTreeLink = tv({
 	},
 });
 
-/** An item’s text, inside the link React Aria gives each item */
+/**
+ * An item’s text, inside the link React Aria gives each item. Each level in steps in by 12px, and an item with pages
+ * under it has a chevron that turns as it opens
+ */
 export function NavigationTreeItemContent({ children }: NavigationTreeItemContentProps) {
 	const press = useContext(PressContext);
 	return (
 		<AriaNavigationTreeItemContent>
 			{(values) => (
-				<AriaLink onPress={press ?? undefined} className={(state) => navigationTreeLink(state)}>
-					{typeof children === 'function' ? children(values) : children}
+				<AriaLink onPress={press ?? undefined} className={(state) => navigationTreeLink(state)} style={{ paddingInlineStart: `calc(var(--spacing) * ${3 * values.level})` }}>
+					<span className="min-w-0 flex-1">{typeof children === 'function' ? children(values) : children}</span>
+					{values.hasChildItems && (
+						<ChevronRight
+							className={`size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted transition-[rotate] duration-150 ease-out motion-reduce:transition-none rtl:-scale-x-100 ${values.isExpanded ? 'rotate-90' : ''}`}
+						/>
+					)}
 				</AriaLink>
 			)}
 		</AriaNavigationTreeItemContent>

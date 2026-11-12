@@ -4,6 +4,11 @@ import { type QueuedToast, type ToastOptions, UNSTABLE_ToastQueue as AriaToastQu
 export interface ToastMessage {
     title: ReactNode;
     description?: ReactNode;
+    /** A button beside the message, such as Undo, which closes the toast once pressed */
+    action?: {
+        label: ReactNode;
+        onAction: () => void;
+    };
 }
 type ToastQueueOptions = NonNullable<ConstructorParameters<typeof AriaToastQueue>[0]>;
 /**

@@ -12,6 +12,11 @@ describe('TextField', () => {
 		expect(described?.textContent).toBe('As you’d like Steve to say it');
 	});
 
+	it('marks a required label, out of screen readers’ way', () => {
+		const { container } = render(<TextField label="Email" isRequired />);
+		expect(container.querySelector('label')?.className).toContain('in-data-required:after:content-');
+	});
+
 	it('takes typing', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();

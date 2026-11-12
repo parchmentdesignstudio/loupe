@@ -5,7 +5,7 @@ import { tv } from './tv.js';
 export type KeyboardProps = ComponentProps<typeof AriaKeyboard>;
 
 const keyboard = tv({
-	base: 'font-sans bg-white shadow-raised rounded-sm px-1.5 py-0.25 mx-[0.25ch]'
+	base: 'mx-[0.25ch] rounded-sm bg-raised px-1.5 py-px font-sans text-ink shadow-raised',
 });
 
 /** A keyboard shortcut, such as ⌘Z, in a sentence, a Tooltip, or last in a MenuItem, which it sits at the end of */

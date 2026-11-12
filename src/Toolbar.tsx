@@ -7,7 +7,7 @@ const toolbar = tv({
 	base: 'flex items-center gap-1',
 	variants: {
 		orientation: {
-			horizontal: '',
+			horizontal: 'flex-wrap',
 			vertical: 'flex-col',
 		},
 	},

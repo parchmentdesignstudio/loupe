@@ -25,6 +25,27 @@ describe('DropZone', () => {
 		expect((await files[0].getFile()).name).toBe('mark.svg');
 	});
 
+	it('turns away a drag of a type it doesn’t take', () => {
+		const { container } = render(<DropZone label="Drop artwork" acceptedFileTypes={['image/*']} />);
+		const zone = container.firstElementChild as HTMLElement;
+		fireEvent.dragEnter(zone, { dataTransfer: dataTransferWith(new File(['%PDF'], 'brief.pdf', { type: 'application/pdf' })) });
+		expect(zone.hasAttribute('data-drop-target')).toBe(false);
+		fireEvent.dragEnter(zone, { dataTransfer: dataTransferWith(new File(['<svg/>'], 'mark.svg', { type: 'image/svg+xml' })) });
+		expect(zone.hasAttribute('data-drop-target')).toBe(true);
+	});
+
+	it('hands its types to a FileTrigger inside, and disables its button with it', () => {
+		const { container } = render(
+			<DropZone label="Drop artwork" acceptedFileTypes={['image/*']} isDisabled>
+				<FileTrigger>
+					<Button>Choose a file</Button>
+				</FileTrigger>
+			</DropZone>,
+		);
+		expect(container.querySelector('input[type=file]')?.getAttribute('accept')).toBe('image/*');
+		expect(screen.getByRole('button', { name: 'Choose a file' }).hasAttribute('disabled')).toBe(true);
+	});
+
 	it('labels its drop button, so files can be pasted onto it from the keyboard', () => {
 		render(<DropZone label="Drop artwork" />);
 		expect(screen.getByRole('button', { name: /Drop artwork/ })).toBeTruthy();
@@ -36,7 +57,7 @@ describe('DropZone', () => {
 		const { container } = render(
 			<DropZone label="Drop artwork">
 				<FileTrigger acceptedFileTypes={['image/svg+xml']} onSelect={onSelect}>
-					<Button variant="tertiary">Choose files</Button>
+					<Button variant="secondary">Choose files</Button>
 				</FileTrigger>
 			</DropZone>,
 		);
@@ -54,7 +75,7 @@ describe('DropZone', () => {
 			<>
 				<DropZone label="Drop artwork">
 					<FileTrigger>
-						<Button variant="tertiary">Choose files</Button>
+						<Button variant="secondary">Choose files</Button>
 					</FileTrigger>
 				</DropZone>
 				<DropZone variant="quiet" aria-label="Drop artwork onto the canvas">

@@ -10,7 +10,7 @@ export function Dialog({ heading = 'Rename project', field = 'Name', value = 'Lo
 				<DialogHeading>{heading}</DialogHeading>
 				<TextField label={field} value={value} onChange={() => {}} className="mt-4" />
 				<DialogActions>
-					<Button variant="quiet">{cancel}</Button>
+					<Button variant="ghost">{cancel}</Button>
 					<Button>{confirm}</Button>
 				</DialogActions>
 			</UiDialog>

@@ -40,7 +40,7 @@ export function Select<T extends object>({ label, description, errorMessage, ite
 					</Button>
 					{description && <Description>{description}</Description>}
 					<FieldError>{errorMessage}</FieldError>
-					<Popover className="min-w-(--trigger-width)">
+					<Popover className="max-w-[max(var(--trigger-width),20rem)] min-w-(--trigger-width)">
 						<ListBox items={items}>{children}</ListBox>
 					</Popover>
 				</>

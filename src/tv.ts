@@ -7,7 +7,7 @@ const twMergeConfig = {
 	extend: {
 		theme: {
 			text: ['body', 'control', 'label', 'title'],
-			shadow: ['raised', 'floating', 'overlay', 'invalid'],
+			shadow: ['raised', 'button', 'button-lifted', 'floating', 'overlay', 'invalid'],
 		},
 	},
 } satisfies TWMergeConfig;

@@ -5,7 +5,7 @@ import { tv } from './tv.js';
 export { TooltipTrigger } from 'react-aria-components';
 
 const tooltip = tv({
-	base: 'max-w-64 rounded-lg bg-inverse px-2.5 py-1.5 text-label text-paper [&_kbd]:ms-2 [&_kbd]:text-paper/70',
+	base: 'max-w-64 rounded-lg bg-inverse px-2.5 py-1.5 text-label text-paper [&_kbd]:ms-2 [&_kbd]:bg-paper/12 [&_kbd]:text-paper [&_kbd]:shadow-none',
 	variants: {
 		isEntering: {
 			true: 'animate-enter motion-reduce:animate-fade-in',

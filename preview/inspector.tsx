@@ -2,13 +2,14 @@ import { type ReactNode, useId } from 'react';
 import details from 'virtual:details';
 import { Link } from '../src/index.js';
 import type { Colour, Detail, Place, TokenKind, Use } from './details.mjs';
+import { href } from './routes.js';
 import { type Entry, library } from './stories.js';
 
 // The page each export is on: the one it leads, as FileTrigger has its own besides DropZone’s, or else the first
 const entries = library.flatMap((group) => group.components);
 const pages = new Map<string, string>();
-for (const entry of entries) if (entry.exports && !pages.has(entry.exports[0])) pages.set(entry.exports[0], entry.id);
-for (const entry of entries) for (const name of entry.exports ?? []) if (!pages.has(name)) pages.set(name, entry.id);
+for (const entry of entries) if (entry.exports && !pages.has(entry.exports[0])) pages.set(entry.exports[0], href(entry));
+for (const entry of entries) for (const name of entry.exports ?? []) if (!pages.has(name)) pages.set(name, href(entry));
 
 // React Aria documents a part on its family’s page, as MenuItem on Menu’s
 const families: Record<string, string> = {
@@ -104,7 +105,7 @@ function Aria({ name }: { name: string }) {
 function Part({ name }: { name: string }) {
 	const page = pages.get(name);
 	return page ? (
-		<Link href={`#/${page}`} className="font-mono">
+		<Link href={page} className="font-mono">
 			{name}
 		</Link>
 	) : (
@@ -381,7 +382,7 @@ export function Inspector({ entry }: { entry: Entry }) {
 		<aside
 			id="code"
 			aria-labelledby={heading}
-			className="scroll-mt-26 border-t border-bleed/8 px-4 py-10 md:px-10 xl:sticky xl:top-18 xl:col-start-3 xl:row-start-2 xl:h-[calc(100dvh-5.5rem)] xl:overflow-y-auto xl:border-t-0 xl:px-6 xl:pt-0 xl:pb-6"
+			className="scroll-mt-26 border-t border-bleed/8 px-4 py-10 md:px-10 xl:sticky xl:top-12 xl:col-start-3 xl:row-span-2 xl:row-start-1 xl:h-[calc(100dvh-4rem)] xl:overflow-y-auto xl:border-t-0 xl:px-6 xl:pt-12 xl:pb-6"
 		>
 			{/* Under the stories, it lines up with them */}
 			<div className="mx-auto flex max-w-[40rem] flex-col gap-6 xl:max-w-none">

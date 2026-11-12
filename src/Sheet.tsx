@@ -10,7 +10,7 @@ const sheet = tv({
 	slots: {
 		backdrop: 'data-[stack-index=0]:bg-scrim',
 		panel: 'z-1 box-content overflow-clip rounded-3xl bg-overlay [--bleed:var(--overlay-bleed)] text-ink shadow-overlay outline-0 will-change-transform transform-[perspective(1000px)] forced-colors:bg-[Canvas]',
-		content: 'relative box-border h-full overflow-hidden p-6 pb-[calc(--spacing(6)_+_var(--sheet-scroll-padding-y))] outline-0 group-data-expanded/sheet:overflow-auto',
+		content: 'relative box-border h-full overflow-hidden p-(--dialog-padding) pb-[calc(var(--dialog-padding)_+_var(--sheet-scroll-padding-y))] [--dialog-padding:--spacing(6)] outline-0 group-data-expanded/sheet:overflow-auto',
 	},
 	variants: {
 		position: {

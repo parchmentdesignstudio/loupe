@@ -11,8 +11,8 @@ const editing = (
 			<ToggleButton id="pan">Pan</ToggleButton>
 		</ToggleButtonGroup>
 		<Separator />
-		<Button variant="quiet">Undo</Button>
-		<Button variant="quiet">Redo</Button>
+		<Button variant="ghost">Undo</Button>
+		<Button variant="ghost">Redo</Button>
 	</Toolbar>
 );
 
@@ -51,9 +51,9 @@ describe('Toolbar', () => {
 	it('lays a Separator flat across a column', () => {
 		render(
 			<Toolbar aria-label="Tools" orientation="vertical">
-				<Button variant="quiet">Select</Button>
+				<Button variant="ghost">Select</Button>
 				<Separator />
-				<Button variant="quiet">Pan</Button>
+				<Button variant="ghost">Pan</Button>
 			</Toolbar>,
 		);
 		expect(screen.getByRole('toolbar').getAttribute('aria-orientation')).toBe('vertical');
@@ -65,7 +65,7 @@ describe('Toolbar', () => {
 		render(
 			<Toolbar aria-label="Canvas">
 				<MenuTrigger>
-					<Button variant="quiet">Zoom</Button>
+					<Button variant="ghost">Zoom</Button>
 					<Menu>
 						<MenuItem>Zoom to fit</MenuItem>
 						<MenuSeparator />

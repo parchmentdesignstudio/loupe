@@ -29,7 +29,7 @@ describe('EmptyState', () => {
 
 	it('has nothing for axe to flag', async () => {
 		const { container } = render(
-			<EmptyState icon={<svg aria-hidden="true" />} title="No skills yet" actions={<Button variant="tertiary">Read the plan</Button>}>
+			<EmptyState icon={<svg aria-hidden="true" />} title="No skills yet" actions={<Button variant="secondary">Read the plan</Button>}>
 				Guidance for agents will go here
 			</EmptyState>,
 		);
