@@ -150,4 +150,14 @@ describe('Table', () => {
 		const { container } = render(<Invoices selectionMode="multiple" sortDescriptor={{ column: 'customer', direction: 'ascending' }} />);
 		await expectAccessible(container);
 	});
+
+	it('drops its box when flush, keeping the header opaque in what it sits on', () => {
+		const { container, rerender } = render(<Invoices />);
+		const box = () => container.firstElementChild!.className;
+		expect(box()).toContain('shadow-raised');
+		rerender(<Invoices variant="flush" />);
+		expect(box()).not.toContain('shadow-raised');
+		expect(box()).not.toContain('rounded-lg');
+		expect(box()).toContain('--table-fill:var(--color-panel)');
+	});
 });

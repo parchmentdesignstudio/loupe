@@ -24,6 +24,7 @@ import { Lockup, ParchmentLogo } from './logo.js';
 import { Search, SearchButton } from './search.js';
 import { Appearance, Settings, remember, remembered } from './settings.js';
 import { type Crumb, forward, href, pageAt } from './routes.js';
+import { screenAt } from './screens/index.js';
 import { type Entry, areas, blocks, library } from './stories.js';
 
 // All components leaves out the tokens, such as colour, which export nothing
@@ -245,6 +246,15 @@ function Overview({ entries }: { entries: Entry[] }) {
 	));
 }
 
+// A screen fills the window on its own, without loupe's sidebar and bar around it
+function Root() {
+	const screen = screenAt(useAddress());
+	useEffect(() => {
+		if (screen) document.title = `${screen.name} · loupe`;
+	}, [screen]);
+	return screen ? <screen.render /> : <Preview />;
+}
+
 function Preview() {
 	const asked = useAddress();
 	const address = forward(asked) ?? asked;
@@ -292,7 +302,8 @@ function Preview() {
 			<div
 				ref={scroller}
 				className={[
-					'min-w-0 flex-1 bg-panel md:my-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-raised',
+					// Raised over the sticky columns either side, which would otherwise paint over its shadow
+					'min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-raised',
 					isOpen ? '' : 'md:mr-2',
 				].join(' ')}
 			>
@@ -325,6 +336,6 @@ function Preview() {
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
-		<Preview />
+		<Root />
 	</StrictMode>,
 );

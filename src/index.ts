@@ -31,6 +31,7 @@ export { Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger
 export { Navigation, type NavigationProps } from './Navigation.js';
 export { NavigationTree, NavigationTreeHeader, NavigationTreeItem, NavigationTreeItemContent, NavigationTreeSection, navigationTreeLink } from './NavigationTree.js';
 export { NumberField, type NumberFieldProps } from './NumberField.js';
+export { Pagination, pageRange, type PaginationProps } from './Pagination.js';
 export { Popover, popover, type PopoverProps } from './Popover.js';
 export { Meter, ProgressBar, ProgressCircle, progressBar, progressCircle, type MeterProps, type ProgressBarProps, type ProgressCircleProps } from './ProgressBar.js';
 export { Radio, RadioGroup, type RadioGroupProps } from './RadioGroup.js';
@@ -39,6 +40,7 @@ export { Select, trigger, type SelectProps } from './Select.js';
 export { Separator, type SeparatorProps } from './Separator.js';
 export { Sheet, SheetTrigger, type SheetProps } from './Sheet.js';
 export { Slider, type SliderProps } from './Slider.js';
+export { Status, status, type StatusProps, type StatusTone } from './Status.js';
 export { Switch } from './Switch.js';
 export { Cell, Column, Row, RowActions, Table, TableBody, TableHeader, TableLoadMore, table, tableCell, tableColumn, tableRow, type CellProps, type ColumnProps, type RowActionsProps, type RowProps, type TableBodyProps, type TableHeaderProps, type TableLoadMoreItemProps, type TableProps } from './Table.js';
 export { Tab, TabList, TabPanel, Tabs, type TabListProps, type TabPanelProps, type TabProps, type TabsProps } from './Tabs.js';

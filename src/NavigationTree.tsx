@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import {
+	Button as AriaButton,
 	Link as AriaLink,
 	NavigationTree as AriaNavigationTree,
 	NavigationTreeHeader as AriaNavigationTreeHeader,
@@ -80,22 +81,34 @@ export const navigationTreeLink = tv({
 });
 
 /**
- * An item’s text, inside the link React Aria gives each item. Each level in steps in by 12px, and an item with pages
- * under it has a chevron that turns as it opens
+ * An item’s text, inside the link React Aria gives each item. Each level in steps in by 12px. An item with pages under
+ * it has a chevron that turns as it opens: a button of its own, beside the link rather than in it, so a screen reader
+ * can open and close it
  */
 export function NavigationTreeItemContent({ children }: NavigationTreeItemContentProps) {
 	const press = useContext(PressContext);
 	return (
 		<AriaNavigationTreeItemContent>
 			{(values) => (
-				<AriaLink onPress={press ?? undefined} className={(state) => navigationTreeLink(state)} style={{ paddingInlineStart: `calc(var(--spacing) * ${3 * values.level})` }}>
-					<span className="min-w-0 flex-1">{typeof children === 'function' ? children(values) : children}</span>
+				<div className="relative flex">
+					<AriaLink
+						onPress={press ?? undefined}
+						className={(state) => navigationTreeLink({ ...state, className: 'flex-1' })}
+						style={{ paddingInlineStart: `calc(var(--spacing) * ${3 * values.level})`, paddingInlineEnd: values.hasChildItems ? 'calc(var(--spacing) * 9)' : undefined }}
+					>
+						<span className="min-w-0 flex-1">{typeof children === 'function' ? children(values) : children}</span>
+					</AriaLink>
 					{values.hasChildItems && (
-						<ChevronRight
-							className={`size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted transition-[rotate] duration-150 ease-out motion-reduce:transition-none rtl:-scale-x-100 ${values.isExpanded ? 'rotate-90' : ''}`}
-						/>
+						<AriaButton
+							slot="chevron"
+							className={(state) => focusRing({ ...state, className: 'absolute inset-y-0 end-1 my-auto flex size-7 items-center justify-center rounded-md text-muted outline-offset-0 hover:bg-bleed/4 hover:text-ink' })}
+						>
+							<ChevronRight
+								className={`size-4 shrink-0 fill-none stroke-current stroke-[1.5] transition-[rotate] duration-150 ease-out motion-reduce:transition-none rtl:-scale-x-100 ${values.isExpanded ? 'rotate-90' : ''}`}
+							/>
+						</AriaButton>
 					)}
-				</AriaLink>
+				</div>
 			)}
 		</AriaNavigationTreeItemContent>
 	);
