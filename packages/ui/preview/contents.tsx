@@ -68,7 +68,7 @@ export function Contents({ headings, scroller }: { headings: Heading[]; scroller
 export function ContentsMenu({ headings }: { headings: Heading[] }) {
 	return (
 		<MenuTrigger>
-			<Button variant="ghost" shape="circle" size="small" aria-label="On this page" className="-ml-1.5 xl:hidden">
+			<Button variant="ghost" shape="full" size="small" aria-label="On this page" className="-ml-1.5 xl:hidden">
 				<Icon name="text-alignleft" />
 			</Button>
 			<Menu items={headings} onAction={(id) => jump(String(id))} placement="bottom start">

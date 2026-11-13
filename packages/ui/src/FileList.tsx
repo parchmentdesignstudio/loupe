@@ -156,7 +156,7 @@ export function FileListItem({ file, name = file?.name ?? '', size = file?.size,
 						</span>
 					)}
 					{onRemove && (
-						<Button variant="ghost" size="small" shape="square" onPress={onRemove} aria-label={`Remove ${name}`}>
+						<Button variant="ghost" size="small" onPress={onRemove} aria-label={`Remove ${name}`}>
 							<Cross />
 						</Button>
 					)}

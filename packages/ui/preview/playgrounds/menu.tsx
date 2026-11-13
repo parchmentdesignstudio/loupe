@@ -3,7 +3,7 @@ import { type Key, PopoverContext, type Selection } from 'react-aria-components'
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, Header, Keyboard, Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger } from '../../src/index.js';
-import { Choice, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 import { type Align, type Side, aligns, placementOf, sides } from './overlay.js';
 
 const actions: { label: string; icon: IconName; shortcut?: string }[] = [
@@ -130,22 +130,32 @@ export function MenuPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<SwitchControl label="Keep open" value={keepOpen} onChange={keep} />}
 			controls={
 				<>
-					<SwitchControl label="Keep open" value={keepOpen} onChange={keep} />
-					<TextControl label="Trigger" value={trigger} onChange={setTrigger} />
-					<NumberControl label="Items" value={count} onChange={setCount} minValue={1} maxValue={60} />
-					<Choice label="Grouping" options={groupings} value={grouping} onChange={setGrouping} />
-					<SwitchControl label="Icons" value={hasIcons} onChange={setHasIcons} />
-					<SwitchControl label="Shortcuts" value={hasShortcuts} onChange={setHasShortcuts} />
-					<SwitchControl label="Long first item" value={hasLong} onChange={setHasLong} />
-					<SwitchControl label="Disabled second item" value={hasDisabled} onChange={setHasDisabled} />
-					<SwitchControl label="Submenu" value={hasSubmenu} onChange={setHasSubmenu} />
-					<SwitchControl label="Delete at the end" value={hasDanger} onChange={setHasDanger} />
-					<Choice label="Selection" options={selectionModes} value={selectionMode} onChange={setSelectionMode} />
-					<Choice label="Side" options={sides} value={side} onChange={setSide} />
-					<Choice label="Align" options={aligns} value={align} onChange={setAlign} />
-					<SwitchControl label="Open on long press" value={longPress} onChange={setLongPress} />
+					<ControlGroup label="Content">
+						<NumberControl label="Items" value={count} onChange={setCount} minValue={1} maxValue={60} />
+						<Choice label="Grouping" options={groupings} value={grouping} onChange={setGrouping} />
+						<SwitchControl label="Icons" value={hasIcons} onChange={setHasIcons} />
+						<SwitchControl label="Shortcuts" value={hasShortcuts} onChange={setHasShortcuts} />
+						<SwitchControl label="Long first item" value={hasLong} onChange={setHasLong} />
+						<SwitchControl label="Submenu" value={hasSubmenu} onChange={setHasSubmenu} />
+						<SwitchControl label="Delete at the end" value={hasDanger} onChange={setHasDanger} />
+					</ControlGroup>
+					<ControlGroup label="Placement">
+						<Choice label="Side" options={sides} value={side} onChange={setSide} />
+						<Choice label="Align" options={aligns} value={align} onChange={setAlign} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Selection" options={selectionModes} value={selectionMode} onChange={setSelectionMode} />
+						<SwitchControl label="Open on long press" value={longPress} onChange={setLongPress} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Disabled second item" value={hasDisabled} onChange={setHasDisabled} />
+					</ControlGroup>
+					<ControlGroup label="Trigger">
+						<TextControl label="Trigger" value={trigger} onChange={setTrigger} />
+					</ControlGroup>
 				</>
 			}
 		>

@@ -75,7 +75,7 @@ export const navigationTreeLink = tv({
 			true: 'bg-bleed/8',
 		},
 		isDisabled: {
-			true: 'opacity-40',
+			true: 'text-muted',
 		},
 	},
 });

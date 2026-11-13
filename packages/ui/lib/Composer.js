@@ -18,7 +18,7 @@ const composer = tv({
             true: { group: 'outline-2' },
         },
         isDisabled: {
-            true: { group: 'opacity-50' },
+            true: { group: 'bg-bleed/12 shadow-none', input: 'text-muted' },
         },
     },
 });
@@ -48,5 +48,5 @@ export function Composer({ label, placeholder, submitLabel = 'Send', submitIcon,
         event.preventDefault();
         event.currentTarget.form?.requestSubmit();
     };
-    return (_jsx(Form, { onSubmit: send, className: className, children: _jsx(AriaTextField, { "aria-label": label, value: message, onChange: change, isDisabled: isDisabled, children: _jsxs(Group, { className: (state) => slots.group(state), children: [_jsx(TextArea, { rows: 1, placeholder: placeholder, onKeyDown: sendOnEnter, className: slots.input() }), _jsx(Button, { type: "submit", "aria-label": submitLabel, shape: "square", size: "small", isDisabled: isDisabled || empty, className: slots.send(), children: submitIcon })] }) }) }));
+    return (_jsx(Form, { onSubmit: send, className: className, children: _jsx(AriaTextField, { "aria-label": label, value: message, onChange: change, isDisabled: isDisabled, children: _jsxs(Group, { className: (state) => slots.group(state), children: [_jsx(TextArea, { rows: 1, placeholder: placeholder, onKeyDown: sendOnEnter, className: slots.input() }), _jsx(Button, { type: "submit", "aria-label": submitLabel, size: "small", isDisabled: isDisabled || empty, className: slots.send(), children: submitIcon })] }) }) }));
 }

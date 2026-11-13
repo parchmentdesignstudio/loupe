@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createContext, useContext, useState } from 'react';
-import { Link as AriaLink, NavigationTree as AriaNavigationTree, NavigationTreeHeader as AriaNavigationTreeHeader, NavigationTreeItem as AriaNavigationTreeItem, NavigationTreeItemContent as AriaNavigationTreeItemContent, NavigationTreeSection as AriaNavigationTreeSection, } from 'react-aria-components';
+import { Button as AriaButton, Link as AriaLink, NavigationTree as AriaNavigationTree, NavigationTreeHeader as AriaNavigationTreeHeader, NavigationTreeItem as AriaNavigationTreeItem, NavigationTreeItemContent as AriaNavigationTreeItemContent, NavigationTreeSection as AriaNavigationTreeSection, } from 'react-aria-components';
 import { ChevronRight } from './glyphs.js';
 import { header } from './Header.js';
 import { composeClassName, focusRing, tv } from './tv.js';
@@ -46,15 +46,16 @@ export const navigationTreeLink = tv({
             true: 'bg-bleed/8',
         },
         isDisabled: {
-            true: 'opacity-40',
+            true: 'text-muted',
         },
     },
 });
 /**
- * An item’s text, inside the link React Aria gives each item. Each level in steps in by 12px, and an item with pages
- * under it has a chevron that turns as it opens
+ * An item’s text, inside the link React Aria gives each item. Each level in steps in by 12px. An item with pages under
+ * it has a chevron that turns as it opens: a button of its own, beside the link rather than in it, so a screen reader
+ * can open and close it
  */
 export function NavigationTreeItemContent({ children }) {
     const press = useContext(PressContext);
-    return (_jsx(AriaNavigationTreeItemContent, { children: (values) => (_jsxs(AriaLink, { onPress: press ?? undefined, className: (state) => navigationTreeLink(state), style: { paddingInlineStart: `calc(var(--spacing) * ${3 * values.level})` }, children: [_jsx("span", { className: "min-w-0 flex-1", children: typeof children === 'function' ? children(values) : children }), values.hasChildItems && (_jsx(ChevronRight, { className: `size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted transition-[rotate] duration-150 ease-out motion-reduce:transition-none rtl:-scale-x-100 ${values.isExpanded ? 'rotate-90' : ''}` }))] })) }));
+    return (_jsx(AriaNavigationTreeItemContent, { children: (values) => (_jsxs("div", { className: "relative flex", children: [_jsx(AriaLink, { onPress: press ?? undefined, className: (state) => navigationTreeLink({ ...state, className: 'flex-1' }), style: { paddingInlineStart: `calc(var(--spacing) * ${3 * values.level})`, paddingInlineEnd: values.hasChildItems ? 'calc(var(--spacing) * 9)' : undefined }, children: _jsx("span", { className: "min-w-0 flex-1", children: typeof children === 'function' ? children(values) : children }) }), values.hasChildItems && (_jsx(AriaButton, { slot: "chevron", className: (state) => focusRing({ ...state, className: 'absolute inset-y-0 end-1 my-auto flex size-7 items-center justify-center rounded-md text-muted outline-offset-0 hover:bg-bleed/4 hover:text-ink' }), children: _jsx(ChevronRight, { className: `size-4 shrink-0 fill-none stroke-current stroke-[1.5] transition-[rotate] duration-150 ease-out motion-reduce:transition-none rtl:-scale-x-100 ${values.isExpanded ? 'rotate-90' : ''}` }) }))] })) }));
 }

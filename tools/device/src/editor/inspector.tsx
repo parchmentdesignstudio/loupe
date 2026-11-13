@@ -59,6 +59,8 @@ function Devices({ devices }: { devices: Device[] }) {
     <>
       <Section title={single ? 'Device' : `${devices.length} devices`}>
         <Select
+          variant="filled"
+          size="small"
           aria-label="Device"
           placeholder="Mixed"
           value={model?.id ?? null}
@@ -175,7 +177,7 @@ function Screen({ device }: { device: Device }) {
 function ArrangeButton({ icon, tooltip, shortcut, onPress }: { icon: Name; tooltip: string; shortcut?: string; onPress: () => void }) {
   return (
     <WithTooltip tooltip={tooltip} shortcut={shortcut}>
-      <Button variant="ghost" shape="circle" aria-label={tooltip} onPress={onPress}>
+      <Button variant="ghost" shape="full" aria-label={tooltip} onPress={onPress}>
         <Icon name={icon} />
       </Button>
     </WithTooltip>
@@ -307,6 +309,8 @@ function Artboard() {
     <>
       <Section title="Artboard">
         <Select
+          variant="filled"
+          size="small"
           aria-label="Size"
           placeholder="Custom"
           value={preset ? sizeKey(preset.width, preset.height) : null}
@@ -322,8 +326,8 @@ function Artboard() {
           ))}
         </Select>
         <div className="grid grid-cols-2 gap-2">
-          <NumberField label="Width" value={artboard.width} minValue={16} formatOptions={whole} onChange={numeric((width) => actions.setArtboard({ width }))} />
-          <NumberField label="Height" value={artboard.height} minValue={16} formatOptions={whole} onChange={numeric((height) => actions.setArtboard({ height }))} />
+          <NumberField variant="filled" size="small" label="Width" value={artboard.width} minValue={16} formatOptions={whole} onChange={numeric((width) => actions.setArtboard({ width }))} />
+          <NumberField variant="filled" size="small" label="Height" value={artboard.height} minValue={16} formatOptions={whole} onChange={numeric((height) => actions.setArtboard({ height }))} />
         </div>
         <Fill />
       </Section>
@@ -343,7 +347,7 @@ function Artboard() {
         {artboard.layout === 'row' ? (
           <>
             <div className="grid grid-cols-2 gap-2">
-              <NumberField label="Gap" value={artboard.gap} formatOptions={points} onChange={numeric((gap) => actions.setArtboard({ gap }))} />
+              <NumberField variant="filled" size="small" label="Gap" value={artboard.gap} formatOptions={points} onChange={numeric((gap) => actions.setArtboard({ gap }))} />
             </div>
             <Note>A centred row, as a flexbox lays it out. Drag a device along it, or use the arrow keys.</Note>
           </>
@@ -366,7 +370,7 @@ function Placing() {
     <>
       <Section title="Grid">
         <div className="grid grid-cols-2 gap-2">
-          <NumberField label="Size" value={settings.grid.size} minValue={1} formatOptions={points} onChange={numeric((size) => actions.setGrid({ size }))} />
+          <NumberField variant="filled" size="small" label="Size" value={settings.grid.size} minValue={1} formatOptions={points} onChange={numeric((size) => actions.setGrid({ size }))} />
         </div>
         <Switch isSelected={settings.grid.visible} onChange={(visible) => actions.setGrid({ visible })}>Show the grid</Switch>
         <Switch isSelected={settings.grid.snap} onChange={(snap) => actions.setGrid({ snap })}>Snap to the grid</Switch>
@@ -374,9 +378,9 @@ function Placing() {
 
       <Section title="Columns">
         <div className="grid grid-cols-2 gap-2">
-          <NumberField label="Count" value={settings.columns.count} minValue={1} formatOptions={whole} onChange={numeric((count) => actions.setColumns({ count }))} />
-          <NumberField label="Gutter" value={settings.columns.gutter} minValue={0} formatOptions={points} onChange={numeric((gutter) => actions.setColumns({ gutter }))} />
-          <NumberField label="Margin" value={settings.columns.margin} minValue={0} formatOptions={points} onChange={numeric((margin) => actions.setColumns({ margin }))} />
+          <NumberField variant="filled" size="small" label="Count" value={settings.columns.count} minValue={1} formatOptions={whole} onChange={numeric((count) => actions.setColumns({ count }))} />
+          <NumberField variant="filled" size="small" label="Gutter" value={settings.columns.gutter} minValue={0} formatOptions={points} onChange={numeric((gutter) => actions.setColumns({ gutter }))} />
+          <NumberField variant="filled" size="small" label="Margin" value={settings.columns.margin} minValue={0} formatOptions={points} onChange={numeric((margin) => actions.setColumns({ margin }))} />
         </div>
         <Switch isSelected={settings.columns.visible} onChange={(visible) => actions.setColumns({ visible })}>Show them, and snap to them</Switch>
       </Section>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pagination, Status, type StatusTone } from '../../src/index.js';
-import { Choice, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 
 const tones = ['neutral', 'info', 'success', 'warning', 'danger'] as const satisfies readonly StatusTone[];
 const samples: [StatusTone, string][] = [
@@ -31,14 +31,20 @@ export function StatusPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Room" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Tone" options={tones} value={tone} onChange={setTone} />
-					<Choice label="Variant" options={['dot', 'badge'] as const} value={variant} onChange={setVariant} />
-					<TextControl label="Label" value={label} onChange={setLabel} />
-					<TextControl label="Detail" value={detail} onChange={setDetail} />
-					<SwitchControl label="Detail overdue" value={isOverdue} onChange={setOverdue} />
-					<Choice label="Room" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />
+					<ControlGroup label="Content">
+						<TextControl label="Label" value={label} onChange={setLabel} />
+						<TextControl label="Detail" value={detail} onChange={setDetail} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Tone" options={tones} value={tone} onChange={setTone} />
+						<Choice label="Variant" options={['dot', 'badge'] as const} value={variant} onChange={setVariant} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Detail overdue" value={isOverdue} onChange={setOverdue} />
+					</ControlGroup>
 				</>
 			}
 		>
@@ -86,9 +92,11 @@ export function PaginationPlayground() {
 			onRandom={shuffle}
 			controls={
 				<>
-					<NumberControl label="Pages" value={count} onChange={(next) => (setCount(next), setPage(Math.min(page, next)))} minValue={1} maxValue={999} />
-					<NumberControl label="Page" value={page} onChange={setPage} minValue={1} maxValue={count} />
-					<NumberControl label="Either side" value={siblings} onChange={setSiblings} minValue={0} maxValue={3} />
+					<ControlGroup label="Behaviour">
+						<NumberControl label="Pages" value={count} onChange={(next) => (setCount(next), setPage(Math.min(page, next)))} minValue={1} maxValue={999} />
+						<NumberControl label="Page" value={page} onChange={setPage} minValue={1} maxValue={count} />
+						<NumberControl label="Either side" value={siblings} onChange={setSiblings} minValue={0} maxValue={3} />
+					</ControlGroup>
 				</>
 			}
 		>

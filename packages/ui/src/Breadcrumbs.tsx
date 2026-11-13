@@ -28,7 +28,7 @@ const crumbLink = tv({
 			true: 'text-ink',
 		},
 		isDisabled: {
-			true: 'opacity-40',
+			true: 'text-muted',
 		},
 	},
 });
@@ -159,7 +159,7 @@ export function Breadcrumbs({ children, maxVisible, className, 'aria-label': lab
 					})}
 				</div>
 				<span ref={ellipsisRef} className="flex w-max items-center gap-1.5">
-					<span className={button({ variant: 'ghost', shape: 'square', size: 'small', className: ellipsisButton })}>
+					<span className={button({ variant: 'ghost', size: 'small', className: ellipsisButton })}>
 						<Ellipsis />
 					</span>
 					<Separator />
@@ -177,7 +177,7 @@ function Folded({ crumbs, isDisabled, onAction }: { crumbs: Crumb[]; isDisabled?
 	return (
 		<AriaBreadcrumb className={breadcrumb({ isCurrent: false })}>
 			<MenuTrigger>
-				<Button variant="ghost" shape="square" size="small" aria-label="Show hidden pages" isDisabled={isDisabled} className={ellipsisButton}>
+				<Button variant="ghost" size="small" aria-label="Show hidden pages" isDisabled={isDisabled} className={ellipsisButton}>
 					<Ellipsis />
 				</Button>
 				<Menu placement="bottom start" onAction={onAction}>

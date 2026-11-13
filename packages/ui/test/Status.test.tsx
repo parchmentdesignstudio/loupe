@@ -55,4 +55,16 @@ describe('Pagination', () => {
 		expect(onChange).toHaveBeenLastCalledWith(8);
 		await expectAccessible(container);
 	});
+
+	it('folds the far pages into a menu to jump to', async () => {
+		const onChange = vi.fn();
+		render(<Pagination page={10} count={20} onChange={onChange} />);
+		const nav = screen.getByRole('navigation', { name: 'Pages' });
+		await userEvent.click(within(nav).getByRole('button', { name: 'Pages 2 to 8' }));
+		const menu = await screen.findByRole('menu');
+		expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['2', '3', '4', '5', '6', '7', '8']);
+		await userEvent.click(within(menu).getByRole('menuitem', { name: '5' }));
+		expect(onChange).toHaveBeenLastCalledWith(5);
+		expect(within(nav).getByRole('button', { name: 'Pages 12 to 19' })).toBeTruthy();
+	});
 });

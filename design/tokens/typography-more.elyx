@@ -1,0 +1,10 @@
+import "./typography.elyx" as base
+
+// The type in the prefers-contrast=more context.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+@context(prefers-contrast="more")
+file {}
+
+export more-typography = tokens : base.typography {
+
+}

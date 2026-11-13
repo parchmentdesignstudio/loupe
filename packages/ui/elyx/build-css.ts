@@ -1,6 +1,8 @@
 // Compiles styles.css to compiled/styles.css, as code layers can't run Tailwind: pnpm --filter @parchment/ui elyx:css
-import tailwindcss from '@tailwindcss/vite';
-import { type Plugin, defineConfig } from 'vite';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { Polyfills, compile, optimize } from '@tailwindcss/node';
+import { Scanner } from '@tailwindcss/oxide';
 
 // Code layers don't read rules inside @layer, which is where Tailwind puts the tokens and the utilities.
 // This takes each layer's rules out of it, in the order Tailwind wrote them, and drops the order statement
@@ -64,25 +66,14 @@ function resolveLightDark(css: string) {
 	return out + css.slice(i);
 }
 
-const flatten = (): Plugin => ({
-	name: 'flatten-layers',
-	generateBundle(_, bundle) {
-		for (const file of Object.values(bundle)) {
-			if (file.type === 'asset' && file.fileName.endsWith('.css')) file.source = resolveLightDark(flattenLayers(String(file.source)));
-		}
-	},
-});
+const base = import.meta.dirname;
+const from = join(base, 'styles.css');
+// The Vite plugin can't turn polyfills off. Every browser supported has had color-mix() for years, so its fallbacks
+// only split each rule round an @supports. The @property fallback stays, as code layers may not read @property
+const compiler = await compile(await readFile(from, 'utf8'), { base, from, onDependency: () => {}, polyfills: Polyfills.AtProperty });
+const root = compiler.root === 'none' ? [] : compiler.root === null ? [{ base, pattern: '**/*', negated: false }] : [{ ...compiler.root, negated: false }];
+const scanner = new Scanner({ sources: [...root, ...compiler.sources] });
+const { code } = optimize(compiler.build(scanner.scan()), { minify: false });
 
-export default defineConfig({
-	root: import.meta.dirname,
-	plugins: [tailwindcss(), flatten()],
-	build: {
-		outDir: 'compiled',
-		emptyOutDir: true,
-		cssMinify: false,
-		rollupOptions: {
-			input: 'styles.css',
-			output: { assetFileNames: 'styles.css' },
-		},
-	},
-});
+await mkdir(join(base, 'compiled'), { recursive: true });
+await writeFile(join(base, 'compiled/styles.css'), resolveLightDark(flattenLayers(code)));

@@ -91,7 +91,7 @@ describe('Menu', () => {
 
 const sendTooltip = (showArrow?: boolean) => (
 	<TooltipTrigger>
-		<Button shape="circle" aria-label="Send">
+		<Button shape="full" aria-label="Send">
 			<svg aria-hidden="true" />
 		</Button>
 		<Tooltip showArrow={showArrow}>Send message</Tooltip>
@@ -103,7 +103,7 @@ describe('Tooltip', () => {
 		const user = userEvent.setup();
 		render(
 			<TooltipTrigger>
-				<Button shape="circle" aria-label="Send">
+				<Button shape="full" aria-label="Send">
 					<svg aria-hidden="true" />
 				</Button>
 				<Tooltip>Send message</Tooltip>

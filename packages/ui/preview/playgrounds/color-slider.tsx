@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type ColorChannel, type ColorSpace, parseColor } from 'react-aria-components';
 import { ColorSlider, ColorSwatch } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 import { ColourControl, channels, randomColour, spaces } from './colour.js';
 
 const lengths = {
@@ -40,16 +40,28 @@ export function ColorSliderPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={
+				<>
+					<Choice label="Length" options={['short', 'medium', 'long'] as const} value={length} onChange={setLength} />
+					<SwitchControl label="Swatch alongside" value={hasSwatch} onChange={setSwatch} />
+				</>
+			}
 			controls={
 				<>
-					<ColourControl value={color} onChange={(next) => setColor(next.toFormat(space))} />
-					<Choice label="Colour space" options={spaces} value={space} onChange={setColourSpace} />
-					<Choice label="Channel" options={channelsWithAlpha(space)} value={channel} onChange={setChannel} />
-					<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
-					<Choice label="Length" options={['short', 'medium', 'long'] as const} value={length} onChange={setLength} />
-					<TextControl label="Label" value={label} onChange={setLabel} />
-					<SwitchControl label="Swatch alongside" value={hasSwatch} onChange={setSwatch} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<TextControl label="Label" value={label} onChange={setLabel} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Colour space" options={spaces} value={space} onChange={setColourSpace} />
+						<Choice label="Channel" options={channelsWithAlpha(space)} value={channel} onChange={setChannel} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<ColourControl value={color} onChange={(next) => setColor(next.toFormat(space))} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

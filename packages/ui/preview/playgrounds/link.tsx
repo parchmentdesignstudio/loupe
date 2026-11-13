@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Link } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 
 const settings = ['alone', 'sentence', 'list'] as const;
 const destinations = ['page', 'elsewhere', 'nowhere'] as const;
@@ -37,13 +37,19 @@ export function LinkPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Setting" options={settings} value={setting} onChange={setSetting} />}
 			controls={
 				<>
-					<TextControl label="Text" value={label} onChange={setLabel} />
-					<Choice label="Setting" options={settings} value={setting} onChange={setSetting} />
-					<Choice label="Goes to" options={destinations} value={destination} onChange={setDestination} />
-					<SwitchControl label="Current page" value={isCurrent} onChange={setCurrent} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<TextControl label="Text" value={label} onChange={setLabel} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Goes to" options={destinations} value={destination} onChange={setDestination} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Current page" value={isCurrent} onChange={setCurrent} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

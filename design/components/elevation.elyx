@@ -7,7 +7,7 @@ import "tokens/lengths.elyx" as l
 file {}
 
 export raised = frame {
-  caption: "Chips, fields and containers",
+  caption: "Chips, fields and checkboxes",
   left: 0px,
   top: 0px,
   width: 160px,
@@ -38,15 +38,54 @@ export raised = frame {
         spread: -1px
       }
     },
-    {drop-shadow: {color: base.colors.edge, spread: 0.5px}}
+    {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
+    {drop-shadow: {color: base.colors.toplight, offset: point(0px, -0.5px)}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
 }
 
+export panel = frame {
+  caption: "Panels and cards, an even edge without the top light",
+  left: 208px,
+  top: 0px,
+  width: 160px,
+  height: 96px,
+  fill: base.colors.panel,
+  shadow: [
+    {
+      drop-shadow: {
+        color: base.colors.drop-raised,
+        offset: point(0px, 2px),
+        blur-radius: 4px,
+        spread: -2px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-raised,
+        offset: point(0px, 1px),
+        blur-radius: 3px,
+        spread: -1.5px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-raised,
+        offset: point(0px, 1px),
+        blur-radius: 1px,
+        spread: -1px
+      }
+    },
+    {drop-shadow: {color: base.colors.edge, spread: 0.5px}}
+  ],
+  corner-radius: l.lengths.radius-xl,
+  slot: .true
+}
+
 export button = frame {
   caption: "Buttons, raised with a 1px edge",
-  left: 208px,
+  left: 416px,
   top: 0px,
   width: 160px,
   height: 96px,
@@ -76,7 +115,8 @@ export button = frame {
         spread: -1px
       }
     },
-    {drop-shadow: {color: base.colors.edge, spread: 1px}}
+    {drop-shadow: {color: base.colors.edge, spread: 1px}},
+    {drop-shadow: {color: base.colors.toplight, offset: point(0px, -1px)}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
@@ -84,7 +124,7 @@ export button = frame {
 
 export button-lifted = frame {
   caption: "A button hovered, lifted a little",
-  left: 416px,
+  left: 624px,
   top: 0px,
   width: 160px,
   height: 96px,
@@ -130,7 +170,8 @@ export button-lifted = frame {
         spread: -1px
       }
     },
-    {drop-shadow: {color: base.colors.edge, spread: 1px}}
+    {drop-shadow: {color: base.colors.edge, spread: 1px}},
+    {drop-shadow: {color: base.colors.toplight, offset: point(0px, -1px)}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
@@ -138,7 +179,7 @@ export button-lifted = frame {
 
 export floating = frame {
   caption: "Floating toolbars",
-  left: 624px,
+  left: 832px,
   top: 0px,
   width: 160px,
   height: 96px,
@@ -200,7 +241,7 @@ export floating = frame {
 
 export overlay = frame {
   caption: "Popovers and menus. Dialogs and sheets round to radius-3xl",
-  left: 832px,
+  left: 1040px,
   top: 0px,
   width: 160px,
   height: 96px,
@@ -260,9 +301,71 @@ export overlay = frame {
   slot: .true
 }
 
+export handle = frame {
+  caption: "A switch or slider handle, lifted off its well",
+  left: 1248px,
+  top: 0px,
+  width: 160px,
+  height: 96px,
+  fill: base.colors.knob,
+  shadow: [
+    {
+      drop-shadow: {
+        color: base.colors.drop-handle,
+        offset: point(0px, 12px),
+        blur-radius: 24px,
+        spread: -12px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-handle,
+        offset: point(0px, 6px),
+        blur-radius: 12px,
+        spread: -6px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-handle,
+        offset: point(0px, 3px),
+        blur-radius: 6px,
+        spread: -3px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-handle,
+        offset: point(0px, 2px),
+        blur-radius: 4px,
+        spread: -2px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-handle,
+        offset: point(0px, 1px),
+        blur-radius: 3px,
+        spread: -1.5px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-handle,
+        offset: point(0px, 1px),
+        blur-radius: 1px,
+        spread: -0.5px
+      }
+    },
+    {drop-shadow: {color: base.colors.edge, spread: 0.5px}}
+  ],
+  corner-radius: l.lengths.radius-3xl,
+  slot: .true
+}
+
 export invalid = frame {
   caption: "A field whose value is wrong",
-  left: 1040px,
+  left: 1456px,
   top: 0px,
   width: 160px,
   height: 96px,

@@ -24,7 +24,7 @@ export const datePicker = tv({
 		group: 'pr-1',
 		input: 'flex min-w-0',
 		dash: 'px-1 text-muted',
-		button: 'ms-auto flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[disabled]:opacity-40 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12 data-[focus-visible]:bg-bleed/12',
+		button: 'ms-auto flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[disabled]:text-bleed/24 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12 data-[focus-visible]:bg-bleed/12',
 	},
 });
 

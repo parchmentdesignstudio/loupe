@@ -5,10 +5,14 @@ export declare const toggleButtonGroup: import("tailwind-variants").TVReturnType
         horizontal: string;
         vertical: string;
     };
-    isDisabled: {
+    isMultiple: {
+        false: string;
         true: string;
     };
-}, undefined, "group/toggle inline-flex w-fit rounded-lg bg-bleed/8 p-(--inset) [--inset:--spacing(0.5)]", undefined, undefined, undefined>;
+    isDisabled: {
+        false: string;
+    };
+}, undefined, "group/toggle isolate inline-flex w-fit rounded-lg p-(--inset) [--chosen-edge:color-mix(in_oklab,var(--bleed)_16%,transparent)] [--chosen:light-dark(var(--color-raised),var(--color-surface))] [--inset:--spacing(0.75)]", undefined, undefined, undefined>;
 export declare const toggleButton: import("tailwind-variants").TVReturnType<{
     isSelected: {
         true: string;
@@ -25,7 +29,7 @@ export declare const toggleButton: import("tailwind-variants").TVReturnType<{
     hasIndicator: {
         false: string;
     };
-}, undefined, "relative isolate inline-flex cursor-default items-center justify-center gap-1.5 rounded-[calc(var(--radius-lg)-var(--inset,0px))] px-2.5 py-1 text-control font-medium text-muted [&>svg]:my-[calc((1lh-1rem)/2)] outline-offset-0 transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none", {
+}, undefined, "relative inline-flex cursor-default items-center justify-center gap-1.5 rounded-[calc(var(--radius-lg)-var(--inset,0px))] px-2.5 py-1 text-control font-medium text-muted [&>svg]:my-[calc((1lh-1rem)/2)] outline-offset-0 transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

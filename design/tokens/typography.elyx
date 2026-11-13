@@ -1,11 +1,12 @@
+import "./typography-more.elyx" as more
 import "./typography-coarse.elyx" as coarse
 
 // Parchment’s type: the sizes the text components use, in points, and their leadings, as multiples of the size.
-// fonts.elyx names the families. typography-coarse.elyx holds the sizes in the pointer=coarse context.
+// fonts.elyx names the families. typography-more.elyx holds the sizes in the prefers-contrast=more context. typography-coarse.elyx holds the sizes in the pointer=coarse context.
 // Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
 file {}
 
-@variants(coarse.coarse-typography)
+@variants(more.more-typography, coarse.coarse-typography)
 export typography = tokens {
   text-body: 15,
   text-body-line-height: 1.4,

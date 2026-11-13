@@ -11,8 +11,8 @@ export declare const button: import("tailwind-variants").TVReturnType<{
         ghost: string;
     };
     shape: {
-        circle: string;
-        square: string;
+        rounded: string;
+        full: string;
     };
     size: {
         medium: string;
@@ -47,5 +47,8 @@ export interface ButtonProps extends AriaButtonProps, Pick<VariantProps<typeof b
      * not pressed, and a screen reader hears it’s busy */
     isPending?: boolean;
 }
-/** A button for any action, with an icon at the start or end if it helps. A circle or square holds just an icon, so it needs an aria-label. isPending spins while its action runs */
+/**
+ * A button for any action, with an icon at the start or end if it helps. With just an icon as its child it's square, or
+ * a circle when its shape is full, and needs an aria-label. isPending spins while its action runs
+ */
 export declare function Button({ variant, shape, size, start, end, ...props }: ButtonProps): import("react").JSX.Element;

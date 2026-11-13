@@ -23,7 +23,7 @@ export function App() {
       <Toolbar />
       {/* The canvas is a card on the ground, as the library’s preview has its pages, with the inspector beside it */}
       <div className="flex min-h-0 flex-1 pb-2 pl-2">
-        <main className={cx('flex min-w-0 flex-1 overflow-hidden rounded-xl bg-panel shadow-raised [--bleed:var(--panel-bleed)]', !inspector && 'mr-2')}>
+        <main className={cx('flex min-w-0 flex-1 overflow-hidden rounded-xl bg-panel shadow-panel [--bleed:var(--panel-bleed)]', !inspector && 'mr-2')}>
           <Canvas />
         </main>
         {inspector && (

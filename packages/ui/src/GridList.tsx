@@ -49,7 +49,7 @@ export const gridListItem = tv({
 			true: '',
 		},
 		isDisabled: {
-			true: 'opacity-40',
+			true: 'text-muted',
 		},
 	},
 	compoundVariants: [

@@ -189,7 +189,7 @@ The site needs React 19, and for Astro, `@astrojs/react`. Import the tokens afte
 import { Button, Chip, ChipGroup } from '@parchment/ui'
 
 <Button onPress={schedule}>Schedule call</Button>
-<Button variant="plain" shape="circle" aria-label="Email Steve"><Icon name="envelope" /></Button>
+<Button variant="ghost" shape="full" aria-label="Email Steve"><Icon name="envelope" /></Button>
 <ChipGroup aria-label="Or start with">
   <Chip onPress={start}>A new website</Chip>
 </ChipGroup>

@@ -15,7 +15,7 @@ const trigger = tv({
             small: 'justify-start gap-1.5 py-1.5 text-body',
         },
         isDisabled: {
-            true: 'opacity-40',
+            true: 'text-muted',
         },
     },
 });

@@ -108,7 +108,7 @@ describe('Keyboard', () => {
 		const user = userEvent.setup();
 		render(
 			<TooltipTrigger>
-				<Button shape="circle" aria-label="Undo">
+				<Button shape="full" aria-label="Undo">
 					<svg aria-hidden="true" />
 				</Button>
 				<Tooltip>

@@ -70,7 +70,7 @@ export function Inspector({ output, art, setArt, onSave }: InspectorProps) {
               </p>
             )}
           </div>
-          <Select label="Artwork" items={choices} value={settings.source} onChange={(key) => key != null && setOverride({ source: String(key) })}>
+          <Select variant="filled" size="small" label="Artwork" items={choices} value={settings.source} onChange={(key) => key != null && setOverride({ source: String(key) })}>
             {(item) => <ListBoxItem id={item.id}>{item.name}</ListBoxItem>}
           </Select>
         </>

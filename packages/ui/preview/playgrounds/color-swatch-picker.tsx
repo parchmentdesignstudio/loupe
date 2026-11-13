@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type Color, parseColor } from 'react-aria-components';
 import { Button, ColorSwatchPicker, ColorSwatchPickerItem } from '../../src/index.js';
-import { Choice, ControlRow, NumberControl, Playground, SwitchControl, pick } from '../playground.js';
+import { Choice, ControlGroup, ControlRow, NumberControl, Playground, SwitchControl, pick } from '../playground.js';
 import { extremes, randomColour } from './colour.js';
 
 const palettes = {
@@ -68,30 +68,36 @@ export function ColorSwatchPickerPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Room" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice
-						label="Palette"
-						options={paletteNames}
-						value={palette}
-						onChange={(next) => {
-							setPalette(next);
-							restart(value);
-						}}
-					/>
-					<NumberControl label="Swatches" value={count} onChange={setCount} minValue={0} maxValue={60} />
-					<Choice label="Swatch size" options={Object.keys(sizes) as Size[]} value={size} onChange={setSize} />
-					<Choice label="Room" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
-					<Choice label="Layout" options={['grid', 'stack'] as const} value={layout} onChange={setLayout} />
-					<SwitchControl label="Every third disabled" value={disableSome} onChange={setDisableSome} />
-					<ControlRow label="Chosen">
-						<div className="flex items-center gap-2">
-							<span className="text-control text-ink tabular-nums">{value ? value.toString('hexa') : 'Nothing'}</span>
-							<Button variant="ghost" size="small" onPress={() => restart(null)} isDisabled={!value}>
-								Clear
-							</Button>
-						</div>
-					</ControlRow>
+					<ControlGroup label="Content">
+						<Choice
+							label="Palette"
+							options={paletteNames}
+							value={palette}
+							onChange={(next) => {
+								setPalette(next);
+								restart(value);
+							}}
+						/>
+						<NumberControl label="Swatches" value={count} onChange={setCount} minValue={0} maxValue={60} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Swatch size" options={Object.keys(sizes) as Size[]} value={size} onChange={setSize} />
+						<Choice label="Layout" options={['grid', 'stack'] as const} value={layout} onChange={setLayout} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Every third disabled" value={disableSome} onChange={setDisableSome} />
+						<ControlRow label="Chosen">
+							<div className="flex items-center gap-2">
+								<span className="text-control text-ink tabular-nums">{value ? value.toString('hexa') : 'Nothing'}</span>
+								<Button variant="ghost" size="small" onPress={() => restart(null)} isDisabled={!value}>
+									Clear
+								</Button>
+							</div>
+						</ControlRow>
+					</ControlGroup>
 				</>
 			}
 		>

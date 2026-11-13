@@ -57,6 +57,8 @@ export function Sources({ art, site, setArt, setSite, onAdd }: SourcesProps) {
                   <span className="flex items-center gap-2">
                     Drawn at
                     <NumberField
+                      variant="filled"
+                      size="small"
                       aria-label={`Size ${source.name} is drawn at`}
                       value={source.size}
                       minValue={1}
@@ -170,9 +172,9 @@ export function Sources({ art, site, setArt, setSite, onAdd }: SourcesProps) {
 
       <section className={section}>
         <h2 className={heading}>Site</h2>
-        <TextField label="Name" value={site.name} onChange={(name) => setSite((current) => ({ ...current, name }))} />
-        <TextField label="Short name" value={site.short} onChange={(short) => setSite((current) => ({ ...current, short }))} />
-        <TextField label="URL" type="url" value={site.url} onChange={(url) => setSite((current) => ({ ...current, url }))} />
+        <TextField variant="filled" size="small" label="Name" value={site.name} onChange={(name) => setSite((current) => ({ ...current, name }))} />
+        <TextField variant="filled" size="small" label="Short name" value={site.short} onChange={(short) => setSite((current) => ({ ...current, short }))} />
+        <TextField variant="filled" size="small" label="URL" type="url" value={site.url} onChange={(url) => setSite((current) => ({ ...current, url }))} />
         <div className="grid grid-cols-2 gap-2.5">
           <ColorPicker label="Background" defaultValue={art.background} onChange={(color) => setArt((current) => ({ ...current, background: hex(color) }))} />
           <ColorPicker label="Theme" defaultValue={site.theme} onChange={(color) => setSite((current) => ({ ...current, theme: hex(color) }))} />
@@ -225,7 +227,7 @@ function Row({ source, actions, children }: { source: Source; actions: ReactNode
 function IconButton({ icon, label, tooltip = label, ...props }: Omit<ButtonProps, 'children'> & { icon: IconName; label: string; tooltip?: string }) {
   return (
     <TooltipTrigger delay={300}>
-      <Button variant="ghost" shape="circle" size="small" aria-label={label} {...props}>
+      <Button variant="ghost" shape="full" size="small" aria-label={label} {...props}>
         <Icon name={icon} />
       </Button>
       <Tooltip>{tooltip}</Tooltip>

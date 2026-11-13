@@ -26,7 +26,8 @@ export const button = tv({
                 '[--fill:oklch(0.834_0.153_85.6)]',
                 '[--rim:oklch(from_var(--fill)_calc(l*0.84)_c_calc(h-16))]',
             ],
-            secondary: 'bg-raised text-ink shadow-button before:bg-raised',
+            // In the dark, surface's fill and a stronger edge, as a chosen toggle has, so it stands clear of the panel and of outline
+            secondary: 'bg-[light-dark(var(--color-raised),var(--color-surface))] text-ink shadow-button [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_16%,transparent))] before:bg-[light-dark(var(--color-raised),var(--color-surface))]',
             accent: [
                 'text-pine-26',
                 '[--fill:oklch(0.858_0.027_196.7)]',
@@ -39,19 +40,20 @@ export const button = tv({
                 '[--fill:var(--color-red-50)]',
                 '[--rim:oklch(from_var(--fill)_calc(l*0.84)_c_h)]',
             ],
-            outline: 'text-ink shadow-[0_0_0_1px_var(--edge)]',
+            // Fainter in the dark, where secondary's lighter fill would otherwise be all that tells them apart
+            outline: 'text-ink shadow-[0_0_0_1px_var(--edge)] [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_8%,transparent))]',
             ghost: 'text-ink',
         },
-        // Both hold just an icon. A square keeps the button's corners, so inside a rounded box it can set --button-radius to
-        // the box's radius less the gap around it, and sit concentric
+        // Rounded corners, or full: a pill round a label and a circle round an icon. Rounded, inside a rounded box a button can
+        // set --button-radius to the box's radius less the gap around it, and sit concentric
         shape: {
-            circle: 'rounded-full before:rounded-full',
-            square: '',
+            rounded: '',
+            full: 'rounded-full before:rounded-full',
         },
         // No set height: the padding adds to the 20px line, so 32px medium and 28px small. An icon sits on the line, as
         // text does, so a button with only an icon is as tall. The label brings 4px of its own each side, so a side
-        // with text pads 12px (10px small) and a side with an icon 8px (6px), tucking it into the corner. A circle,
-        // with no label, pads its icon evenly and stays round
+        // with text pads 12px (10px small) and a side with an icon 8px (6px), tucking it into the corner. A button with
+        // just an icon pads it evenly, so it's square, or a circle when full
         size: {
             medium: 'px-2 py-1.5',
             small: 'px-1.5 py-1',
@@ -72,14 +74,15 @@ export const button = tv({
             variant: ['primary', 'accent', 'danger'],
             class: [
                 // Secondary's shadow, with its ring as the border, in the button's own --rim. The fill covers the whole button,
-                // so the ring is the only edge. The shape and drop are --shadow-button and --drop-raised in tokens.css
-                'shadow-button [--edge:var(--rim)] before:inset-0 before:rounded-[inherit]',
+                // so the ring is the only edge. In the dark a darker rim muddies the fill against the ground, so there's none,
+                // and the inner line below does its job. The shape and drop are --shadow-button and --drop-raised in tokens.css
+                'shadow-button [--edge:light-dark(var(--rim),transparent)] before:inset-0 before:rounded-[inherit]',
                 // The fill: 4% lighter at the top, to its colour at the bottom
                 'before:bg-linear-to-b',
                 'before:from-[color-mix(in_oklab,var(--fill),white_4%)]',
                 'before:to-(color:--fill)',
-                // A half-pixel line inside the edge, a shade lighter
-                'before:inset-ring-[1px] before:inset-ring-[color-mix(in_oklab,var(--fill),white_20%)]',
+                // A line inside the edge, a shade lighter, and twice that in the dark, where it's the only edge
+                'before:inset-ring-[1px] before:inset-ring-[light-dark(color-mix(in_oklab,var(--fill),white_20%),color-mix(in_oklab,var(--fill),white_40%))]',
                 // A bevel along the bottom in the --rim's tint: a crisp line, then a soft band above it. Tailwind adds the inset
                 'before:inset-shadow-[0_1px_1px_-.5px_color-mix(in_oklab,var(--fill),white_20%),0_1px_3px_-1.5px_color-mix(in_oklab,var(--fill),white_20%),0_-1px_3px_-1.5px_color-mix(in_oklab,var(--rim)_20%,transparent)]',
             ],
@@ -102,10 +105,11 @@ export const button = tv({
         { variant: ['primary', 'accent', 'danger'], isPressed: true, class: 'before:from-(color:--fill) before:to-(color:--fill) before:inset-ring-0 before:inset-shadow-none' },
         // Disabled, a raised button goes flat and grey: the ::before goes, taking the fill, inner line and bevel with it,
         // and so does the shadow. Outline keeps its line and ghost stays bare, both with muted text
-        { variant: ['primary', 'secondary', 'accent', 'danger'], isDisabled: true, class: 'bg-bleed/8 shadow-none before:content-none' },
+        { variant: ['primary', 'secondary', 'accent', 'danger'], isDisabled: true, class: 'bg-bleed/12 shadow-none before:content-none' },
     ],
     defaultVariants: {
         variant: 'primary',
+        shape: 'rounded',
         size: 'medium',
     },
 });
@@ -118,7 +122,12 @@ const contents = 'inline-flex items-center gap-1 [&>svg]:my-[calc((1lh-1rem)/2)]
 // spinner takes their place in the middle
 const pending = 'opacity-0';
 const spinner = 'absolute inset-0 m-auto';
-/** A button for any action, with an icon at the start or end if it helps. A circle or square holds just an icon, so it needs an aria-label. isPending spins while its action runs */
+// Text is a label, with room either side. Anything else, such as an icon, is the button's only content, padded evenly
+const isText = (children) => typeof children === 'string' || (Array.isArray(children) && children.some((child) => typeof child === 'string'));
+/**
+ * A button for any action, with an icon at the start or end if it helps. With just an icon as its child it's square, or
+ * a circle when its shape is full, and needs an aria-label. isPending spins while its action runs
+ */
 export function Button({ variant, shape, size, start, end, ...props }) {
-    return (_jsx(AriaButton, { ...props, className: composeRenderProps(props.className, (className, state) => button({ ...state, variant, shape, size, className })), children: composeRenderProps(props.children, (children, { isPending }) => (_jsxs(_Fragment, { children: [_jsxs("span", { className: isPending ? `${contents} ${pending}` : contents, children: [start, shape != null || children == null ? children : _jsx("span", { className: label, children: children }), end] }), isPending && _jsx(ProgressCircle, { "aria-label": "Pending", isIndeterminate: true, className: spinner })] }))) }));
+    return (_jsx(AriaButton, { ...props, className: composeRenderProps(props.className, (className, state) => button({ ...state, variant, shape, size, className })), children: composeRenderProps(props.children, (children, { isPending }) => (_jsxs(_Fragment, { children: [_jsxs("span", { className: isPending ? `${contents} ${pending}` : contents, children: [start, isText(children) ? _jsx("span", { className: label, children: children }) : children, end] }), isPending && _jsx(ProgressCircle, { "aria-label": "Pending", isIndeterminate: true, className: spinner })] }))) }));
 }

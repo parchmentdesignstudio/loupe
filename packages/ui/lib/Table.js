@@ -10,18 +10,29 @@ import { focusRing, tv } from './tv.js';
 // The scroll box is React Aria's ResizableTableContainer, which works out each column's width from the space there is,
 // so cells truncate rather than push the table wider, until every column is at its minimum and the box scrolls sideways.
 // Density is a data attribute here, read by the cells with in-data-[density], so it needs no context
+// --table-fill is the header's fill, opaque so rows scroll under it: the box's own when raised, and what it sits on when
+// flush, which is a panel unless it's set otherwise
 export const table = tv({
     slots: {
-        container: 'relative isolate scroll-pt-8 overflow-auto rounded-lg bg-raised text-ink shadow-raised [--bleed:var(--raised-bleed)] data-[density=compact]:scroll-pt-7',
+        container: 'relative isolate scroll-pt-8 overflow-auto text-ink data-[density=compact]:scroll-pt-7',
         grid: 'border-separate border-spacing-0 outline-0',
     },
+    variants: {
+        // Raised is a box of its own, on a page with other things around it. Flush has no box, for a table that is the page,
+        // filling its content edge to edge with the rows' lines running the full width
+        variant: {
+            raised: { container: 'rounded-lg bg-raised shadow-panel [--bleed:var(--raised-bleed)] [--table-fill:var(--color-raised)]' },
+            flush: { container: '[--table-fill:var(--color-panel)]' },
+        },
+    },
+    defaultVariants: { variant: 'raised' },
 });
 // A cell's ring sits inside it, clear of the cells and rows around it and of the box's clipped edge
 const inset = tv({ extend: focusRing, base: '-outline-offset-2' });
 export const tableColumn = tv({
     extend: inset,
     // Opaque and sticky, so rows scroll under the header when the box has a height
-    base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-raised px-3 py-2 text-start text-label font-medium text-muted transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
+    base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label font-medium text-muted transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
     variants: {
         isHovered: {
             true: 'text-ink',
@@ -46,7 +57,7 @@ export const tableRow = tv({
             true: 'bg-bleed/12',
         },
         isDisabled: {
-            true: 'opacity-40',
+            true: 'text-muted',
         },
         isFocusVisible: {
             false: 'outline-0',
@@ -81,8 +92,8 @@ const cellContent = tv({
  * Rows of records under sortable columns, such as customers, invoices or members, on a raised box. Set isRowHeader on
  * the column that names each row, and give the table an aria-label
  */
-export function Table({ density = 'comfortable', className, ...props }) {
-    const { container, grid } = table();
+export function Table({ density = 'comfortable', variant, className, ...props }) {
+    const { container, grid } = table({ variant });
     return (_jsx(ResizableTableContainer, { "data-density": density, className: container({ className }), children: _jsx(AriaTable, { ...props, className: ({ isFocusVisible }) => inset({ isFocusVisible, className: grid() }) }) }));
 }
 // An unticked box is raised, like the table under it, so in the dark its edge is drawn stronger to stand apart
@@ -95,7 +106,7 @@ function SelectAll() {
 /** The header row, holding a Column for each column. With several rows to choose, it starts with a checkbox that chooses them all */
 export function TableHeader({ columns, children, ...props }) {
     const { selectionBehavior, selectionMode } = useTableOptions();
-    return (_jsxs(AriaTableHeader, { ...props, children: [selectionBehavior === 'toggle' && selectionMode === 'multiple' && (_jsx(AriaColumn, { width: 36, minWidth: 36, className: (state) => tableColumn({ ...state, className: 'pr-0' }), children: _jsx(SelectAll, {}) })), _jsx(Collection, { items: columns, dependencies: props.dependencies, children: children })] }));
+    return (_jsxs(AriaTableHeader, { ...props, children: [selectionBehavior === 'toggle' && selectionMode === 'multiple' && (_jsx(AriaColumn, { width: 36, minWidth: 36, className: (state) => tableColumn({ ...state, className: 'z-2 pr-0' }), children: _jsx(SelectAll, {}) })), _jsx(Collection, { items: columns, dependencies: props.dependencies, children: children })] }));
 }
 /** A column’s header. allowsSorting makes it a button that sorts the table, shown by an arrow beside the name. A width, defaultWidth or minWidth is in pixels or a fraction of what’s left, as in 2fr */
 export function Column({ align = 'start', ...props }) {
@@ -138,7 +149,7 @@ export function Cell({ align, ...props }) {
  * It's 28px, pulled into the row's 20px line, so it doesn't make the row taller; give its column a width of 52
  */
 export function RowActions({ 'aria-label': label, placement = 'bottom end', ...props }) {
-    return (_jsxs(MenuTrigger, { children: [_jsx(Button, { variant: "ghost", size: "small", shape: "square", "aria-label": label, className: "-my-1 text-muted data-[hovered]:text-ink aria-expanded:text-ink", children: _jsx(Ellipsis, {}) }), _jsx(Menu, { placement: placement, ...props })] }));
+    return (_jsxs(MenuTrigger, { children: [_jsx(Button, { variant: "ghost", size: "small", "aria-label": label, className: "-my-1 text-muted data-[hovered]:text-ink aria-expanded:text-ink", children: _jsx(Ellipsis, {}) }), _jsx(Menu, { placement: placement, ...props })] }));
 }
 /** The last thing in a TableBody when there's more to load: onLoadMore runs as it scrolls into view, and isLoading shows a row saying so */
 export function TableLoadMore({ children = 'Loading more…', className, ...props }) {

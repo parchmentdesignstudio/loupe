@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { SearchField } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const values = ['empty', 'short', 'long'] as const;
@@ -44,17 +44,21 @@ export function SearchFieldPlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="flex-col gap-3"
+			preview={<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
-					<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
-					<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
-					<Choice label="Value" options={values} value={content} onChange={fill} />
-					<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					{isInvalid && <Choice label="Error" options={['short', 'long'] as const} value={error} onChange={setError} />}
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
+						<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
+						<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Value" options={values} value={content} onChange={fill} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						{isInvalid && <Choice label="Error" options={['short', 'long'] as const} value={error} onChange={setError} />}
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

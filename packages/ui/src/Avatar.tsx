@@ -73,7 +73,7 @@ export type AvatarShape = 'circle' | 'square';
 export type AvatarStatus = 'online' | 'away' | 'busy';
 
 // Soft, light steps from the palette, a few calm hues rather than the whole wheel
-const tints = ['--color-lime-91', '--color-teal-88', '--color-sky-85', '--color-violet-82', '--color-orange-89', '--color-red-87', '--color-yellow-91'];
+const tints = ['--color-olive-91', '--color-teal-88', '--color-sky-85', '--color-violet-82', '--color-orange-89', '--color-red-87', '--color-yellow-91'];
 
 /** The tint a name always gets, the same on every visit, as a CSS variable from the palette */
 export function avatarTint(name: string) {

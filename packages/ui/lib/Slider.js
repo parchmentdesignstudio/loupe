@@ -19,15 +19,20 @@ const slider = tv({
             vertical: { base: 'items-center', track: 'w-5 flex-1', rail: 'inset-y-0 left-1/2 w-1 -translate-x-1/2' },
         },
         isDisabled: {
-            true: { base: 'opacity-50' },
+            // The well is only on false, as inset-shadow-none comes earlier in the CSS than inset-shadow-well and would lose
+            false: { rail: 'inset-shadow-well' },
+            true: { fill: 'bg-muted' },
         },
     },
 });
 // React Aria sets the thumb's left and a translate of -50% both ways, so top-1/2 is all it takes to centre it on the rail
 const thumb = tv({
     extend: focusRing,
-    base: 'size-5 rounded-full bg-knob shadow-raised',
+    base: 'size-5 rounded-full bg-knob shadow-handle',
     variants: {
+        isDisabled: {
+            true: 'bg-bleed/24 shadow-none',
+        },
         orientation: {
             horizontal: 'top-1/2',
             vertical: 'left-1/2',

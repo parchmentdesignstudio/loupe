@@ -6,7 +6,7 @@ const colorArea = tv({
     base: 'aspect-square w-full shrink-0 rounded-lg inset-ring inset-ring-bleed/12',
     variants: {
         isDisabled: {
-            true: 'opacity-50',
+            true: 'grayscale',
         },
     },
 });

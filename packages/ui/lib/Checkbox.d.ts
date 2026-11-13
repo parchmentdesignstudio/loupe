@@ -7,20 +7,16 @@ export declare const choice: import("tailwind-variants").TVReturnType<{
     };
 }, undefined, "group relative flex cursor-default items-start gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]", undefined, undefined, undefined>;
 export declare const box: import("tailwind-variants").TVReturnType<{
-    isSelected: {
-        false: string;
-        true: string;
-    };
-    isHovered: {
-        true: string;
-    };
     isPressed: {
         true: string;
     };
     isInvalid: {
         true: string;
     };
-}, undefined, "my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-md transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none", {
+    isDisabled: {
+        true: string;
+    };
+}, undefined, "my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-md bg-raised text-ink shadow-raised transition-[scale] duration-150 ease-out motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, Separator, ToggleButton, ToggleButtonGroup, Toolbar } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick, sampleWords, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, sampleWords, solidIcons } from '../playground.js';
 
 const counts = { few: 3, some: 6, many: 14 } as const;
 const contents = ['icons', 'labels', 'both'] as const;
@@ -42,16 +42,22 @@ export function ToolbarPlayground() {
 			onRandom={shuffle}
 			controls={
 				<>
-					<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
-					<Choice label="Surface" options={surfaces} value={surface} onChange={setSurface} />
-					<Choice label="Buttons" options={Object.keys(counts) as (keyof typeof counts)[]} value={count} onChange={setCount} />
-					<Choice label="Content" options={contents} value={content} onChange={setContent} />
-					<Choice label={isIcons ? 'Label, read out' : 'Label'} options={['short', 'long'] as const} value={text} onChange={setText} />
-					<Choice label="Variant" options={['ghost', 'secondary', 'outline'] as const} value={variant} onChange={setVariant} />
-					<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
-					<SwitchControl label="Tool group" value={hasTools} onChange={setTools} />
-					<SwitchControl label="Separators" value={hasSeparators} onChange={setSeparators} />
-					<SwitchControl label="A disabled button" value={hasDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Buttons" options={Object.keys(counts) as (keyof typeof counts)[]} value={count} onChange={setCount} />
+						<Choice label="Content" options={contents} value={content} onChange={setContent} />
+						<Choice label={isIcons ? 'Label, read out' : 'Label'} options={['short', 'long'] as const} value={text} onChange={setText} />
+						<SwitchControl label="Tool group" value={hasTools} onChange={setTools} />
+						<SwitchControl label="Separators" value={hasSeparators} onChange={setSeparators} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
+						<Choice label="Surface" options={surfaces} value={surface} onChange={setSurface} />
+						<Choice label="Variant" options={['ghost', 'secondary', 'outline'] as const} value={variant} onChange={setVariant} />
+						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="A disabled button" value={hasDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>
@@ -82,7 +88,7 @@ export function ToolbarPlayground() {
 						<Button
 							variant={variant}
 							size={size}
-							shape={isIcons ? 'circle' : undefined}
+							shape={isIcons ? 'full' : undefined}
 							aria-label={isIcons ? label(index) : undefined}
 							start={content === 'both' ? <Icon name={name} /> : undefined}
 							isDisabled={hasDisabled && index === 1}

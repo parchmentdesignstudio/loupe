@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { parseColor } from 'react-aria-components';
 import { ColorArea, ColorField, ColorPicker, ColorSlider, ColorSwatchPicker, ColorSwatchPickerItem } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 import { ColourControl, extremes, randomColour } from './colour.js';
 
 const insides = ['standard', 'opacity', 'channels', 'swatches'] as const;
@@ -67,14 +67,22 @@ export function ColorPickerPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
-			controls={
+			preview={
 				<>
-					<ColourControl value={color} onChange={setColor} />
-					<TextControl label={hasLabel ? 'Label' : 'Label, read out'} value={label} onChange={setLabel} />
-					<SwitchControl label="Label shown" value={hasLabel} onChange={setHasLabel} />
-					<Choice label="Inside" options={insides} value={contents} onChange={setContents} />
 					<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
 					<SwitchControl label="Beside another" value={isPaired} onChange={setPaired} />
+				</>
+			}
+			controls={
+				<>
+					<ControlGroup label="Content">
+						<TextControl label={hasLabel ? 'Label' : 'Label, read out'} value={label} onChange={setLabel} />
+						<SwitchControl label="Label shown" value={hasLabel} onChange={setHasLabel} />
+						<Choice label="Inside" options={insides} value={contents} onChange={setContents} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<ColourControl value={color} onChange={setColor} />
+					</ControlGroup>
 				</>
 			}
 		>

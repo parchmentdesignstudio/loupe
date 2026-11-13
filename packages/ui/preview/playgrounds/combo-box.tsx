@@ -3,7 +3,7 @@ import type { Key } from 'react-aria-components';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { ComboBox, Header, ListBoxItem, ListBoxSection } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
 
 const pool = ['Field Gothic', 'Fraunces', 'IBM Plex Sans', 'Instrument Serif', 'Literata', 'Newsreader', 'Nimbus Sans', 'Public Sans', 'Source Serif 4', 'Work Sans'];
 const headings = ['Sans', 'Serif', 'Display', 'Mono', 'Script', 'Everything else'];
@@ -76,26 +76,32 @@ export function ComboBoxPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Width" options={Object.keys(widths) as (keyof typeof widths)[]} value={width} onChange={setWidth} />}
 			box="items-start"
 			controls={
 				<>
-					<TextControl label="Label" value={label} onChange={setLabel} />
-					<TextControl label="Placeholder" value={placeholder} onChange={setPlaceholder} />
-					<TextControl label="Description" value={description} onChange={setDescription} />
-					<TextControl label="Error, when invalid" value={errorMessage} onChange={setErrorMessage} />
-					<Choice label="Width" options={Object.keys(widths) as (keyof typeof widths)[]} value={width} onChange={setWidth} />
-					<Choice label="Options" options={counts} value={count} onChange={setCount} />
-					<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
-					<Choice label="Opens on" options={triggers} value={menuTrigger} onChange={setMenuTrigger} />
-					<SwitchControl label="Under headings" value={hasSections} onChange={setSections} />
-					<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
-					<SwitchControl label="Nothing chosen" value={selectedKey == null} onChange={(none) => setSelectedKey(none ? null : 'option-0')} />
-					<SwitchControl label="Any text allowed" value={allowsCustomValue} onChange={setCustomValue} />
-					<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+					<ControlGroup label="Content">
+						<TextControl label="Label" value={label} onChange={setLabel} />
+						<TextControl label="Placeholder" value={placeholder} onChange={setPlaceholder} />
+						<TextControl label="Description" value={description} onChange={setDescription} />
+						<TextControl label="Error, when invalid" value={errorMessage} onChange={setErrorMessage} />
+						<Choice label="Options" options={counts} value={count} onChange={setCount} />
+						<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
+						<SwitchControl label="Under headings" value={hasSections} onChange={setSections} />
+						<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Opens on" options={triggers} value={menuTrigger} onChange={setMenuTrigger} />
+						<SwitchControl label="Any text allowed" value={allowsCustomValue} onChange={setCustomValue} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Nothing chosen" value={selectedKey == null} onChange={(none) => setSelectedKey(none ? null : 'option-0')} />
+						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+					</ControlGroup>
 				</>
 			}
 		>

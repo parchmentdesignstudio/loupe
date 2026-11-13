@@ -44,7 +44,7 @@ function Reference() {
       {platforms.map((group) => (
         <section key={group.platform} className="flex flex-col gap-3">
           <h2 className="text-base font-medium">{group.platform}</h2>
-          <div className="overflow-x-auto rounded-lg bg-panel shadow-raised [--bleed:var(--panel-bleed)]">
+          <div className="overflow-x-auto rounded-lg bg-panel shadow-panel [--bleed:var(--panel-bleed)]">
             <table className="w-full border-collapse">
               <thead className="bg-bleed/4 text-muted">
                 <tr>

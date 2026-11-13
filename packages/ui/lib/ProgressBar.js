@@ -9,7 +9,7 @@ export const progressBar = tv({
         base: 'grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5',
         label: 'min-w-0 truncate',
         value: 'text-control whitespace-nowrap text-muted tabular-nums',
-        track: 'relative h-1 overflow-hidden rounded-full bg-bleed/12',
+        track: 'relative h-1 overflow-hidden rounded-full bg-bleed/12 inset-shadow-well',
         fill: 'h-full rounded-full bg-ink transition-[width] duration-150 ease-out motion-reduce:transition-none',
     },
     variants: {

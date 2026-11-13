@@ -18,15 +18,17 @@ const strengths = [4, 8, 12, 16, 24, 32]
 
 // The steps of --spacing that Elyx gets, as tokens.css lists them. Tailwind takes any multiple, but Elyx needs a token
 // for each
-const steps = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 10, 12, 16]
+const steps = [0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 10, 12, 16]
 
 // The fill and corners each shadow goes with in the components, and what it’s for
 const levels = {
-  raised: { fill: 'raised', corners: 'radius-lg', caption: 'Chips, fields and containers' },
+  raised: { fill: 'raised', corners: 'radius-lg', caption: 'Chips, fields and checkboxes' },
+  panel: { fill: 'panel', corners: 'radius-xl', caption: 'Panels and cards, an even edge without the top light' },
   button: { fill: 'raised', corners: 'radius-lg', caption: 'Buttons, raised with a 1px edge' },
   'button-lifted': { fill: 'raised', corners: 'radius-lg', caption: 'A button hovered, lifted a little' },
   floating: { fill: 'overlay', corners: 'radius-xl', caption: 'Floating toolbars' },
   overlay: { fill: 'overlay', corners: 'radius-lg', caption: 'Popovers and menus. Dialogs and sheets round to radius-3xl' },
+  handle: { fill: 'knob', corners: 'radius-3xl', caption: 'A switch or slider handle, lifted off its well' },
   invalid: { fill: 'raised', corners: 'radius-lg', caption: 'A field whose value is wrong' },
 }
 
@@ -124,6 +126,8 @@ function hex(l, c, h) {
 // a hex, the name of a colour above it, or a mix of one
 const known = new Set()
 function colour(value) {
+  // Elyx has no transparent, so it's black at none
+  if (value.trim() === 'transparent') return { light: { name: 'black', amount: '0' }, dark: { name: 'black', amount: '0' } }
   const [, fn, inner] = /^([\w-]+)\((.*)\)$/s.exec(value.trim()) ?? []
   if (fn === 'oklch') {
     const [l, c, h] = inner.split(/\s+/).map((part) => (part.endsWith('%') ? parseFloat(part) / 100 : parseFloat(part)))

@@ -8,11 +8,9 @@ file {}
 export colors = tokens {
   // The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
   // two numbers, the stronger the contrast. Components use the roles below rather than these, though each is a
-  // utility too, as in bg-teal-48. First Parchment's own, cream-99, blush-95, pine-26, rust-60 and lime-91, with
-  // the colours the roles work out from them
+  // utility too, as in bg-teal-48. First the colours the roles work out from, then Parchment's own
   white: .white,
   black: .black,
-  cream-99: #fffdf8,
   cream-95: #f3eee6,
   cream-80: #c3bdb4,
   umber-30: #3d2a08,
@@ -21,18 +19,28 @@ export colors = tokens {
   linen-99: #fbfaf9,
   linen-97: #f6f3f1,
   linen-30: #362c21,
-  blush-95: #f5ebe6,
-  rust-60: #c76024,
-  lime-91: #ceeea7,
+  linen-18: #191006,
   pine-95: #ccfbe9,
   pine-50: #566861,
   pine-35: #254137,
   pine-32: #1f3930,
   pine-29: #183129,
   pine-26: #0c2920,
+  pine-24: #0b251d,
   pine-20: #081a14,
   red-81: #ffa699,
   red-50: #b3261e,
+  // Parchment's own, as the parchment-brand board in Sketch has them, with linen-99, linen-97 and pine-26 above
+  marigold-83: #f5c03c,
+  apricot-73: #f68543,
+  claret-79: #eea3a3,
+  claret-36: #64262b,
+  olive-47: #516426,
+  slate-86: #bdd6d6,
+  // Worked out from them for the roles: apricot at the lightness white text needs on it, and olive light enough
+  // to sit behind ink
+  apricot-60: #c6611f,
+  olive-91: #d3eda3,
   // Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet
   red-87: #f9c7c8,
   red-67: #f75860,
@@ -92,24 +100,25 @@ export colors = tokens {
   danger: red-50,
   // Marks on ink or the accent, such as a button's text or a checkbox's tick
   paper: white,
-  // What a page leads with, in rust rather than a button’s marigold. It stays rust in the dark, where paper turns dark
-  accent: rust-60,
-  // The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on
-  highlight: lime-91,
+  // What a page leads with, in apricot rather than a button’s marigold. It stays apricot in the dark, where paper turns dark
+  accent: apricot-60,
+  // The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on
+  highlight: olive-91,
   // The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
-  // overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel is the light mode's ink
+  // overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel only just, so the controls on it stand out
   ground: linen-97,
   // An area on the page, such as a tool's side panel
   panel: linen-99,
   // A control's fill, such as a button's, a field's or a checkbox's
   raised: white,
-  // What raised turns on hover
-  surface: blush-95,
+  // What raised turns on hover. In the light, a see-through dark linen, so it suits the ground or a panel under it
+  // rather than one of them. In the dark, a step lighter than raised, as each layer there is lighter than the last
+  surface: opacity(linen-18, 4%),
   // Popovers, menus, dialogs, sheets and floating toolbars
   overlay: white,
   // Ink as a surface, such as a toast or a tooltip, with paper text
   inverse: ink,
-  // A switch's handle and a slider's thumb, which stay lighter than their track
+  // A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track
   knob: white,
   // Behind a sheet
   scrim: opacity(pine-26, 32%),
@@ -125,9 +134,15 @@ export colors = tokens {
   // Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
   // drops take the ground's hue in the light, as the tints do
   edge: opacity(bleed, 12%),
+  // In the dark, what's raised is lit from straight above, so its edge is brighter along the top. The light sits on
+  // the edge, as thick as it and drawn over it, so the two read as one line that fades round the corners rather than
+  // two side by side. Its shadow carries it, so it goes with the shadow when something is disabled or pressed flat
+  toplight: opacity(black, 0%),
   drop-raised: opacity(bleed, 12%),
   drop-floating: opacity(bleed, 12%),
-  drop-overlay: opacity(bleed, 12%)
+  drop-overlay: opacity(bleed, 12%),
+  drop-handle: opacity(bleed, 12%),
+  drop-well: opacity(bleed, 16%)
 }
 
 // A tint is a layer’s bleed at 4, 8, 12, 16, 24 or 32%, named for the layer it sits on, such as overlay-8 for a

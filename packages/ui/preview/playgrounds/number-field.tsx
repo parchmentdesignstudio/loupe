@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { NumberField } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { type FieldSize, type FieldVariant, NumberField } from '../../src/index.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const values = ['empty', 'typical', 'huge'] as const;
@@ -36,6 +36,8 @@ export function NumberFieldPlayground() {
 	const [isRequired, setRequired] = useState(false);
 	const [isReadOnly, setReadOnly] = useState(false);
 	const [isDisabled, setDisabled] = useState(false);
+	const [variant, setVariant] = useState<FieldVariant>('raised');
+	const [size, setSize] = useState<FieldSize>('medium');
 	const preset = formats[format];
 	// NaN is how a controlled number field shows empty
 	const fill = (next: Value, from: Format = format) => {
@@ -61,21 +63,31 @@ export function NumberFieldPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Format" options={Object.keys(formats) as Format[]} value={format} onChange={changeFormat} />
-					<Choice label="Value" options={values} value={content} onChange={(next) => fill(next)} />
-					<SwitchControl label="Limits" value={hasLimits} onChange={setLimits} />
-					<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
-					<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
-					<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
-					<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
-					<SwitchControl label="Wheel disabled" value={isWheelDisabled} onChange={setWheelDisabled} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					{isInvalid && <Choice label="Error" options={['short', 'long'] as const} value={error} onChange={setError} />}
-					<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
+						<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
+						<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Format" options={Object.keys(formats) as Format[]} value={format} onChange={changeFormat} />
+						<SwitchControl label="Limits" value={hasLimits} onChange={setLimits} />
+						<SwitchControl label="Wheel disabled" value={isWheelDisabled} onChange={setWheelDisabled} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Variant" options={['raised', 'filled'] as const} value={variant} onChange={setVariant} />
+						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Value" options={values} value={content} onChange={(next) => fill(next)} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						{isInvalid && <Choice label="Error" options={['short', 'long'] as const} value={error} onChange={setError} />}
+						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>
@@ -96,6 +108,8 @@ export function NumberFieldPlayground() {
 				isRequired={isRequired}
 				isReadOnly={isReadOnly}
 				isDisabled={isDisabled}
+				variant={variant}
+				size={size}
 				className={widths[width]}
 			/>
 		</Playground>

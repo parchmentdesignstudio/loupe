@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Radio, RadioGroup } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 
 const pool = ['Under £5k', '£5–15k', 'Over £15k', 'Not sure yet', 'Monthly retainer', 'Day rate', 'Fixed price', 'Equity', 'Pro bono', 'Let’s talk'];
 const counts = ['none', '2', '5', '30'] as const;
@@ -45,18 +45,24 @@ export function RadioGroupPlayground() {
 			box="items-start"
 			controls={
 				<>
-					<TextControl label="Label" value={label} onChange={setLabel} />
-					<TextControl label="Description" value={description} onChange={setDescription} />
-					<TextControl label="Error, when invalid" value={errorMessage} onChange={setErrorMessage} />
-					<Choice label="Orientation" options={['vertical', 'horizontal'] as const} value={orientation} onChange={setOrientation} />
-					<Choice label="Options" options={counts} value={count} onChange={setCount} />
-					<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
-					<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
-					<SwitchControl label="Nothing chosen" value={value == null} onChange={(none) => setValue(none ? null : 'option-0')} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+					<ControlGroup label="Content">
+						<TextControl label="Label" value={label} onChange={setLabel} />
+						<TextControl label="Description" value={description} onChange={setDescription} />
+						<TextControl label="Error, when invalid" value={errorMessage} onChange={setErrorMessage} />
+						<Choice label="Options" options={counts} value={count} onChange={setCount} />
+						<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Orientation" options={['vertical', 'horizontal'] as const} value={orientation} onChange={setOrientation} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
+						<SwitchControl label="Nothing chosen" value={value == null} onChange={(none) => setValue(none ? null : 'option-0')} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+					</ControlGroup>
 				</>
 			}
 		>

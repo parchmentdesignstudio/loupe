@@ -31,7 +31,10 @@ export { Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger
 export { Navigation } from './Navigation.js';
 export { NavigationTree, NavigationTreeHeader, NavigationTreeItem, NavigationTreeItemContent, NavigationTreeSection, navigationTreeLink } from './NavigationTree.js';
 export { NumberField } from './NumberField.js';
+export { setOnOffLabels, useOnOffLabels } from './OnOffLabels.js';
+export { Pagination, pageRange } from './Pagination.js';
 export { Popover, popover } from './Popover.js';
+export { PreviewTrigger } from './PreviewTrigger.js';
 export { Meter, ProgressBar, ProgressCircle, progressBar, progressCircle } from './ProgressBar.js';
 export { Radio, RadioGroup } from './RadioGroup.js';
 export { SearchField } from './SearchField.js';
@@ -39,6 +42,7 @@ export { Select, trigger } from './Select.js';
 export { Separator } from './Separator.js';
 export { Sheet, SheetTrigger } from './Sheet.js';
 export { Slider } from './Slider.js';
+export { Status, status } from './Status.js';
 export { Switch } from './Switch.js';
 export { Cell, Column, Row, RowActions, Table, TableBody, TableHeader, TableLoadMore, table, tableCell, tableColumn, tableRow } from './Table.js';
 export { Tab, TabList, TabPanel, Tabs } from './Tabs.js';

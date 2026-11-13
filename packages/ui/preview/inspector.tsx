@@ -92,7 +92,7 @@ function Source({ place, label, children }: { place: Place; label?: string; chil
 	);
 }
 
-function Aria({ name }: { name: string }) {
+export function Aria({ name }: { name: string }) {
 	const label = plain(name);
 	if (!/^[A-Z]/.test(label)) return <code>{label}</code>;
 	return (
@@ -145,40 +145,6 @@ function Header({ name, place, children }: { name: string; place?: Place; childr
 			</div>
 			{children && <p className="text-label text-muted">{children}</p>}
 		</header>
-	);
-}
-
-function Props({ detail }: { detail: Detail }) {
-	const props = detail.props ?? [];
-	return (
-		<ul className="flex flex-col gap-2.5">
-			{props.map((prop) => (
-				<li key={prop.name} className="flex flex-col gap-0.5">
-					<code>
-						{prop.name}
-						{prop.required && <span className="font-sans text-muted"> required</span>}
-						{prop.default && <span className="text-muted"> = {prop.default}</span>}
-					</code>
-					{(prop.options || prop.type) && <code className="text-muted">{prop.options ? prop.options.map((option) => `'${option}'`).join(' | ') : prop.type}</code>}
-					{prop.from && <span className="text-muted">From React Aria’s {prop.from}</span>}
-					{prop.doc && <span className="text-muted">{prop.doc}</span>}
-				</li>
-			))}
-			{detail.rest?.map((rest) => (
-				<li key={rest.aria ?? rest.react} className="text-muted">
-					{props.length > 0 && 'And '}
-					{rest.aria ? (
-						<>
-							React Aria’s <Aria name={rest.aria} /> props
-						</>
-					) : rest.react === 'HTMLAttributes' ? (
-						'HTML attributes'
-					) : (
-						`React’s ${rest.react}`
-					)}
-				</li>
-			))}
-		</ul>
 	);
 }
 
@@ -261,11 +227,6 @@ function Export({ detail }: { detail: Detail }) {
 				)}
 			</Header>
 			<dl className="flex flex-col gap-4 text-label">
-				{detail.kind === 'component' && (detail.props?.length || detail.rest?.length) ? (
-					<Row term="Props">
-						<Props detail={detail} />
-					</Row>
-				) : null}
 				{detail.kind === 'class' && detail.rest?.[0]?.aria && (
 					<Row term="Extends">
 						React Aria’s <Aria name={detail.rest[0].aria} />
@@ -325,7 +286,7 @@ function Export({ detail }: { detail: Detail }) {
 	);
 }
 
-// What a role is set to, named as the colour page names it: var(--color-pine-26) as pine-26, and a colour mixed with transparent as lime-91 at 24%
+// What a role is set to, named as the colour page names it: var(--color-pine-26) as pine-26, and a colour mixed with transparent as olive-91 at 24%
 function Shade({ value, when }: { value: string; when?: string }) {
 	const mixed = /^color-mix\(in \w+, var\(--(?:color-)?([\w-]+)\) ([\d.]+%), transparent\)$/.exec(value);
 	return (

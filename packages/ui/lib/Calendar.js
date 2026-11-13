@@ -9,7 +9,7 @@ import { composeClassName, tv } from './tv.js';
 // previous button on the first and the next on the last, so two months read as one spread
 export const calendar = tv({
     slots: {
-        root: 'flex w-fit max-w-full flex-col gap-3 text-control text-ink data-[disabled]:opacity-50',
+        root: 'flex w-fit max-w-full flex-col gap-3 text-control text-ink data-[disabled]:text-muted',
         months: 'flex flex-wrap items-start gap-x-6 gap-y-4',
         month: 'flex flex-col gap-2',
         header: 'flex items-center gap-1',
@@ -54,7 +54,7 @@ export const calendarDay = tv({
             true: { mark: 'text-muted line-through' },
         },
         isDisabled: {
-            true: { mark: 'text-muted opacity-50' },
+            true: { mark: 'text-muted' },
         },
         isInvalid: {
             true: '',
@@ -84,7 +84,7 @@ function MonthHeading({ state, offset }) {
     return (_jsx("span", { "aria-hidden": "true", className: heading(), children: formatter.format(start.toDate(state.timeZone)) }));
 }
 function Month({ state, offset, count, isRange }) {
-    return (_jsxs("div", { className: month(), children: [_jsxs("div", { className: header(), children: [offset === 0 ? (_jsx(Button, { slot: "previous", variant: "ghost", size: "small", shape: "square", className: "text-muted", children: _jsx(ChevronLeft, { className: "size-4 shrink-0 fill-none stroke-current stroke-[1.5] rtl:rotate-180" }) })) : (_jsx("span", { className: spacer() })), _jsx(MonthHeading, { state: state, offset: offset }), offset === count - 1 ? (_jsx(Button, { slot: "next", variant: "ghost", size: "small", shape: "square", className: "text-muted", children: _jsx(ChevronRight, { className: "size-4 shrink-0 fill-none stroke-current stroke-[1.5] rtl:rotate-180" }) })) : (_jsx("span", { className: spacer() }))] }), _jsxs(CalendarGrid, { offset: { months: offset }, className: grid(), children: [_jsx(CalendarGridHeader, { children: (day) => _jsx(CalendarHeaderCell, { className: weekday(), children: day }) }), _jsx(CalendarGridBody, { children: (date) => _jsx(Day, { date: date, isRange: isRange }) })] })] }));
+    return (_jsxs("div", { className: month(), children: [_jsxs("div", { className: header(), children: [offset === 0 ? (_jsx(Button, { slot: "previous", variant: "ghost", size: "small", className: "text-muted", children: _jsx(ChevronLeft, { className: "size-4 shrink-0 fill-none stroke-current stroke-[1.5] rtl:rotate-180" }) })) : (_jsx("span", { className: spacer() })), _jsx(MonthHeading, { state: state, offset: offset }), offset === count - 1 ? (_jsx(Button, { slot: "next", variant: "ghost", size: "small", className: "text-muted", children: _jsx(ChevronRight, { className: "size-4 shrink-0 fill-none stroke-current stroke-[1.5] rtl:rotate-180" }) })) : (_jsx("span", { className: spacer() }))] }), _jsxs(CalendarGrid, { offset: { months: offset }, className: grid(), children: [_jsx(CalendarGridHeader, { children: (day) => _jsx(CalendarHeaderCell, { className: weekday(), children: day }) }), _jsx(CalendarGridBody, { children: (date) => _jsx(Day, { date: date, isRange: isRange }) })] })] }));
 }
 // Unavailable and disabled days don't answer to the pointer
 const dayState = (state, isRange) => {

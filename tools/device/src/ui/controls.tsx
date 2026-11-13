@@ -35,7 +35,7 @@ export function BoundsField({ label, title, value, onChange, min }: { label: str
   }
 
   return (
-    <label title={title} className="flex min-w-0 items-center gap-2 rounded-lg bg-raised px-3 py-1.5 text-control shadow-raised outline-offset-0 outline-ink focus-within:outline-2">
+    <label title={title} className="flex min-w-0 items-center gap-2 rounded-lg bg-bleed/8 px-2.5 py-1 text-control outline-offset-0 outline-ink focus-within:outline-2">
       <span aria-hidden="true" className="shrink-0 text-muted">
         {label}
       </span>

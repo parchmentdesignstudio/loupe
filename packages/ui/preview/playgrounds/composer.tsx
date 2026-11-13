@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Composer } from '../../src/index.js';
-import { Choice, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const widths = { narrow: 'w-56', medium: 'w-80', wide: 'w-full max-w-lg' } as const;
@@ -29,15 +29,19 @@ export function ComposerPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			box="flex-col gap-3"
 			controls={
 				<>
-					<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
-					<Choice label="Draft" options={lengths} value={(Object.keys(drafts) as Length[]).find((key) => drafts[key] === message) ?? 'short'} onChange={(next) => setMessage(drafts[next])} />
-					<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
-					<IconPicker label="Send icon" value={submitIcon} onChange={setSubmitIcon} />
-					<TextControl label="Send button, read out" value={submitLabel} onChange={setSubmitLabel} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
+						<Choice label="Draft" options={lengths} value={(Object.keys(drafts) as Length[]).find((key) => drafts[key] === message) ?? 'short'} onChange={(next) => setMessage(drafts[next])} />
+						<IconPicker label="Send icon" value={submitIcon} onChange={setSubmitIcon} />
+						<TextControl label="Send button, read out" value={submitLabel} onChange={setSubmitLabel} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

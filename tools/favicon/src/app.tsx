@@ -106,7 +106,7 @@ export function App() {
       </aside>
 
       {/* The canvas is a card on the ground, as the library’s preview has its pages, with the columns beside it */}
-      <main className="relative order-1 bg-panel [--bleed:var(--panel-bleed)] md:col-start-2 md:row-start-2 md:mr-2 md:mb-2 md:overflow-auto md:rounded-xl md:shadow-raised wide:mr-0">
+      <main className="relative order-1 bg-panel [--bleed:var(--panel-bleed)] md:col-start-2 md:row-start-2 md:mr-2 md:mb-2 md:overflow-auto md:rounded-xl md:shadow-panel wide:mr-0">
         <DropZone
           variant="quiet"
           aria-label="Drop artwork onto the canvas"

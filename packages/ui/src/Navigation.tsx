@@ -1,4 +1,4 @@
-import { type HTMLAttributes, useCallback, useRef, useState } from 'react';
+import { type HTMLAttributes, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { Button } from './Button.js';
 import { Sheet, SheetTrigger } from './Sheet.js';
 import { tv } from './tv.js';
@@ -30,7 +30,9 @@ export function Navigation({ className, children, hasTrigger = true, isOpen: giv
 	};
 	// The listener below is added once, so it reads the latest setOpen, and with it the page's onOpenChange, from here
 	const latest = useRef(setOpen);
-	latest.current = setOpen;
+	useLayoutEffect(() => {
+		latest.current = setOpen;
+	});
 
 	// Choosing a link in the sheet closes it, to show its page. It listens on the nav rather than each
 	// link, and the links already take the keyboard, so it isn't an onClick

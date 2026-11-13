@@ -21,7 +21,7 @@ const searchField = tv({
 			true: { group: 'outline-danger shadow-invalid' },
 		},
 		isDisabled: {
-			true: { group: 'opacity-50' },
+			true: { group: 'bg-bleed/12 shadow-none', input: 'text-muted' },
 		},
 		isEmpty: {
 			true: { clear: 'invisible' },

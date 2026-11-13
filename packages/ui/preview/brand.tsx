@@ -181,7 +181,7 @@ export function AppIcons() {
 		<ul className="grid w-full grid-cols-4 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))]">
 			{icons.map(([background, page, curl]) => (
 				<li key={`${background}${page}${curl ?? ''}`} className="flex flex-col items-center gap-2">
-					<div style={tile(hex(background))} className="flex aspect-square w-full max-w-22 items-center justify-center rounded-[22.5%] shadow-raised">
+					<div style={tile(hex(background))} className="flex aspect-square w-full max-w-22 items-center justify-center rounded-[22.5%] shadow-panel">
 						<Mark size="55%" page={hex(page)} background={hex(background)} curl={curl && hex(curl)} />
 					</div>
 					<span className="text-center text-label text-muted">
@@ -440,7 +440,7 @@ export function ProjectCards() {
 					<article
 						key={`${card}${image}${title}`}
 						style={isPlain ? undefined : surface(hex(card), ink)}
-						className={['flex flex-col gap-3 rounded-2xl p-2 pb-3', isPlain ? 'bg-raised shadow-raised [--bleed:var(--raised-bleed)]' : ''].join(' ')}
+						className={['flex flex-col gap-3 rounded-2xl p-2 pb-3', isPlain ? 'bg-raised shadow-panel [--bleed:var(--raised-bleed)]' : ''].join(' ')}
 					>
 						<div style={tile(hex(image))} className="flex aspect-[4/3] items-center justify-center rounded-xl">
 							<Mark size="32%" page={hex(mark)} background={hex(image)} />

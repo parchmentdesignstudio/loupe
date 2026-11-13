@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Checkbox, CheckboxGroup } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 
 const pool = ['Brand identity', 'Website', 'Design system', 'Illustration', 'Typography', 'Signage', 'Packaging', 'Motion', 'Photography', 'Copywriting'];
 const counts = ['none', '2', '5', '30'] as const;
@@ -52,26 +52,35 @@ export function CheckboxPlayground() {
 			box="items-start"
 			controls={
 				<>
-					<Choice label="Mode" options={['single', 'group'] as const} value={mode} onChange={setMode} />
-					{isGroup ? (
-						<>
-							<TextControl label="Label" value={label} onChange={setLabel} />
-							<TextControl label="Description" value={description} onChange={setDescription} />
-							<TextControl label="Error, when invalid" value={errorMessage} onChange={setErrorMessage} />
-							<Choice label="Options" options={counts} value={count} onChange={setCount} />
-							<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
-							<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
-							<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
-						</>
-					) : (
-						<>
+					<ControlGroup label="Content">
+						{isGroup ? (
+							<>
+								<TextControl label="Label" value={label} onChange={setLabel} />
+								<TextControl label="Description" value={description} onChange={setDescription} />
+								<TextControl label="Error, when invalid" value={errorMessage} onChange={setErrorMessage} />
+								<Choice label="Options" options={counts} value={count} onChange={setCount} />
+								<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
+							</>
+						) : (
 							<TextControl label="Label" value={single} onChange={setSingle} />
+						)}
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Mode" options={['single', 'group'] as const} value={mode} onChange={setMode} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						{isGroup ? (
+							<>
+								<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
+								<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
+							</>
+						) : (
 							<Choice label="State" options={states} value={state} onChange={setState} />
-						</>
-					)}
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+						)}
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+					</ControlGroup>
 				</>
 			}
 		>

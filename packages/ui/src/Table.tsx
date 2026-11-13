@@ -46,7 +46,7 @@ export const table = tv({
 		// Raised is a box of its own, on a page with other things around it. Flush has no box, for a table that is the page,
 		// filling its content edge to edge with the rows' lines running the full width
 		variant: {
-			raised: { container: 'rounded-lg bg-raised shadow-raised [--bleed:var(--raised-bleed)] [--table-fill:var(--color-raised)]' },
+			raised: { container: 'rounded-lg bg-raised shadow-panel [--bleed:var(--raised-bleed)] [--table-fill:var(--color-raised)]' },
 			flush: { container: '[--table-fill:var(--color-panel)]' },
 		},
 	},
@@ -85,7 +85,7 @@ export const tableRow = tv({
 			true: 'bg-bleed/12',
 		},
 		isDisabled: {
-			true: 'opacity-40',
+			true: 'text-muted',
 		},
 		isFocusVisible: {
 			false: 'outline-0',
@@ -155,8 +155,10 @@ export function TableHeader<T extends object>({ columns, children, ...props }: T
 	const { selectionBehavior, selectionMode } = useTableOptions();
 	return (
 		<AriaTableHeader {...props}>
+			{/* The column is just as wide as the box, and the next header is opaque and sticky too, so this one sits above it
+			    to keep the box's edge and shadow */}
 			{selectionBehavior === 'toggle' && selectionMode === 'multiple' && (
-				<AriaColumn width={36} minWidth={36} className={(state) => tableColumn({ ...state, className: 'pr-0' })}>
+				<AriaColumn width={36} minWidth={36} className={(state) => tableColumn({ ...state, className: 'z-2 pr-0' })}>
 					<SelectAll />
 				</AriaColumn>
 			)}
@@ -270,7 +272,7 @@ export interface RowActionsProps<T> extends Omit<MenuProps<T>, 'aria-label'> {
 export function RowActions<T extends object>({ 'aria-label': label, placement = 'bottom end', ...props }: RowActionsProps<T>) {
 	return (
 		<MenuTrigger>
-			<Button variant="ghost" size="small" shape="square" aria-label={label} className="-my-1 text-muted data-[hovered]:text-ink aria-expanded:text-ink">
+			<Button variant="ghost" size="small" aria-label={label} className="-my-1 text-muted data-[hovered]:text-ink aria-expanded:text-ink">
 				<Ellipsis />
 			</Button>
 			<Menu placement={placement} {...props} />

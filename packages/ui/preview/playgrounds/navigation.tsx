@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Navigation, NavigationTree } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick } from '../playground.js';
 import { type TreeShape, TreeSections, buildTree, depths, itemCounts, parentIds, sectionCounts } from './navigation-tree.js';
 
 const heights = ['short', 'tall'] as const;
@@ -34,15 +34,17 @@ export function NavigationPlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
+			preview={<Choice label="Height" options={heights} value={height} onChange={setHeight} />}
 			controls={
 				<>
-					<TextControl label="Label, and the phone button" value={label} onChange={setLabel} />
-					<SwitchControl label="Title above" value={hasTitle} onChange={setTitle} />
-					<Choice label="Sections" options={sectionCounts} value={sections} onChange={setSections} />
-					<Choice label="Pages in each" options={itemCounts} value={items} onChange={setItems} />
-					<Choice label="Levels deep" options={depths} value={depth} onChange={setDepth} />
-					<SwitchControl label="Long page name" value={isLong} onChange={setLong} />
-					<Choice label="Height" options={heights} value={height} onChange={setHeight} />
+					<ControlGroup label="Content">
+						<TextControl label="Label, and the phone button" value={label} onChange={setLabel} />
+						<SwitchControl label="Title above" value={hasTitle} onChange={setTitle} />
+						<Choice label="Sections" options={sectionCounts} value={sections} onChange={setSections} />
+						<Choice label="Pages in each" options={itemCounts} value={items} onChange={setItems} />
+						<Choice label="Levels deep" options={depths} value={depth} onChange={setDepth} />
+						<SwitchControl label="Long page name" value={isLong} onChange={setLong} />
+					</ControlGroup>
 				</>
 			}
 		>

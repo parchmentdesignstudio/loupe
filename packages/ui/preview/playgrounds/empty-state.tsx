@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, EmptyState } from '../../src/index.js';
-import { Choice, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
 
 const descriptions = {
 	none: undefined,
@@ -32,15 +32,17 @@ export function EmptyStatePlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<TextControl label="Title" value={title} onChange={setTitle} />
-					<Choice label="Description" options={Object.keys(descriptions) as Description[]} value={description} onChange={setDescription} />
-					<SwitchControl label="Icon" value={hasIcon} onChange={setHasIcon} />
-					{hasIcon && <IconPicker label="Icon name" value={icon} onChange={setIcon} />}
-					<Choice label="Actions" options={['none', 'one', 'two'] as const} value={actions} onChange={setActions} />
-					<Choice label="Action label" options={['short', 'long'] as const} value={action} onChange={setAction} isDisabled={actions === 'none'} />
-					<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />
+					<ControlGroup label="Content">
+						<TextControl label="Title" value={title} onChange={setTitle} />
+						<Choice label="Description" options={Object.keys(descriptions) as Description[]} value={description} onChange={setDescription} />
+						<SwitchControl label="Icon" value={hasIcon} onChange={setHasIcon} />
+						{hasIcon && <IconPicker label="Icon name" value={icon} onChange={setIcon} />}
+						<Choice label="Actions" options={['none', 'one', 'two'] as const} value={actions} onChange={setActions} />
+						<Choice label="Action label" options={['short', 'long'] as const} value={action} onChange={setAction} isDisabled={actions === 'none'} />
+					</ControlGroup>
 				</>
 			}
 		>

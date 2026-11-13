@@ -12,7 +12,7 @@ export const chip = tv({
             true: 'scale-97',
         },
         isDisabled: {
-            true: 'opacity-40',
+            true: 'bg-bleed/12 text-muted shadow-none',
         },
     },
 });

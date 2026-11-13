@@ -24,10 +24,23 @@ export type Ground = keyof typeof grounds;
 
 export function ControlRow({ label, children }: { label: string; children: ReactNode }) {
 	return (
-		<div className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-bleed/8 py-1.5">
-			<span className="text-control text-muted">{label}</span>
+		<div className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-dotted border-bleed/8 py-1.5">
+			<span className="text-control font-medium text-ink">{label}</span>
 			{children}
 		</div>
+	);
+}
+
+/**
+ * A heading over some of a playground's controls, so the component's own props sit apart from its placement, its
+ * behaviour, the control that opens it, and the settings that only change the preview
+ */
+export function ControlGroup({ label, children }: { label: string; children: ReactNode }) {
+	return (
+		<section aria-label={label} className="flex flex-col pt-8 first:pt-0">
+			<h3 className="border-b border-bleed/8 pb-2 text-label font-medium text-muted">{label}</h3>
+			{children}
+		</section>
 	);
 }
 
@@ -92,9 +105,9 @@ export const solidIcons = () => iconNames({ variant: 'solid', size: 16 });
 
 /**
  * The component in a box on the chosen ground, with Random in its corner when there's something to shake up, then the
- * ground and the component's own controls. `box` adds classes to the box, such as `items-start` for something tall
+ * component's own controls in groups, then the ground and anything else that only changes the preview. `box` adds classes to the box, such as `items-start` for something tall
  */
-export function Playground({ children, controls, onRandom, box }: { children: ReactNode; controls: ReactNode; onRandom?: () => void; box?: string }) {
+export function Playground({ children, controls, preview, onRandom, box }: { children: ReactNode; controls: ReactNode; preview?: ReactNode; onRandom?: () => void; box?: string }) {
 	const [ground, setGround] = useState<Ground>('page');
 	return (
 		<div className="flex w-full flex-col gap-4">
@@ -107,8 +120,11 @@ export function Playground({ children, controls, onRandom, box }: { children: Re
 				)}
 			</div>
 			<div className="flex flex-col">
-				<Choice label="Ground" options={Object.keys(grounds) as Ground[]} value={ground} onChange={setGround} />
 				{controls}
+				<ControlGroup label="Preview">
+					<Choice label="Ground" options={Object.keys(grounds) as Ground[]} value={ground} onChange={setGround} />
+					{preview}
+				</ControlGroup>
 			</div>
 		</div>
 	);

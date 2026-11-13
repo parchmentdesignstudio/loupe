@@ -13,25 +13,26 @@ export dark-colors = tokens : base.colors {
   danger: base.colors.red-81,
   // Marks on ink or the accent, such as a button's text or a checkbox's tick
   paper: base.colors.pine-20,
-  // What a page leads with, in rust rather than a button’s marigold. It stays rust in the dark, where paper turns dark
-  accent: base.colors.rust-60,
-  // The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on
-  highlight: opacity(base.colors.lime-91, 24%),
+  // What a page leads with, in apricot rather than a button’s marigold. It stays apricot in the dark, where paper turns dark
+  accent: base.colors.apricot-60,
+  // The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on
+  highlight: opacity(base.colors.olive-91, 24%),
   // The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
-  // overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel is the light mode's ink
+  // overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel only just, so the controls on it stand out
   ground: base.colors.pine-20,
   // An area on the page, such as a tool's side panel
-  panel: base.colors.pine-26,
+  panel: base.colors.pine-24,
   // A control's fill, such as a button's, a field's or a checkbox's
   raised: base.colors.pine-29,
-  // What raised turns on hover
+  // What raised turns on hover. In the light, a see-through dark linen, so it suits the ground or a panel under it
+  // rather than one of them. In the dark, a step lighter than raised, as each layer there is lighter than the last
   surface: base.colors.pine-35,
   // Popovers, menus, dialogs, sheets and floating toolbars
   overlay: base.colors.pine-32,
   // Ink as a surface, such as a toast or a tooltip, with paper text
   inverse: ink,
-  // A switch's handle and a slider's thumb, which stay lighter than their track
-  knob: base.colors.cream-80,
+  // A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track
+  knob: base.colors.white,
   // Behind a sheet
   scrim: opacity(base.colors.black, 48%),
   // Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
@@ -46,9 +47,15 @@ export dark-colors = tokens : base.colors {
   // Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
   // drops take the ground's hue in the light, as the tints do
   edge: opacity(bleed, 12%),
+  // In the dark, what's raised is lit from straight above, so its edge is brighter along the top. The light sits on
+  // the edge, as thick as it and drawn over it, so the two read as one line that fades round the corners rather than
+  // two side by side. Its shadow carries it, so it goes with the shadow when something is disabled or pressed flat
+  toplight: opacity(bleed, 12%),
   drop-raised: opacity(base.colors.black, 24%),
   drop-floating: opacity(base.colors.black, 32%),
-  drop-overlay: opacity(base.colors.black, 48%)
+  drop-overlay: opacity(base.colors.black, 48%),
+  drop-handle: opacity(base.colors.black, 40%),
+  drop-well: opacity(base.colors.black, 0%)
 }
 
 export dark-tints = tokens : base.tints {

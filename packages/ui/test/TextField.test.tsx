@@ -5,6 +5,26 @@ import { TextField } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
 
 describe('TextField', () => {
+	it('is raised and 32px by default, or filled and small', () => {
+		render(
+			<>
+				<TextField label="Name" />
+				<TextField label="Width" variant="filled" size="small" />
+				<TextField label="Height" variant="filled" isDisabled />
+			</>,
+		);
+		const raised = screen.getByRole('textbox', { name: 'Name' }).className;
+		expect(raised).toContain('bg-raised');
+		expect(raised).toContain('py-1.5');
+		const filled = screen.getByRole('textbox', { name: 'Width' }).className;
+		expect(filled).toContain('bg-bleed/8');
+		expect(filled).toContain('shadow-none');
+		expect(filled).toContain('py-1');
+		expect(filled).not.toContain('bg-raised');
+		// Filled is already grey, so disabled goes lighter
+		expect(screen.getByRole('textbox', { name: 'Height' }).className).toContain('bg-bleed/4');
+	});
+
 	it('labels its input and describes it', () => {
 		render(<TextField label="Your name" description="As you’d like Steve to say it" />);
 		const input = screen.getByLabelText('Your name');

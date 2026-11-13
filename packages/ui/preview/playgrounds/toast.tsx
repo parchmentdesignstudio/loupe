@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Button, ToastQueue, ToastRegion } from '../../src/index.js';
-import { Choice, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 
 const descriptions = ['none', 'short', 'long'] as const;
 const timeouts = ['5s', '10s', 'stays'] as const;
@@ -35,12 +35,16 @@ export function ToastPlayground() {
 			onRandom={shuffle}
 			controls={
 				<>
-					<TextControl label="Title" value={title} onChange={setTitle} />
-					<Choice label="Description" options={descriptions} value={description} onChange={setDescription} />
-					<Choice label="Closes after" options={timeouts} value={closeAfter} onChange={setCloseAfter} />
-					<SwitchControl label="Undo action" value={hasAction} onChange={setHasAction} />
-					<NumberControl label="Toasts per press" value={burst} onChange={setBurst} minValue={1} maxValue={10} />
-					<NumberControl label="Shown at once" value={maxVisible} onChange={setMaxVisible} minValue={1} maxValue={6} />
+					<ControlGroup label="Content">
+						<TextControl label="Title" value={title} onChange={setTitle} />
+						<Choice label="Description" options={descriptions} value={description} onChange={setDescription} />
+						<SwitchControl label="Undo action" value={hasAction} onChange={setHasAction} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Closes after" options={timeouts} value={closeAfter} onChange={setCloseAfter} />
+						<NumberControl label="Toasts per press" value={burst} onChange={setBurst} minValue={1} maxValue={10} />
+						<NumberControl label="Shown at once" value={maxVisible} onChange={setMaxVisible} minValue={1} maxValue={6} />
+					</ControlGroup>
 				</>
 			}
 		>

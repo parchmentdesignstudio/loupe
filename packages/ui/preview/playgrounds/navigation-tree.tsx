@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Button, NavigationTree, NavigationTreeHeader, NavigationTreeItem, NavigationTreeItemContent, NavigationTreeSection } from '../../src/index.js';
-import { Choice, ControlRow, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, ControlRow, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const sectionNames = ['Guides', 'Components', 'Foundations', 'Resources'];
 const pageNames = ['Overview', 'Getting started', 'Installation', 'Buttons', 'Forms', 'Colour', 'Typography', 'Icons', 'Layout', 'Spacing', 'Motion', 'Accessibility', 'Writing', 'Releases', 'Roadmap', 'Support'];
@@ -115,28 +115,34 @@ export function NavigationTreePlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
+			preview={<Choice label="Width" options={widths} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Sections" options={sectionCounts} value={sections} onChange={setSections} />
-					<SwitchControl label="Section headers" value={hasHeaders} onChange={setHeaders} />
-					<Choice label="Pages in each" options={itemCounts} value={items} onChange={setItems} />
-					<Choice label="Levels deep" options={depths} value={depth} onChange={setDepth} />
-					<SwitchControl label="Parents are links" value={parentsLink} onChange={setParentsLink} />
-					<Choice label="Open at start" options={openings} value={opened} onChange={setOpened} isDisabled={depth === '1'} />
-					<SwitchControl label="Long page name" value={isLong} onChange={setLong} />
-					<SwitchControl label="A disabled page" value={hasDisabled} onChange={setHasDisabled} />
-					<Choice label="Width" options={widths} value={width} onChange={setWidth} />
-					<ControlRow label="Current page">
-						<div className="flex items-center gap-2">
-							<span className="font-mono text-label text-muted">{route ?? 'None'}</span>
-							<Button variant="secondary" size="small" onPress={() => setRoute(deepestHref)}>
-								Deepest
-							</Button>
-							<Button variant="ghost" size="small" onPress={() => setRoute(null)}>
-								Clear
-							</Button>
-						</div>
-					</ControlRow>
+					<ControlGroup label="Content">
+						<Choice label="Sections" options={sectionCounts} value={sections} onChange={setSections} />
+						<SwitchControl label="Section headers" value={hasHeaders} onChange={setHeaders} />
+						<Choice label="Pages in each" options={itemCounts} value={items} onChange={setItems} />
+						<Choice label="Levels deep" options={depths} value={depth} onChange={setDepth} />
+						<SwitchControl label="Long page name" value={isLong} onChange={setLong} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<SwitchControl label="Parents are links" value={parentsLink} onChange={setParentsLink} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Open at start" options={openings} value={opened} onChange={setOpened} isDisabled={depth === '1'} />
+						<SwitchControl label="A disabled page" value={hasDisabled} onChange={setHasDisabled} />
+						<ControlRow label="Current page">
+							<div className="flex items-center gap-2">
+								<span className="font-mono text-label text-muted">{route ?? 'None'}</span>
+								<Button variant="secondary" size="small" onPress={() => setRoute(deepestHref)}>
+									Deepest
+								</Button>
+								<Button variant="ghost" size="small" onPress={() => setRoute(null)}>
+									Clear
+								</Button>
+							</div>
+						</ControlRow>
+					</ControlGroup>
 				</>
 			}
 		>

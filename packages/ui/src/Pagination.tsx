@@ -1,5 +1,6 @@
 import { Button } from './Button.js';
-import { ChevronLeft, ChevronRight } from './glyphs.js';
+import { ChevronLeft, ChevronRight, Ellipsis } from './glyphs.js';
+import { Menu, MenuItem, MenuTrigger } from './Menu.js';
 
 const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, index) => from + index);
 
@@ -35,21 +36,22 @@ export interface PaginationProps {
 	className?: string;
 }
 
-/** Buttons to move between the pages of a long list or table, with the pages far from the current one folded into a gap */
+/** Buttons to move between the pages of a long list or table, with the pages far from the current one folded behind an ellipsis, in a menu */
 export function Pagination({ page, count, onChange, siblings, 'aria-label': label = 'Pages', className }: PaginationProps) {
 	if (count < 1) return null;
+	const items = pageRange(page, count, siblings);
 	return (
 		<nav aria-label={label} className={className}>
 			<ul className="flex items-center gap-1">
 				<li>
-					<Button variant="ghost" size="small" shape="square" aria-label="Previous page" isDisabled={page <= 1} onPress={() => onChange(page - 1)}>
+					<Button variant="ghost" size="small" aria-label="Previous page" isDisabled={page <= 1} onPress={() => onChange(page - 1)}>
 						<ChevronLeft className={glyph} />
 					</Button>
 				</li>
-				{pageRange(page, count, siblings).map((item, index) =>
+				{items.map((item, index) =>
 					item === 'gap' ? (
-						<li key={`gap-${index}`} aria-hidden className="min-w-7 text-center text-control text-muted">
-							…
+						<li key={`gap-${index}`}>
+							<Folded pages={range((items[index - 1] as number) + 1, (items[index + 1] as number) - 1)} onChange={onChange} />
 						</li>
 					) : item === page ? (
 						// The current page isn't a button, as there's nowhere for it to go
@@ -59,18 +61,37 @@ export function Pagination({ page, count, onChange, siblings, 'aria-label': labe
 						</li>
 					) : (
 						<li key={item}>
-							<Button variant="ghost" size="small" shape="square" aria-label={`Page ${item}`} className="min-w-7 tabular-nums" onPress={() => onChange(item)}>
+							<Button variant="ghost" size="small" aria-label={`Page ${item}`} className="min-w-7 tabular-nums" onPress={() => onChange(item)}>
 								{item}
 							</Button>
 						</li>
 					),
 				)}
 				<li>
-					<Button variant="ghost" size="small" shape="square" aria-label="Next page" isDisabled={page >= count} onPress={() => onChange(page + 1)}>
+					<Button variant="ghost" size="small" aria-label="Next page" isDisabled={page >= count} onPress={() => onChange(page + 1)}>
 						<ChevronRight className={glyph} />
 					</Button>
 				</li>
 			</ul>
 		</nav>
+	);
+}
+
+/** The pages a gap stands for, behind an ellipsis, in a menu to jump to any of them, as breadcrumbs fold theirs */
+function Folded({ pages, onChange }: { pages: number[]; onChange: (page: number) => void }) {
+	return (
+		<MenuTrigger>
+			<Button variant="ghost" size="small" aria-label={`Pages ${pages[0]} to ${pages.at(-1)}`} className="min-w-7 text-muted">
+				<Ellipsis />
+			</Button>
+			{/* Above, as pages usually sit under what they page through, and it flips when there's no room */}
+			<Menu placement="top" onAction={(key) => onChange(Number(key))}>
+				{pages.map((number) => (
+					<MenuItem key={number} id={number} textValue={`Page ${number}`}>
+						{number}
+					</MenuItem>
+				))}
+			</Menu>
+		</MenuTrigger>
 	);
 }
