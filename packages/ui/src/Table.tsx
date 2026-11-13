@@ -35,11 +35,22 @@ type Density = 'compact' | 'comfortable';
 // The scroll box is React Aria's ResizableTableContainer, which works out each column's width from the space there is,
 // so cells truncate rather than push the table wider, until every column is at its minimum and the box scrolls sideways.
 // Density is a data attribute here, read by the cells with in-data-[density], so it needs no context
+// --table-fill is the header's fill, opaque so rows scroll under it: the box's own when raised, and what it sits on when
+// flush, which is a panel unless it's set otherwise
 export const table = tv({
 	slots: {
-		container: 'relative isolate scroll-pt-8 overflow-auto rounded-lg bg-raised text-ink shadow-raised [--bleed:var(--raised-bleed)] data-[density=compact]:scroll-pt-7',
+		container: 'relative isolate scroll-pt-8 overflow-auto text-ink data-[density=compact]:scroll-pt-7',
 		grid: 'border-separate border-spacing-0 outline-0',
 	},
+	variants: {
+		// Raised is a box of its own, on a page with other things around it. Flush has no box, for a table that is the page,
+		// filling its content edge to edge with the rows' lines running the full width
+		variant: {
+			raised: { container: 'rounded-lg bg-raised shadow-raised [--bleed:var(--raised-bleed)] [--table-fill:var(--color-raised)]' },
+			flush: { container: '[--table-fill:var(--color-panel)]' },
+		},
+	},
+	defaultVariants: { variant: 'raised' },
 });
 
 // A cell's ring sits inside it, clear of the cells and rows around it and of the box's clipped edge
@@ -48,7 +59,7 @@ const inset = tv({ extend: focusRing, base: '-outline-offset-2' });
 export const tableColumn = tv({
 	extend: inset,
 	// Opaque and sticky, so rows scroll under the header when the box has a height
-	base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-raised px-3 py-2 text-start text-label font-medium text-muted transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
+	base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label font-medium text-muted transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'text-ink',
@@ -111,6 +122,8 @@ const cellContent = tv({
 export interface TableProps extends Omit<AriaTableProps, 'className'> {
 	/** Compact rows are 32px, as tall as a control, for dense data. Comfortable rows are 40px */
 	density?: Density;
+	/** Raised sits in a box of its own. Flush has none, for a table that fills a page's content edge to edge; on anything but a panel, set --table-fill to its colour */
+	variant?: 'raised' | 'flush';
 	/** Classes for the box around the table. Give it a height, as in max-h-96, and the rows scroll under a header that stays put */
 	className?: string;
 }
@@ -119,8 +132,8 @@ export interface TableProps extends Omit<AriaTableProps, 'className'> {
  * Rows of records under sortable columns, such as customers, invoices or members, on a raised box. Set isRowHeader on
  * the column that names each row, and give the table an aria-label
  */
-export function Table({ density = 'comfortable', className, ...props }: TableProps) {
-	const { container, grid } = table();
+export function Table({ density = 'comfortable', variant, className, ...props }: TableProps) {
+	const { container, grid } = table({ variant });
 	return (
 		<ResizableTableContainer data-density={density} className={container({ className })}>
 			<AriaTable {...props} className={({ isFocusVisible }) => inset({ isFocusVisible, className: grid() })} />

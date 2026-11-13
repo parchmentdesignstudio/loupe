@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { NavigationTree, NavigationTreeHeader, NavigationTreeItem, NavigationTreeItemContent, NavigationTreeSection } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
 
@@ -82,4 +82,25 @@ describe('NavigationTree', () => {
 		const { container } = render(<Services />);
 		await expectAccessible(container);
 	});
+
+	it('gives an item with pages under it a button that opens and closes them', async () => {
+		const user = userEvent.setup();
+		const warn = vi.spyOn(console, 'warn');
+		render(
+			<NavigationTree aria-label="Work">
+				<NavigationTreeItem id="leads" textValue="Leads">
+					<NavigationTreeItemContent>Leads</NavigationTreeItemContent>
+					<NavigationTreeItem id="calls" href="#calls" textValue="Calls">
+						<NavigationTreeItemContent>Calls</NavigationTreeItemContent>
+					</NavigationTreeItem>
+				</NavigationTreeItem>
+			</NavigationTree>,
+		);
+		expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('expand button'));
+		expect(screen.queryByRole('link', { name: 'Calls' })).toBeNull();
+		await user.click(screen.getByRole('button', { name: /expand/i }));
+		expect(screen.getByRole('link', { name: 'Calls' })).toBeTruthy();
+		warn.mockRestore();
+	});
 });
+

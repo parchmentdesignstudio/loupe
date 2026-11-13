@@ -19,8 +19,8 @@ export colors = tokens {
   // A paler, greyer cream for the light mode's ground and panels, so white controls stand out on them, and a
   // dark in its hue for their tints and lines
   linen-99: #fbfaf9,
-  linen-97: #f7f6f3,
-  linen-30: #322e20,
+  linen-97: #f6f3f1,
+  linen-30: #362c21,
   blush-95: #f5ebe6,
   rust-60: #c76024,
   lime-91: #ceeea7,

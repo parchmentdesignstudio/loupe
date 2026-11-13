@@ -55,6 +55,7 @@ import {
 	NavigationTreeSection,
 	Meter,
 	NumberField,
+	Pagination,
 	Popover,
 	ProgressBar,
 	ProgressCircle,
@@ -66,6 +67,7 @@ import {
 	Sheet,
 	SheetTrigger,
 	Slider,
+	Status,
 	Switch,
 	Tab,
 	TabList,
@@ -114,6 +116,8 @@ import { BreadcrumbsPlayground } from './playgrounds/breadcrumbs.js';
 import { NumberFieldPlayground } from './playgrounds/number-field.js';
 import { PopoverPlayground } from './playgrounds/popover.js';
 import { ProgressBarPlayground, Saving } from './playgrounds/progress-bar.js';
+import { screens } from './screens/index.js';
+import { PaginationPlayground, PaginationUnderTable, StatusBadges, StatusPlayground, StatusTones } from './playgrounds/status.js';
 import { RadioGroupPlayground } from './playgrounds/radio-group.js';
 import { SearchFieldPlayground } from './playgrounds/search-field.js';
 import { SelectPlayground } from './playgrounds/select.js';
@@ -1282,6 +1286,18 @@ export const library: Group[] = [
 					{ name: 'A meter', render: () => <Meter label="Storage" value={7.2} maxValue={10} valueLabel="7.2 of 10 GB" className="w-full max-w-md" /> },
 				],
 			},
+			{
+				id: 'status',
+				name: 'Status',
+				description: 'Where something is up to, such as a lead that’s qualified or an invoice that’s overdue, as a coloured dot and a label. The colour backs up the label, so the label has to say it all',
+				exports: ['Status'],
+				stories: [
+					{ name: 'Build one', render: StatusPlayground },
+					{ name: 'Tones', render: StatusTones },
+					{ name: 'With a detail', render: () => <div className="flex flex-col gap-2"><Status tone="info" detail="25 Sept">Call arranged</Status><Status tone="info" detail={<><span>4 calls</span> · <span className="text-danger">22 Sept</span></>}>Call arranged</Status></div> },
+					{ name: 'As badges', render: StatusBadges },
+				],
+			},
 		],
 	},
 	{
@@ -1554,6 +1570,17 @@ export const library: Group[] = [
 				],
 			},
 			{
+				id: 'pagination',
+				name: 'Pagination',
+				description: 'Buttons to move between the pages of a long table or list. Pages far from the current one fold into a gap, and the row stays the same length as you move through',
+				exports: ['Pagination'],
+				stories: [
+					{ name: 'Build one', render: PaginationPlayground },
+					{ name: 'Under a table', render: PaginationUnderTable },
+					{ name: 'A few pages', render: () => <Pagination page={2} count={3} onChange={() => {}} /> },
+				],
+			},
+			{
 				id: 'link',
 				name: 'Link',
 				description: 'A link to another page, or a place on this one',
@@ -1762,6 +1789,28 @@ export const areas: Entry[] = [
 				Pieces made from the components, such as a sign-up form or a project card, go here once two or three are worth sharing
 			</EmptyState>
 		),
+	},
+	{
+		id: 'screens',
+		name: 'Screens',
+		description: 'Whole screens built from the components alone, each filling the window, to see how they hold up together. They’re dummies, and nothing in them is saved',
+		stories: [
+			{
+				name: 'Open one',
+				render: () => (
+					<ul className="flex w-full flex-col gap-2">
+						{screens.map((screen) => (
+							<li key={screen.id} className="flex flex-col gap-1">
+								<Link href={`#/screens/${screen.id}`} className="font-medium">
+									{screen.name}
+								</Link>
+								<p className="text-control text-muted">{screen.description}</p>
+							</li>
+						))}
+					</ul>
+				),
+			},
+		],
 	},
 	{
 		id: 'icons',

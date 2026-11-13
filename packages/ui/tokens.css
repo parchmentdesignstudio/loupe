@@ -21,8 +21,8 @@
 	/* A paler, greyer cream for the light mode's ground and panels, so white controls stand out on them, and a
 	   dark in its hue for their tints and lines */
 	--color-linen-99: oklch(0.986 0.002 67.8);
-	--color-linen-97: oklch(0.973 0.004 91.4);
-	--color-linen-30: oklch(0.3 0.024 91.4);
+	--color-linen-97: oklch(0.966 0.004 67.8);
+	--color-linen-30: oklch(0.3 0.024 67.8);
 	--color-blush-95: oklch(0.947 0.013 48.6);
 	--color-rust-60: oklch(0.605 0.149 46.9);
 	--color-lime-91: oklch(0.909 0.099 127.9);
