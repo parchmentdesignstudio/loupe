@@ -220,6 +220,8 @@ export function Chip(props: ChipProps) {
 
 Import `tv` from `src/tv.ts` rather than tailwind-variants itself. It teaches the merge the tokens’ names, so `text-body` (a size) and `text-ink` (a colour) don’t cancel each other out. Text in a control, from a button’s to a field’s and its label, is `text-control`: 13px with a mouse or trackpad, and 16px on a touch screen, where iOS zooms into a field with smaller text. Change `--text-control` to change it everywhere. It sits on `--text-control--line-height`, a fixed 20px rather than a multiple, so a control keeps its height at either size. A 16px line, to match an icon, would be too tight for 16px text, and Chrome ignores a field’s line when it’s no taller than the text. Instead, a control that can hold just an icon gives the icon the line’s height, as `Button` and `ToggleButton` do with `[&>svg]:my-[calc((1lh-1rem)/2)]`.
 
+Size bars, headers and rows by padding around their content, not a fixed height, so they fit whatever they hold: `py-2` around a 28px button rather than `h-11`. Set a height only where something else has to know it, such as the offset of a sticky element below another, and then say in a comment which content and padding it adds up to, so a change to one shows up in the other.
+
 ### Checks
 
 | Command | What it does |
