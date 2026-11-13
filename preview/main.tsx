@@ -87,7 +87,7 @@ function Sidebar({ current }: { current: string }) {
 			<Navigation aria-label="Components" className="md:border-r-0">
 				{/* As tall as the page's bar and level with it, so the logo lines up with the breadcrumbs */}
 				<div className="-mt-4 flex h-12 shrink-0 items-center gap-2.5 px-3">
-					<Lockup word="loupe" height={20} />
+					<Lockup word="loupe" height={16} />
 					<Version />
 				</div>
 				<Tree current={current} />
@@ -122,10 +122,10 @@ function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void
 		setOpen(false);
 	}
 	return (
-		<header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-3 shadow-[0_.5px_color-mix(in_oklab,var(--bleed)_8%,transparent)] bg-panel px-4 [--bleed:var(--panel-bleed)] md:hidden">
+		<header className="sticky top-0 z-20 flex items-center justify-between gap-3 bg-ground px-4 py-2 [--bleed:var(--ground-bleed)] md:hidden">
 			<div className="flex items-center gap-2.5">
 				<Link href="#/" className="flex items-center no-underline">
-					<Lockup word="loupe" height={20} />
+					<Lockup word="loupe" height={16} />
 				</Link>
 				<Version />
 			</div>
@@ -153,7 +153,8 @@ function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void
 function Bar({ entry, trail, headings, isOpen, onToggle, onSearch }: { entry?: Entry; trail: Crumb[]; headings: Heading[]; isOpen: boolean; onToggle: () => void; onSearch: () => void }) {
 	const label = isOpen ? 'Hide settings' : 'Show settings';
 	return (
-		<div className="sticky top-14 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-bleed/8 bg-panel px-4 md:top-0 md:px-5">
+		// Sticks below the phone's header, which is as tall as its 28px buttons and its padding
+		<div className="sticky top-11 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-bleed/8 bg-panel px-4 md:top-0 md:px-5">
 			<div className="flex min-w-0 flex-1 items-center gap-2">
 				{/* Below the stories here, so the code is one of the places to jump to */}
 				{headings.length > 0 && <ContentsMenu headings={hasCode(entry) ? [...headings, { id: 'code', name: 'Code' }] : headings} />}
@@ -204,7 +205,7 @@ class StoryBoundary extends Component<{ children: ReactNode }, { error?: Error }
 function Stories({ entry, heading: Heading }: { entry: Entry; heading: 'h2' | 'h3' }) {
 	if (entry.empty) return <div className="rounded-lg border border-bleed/8">{entry.empty()}</div>;
 	return entry.stories.map((story, index) => (
-		<section key={story.name} id={`${entry.id}-${index}`} className="flex scroll-mt-28 md:scroll-mt-18 flex-col gap-3">
+		<section key={story.name} id={`${entry.id}-${index}`} className="flex scroll-mt-25 md:scroll-mt-18 flex-col gap-3">
 			<Heading className="font-sans text-label text-muted">{story.name}</Heading>
 			<div className={['flex flex-wrap items-center gap-2 border-y border-bleed/8 py-6', story.box].filter(Boolean).join(' ')}>
 				<StoryBoundary>
@@ -239,7 +240,7 @@ function Title({ entry }: { entry?: Entry }) {
 // Every component's stories on one page, or every block's
 function Overview({ entries }: { entries: Entry[] }) {
 	return entries.map((entry) => (
-		<section key={entry.id} id={entry.id} className="flex scroll-mt-28 md:scroll-mt-18 flex-col gap-6">
+		<section key={entry.id} id={entry.id} className="flex scroll-mt-25 md:scroll-mt-18 flex-col gap-6">
 			<h2 className="text-title font-medium">{entry.name}</h2>
 			<Stories entry={entry} heading="h3" />
 		</section>
