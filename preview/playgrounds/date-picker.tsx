@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { type DateValue, parseDate, toCalendarDateTime } from '@internationalized/date';
 import type { DateRange } from 'react-aria-components';
 import { DatePicker, DateRangePicker } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
 import { InLocale, type LocaleName, limits, locales, now, weekends } from './dates.js';
 
 const kinds = ['single', 'range'] as const;
@@ -82,23 +82,31 @@ export function DatePickerPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			box="items-start"
 			controls={
 				<>
-					<Choice label="Kind" options={kinds} value={kind} onChange={setKind} />
-					<Choice label="Granularity" options={granularities} value={granularity} onChange={setGranularity} />
-					<Choice label="Value" options={values} value={content} onChange={fill} />
-					<Choice label="Locale" options={Object.keys(locales) as LocaleName[]} value={locale} onChange={setLocale} />
-					<Choice label="Months shown" options={months} value={visible} onChange={setVisible} isDisabled={kind === 'single'} />
-					<SwitchControl label="A month either side of today" value={hasLimits} onChange={setLimits} />
-					<SwitchControl label="Weekends unavailable" value={hasWeekends} onChange={setWeekends} />
-					<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
-					<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
-					<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
+						<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Months shown" options={months} value={visible} onChange={setVisible} isDisabled={kind === 'single'} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Kind" options={kinds} value={kind} onChange={setKind} />
+						<Choice label="Granularity" options={granularities} value={granularity} onChange={setGranularity} />
+						<Choice label="Locale" options={Object.keys(locales) as LocaleName[]} value={locale} onChange={setLocale} />
+						<SwitchControl label="A month either side of today" value={hasLimits} onChange={setLimits} />
+						<SwitchControl label="Weekends unavailable" value={hasWeekends} onChange={setWeekends} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Value" options={values} value={content} onChange={fill} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

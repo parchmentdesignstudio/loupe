@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Disclosure, DisclosureGroup, DisclosureHeader, DisclosurePanel } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const questions = [
 	{ title: 'What’s a disclosure?', answer: 'A heading that shows or hides what’s under it, such as an answer under its question.' },
@@ -82,17 +82,25 @@ export function DisclosurePlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
+			preview={<Choice label="Width" options={widths} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
-					<Choice label="Layout" options={layouts} value={layout} onChange={setLayout} />
-					<Choice label="How many" options={counts} value={count} onChange={setCount} isDisabled={!isGroup} />
-					{isGroup && <SwitchControl label="Several open at once" value={allowsMultiple} onChange={setAllowsMultiple} />}
-					<Choice label="Open at start" options={openings} value={opened} onChange={setOpened} />
-					<SwitchControl label="Long title" value={isLongTitle} onChange={setLongTitle} />
-					<SwitchControl label="Long panel" value={isLongPanel} onChange={setLongPanel} />
-					<Choice label="Disabled" options={disablings} value={disabled} onChange={setDisabled} />
-					<Choice label="Width" options={widths} value={width} onChange={setWidth} />
+					<ControlGroup label="Content">
+						<Choice label="How many" options={counts} value={count} onChange={setCount} isDisabled={!isGroup} />
+						<SwitchControl label="Long title" value={isLongTitle} onChange={setLongTitle} />
+						<SwitchControl label="Long panel" value={isLongPanel} onChange={setLongPanel} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+						<Choice label="Layout" options={layouts} value={layout} onChange={setLayout} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						{isGroup && <SwitchControl label="Several open at once" value={allowsMultiple} onChange={setAllowsMultiple} />}
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Open at start" options={openings} value={opened} onChange={setOpened} />
+						<Choice label="Disabled" options={disablings} value={disabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

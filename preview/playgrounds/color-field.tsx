@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type Color, type ColorChannel, type ColorSpace, parseColor } from 'react-aria-components';
 import { ColorField } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 import { ColourControl, channels, randomColour, spaces } from './colour.js';
 
 const widths = { narrow: 'w-28', medium: 'w-56', wide: 'w-full max-w-md' } as const;
@@ -46,22 +46,28 @@ export function ColorFieldPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<ColourControl value={last} onChange={update} />
-					<SwitchControl label="Empty" value={!color} onChange={(isEmpty) => update(isEmpty ? null : last)} />
-					<Choice label="Type" options={['hex', 'channel'] as const} value={mode} onChange={setMode} />
-					{isChannel && <Choice label="Colour space" options={spaces} value={space} onChange={setColourSpace} />}
-					{isChannel && <Choice label="Channel" options={channels[space]} value={channel} onChange={setChannel} />}
-					<TextControl label="Label" value={label} onChange={setLabel} />
-					<TextControl label="Description" value={description} onChange={setDescription} />
-					<TextControl label="Placeholder" value={placeholder} onChange={setPlaceholder} />
-					<TextControl label="Error message" value={errorMessage} onChange={setErrorMessage} />
-					<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<TextControl label="Label" value={label} onChange={setLabel} />
+						<TextControl label="Description" value={description} onChange={setDescription} />
+						<TextControl label="Placeholder" value={placeholder} onChange={setPlaceholder} />
+						<TextControl label="Error message" value={errorMessage} onChange={setErrorMessage} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Type" options={['hex', 'channel'] as const} value={mode} onChange={setMode} />
+						{isChannel && <Choice label="Colour space" options={spaces} value={space} onChange={setColourSpace} />}
+						{isChannel && <Choice label="Channel" options={channels[space]} value={channel} onChange={setChannel} />}
+					</ControlGroup>
+					<ControlGroup label="State">
+						<ColourControl value={last} onChange={update} />
+						<SwitchControl label="Empty" value={!color} onChange={(isEmpty) => update(isEmpty ? null : last)} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

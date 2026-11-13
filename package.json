@@ -22,7 +22,7 @@
     "check": "tsc -p tsconfig.json",
     "test": "vitest run",
     "dev": "vite --port 5199 --strictPort",
-    "elyx:css": "vite build --config elyx/vite.config.ts"
+    "elyx:css": "node elyx/build-css.ts"
   },
   "peerDependencies": {
     "react": ">=19",
@@ -35,6 +35,8 @@
   },
   "devDependencies": {
     "@parchment/icons": "workspace:*",
+    "@tailwindcss/node": "^4.3.3",
+    "@tailwindcss/oxide": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",

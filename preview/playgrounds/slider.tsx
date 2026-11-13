@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Slider } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const thumbs = ['one', 'range'] as const;
@@ -41,15 +41,23 @@ export function SliderPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label={isVertical ? 'Width, when horizontal' : 'Width'} options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} isDisabled={isVertical} />}
 			controls={
 				<>
-					<Choice label="Format" options={Object.keys(formats) as Format[]} value={format} onChange={setFormat} />
-					<Choice label="Thumbs" options={thumbs} value={count} onChange={setCount} />
-					<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
-					<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
-					<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
-					<Choice label={isVertical ? 'Width, when horizontal' : 'Width'} options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} isDisabled={isVertical} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
+						<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Thumbs" options={thumbs} value={count} onChange={setCount} />
+						<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Format" options={Object.keys(formats) as Format[]} value={format} onChange={setFormat} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

@@ -27,7 +27,7 @@ const item = tv({
 			true: 'scale-95',
 		},
 		isDisabled: {
-			true: 'opacity-40',
+			true: 'grayscale',
 		},
 	},
 });

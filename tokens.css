@@ -4,17 +4,26 @@
    The @source line has Tailwind read the components' classes from the package */
 @source "./lib";
 
+/* For marks that say a state in more than colour, such as a switch's | and O. On where an app sets data-on-off-labels
+   on the root or around part of a page, as useOnOffLabels does, and wherever the system asks for more contrast */
+@custom-variant on-off-labels {
+	&:where([data-on-off-labels], [data-on-off-labels] *) {
+		@slot;
+	}
+	@media (prefers-contrast: more) {
+		@slot;
+	}
+}
+
 /* The colours and type, as Tailwind's own variables, so each value is set once, beside its dark one: --color-ink is
    bg-ink and text-ink, and --text-label is text-label. Static, so every variable is written out, for CSS and inline
    styles that read one by name, such as var(--color-paper) */
 @theme static {
 	/* The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
 	   two numbers, the stronger the contrast. Components use the roles below rather than these, though each is a
-	   utility too, as in bg-teal-48. First Parchment's own, cream-99, blush-95, pine-26, rust-60 and lime-91, with
-	   the colours the roles work out from them */
+	   utility too, as in bg-teal-48. First the colours the roles work out from, then Parchment's own */
 	--color-white: oklch(1 0 0);
 	--color-black: oklch(0 0 0);
-	--color-cream-99: oklch(0.994 0.007 88.6);
 	--color-cream-95: oklch(0.95 0.011 76.6);
 	--color-cream-80: oklch(0.8 0.014 76.6);
 	--color-umber-30: oklch(0.3 0.055 77);
@@ -23,18 +32,28 @@
 	--color-linen-99: oklch(0.986 0.002 67.8);
 	--color-linen-97: oklch(0.966 0.004 67.8);
 	--color-linen-30: oklch(0.3 0.024 67.8);
-	--color-blush-95: oklch(0.947 0.013 48.6);
-	--color-rust-60: oklch(0.605 0.149 46.9);
-	--color-lime-91: oklch(0.909 0.099 127.9);
+	--color-linen-18: oklch(0.18 0.024 67.8);
 	--color-pine-95: oklch(0.95 0.054 169.9);
 	--color-pine-50: oklch(0.5 0.025 169.9);
 	--color-pine-35: oklch(0.35 0.038 169.9);
 	--color-pine-32: oklch(0.32 0.036 169.9);
 	--color-pine-29: oklch(0.29 0.035 169.9);
 	--color-pine-26: oklch(0.256 0.039 169.9);
+	--color-pine-24: oklch(0.24 0.035 169.9);
 	--color-pine-20: oklch(0.2 0.027 169.9);
 	--color-red-81: oklch(0.81 0.108 28.7);
 	--color-red-50: oklch(0.501 0.178 28.7);
+	/* Parchment's own, as the parchment-brand board in Sketch has them, with linen-99, linen-97 and pine-26 above */
+	--color-marigold-83: oklch(0.834 0.1525 85.6);
+	--color-apricot-73: oklch(0.731 0.159 48.5);
+	--color-claret-79: oklch(0.788 0.089 19.3);
+	--color-claret-36: oklch(0.361 0.09 17.9);
+	--color-olive-47: oklch(0.473 0.09 124.1);
+	--color-slate-86: oklch(0.858 0.027 196.7);
+	/* Worked out from them for the roles: apricot at the lightness white text needs on it, and olive light enough
+	   to sit behind ink */
+	--color-apricot-60: oklch(0.605 0.149 48.5);
+	--color-olive-91: oklch(0.909 0.099 124.1);
 	/* Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet */
 	--color-red-87: oklch(0.874 0.057 17);
 	--color-red-67: oklch(0.675 0.194 21.2);
@@ -95,26 +114,27 @@
 	--color-danger: light-dark(var(--color-red-50), var(--color-red-81));
 	/* Marks on ink or the accent, such as a button's text or a checkbox's tick */
 	--color-paper: light-dark(var(--color-white), var(--color-pine-20));
-	/* What a page leads with, in rust rather than a button’s marigold. It stays rust in the dark, where paper turns dark */
-	--color-accent: var(--color-rust-60);
-	/* The light accent, a fill behind ink to mark something out. In the dark it's a lime tint over what it sits on */
-	--color-highlight: light-dark(var(--color-lime-91), color-mix(in oklab, var(--color-lime-91) 24%, transparent));
+	/* What a page leads with, in apricot rather than a button’s marigold. It stays apricot in the dark, where paper turns dark */
+	--color-accent: var(--color-apricot-60);
+	/* The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on */
+	--color-highlight: light-dark(var(--color-olive-91), color-mix(in oklab, var(--color-olive-91) 24%, transparent));
 
 	/* The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
-	   overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel is the light mode's ink */
+	   overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel only just, so the controls on it stand out */
 	--color-ground: light-dark(var(--color-linen-97), var(--color-pine-20));
 	/* An area on the page, such as a tool's side panel */
-	--color-panel: light-dark(var(--color-linen-99), var(--color-pine-26));
+	--color-panel: light-dark(var(--color-linen-99), var(--color-pine-24));
 	/* A control's fill, such as a button's, a field's or a checkbox's */
 	--color-raised: light-dark(var(--color-white), var(--color-pine-29));
-	/* What raised turns on hover */
-	--color-surface: light-dark(var(--color-blush-95), var(--color-pine-35));
+	/* What raised turns on hover. In the light, a see-through dark linen, so it suits the ground or a panel under it
+	   rather than one of them. In the dark, a step lighter than raised, as each layer there is lighter than the last */
+	--color-surface: light-dark(color-mix(in oklab, var(--color-linen-18) 4%, transparent), var(--color-pine-35));
 	/* Popovers, menus, dialogs, sheets and floating toolbars */
 	--color-overlay: light-dark(var(--color-white), var(--color-pine-32));
 	/* Ink as a surface, such as a toast or a tooltip, with paper text */
 	--color-inverse: var(--color-ink);
-	/* A switch's handle and a slider's thumb, which stay lighter than their track */
-	--color-knob: light-dark(var(--color-white), var(--color-cream-80));
+	/* A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track */
+	--color-knob: var(--color-white);
 	/* Behind a sheet */
 	--color-scrim: light-dark(color-mix(in oklab, var(--color-pine-26) 32%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 
@@ -138,15 +158,25 @@
 @theme inline {
 	--color-bleed: var(--bleed);
 	/* A level for controls, one for floating toolbars and one for overlays, each a soft drop and an edge. Raised's edge
-	   is half a pixel, a hint of depth for fields, chips and containers. A button is raised with a 1px edge, as it's
-	   pressed, and lifted a little on hover by two wider layers, short of floating. The geometry is the same in both modes, and the colours come from :root, below */
-	--shadow-raised: 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-	--shadow-button: 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-	--shadow-button-lifted: 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised), 0 3px 6px -3px var(--drop-raised), 0 4px 8px -4px var(--drop-raised);
+	   is half a pixel, a hint of depth for fields, chips and checkboxes. A button is raised with a 1px edge, as it's
+	   pressed, and lifted a little on hover by two wider layers, short of floating. Only controls take the top light: a
+	   panel or card is raised the same way with an even edge all round. The geometry is the same in both modes, and the
+	   colours come from :root, below */
+	--shadow-raised: 0 -.5px 0 var(--toplight), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
+	--shadow-panel: 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
+	--shadow-button: 0 -1px 0 var(--toplight), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
+	--shadow-button-lifted: 0 -1px 0 var(--toplight), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised), 0 3px 6px -3px var(--drop-raised), 0 4px 8px -4px var(--drop-raised);
 	--shadow-floating: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-floating), 0 1px 3px -1.5px var(--drop-floating), 0 2px 4px -2px var(--drop-floating), 0 3px 6px -3px var(--drop-floating), 0 6px 12px -6px var(--drop-floating), 0 12px 24px -12px var(--drop-floating);
 	--shadow-overlay: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-overlay), 0 1px 3px -1.5px var(--drop-overlay), 0 2px 4px -2px var(--drop-overlay), 0 3px 6px -3px var(--drop-overlay), 0 8px 16px -12px var(--drop-overlay), 0 12px 32px -24px var(--drop-overlay);
+	/* Floating, for the handle of a switch or slider that lifts off its well. In the dark the drop is darker than a
+	   raised one's, so the handle stands off the track rather than sitting in it */
+	--shadow-handle: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-handle), 0 1px 3px -1.5px var(--drop-handle), 0 2px 4px -2px var(--drop-handle), 0 3px 6px -3px var(--drop-handle), 0 6px 12px -6px var(--drop-handle), 0 12px 24px -12px var(--drop-handle);
 	/* In place of a field's shadow when what's in it is wrong */
 	--shadow-invalid: 0 0 0 1px var(--color-danger);
+	/* The opposite of raised, for a well that controls sit in, such as a switch's track or a toggle group's tray: a soft
+	   shade under its top edge, and the same half-pixel edge. In the dark it's only the edge, as a handle's is, since a
+	   shade there muddies the well. As inset-shadow-well, it sits alongside any shadow */
+	--inset-shadow-well: inset 0 1px 1px -.5px var(--drop-well), inset 0 1px 3px -1px var(--drop-well), inset 0 0 0 .5px var(--edge);
 }
 
 /* Corners and spacing, under Tailwind's own names, so rounded-lg and p-3 are Parchment's */
@@ -176,6 +206,8 @@
 	--animate-toast-out: toast-out 150ms ease-in forwards;
 	/* An indeterminate progress bar's fill, two fifths of its track, sliding across it and out the far side */
 	--animate-indeterminate: indeterminate 1.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+	/* A small spring, overshooting by about a twentieth and settling over 350ms, for a switch's handle */
+	--ease-spring: linear(0, 0.046, 0.157, 0.299, 0.449, 0.591, 0.716, 0.819, 0.899, 0.959, 1, 1.026, 1.04, 1.046, 1.045, 1.041, 1.035, 1.028, 1.021, 1.015, 1);
 
 	@keyframes enter {
 		from {
@@ -252,9 +284,15 @@
 		/* Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
 		   drops take the ground's hue in the light, as the tints do */
 		--edge: color-mix(in oklab, var(--bleed) 12%, transparent);
+		/* In the dark, what's raised is lit from straight above, so its edge is brighter along the top. The light sits on
+		   the edge, as thick as it and drawn over it, so the two read as one line that fades round the corners rather than
+		   two side by side. Its shadow carries it, so it goes with the shadow when something is disabled or pressed flat */
+		--toplight: light-dark(transparent, color-mix(in oklab, var(--bleed) 12%, transparent));
 		--drop-raised: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
 		--drop-floating: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
 		--drop-overlay: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
+		--drop-handle: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 40%, transparent));
+		--drop-well: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), transparent);
 	}
 
 	/* 16px on touch screens, as iOS zooms into a field with smaller text. The line stays 20px, so controls keep their height */

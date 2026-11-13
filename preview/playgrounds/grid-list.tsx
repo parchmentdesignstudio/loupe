@@ -3,7 +3,7 @@ import type { Selection } from 'react-aria-components';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, GridList, GridListHeader, GridListItem, GridListSection } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const counts = { none: 0, few: 3, many: 12 } as const;
 type Count = keyof typeof counts;
@@ -83,21 +83,29 @@ export function GridListPlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
+			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Layout" options={['stack', 'grid'] as const} value={layout} onChange={setLayout} />
-					<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />
-					<Choice label="Selection behaviour" options={['toggle', 'replace'] as const} value={behaviour} onChange={setBehaviour} isDisabled={selectionMode === 'none'} />
-					<Choice label="Items" options={Object.keys(counts) as Count[]} value={count} onChange={setCount} />
-					<Choice label="Name" options={['short', 'long'] as const} value={text} onChange={setText} />
-					<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />
-					<SwitchControl label="Truncate" value={isTruncated} onChange={setTruncated} />
-					<SwitchControl label="Detail" value={hasDetail} onChange={setDetail} />
-					<SwitchControl label={isGrid ? 'Preview' : 'Icon'} value={hasIcon} onChange={setIcon} />
-					<SwitchControl label="Button" value={hasAction} onChange={setAction} />
-					<SwitchControl label="Sections" value={hasSections} onChange={setSections} />
-					<SwitchControl label="A disabled item" value={hasDisabled} onChange={setDisabled} />
-					<SwitchControl label="Keep one chosen" value={disallowEmpty} onChange={setDisallowEmpty} />
+					<ControlGroup label="Content">
+						<Choice label="Items" options={Object.keys(counts) as Count[]} value={count} onChange={setCount} />
+						<Choice label="Name" options={['short', 'long'] as const} value={text} onChange={setText} />
+						<SwitchControl label="Truncate" value={isTruncated} onChange={setTruncated} />
+						<SwitchControl label="Detail" value={hasDetail} onChange={setDetail} />
+						<SwitchControl label={isGrid ? 'Preview' : 'Icon'} value={hasIcon} onChange={setIcon} />
+						<SwitchControl label="Button" value={hasAction} onChange={setAction} />
+						<SwitchControl label="Sections" value={hasSections} onChange={setSections} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Layout" options={['stack', 'grid'] as const} value={layout} onChange={setLayout} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />
+						<Choice label="Selection behaviour" options={['toggle', 'replace'] as const} value={behaviour} onChange={setBehaviour} isDisabled={selectionMode === 'none'} />
+						<SwitchControl label="Keep one chosen" value={disallowEmpty} onChange={setDisallowEmpty} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="A disabled item" value={hasDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

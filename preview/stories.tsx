@@ -3,6 +3,7 @@ import { RouterProvider, parseColor } from 'react-aria-components';
 import { type IconSize, type IconVariant, iconNames } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import {
+	Avatar,
 	Breadcrumb,
 	Breadcrumbs,
 	Button,
@@ -57,6 +58,7 @@ import {
 	NumberField,
 	Pagination,
 	Popover,
+	PreviewTrigger,
 	ProgressBar,
 	ProgressCircle,
 	Radio,
@@ -87,7 +89,7 @@ import {
 } from '../src/index.js';
 import { ParchmentLogo } from './logo.js';
 import { AppIcons, BrandButtons, Cards, Crops, Curls, Lockups, OnColour, Pairings, Palette, ProjectCards, System } from './brand.js';
-import { AvatarGroups, AvatarPlayground, AvatarSizes, AvatarsInText, PeopleAndOrganisations } from './playgrounds/avatar.js';
+import { AvatarGroups, AvatarPlayground, AvatarSizes, AvatarsInText, PeopleAndOrganisations, photos } from './playgrounds/avatar.js';
 import { ButtonPlayground } from './playgrounds/button.js';
 import { CalendarPlayground, PickADay, TwoMonths, WeekendsUnavailable } from './playgrounds/calendar.js';
 import { DateAndTime, DateFieldPlayground, DateFieldStates } from './playgrounds/date-field.js';
@@ -150,6 +152,8 @@ export interface Entry {
 	exports?: string[];
 	usage?: string;
 	stories: Story[];
+	/** The lead export drawn with some of its props, so the API reference can preview an option, as Button's variant set to ghost */
+	sample?: (props: Record<string, unknown>) => ReactNode;
 	/** For an area of loupe with nothing in it yet, shown in place of the stories */
 	empty?: () => ReactNode;
 }
@@ -195,7 +199,7 @@ function Editing({ className }: { className?: string }) {
 			</ToggleButtonGroup>
 			<Separator />
 			<TooltipTrigger delay={300}>
-				<Button variant="ghost" shape="circle" aria-label="Undo">
+				<Button variant="ghost" shape="full" aria-label="Undo">
 					<Icon name="arrow-uturn-left" />
 				</Button>
 				<Tooltip>
@@ -204,7 +208,7 @@ function Editing({ className }: { className?: string }) {
 				</Tooltip>
 			</TooltipTrigger>
 			<TooltipTrigger delay={300}>
-				<Button variant="ghost" shape="circle" aria-label="Redo">
+				<Button variant="ghost" shape="full" aria-label="Redo">
 					<Icon name="arrow-uturn-right" />
 				</Button>
 				<Tooltip>
@@ -425,15 +429,15 @@ function ChoosingFiles() {
 	);
 }
 
-// Parchment’s cream, blush, lime and rust, then muted and ink
-const palette = ['#fffdf8', '#f5ebe6', '#ceeea7', '#c76024', '#566861', '#0c2920'];
+// Some of Parchment’s own: linen, marigold, apricot, claret, olive and pine
+const palette = ['#fbfaf9', '#f5c03c', '#f68543', '#eea3a3', '#516426', '#0c2920'];
 
 // An artboard’s fills, as the device tool offers them: none, white, greys, cream and ink
 const fills = ['#0000', '#ffffff', '#f4f5f1', '#dfe2da', '#fbf6ef', '#1f2f31'];
 
 // One colour shared by the area and the slider, so moving the hue recolours the area
 function AreaAndHue() {
-	const [color, setColor] = useState(() => parseColor('#c76024').toFormat('hsb'));
+	const [color, setColor] = useState(() => parseColor('#c6611f').toFormat('hsb'));
 	return (
 		<div className="flex w-56 flex-col gap-3">
 			<ColorArea aria-label="Colour" value={color} onChange={setColor} xChannel="saturation" yChannel="brightness" />
@@ -442,13 +446,17 @@ function AreaAndHue() {
 	);
 }
 
-// Parchment’s five, with the role each makes
+// Parchment’s own, in the order of the parchment-brand board in Sketch, with the role each makes
 const brand = [
-	{ name: 'cream-99' },
-	{ name: 'blush-95', role: 'surface' },
+	{ name: 'linen-99', role: 'panel' },
+	{ name: 'linen-97', role: 'ground' },
+	{ name: 'marigold-83' },
+	{ name: 'apricot-73' },
+	{ name: 'claret-79' },
+	{ name: 'claret-36' },
+	{ name: 'olive-47' },
+	{ name: 'slate-86' },
 	{ name: 'pine-26', role: 'ink' },
-	{ name: 'rust-60', role: 'accent' },
-	{ name: 'lime-91', role: 'highlight' },
 ];
 
 // Each hue’s light, mid and dark, in the order of Steve’s palette
@@ -539,7 +547,12 @@ export const library: Group[] = [
 					'The palette, named by hue and lightness, so the further apart two numbers, the stronger the contrast. Components use roles made from Parchment’s own, and the hues and greys are there for designs to draw on. On the layer each grey is for, 56 and darker pass 4.5:1 for text, and 66 and darker 3:1 for a control’s edge',
 				usage: 'var(--color-teal-48)',
 				stories: [
-					{ name: 'Parchment’s own', render: () => brand.map(({ name, role }) => <Swatch key={name} name={name} role={role} />) },
+					{
+						name: 'Parchment’s own',
+						// From the top, as only some have a role under them
+						render: () => brand.map(({ name, role }) => <Swatch key={name} name={name} role={role} />),
+						box: 'items-start',
+					},
 					{ name: 'Nine hues, each light, mid and dark', render: Hues },
 					{ name: 'Sand, for the cream ground', render: () => <Greys name="sand" />, box: 'scheme-light bg-ground text-ink' },
 					{ name: 'Grey, for white', render: () => <Greys name="grey" />, box: 'scheme-light bg-panel text-ink [--bleed:var(--panel-bleed)]' },
@@ -554,8 +567,9 @@ export const library: Group[] = [
 			{
 				id: 'button',
 				name: 'Button',
-				description: 'Any action, as primary in marigold, secondary in white, accent in slate, outline or ghost, with an icon at either end, and a circle for just an icon',
+				description: 'Any action, as primary in marigold, secondary in white, accent in slate, outline or ghost, with an icon at either end or just an icon, and rounded corners or full ones for a pill or a circle',
 				exports: ['Button'],
+				sample: (props) => <Button {...props}>New project</Button>,
 				stories: [
 					{ name: 'Build one', render: ButtonPlayground },
 					{
@@ -588,17 +602,33 @@ export const library: Group[] = [
 						),
 					},
 					{
-						name: 'Circle',
+						name: 'Just an icon, rounded or full',
 						render: () => (
 							<>
-								<Button variant="secondary" shape="circle" aria-label="Send">
+								<Button variant="secondary" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
-								<Button shape="circle" size="small" aria-label="Send">
+								<Button variant="secondary" shape="full" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
-								<Button variant="ghost" shape="circle" size="small" aria-label="Send">
+								<Button shape="full" size="small" aria-label="Send">
 									<Icon name="arrow-up" />
+								</Button>
+								<Button variant="ghost" shape="full" size="small" aria-label="Send">
+									<Icon name="arrow-up" />
+								</Button>
+							</>
+						),
+					},
+					{
+						name: 'Full, as a pill',
+						render: () => (
+							<>
+								<Button shape="full" start={<Icon name="plus" />}>
+									New project
+								</Button>
+								<Button variant="secondary" shape="full">
+									Cancel
 								</Button>
 							</>
 						),
@@ -638,17 +668,17 @@ export const library: Group[] = [
 						name: 'In a column',
 						render: () => (
 							<Toolbar aria-label="Tools" orientation="vertical" className="rounded-xl bg-overlay p-1 shadow-floating [--bleed:var(--overlay-bleed)]">
-								<Button variant="ghost" shape="circle" aria-label="Select">
+								<Button variant="ghost" shape="full" aria-label="Select">
 									<Icon name="cursorarrow" />
 								</Button>
-								<Button variant="ghost" shape="circle" aria-label="Pan">
+								<Button variant="ghost" shape="full" aria-label="Pan">
 									<Icon name="arrow-up-and-down-and-arrow-left-and-right" />
 								</Button>
 								<Separator />
-								<Button variant="ghost" shape="circle" aria-label="Undo">
+								<Button variant="ghost" shape="full" aria-label="Undo">
 									<Icon name="arrow-uturn-left" />
 								</Button>
-								<Button variant="ghost" shape="circle" aria-label="Redo">
+								<Button variant="ghost" shape="full" aria-label="Redo">
 									<Icon name="arrow-uturn-right" />
 								</Button>
 							</Toolbar>
@@ -675,7 +705,7 @@ export const library: Group[] = [
 						name: 'In a tooltip',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="secondary" shape="circle" aria-label="Undo">
+								<Button variant="secondary" shape="full" aria-label="Undo">
 									<Icon name="arrow-uturn-left" />
 								</Button>
 								<Tooltip>
@@ -707,6 +737,15 @@ export const library: Group[] = [
 					{ name: 'With a description', render: () => <TextField label="Your name" placeholder="Sam Smith" description="As you’d like Steve to say it" className="w-full" /> },
 					{ name: 'Invalid', render: () => <TextField label="Email" defaultValue="sam@" isInvalid errorMessage="Enter an email address" className="w-full" /> },
 					{ name: 'Multiline', render: () => <TextField label="What are you working on?" placeholder="A few lines is plenty" multiline className="w-full" /> },
+					{
+						name: 'Filled',
+						render: () => (
+							<div className="flex w-full flex-col gap-4">
+								<TextField label="Your name" variant="filled" placeholder="Sam Smith" className="w-full" />
+								<TextField label="Small" variant="filled" size="small" placeholder="Sam Smith" className="w-full" />
+							</div>
+						),
+					},
 				],
 			},
 			{
@@ -723,6 +762,18 @@ export const library: Group[] = [
 					{
 						name: 'As a percentage',
 						render: () => <NumberField label="Opacity" defaultValue={0.8} minValue={0} maxValue={1} step={0.05} formatOptions={{ style: 'percent' }} className="w-56" />,
+					},
+					{
+						name: 'Filled and small, for an inspector',
+						render: () => (
+							<div className="flex w-full flex-col gap-2">
+								<div className="flex gap-2">
+									<NumberField aria-label="Width" variant="filled" size="small" defaultValue={52} minValue={1} formatOptions={{ useGrouping: false }} className="w-28" />
+									<NumberField aria-label="Height" variant="filled" size="small" defaultValue={52} minValue={1} formatOptions={{ useGrouping: false }} className="w-28" />
+								</div>
+								<TextField aria-label="Layer name" variant="filled" size="small" defaultValue="App icon" className="w-58" />
+							</div>
+						),
 					},
 				],
 			},
@@ -807,6 +858,20 @@ export const library: Group[] = [
 					},
 					{ name: 'Indeterminate', render: () => <Checkbox isIndeterminate>All services</Checkbox> },
 					{ name: 'Invalid', render: () => <Checkbox isInvalid>I’ve read the terms</Checkbox> },
+					{
+						name: 'Disabled',
+						render: () => (
+							<div className="flex flex-col">
+								<Checkbox isDisabled defaultSelected>
+									Ticked
+								</Checkbox>
+								<Checkbox isDisabled>Not ticked</Checkbox>
+								<Checkbox isDisabled isIndeterminate>
+									Mixed
+								</Checkbox>
+							</div>
+						),
+					},
 				],
 			},
 			{
@@ -829,17 +894,56 @@ export const library: Group[] = [
 							</RadioGroup>
 						),
 					},
+					{
+						name: 'Disabled',
+						render: () => (
+							<RadioGroup label="Budget" defaultValue="mid" isDisabled>
+								<Radio value="small">Under £5k</Radio>
+								<Radio value="mid">£5–15k</Radio>
+							</RadioGroup>
+						),
+					},
 				],
 			},
 			{
 				id: 'switch',
 				name: 'Switch',
-				description: 'A setting that takes effect straight away',
+				description: 'A setting that takes effect straight away, with rounded corners or full ones for a pill. With on/off labels turned on, or where the system asks for more contrast, a | and an O say its state too',
 				exports: ['Switch'],
 				stories: [
 					{ name: 'Build one', render: SwitchPlayground },
 					{ name: 'On', render: () => <Switch defaultSelected>Send me the newsletter</Switch> },
-					{ name: 'Disabled', render: () => <Switch isDisabled>Disabled</Switch> },
+					{
+						name: 'Rounded or full',
+						render: () => (
+							<>
+								<Switch defaultSelected>Rounded</Switch>
+								<Switch shape="full" defaultSelected>
+									Full
+								</Switch>
+							</>
+						),
+					},
+					{
+						name: 'With on/off labels',
+						render: () => (
+							<div data-on-off-labels className="flex flex-col">
+								<Switch defaultSelected>On</Switch>
+								<Switch>Off</Switch>
+							</div>
+						),
+					},
+					{
+						name: 'Disabled',
+						render: () => (
+							<div className="flex flex-col">
+								<Switch isDisabled defaultSelected>
+									On
+								</Switch>
+								<Switch isDisabled>Off</Switch>
+							</div>
+						),
+					},
 				],
 			},
 			{
@@ -872,7 +976,7 @@ export const library: Group[] = [
 					{
 						name: 'Several at once',
 						render: () => (
-							<ToggleButtonGroup aria-label="Show" selectionMode="multiple" defaultSelectedKeys={['grid']}>
+							<ToggleButtonGroup aria-label="Show" selectionMode="multiple" defaultSelectedKeys={['grid', 'rulers']}>
 								<ToggleButton id="grid">Grid</ToggleButton>
 								<ToggleButton id="rulers">Rulers</ToggleButton>
 								<ToggleButton id="guides">Guides</ToggleButton>
@@ -1453,6 +1557,38 @@ export const library: Group[] = [
 				],
 			},
 			{
+				id: 'preview-trigger',
+				name: 'Preview trigger',
+				description: 'A popover on hover, focus or a long press, for a closer look at what a link points to. Unlike a tooltip, what’s in it can be used',
+				exports: ['PreviewTrigger'],
+				stories: [
+					{
+						name: 'On a link',
+						render: () => (
+							<p>
+								Say hello to{' '}
+								<PreviewTrigger>
+									<Link href="#/ui/avatar">Doris</Link>
+									<Popover placement="bottom start" className="flex w-64 flex-col gap-3 p-4">
+										<div className="flex items-center gap-3">
+											<Avatar name="Doris" src={photos[0]} size={48} />
+											<div className="flex flex-col">
+												<span className="font-medium">Doris</span>
+												<span className="text-label text-muted">Head of naps</span>
+											</div>
+										</div>
+										<Button variant="secondary" size="small">
+											Follow
+										</Button>
+									</Popover>
+								</PreviewTrigger>
+								, the studio dog.
+							</p>
+						),
+					},
+				],
+			},
+			{
 				id: 'tooltip',
 				name: 'Tooltip',
 				description: 'A short label for a control, on hover and keyboard focus',
@@ -1460,10 +1596,10 @@ export const library: Group[] = [
 				stories: [
 					{ name: 'Build one', render: TooltipPlayground },
 					{
-						name: 'On a circle button',
+						name: 'On a round icon button',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="secondary" shape="circle" aria-label="Send">
+								<Button variant="secondary" shape="full" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 								<Tooltip>Send message</Tooltip>
@@ -1474,7 +1610,7 @@ export const library: Group[] = [
 						name: 'With an arrow',
 						render: () => (
 							<TooltipTrigger delay={300}>
-								<Button variant="secondary" shape="circle" aria-label="Send">
+								<Button variant="secondary" shape="full" aria-label="Send">
 									<Icon name="arrow-up" />
 								</Button>
 								<Tooltip showArrow>Send message</Tooltip>

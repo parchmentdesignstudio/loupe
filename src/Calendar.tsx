@@ -24,7 +24,7 @@ import { composeClassName, tv } from './tv.js';
 // previous button on the first and the next on the last, so two months read as one spread
 export const calendar = tv({
 	slots: {
-		root: 'flex w-fit max-w-full flex-col gap-3 text-control text-ink data-[disabled]:opacity-50',
+		root: 'flex w-fit max-w-full flex-col gap-3 text-control text-ink data-[disabled]:text-muted',
 		months: 'flex flex-wrap items-start gap-x-6 gap-y-4',
 		month: 'flex flex-col gap-2',
 		header: 'flex items-center gap-1',
@@ -70,7 +70,7 @@ export const calendarDay = tv({
 			true: { mark: 'text-muted line-through' },
 		},
 		isDisabled: {
-			true: { mark: 'text-muted opacity-50' },
+			true: { mark: 'text-muted' },
 		},
 		isInvalid: {
 			true: '',
@@ -111,7 +111,7 @@ function Month({ state, offset, count, isRange }: { state: CalendarState | Range
 		<div className={month()}>
 			<div className={header()}>
 				{offset === 0 ? (
-					<Button slot="previous" variant="ghost" size="small" shape="square" className="text-muted">
+					<Button slot="previous" variant="ghost" size="small" className="text-muted">
 						<ChevronLeft className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] rtl:rotate-180" />
 					</Button>
 				) : (
@@ -119,7 +119,7 @@ function Month({ state, offset, count, isRange }: { state: CalendarState | Range
 				)}
 				<MonthHeading state={state} offset={offset} />
 				{offset === count - 1 ? (
-					<Button slot="next" variant="ghost" size="small" shape="square" className="text-muted">
+					<Button slot="next" variant="ghost" size="small" className="text-muted">
 						<ChevronRight className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] rtl:rotate-180" />
 					</Button>
 				) : (

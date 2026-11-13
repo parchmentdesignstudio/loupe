@@ -18,7 +18,7 @@ const composer = tv({
 			true: { group: 'outline-2' },
 		},
 		isDisabled: {
-			true: { group: 'opacity-50' },
+			true: { group: 'bg-bleed/12 shadow-none', input: 'text-muted' },
 		},
 	},
 });
@@ -73,7 +73,7 @@ export function Composer({ label, placeholder, submitLabel = 'Send', submitIcon,
 			<AriaTextField aria-label={label} value={message} onChange={change} isDisabled={isDisabled}>
 				<Group className={(state) => slots.group(state)}>
 					<TextArea rows={1} placeholder={placeholder} onKeyDown={sendOnEnter} className={slots.input()} />
-					<Button type="submit" aria-label={submitLabel} shape="square" size="small" isDisabled={isDisabled || empty} className={slots.send()}>
+					<Button type="submit" aria-label={submitLabel} size="small" isDisabled={isDisabled || empty} className={slots.send()}>
 						{submitIcon}
 					</Button>
 				</Group>

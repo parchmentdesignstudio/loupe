@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { type DateValue, now as nowIn, getLocalTimeZone, parseDate, parseTime, toCalendarDateTime } from '@internationalized/date';
 import type { TimeValue } from 'react-aria-components';
 import { DateField, TimeField } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
 import { InLocale, type LocaleName, limits, locales, now } from './dates.js';
 
 const kinds = ['date', 'date and time', 'time'] as const;
@@ -81,20 +81,26 @@ export function DateFieldPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Kind" options={kinds} value={kind} onChange={changeKind} />
-					<Choice label="Value" options={values} value={content} onChange={(next) => fill(next)} />
-					<Choice label="Locale" options={Object.keys(locales) as LocaleName[]} value={locale} onChange={setLocale} />
-					<Choice label="Clock" options={clocks} value={clock} onChange={setClock} isDisabled={kind === 'date'} />
-					<SwitchControl label="A month either side of today" value={hasLimits} onChange={setLimits} />
-					<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
-					<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
-					<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Label" options={lengths} value={label} onChange={setLabel} />
+						<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Kind" options={kinds} value={kind} onChange={changeKind} />
+						<Choice label="Locale" options={Object.keys(locales) as LocaleName[]} value={locale} onChange={setLocale} />
+						<Choice label="Clock" options={clocks} value={clock} onChange={setClock} isDisabled={kind === 'date'} />
+						<SwitchControl label="A month either side of today" value={hasLimits} onChange={setLimits} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Value" options={values} value={content} onChange={(next) => fill(next)} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

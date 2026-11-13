@@ -21,7 +21,7 @@ const colorSlider = tv({
 			vertical: { base: 'items-center', well: 'w-6 flex-1', thumb: 'left-1/2' },
 		},
 		isDisabled: {
-			true: { base: 'opacity-50' },
+			true: { well: 'grayscale' },
 		},
 	},
 });

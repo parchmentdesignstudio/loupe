@@ -3,7 +3,7 @@ import type { Key } from 'react-aria-components';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { ToggleButton, ToggleButtonGroup } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, solidIcons } from '../playground.js';
 
 const words = ['Day', 'Week', 'Month', 'Quarter', 'Year', 'Decade', 'Century', 'All time'];
 const icons: IconName[] = ['text-alignleft', 'text-aligncenter', 'text-alignright', 'text-justify', 'sidebar-left', 'sidebar-right', 'square-grid-3x3', 'monitor'];
@@ -50,15 +50,23 @@ export function ToggleButtonGroupPlayground() {
 			onRandom={shuffle}
 			controls={
 				<>
-					<Choice label="Selection" options={['single', 'multiple'] as const} value={selectionMode} onChange={changeMode} />
-					<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
-					<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
-					<Choice label="Buttons" options={counts} value={count} onChange={setCount} />
-					<Choice label="Content" options={contents} value={content} onChange={setContent} />
-					<Choice label="Text" options={lengths} value={length} onChange={setLength} isDisabled={content === 'icon'} />
-					{!isSingle && <SwitchControl label="Can choose none" value={allowsEmpty} onChange={setAllowsEmpty} />}
-					<SwitchControl label="A disabled button" value={hasDisabledButton} onChange={setDisabledButton} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Buttons" options={counts} value={count} onChange={setCount} />
+						<Choice label="Content" options={contents} value={content} onChange={setContent} />
+						<Choice label="Text" options={lengths} value={length} onChange={setLength} isDisabled={content === 'icon'} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+						<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Selection" options={['single', 'multiple'] as const} value={selectionMode} onChange={changeMode} />
+						{!isSingle && <SwitchControl label="Can choose none" value={allowsEmpty} onChange={setAllowsEmpty} />}
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="A disabled button" value={hasDisabledButton} onChange={setDisabledButton} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

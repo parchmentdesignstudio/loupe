@@ -28,7 +28,7 @@ export function DialogActions({ children }: { children: ReactNode }) {
 /** A close button for a dialog's corner */
 export function DialogClose({ label = 'Close' }: { label?: string }) {
 	return (
-		<Button slot="close" variant="ghost" shape="circle" size="small" aria-label={label} className="absolute top-5 right-5">
+		<Button slot="close" variant="ghost" shape="full" size="small" aria-label={label} className="absolute top-5 right-5">
 			<Cross />
 		</Button>
 	);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, DropZone, FileList, FileListItem, FileTrigger, isFileDropItem } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 import { type Accepts, accepts } from './files.js';
 
 export interface Upload {
@@ -131,17 +131,25 @@ export function DropZonePlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
+			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Variant" options={['dashed', 'quiet'] as const} value={variant} onChange={setVariant} />
-					<TextControl label={isQuiet ? 'Label, read out' : 'Label'} value={label} onChange={setLabel} />
-					<SwitchControl label="File trigger" value={hasTrigger} onChange={setTrigger} />
-					<Choice label="Accepts" options={Object.keys(accepts) as Accepts[]} value={accepted} onChange={setAccepted} />
-					<SwitchControl label="Several at once" value={isMultiple} onChange={setMultiple} />
-					<Choice label="Files shown" options={Object.keys(seeds) as Seed[]} value={seed} onChange={choose} />
-					<SwitchControl label="Some uploads fail" value={failures} onChange={setFailures} />
-					<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<TextControl label={isQuiet ? 'Label, read out' : 'Label'} value={label} onChange={setLabel} />
+						<SwitchControl label="File trigger" value={hasTrigger} onChange={setTrigger} />
+						<Choice label="Files shown" options={Object.keys(seeds) as Seed[]} value={seed} onChange={choose} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Variant" options={['dashed', 'quiet'] as const} value={variant} onChange={setVariant} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Accepts" options={Object.keys(accepts) as Accepts[]} value={accepted} onChange={setAccepted} />
+						<SwitchControl label="Several at once" value={isMultiple} onChange={setMultiple} />
+						<SwitchControl label="Some uploads fail" value={failures} onChange={setFailures} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

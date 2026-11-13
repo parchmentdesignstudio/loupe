@@ -21,7 +21,7 @@ export const option = tv({
 			true: 'bg-bleed/12',
 		},
 		isDisabled: {
-			true: 'opacity-40',
+			true: 'text-muted',
 		},
 	},
 });

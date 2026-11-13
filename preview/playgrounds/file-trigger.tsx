@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, FileTrigger } from '../../src/index.js';
-import { Choice, IconPicker, Playground, SwitchControl, TextControl, pick, sampleWords, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, pick, sampleWords, solidIcons } from '../playground.js';
 import { type Accepts, type Seed, accepts, seeds } from './files.js';
 
 const variants = ['primary', 'secondary', 'accent', 'outline', 'ghost'] as const;
@@ -43,17 +43,25 @@ export function FileTriggerPlayground() {
 			box="flex-col gap-3"
 			controls={
 				<>
-					<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
-					<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
-					<TextControl label="Label" value={label} onChange={setLabel} />
-					<SwitchControl label="Icon" value={hasIcon} onChange={setHasIcon} />
-					{hasIcon && <IconPicker label="Icon name" value={icon} onChange={setIcon} />}
-					<Choice label="Accepts" options={Object.keys(accepts) as Accepts[]} value={accepted} onChange={setAccepted} isDisabled={isDirectory} />
-					<SwitchControl label="Several at once" value={isMultiple} onChange={setMultiple} />
-					<SwitchControl label="A folder" value={isDirectory} onChange={setDirectory} />
-					<Choice label="Camera" options={cameras} value={camera} onChange={setCamera} />
-					<Choice label="Chosen" options={Object.keys(seeds) as Seed[]} value={seed} onChange={choose} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<TextControl label="Label" value={label} onChange={setLabel} />
+						<SwitchControl label="Icon" value={hasIcon} onChange={setHasIcon} />
+						{hasIcon && <IconPicker label="Icon name" value={icon} onChange={setIcon} />}
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
+						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Accepts" options={Object.keys(accepts) as Accepts[]} value={accepted} onChange={setAccepted} isDisabled={isDirectory} />
+						<SwitchControl label="Several at once" value={isMultiple} onChange={setMultiple} />
+						<SwitchControl label="A folder" value={isDirectory} onChange={setDirectory} />
+						<Choice label="Camera" options={cameras} value={camera} onChange={setCamera} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Chosen" options={Object.keys(seeds) as Seed[]} value={seed} onChange={choose} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

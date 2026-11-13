@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Collection, type Selection, type SortDescriptor } from 'react-aria-components';
 import { Avatar, Cell, Column, EmptyState, MenuItem, MenuSeparator, Row, RowActions, Table, TableBody, TableHeader, TableLoadMore } from '../../src/index.js';
-import { Choice, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const firsts = ['Ada', 'Grace', 'Alan', 'Katherine', 'Tim', 'Margaret', 'Linus', 'Barbara', 'Dennis', 'Radia', 'Ken', 'Frances', 'Donald', 'Hedy', 'Edsger', 'Joan'];
 const lasts = ['Lovelace', 'Hopper', 'Turing', 'Johnson', 'Berners-Lee', 'Hamilton', 'Torvalds', 'Liskov', 'Ritchie', 'Perlman', 'Thompson', 'Allen', 'Knuth', 'Lamarr', 'Dijkstra', 'Clarke'];
@@ -81,18 +81,24 @@ export function TablePlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
+			preview={<SwitchControl label="Fixed height" value={isFixed} onChange={setFixed} />}
 			controls={
 				<>
-					<NumberControl label="Rows" value={count} onChange={setCount} minValue={0} maxValue={500} />
-					<NumberControl label="Columns" value={columnCount} onChange={setColumnCount} minValue={1} maxValue={textColumns.length + 1} />
-					<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />
-					<Choice label="Density" options={['comfortable', 'compact'] as const} value={density} onChange={setDensity} />
-					<Choice label="Pressing a row" options={actionsOn} value={rowsDo} onChange={setRowsDo} />
-					<SwitchControl label="Sortable" value={isSortable} onChange={setSortable} />
-					<SwitchControl label="Amount column" value={hasNumbers} onChange={setNumbers} />
-					<SwitchControl label="Row menu" value={hasMenu} onChange={setMenu} />
-					<SwitchControl label="Long names" value={isLong} onChange={setLong} />
-					<SwitchControl label="Fixed height" value={isFixed} onChange={setFixed} />
+					<ControlGroup label="Content">
+						<NumberControl label="Rows" value={count} onChange={setCount} minValue={0} maxValue={500} />
+						<NumberControl label="Columns" value={columnCount} onChange={setColumnCount} minValue={1} maxValue={textColumns.length + 1} />
+						<SwitchControl label="Amount column" value={hasNumbers} onChange={setNumbers} />
+						<SwitchControl label="Row menu" value={hasMenu} onChange={setMenu} />
+						<SwitchControl label="Long names" value={isLong} onChange={setLong} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Density" options={['comfortable', 'compact'] as const} value={density} onChange={setDensity} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />
+						<Choice label="Pressing a row" options={actionsOn} value={rowsDo} onChange={setRowsDo} />
+						<SwitchControl label="Sortable" value={isSortable} onChange={setSortable} />
+					</ControlGroup>
 				</>
 			}
 		>

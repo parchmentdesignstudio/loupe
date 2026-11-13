@@ -25,7 +25,7 @@ export const dateInput = tv({
 			true: 'outline-danger shadow-invalid',
 		},
 		isDisabled: {
-			true: 'opacity-50',
+			true: 'bg-bleed/12 text-muted shadow-none',
 		},
 	},
 });

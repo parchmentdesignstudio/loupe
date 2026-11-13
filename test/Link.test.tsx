@@ -45,7 +45,8 @@ describe('Link', () => {
 		await user.click(link);
 		expect(onPress).not.toHaveBeenCalled();
 		expect(link.getAttribute('aria-disabled')).toBe('true');
-		expect(link.className).toContain('opacity-40');
+		expect(link.className).toContain('text-muted');
+		expect(link.className).not.toContain('opacity-40');
 	});
 
 	it('has nothing for axe to flag', async () => {

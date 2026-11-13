@@ -3,7 +3,7 @@ import type { Selection } from 'react-aria-components';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Tag, TagGroup } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
 
 const counts = { none: 0, few: 4, many: 16 } as const;
 type Count = keyof typeof counts;
@@ -47,18 +47,24 @@ export function TagGroupPlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
+			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<TextControl label="Label" value={label} onChange={setLabel} />
-					<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />
-					<Choice label="Tags" options={Object.keys(counts) as Count[]} value={count} onChange={(next) => reset(next, text)} />
-					<Choice label="Text" options={['short', 'long'] as const} value={text} onChange={(next) => reset(count, next)} />
-					<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />
-					<SwitchControl label="Removable" value={isRemovable} onChange={setRemovable} />
-					<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
-					<SwitchControl label="Description" value={hasDescription} onChange={setDescription} />
-					<SwitchControl label="Error" value={hasError} onChange={setError} />
-					<SwitchControl label="A disabled tag" value={hasDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<TextControl label="Label" value={label} onChange={setLabel} />
+						<Choice label="Tags" options={Object.keys(counts) as Count[]} value={count} onChange={(next) => reset(next, text)} />
+						<Choice label="Text" options={['short', 'long'] as const} value={text} onChange={(next) => reset(count, next)} />
+						<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
+						<SwitchControl label="Description" value={hasDescription} onChange={setDescription} />
+						<SwitchControl label="Error" value={hasError} onChange={setError} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />
+						<SwitchControl label="Removable" value={isRemovable} onChange={setRemovable} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="A disabled tag" value={hasDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

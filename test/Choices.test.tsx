@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Checkbox, CheckboxGroup, Radio, RadioGroup, Switch } from '../src/index.js';
+import { Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, setOnOffLabels } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
 
 describe('Checkbox', () => {
@@ -63,9 +63,50 @@ describe('Switch', () => {
 		await user.click(screen.getByRole('switch', { name: 'Newsletter' }));
 		expect(onChange.mock.calls).toEqual([[true], [false]]);
 	});
+
+	it('is rounded unless its shape is full', () => {
+		render(
+			<>
+				<Switch>Rounded</Switch>
+				<Switch shape="full">Full</Switch>
+			</>,
+		);
+		const track = (name: string) => screen.getByRole('switch', { name }).closest('label')?.querySelector('.w-9');
+		expect(track('Rounded')?.className).toContain('rounded-lg');
+		expect(track('Full')?.className).toContain('rounded-full');
+	});
+
+	it('marks on/off labels on the root, and keeps them out of its name', () => {
+		setOnOffLabels(true);
+		expect(document.documentElement.hasAttribute('data-on-off-labels')).toBe(true);
+		render(<Switch defaultSelected>Autosave</Switch>);
+		expect(screen.getByRole('switch', { name: 'Autosave' })).toBeTruthy();
+		setOnOffLabels(false);
+		expect(document.documentElement.hasAttribute('data-on-off-labels')).toBe(false);
+	});
 });
 
 describe('Choices', () => {
+	it('go flat and muted when disabled, rather than faded', () => {
+		render(
+			<>
+				<Checkbox isDisabled>Brand identity</Checkbox>
+				<Switch isDisabled defaultSelected>
+					Autosave
+				</Switch>
+			</>,
+		);
+		for (const name of ['Brand identity', 'Autosave']) {
+			const label = screen.getByText(name).closest('label')!;
+			expect(label.className).toContain('text-muted');
+			expect(label.className).not.toContain('opacity-40');
+		}
+		const track = screen.getByText('Autosave').closest('label')!.querySelector('.w-9')!;
+		expect(track.className).toContain('bg-bleed/12');
+		expect(track.className).not.toContain('inset-shadow-well');
+		expect(track.className).not.toContain('bg-green-68');
+	});
+
 	it('have nothing for axe to flag', async () => {
 		const { container } = render(
 			<>

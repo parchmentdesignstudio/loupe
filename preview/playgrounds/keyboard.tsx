@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Icon } from '@parchment/icons/react';
 import { Button, Keyboard, Tooltip, TooltipTrigger } from '../../src/index.js';
-import { Choice, Playground, TextControl, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, TextControl, pick } from '../playground.js';
 
 const contexts = ['alone', 'sentence', 'tooltip'] as const;
 const sizes = { label: 'text-label', control: 'text-control', body: 'text-body', title: 'text-title' } as const;
@@ -22,11 +22,17 @@ export function KeyboardPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
-			controls={
+			preview={
 				<>
-					<TextControl label="Shortcut" value={shortcut} onChange={setShortcut} />
 					<Choice label="In" options={contexts} value={context} onChange={setContext} />
 					<Choice label="Text size" options={Object.keys(sizes) as Size[]} value={size} onChange={setSize} isDisabled={context === 'tooltip'} />
+				</>
+			}
+			controls={
+				<>
+					<ControlGroup label="Content">
+						<TextControl label="Shortcut" value={shortcut} onChange={setShortcut} />
+					</ControlGroup>
 				</>
 			}
 		>
@@ -42,7 +48,7 @@ export function KeyboardPlayground() {
 			)}
 			{context === 'tooltip' && (
 				<TooltipTrigger isOpen>
-					<Button variant="secondary" shape="circle" aria-label="Undo">
+					<Button variant="secondary" shape="full" aria-label="Undo">
 						<Icon name="arrow-uturn-left" />
 					</Button>
 					<Tooltip>

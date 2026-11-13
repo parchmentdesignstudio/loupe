@@ -20,9 +20,10 @@ import {
 } from '../src/index.js';
 import { Contents, ContentsMenu, type Heading } from './contents.js';
 import { Inspector } from './inspector.js';
+import { Reference, hasReference } from './reference.js';
 import { Lockup, ParchmentLogo } from './logo.js';
 import { Search, SearchButton } from './search.js';
-import { Appearance, Settings, remember, remembered } from './settings.js';
+import { Appearance, OnOffLabels, Settings, remember, remembered } from './settings.js';
 import { type Crumb, forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
 import { type Entry, areas, blocks, library } from './stories.js';
@@ -132,14 +133,15 @@ function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void
 			<div className="-mr-1.5 flex items-center gap-1">
 				<SearchButton onPress={onSearch} />
 				<SheetTrigger isOpen={isOpen} onOpenChange={setOpen}>
-					<Button variant="ghost" shape="circle" size="small" aria-label="Components">
+					<Button variant="ghost" shape="full" size="small" aria-label="Components">
 						<More />
 					</Button>
 					<Sheet position="end" aria-label="Components">
 						<div className="flex flex-col gap-6">
 							<Tree current={current} />
-							<div className="px-3">
+							<div className="flex flex-col gap-6 px-3">
 								<Appearance />
+								<OnOffLabels />
 							</div>
 						</div>
 					</Sheet>
@@ -173,7 +175,7 @@ function Bar({ entry, trail, headings, isOpen, onToggle, onSearch }: { entry?: E
 					<Tooltip>Search ⌘K</Tooltip>
 				</TooltipTrigger>
 				<TooltipTrigger>
-					<Button variant="ghost" shape="circle" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
+					<Button variant="ghost" shape="full" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
 						<Icon name={isOpen ? 'sidebar-right' : 'sidebar-right-closed'} />
 					</Button>
 					<Tooltip>{label}</Tooltip>
@@ -270,7 +272,12 @@ function Preview() {
 	const search = useCallback(() => setSearching(true), []);
 
 	const headings = useMemo<Heading[]>(
-		() => (listed ? listed.map(({ id, name }) => ({ id, name })) : entry ? entry.stories.map((story, index) => ({ id: `${entry.id}-${index}`, name: story.name })) : []),
+		() =>
+			listed
+				? listed.map(({ id, name }) => ({ id, name }))
+				: entry
+					? [...entry.stories.map((story, index) => ({ id: `${entry.id}-${index}`, name: story.name })), ...(hasReference(entry) ? [{ id: 'api', name: 'API reference' }] : [])]
+					: [],
 		[entry, listed],
 	);
 
@@ -304,7 +311,7 @@ function Preview() {
 				ref={scroller}
 				className={[
 					// Raised over the sticky columns either side, which would otherwise paint over its shadow
-					'min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-raised',
+					'min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-panel',
 					isOpen ? '' : 'md:mr-2',
 				].join(' ')}
 			>
@@ -322,7 +329,16 @@ function Preview() {
 						{headings.length > 0 && <Contents key={`contents-${address}`} headings={headings} scroller={scroller} />}
 						<div className="min-w-0 px-4 pb-10 md:px-10 xl:col-start-2 xl:row-start-2">
 							<div className="mx-auto flex max-w-[40rem] flex-col gap-10">
-								{listed ? <Overview entries={listed} /> : entry ? <Stories entry={entry} heading="h2" /> : <p className="text-muted">Nothing at this address</p>}
+								{listed ? (
+									<Overview entries={listed} />
+								) : entry ? (
+									<>
+										<Stories entry={entry} heading="h2" />
+										<Reference entry={entry} />
+									</>
+								) : (
+									<p className="text-muted">Nothing at this address</p>
+								)}
 							</div>
 						</div>
 						{entry && <Inspector key={`code-${entry.id}`} entry={entry} />}

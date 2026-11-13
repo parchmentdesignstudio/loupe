@@ -3,7 +3,7 @@ import type { Key } from 'react-aria-components';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Header, ListBoxItem, ListBoxSection, Select } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
 
 const pool = ['Brand identity', 'Website', 'Design system', 'Illustration', 'Typography', 'Signage', 'Packaging', 'Motion', 'Photography', 'Copywriting'];
 const headings = ['Popular', 'Recently used', 'Studio', 'Print', 'Digital', 'Everything else'];
@@ -70,22 +70,26 @@ export function SelectPlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
+			preview={<Choice label="Width" options={Object.keys(widths) as (keyof typeof widths)[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<TextControl label="Label" value={label} onChange={setLabel} />
-					<TextControl label="Placeholder" value={placeholder} onChange={setPlaceholder} />
-					<TextControl label="Description" value={description} onChange={setDescription} />
-					<TextControl label="Error, when invalid" value={errorMessage} onChange={setErrorMessage} />
-					<Choice label="Width" options={Object.keys(widths) as (keyof typeof widths)[]} value={width} onChange={setWidth} />
-					<Choice label="Options" options={counts} value={count} onChange={setCount} />
-					<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
-					<SwitchControl label="Under headings" value={hasSections} onChange={setSections} />
-					<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
-					<SwitchControl label="Nothing chosen" value={selectedKey == null} onChange={(none) => setSelectedKey(none ? null : 'option-0')} />
-					<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<TextControl label="Label" value={label} onChange={setLabel} />
+						<TextControl label="Placeholder" value={placeholder} onChange={setPlaceholder} />
+						<TextControl label="Description" value={description} onChange={setDescription} />
+						<TextControl label="Error, when invalid" value={errorMessage} onChange={setErrorMessage} />
+						<Choice label="Options" options={counts} value={count} onChange={setCount} />
+						<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
+						<SwitchControl label="Under headings" value={hasSections} onChange={setSections} />
+						<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Nothing chosen" value={selectedKey == null} onChange={(none) => setSelectedKey(none ? null : 'option-0')} />
+						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

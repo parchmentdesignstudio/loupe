@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, DialogActions, DialogClose, DialogHeading, Sheet, SheetTrigger, TextField } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 import { type Length, bodyOf, lengths } from './overlay.js';
 
 const positions = ['bottom', 'top', 'start', 'end', 'center'] as const;
@@ -40,16 +40,24 @@ export function SheetPlayground() {
 			onRandom={shuffle}
 			controls={
 				<>
-					<TextControl label="Trigger" value={trigger} onChange={setTrigger} />
-					<Choice label="Position" options={positions} value={position} onChange={setPosition} />
-					<Choice label="Snap points" options={snaps} value={snap} onChange={setSnap} />
-					<Choice label="Heading" options={headings} value={heading} onChange={setHeading} />
-					{heading === 'short' && <TextControl label="Heading text" value={title} onChange={setTitle} />}
-					<Choice label="Body" options={lengths} value={body} onChange={setBody} />
-					<SwitchControl label="Text field" value={hasField} onChange={setHasField} />
-					<SwitchControl label="Actions" value={hasActions} onChange={setHasActions} />
-					<SwitchControl label="Close button" value={hasClose} onChange={setHasClose} />
-					<SwitchControl label="Prevent dismissal" value={preventDismissal} onChange={setPreventDismissal} />
+					<ControlGroup label="Content">
+						<Choice label="Heading" options={headings} value={heading} onChange={setHeading} />
+						{heading === 'short' && <TextControl label="Heading text" value={title} onChange={setTitle} />}
+						<Choice label="Body" options={lengths} value={body} onChange={setBody} />
+						<SwitchControl label="Text field" value={hasField} onChange={setHasField} />
+						<SwitchControl label="Actions" value={hasActions} onChange={setHasActions} />
+						<SwitchControl label="Close button" value={hasClose} onChange={setHasClose} />
+					</ControlGroup>
+					<ControlGroup label="Placement">
+						<Choice label="Position" options={positions} value={position} onChange={setPosition} />
+						<Choice label="Snap points" options={snaps} value={snap} onChange={setSnap} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<SwitchControl label="Prevent dismissal" value={preventDismissal} onChange={setPreventDismissal} />
+					</ControlGroup>
+					<ControlGroup label="Trigger">
+						<TextControl label="Trigger" value={trigger} onChange={setTrigger} />
+					</ControlGroup>
 				</>
 			}
 		>

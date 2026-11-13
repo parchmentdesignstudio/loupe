@@ -59,7 +59,7 @@ const tab = tv({
 			true: 'text-ink',
 		},
 		isDisabled: {
-			true: 'opacity-40',
+			true: 'text-muted',
 		},
 	},
 });

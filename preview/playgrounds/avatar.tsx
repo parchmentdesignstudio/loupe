@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Avatar, AvatarGroup, type AvatarShape, type AvatarSize, type AvatarStatus } from '../../src/index.js';
-import { Choice, NumberControl, Playground, SwitchControl, TextControl, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, pick } from '../playground.js';
+import doris from '../assets/doris.jpg';
 
-// Stand-in photos, drawn rather than fetched so the preview works offline: a head and shoulders on a backdrop, one of
-// them nearly white to show the image's edge, and a logo for an organisation
+// Stand-in photos, bundled rather than fetched so the preview works offline: Doris, a real photo cropped to her head,
+// then drawn heads and shoulders on a backdrop, one of them nearly white to show the image's edge, and a logo for an
+// organisation
 const portrait = (backdrop: string, skin: string, top: string) =>
 	`data:image/svg+xml,${encodeURIComponent(
 		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${backdrop}"/><ellipse cx="32" cy="66" rx="24" ry="18" fill="${top}"/><circle cx="32" cy="28" r="12" fill="${skin}"/></svg>`,
 	)}`;
-export const photos = [portrait('#c9d8d2', '#c58f6b', '#2f4a40'), portrait('#f4d9b8', '#8a5a3c', '#7a2e2a'), portrait('#fbfbfa', '#e7c3a5', '#d9dde3'), portrait('#3c4a68', '#f0c9a8', '#e0a34a')];
+export const photos = [doris, portrait('#c9d8d2', '#c58f6b', '#2f4a40'), portrait('#f4d9b8', '#8a5a3c', '#7a2e2a'), portrait('#fbfbfa', '#e7c3a5', '#d9dde3'), portrait('#3c4a68', '#f0c9a8', '#e0a34a')];
 export const logo = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#0c2920"/><path d="M20 44V20h14a8 8 0 0 1 0 16H26" fill="none" stroke="#f5c03c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>')}`;
 // A path that's never there, to see the initials stay put when an image fails
 const broken = '/no-such-photo.jpg';
@@ -59,14 +61,8 @@ export function AvatarPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
-			controls={
+			preview={
 				<>
-					<Choice label="Name" options={Object.keys(names) as NameKind[]} value={kind} onChange={chooseKind} />
-					<TextControl label="Name, as typed" value={name} onChange={setName} />
-					<Choice label="Image" options={images} value={image} onChange={setImage} />
-					<Choice label="Size" options={sizes} value={size} onChange={setSize} />
-					<Choice label="Shape" options={['circle', 'square'] as const} value={shape} onChange={setShape} />
-					<Choice label="Status" options={statuses} value={status} onChange={setStatus} />
 					<SwitchControl label="In a group" value={isGroup} onChange={setGroup} />
 					{isGroup && (
 						<>
@@ -74,6 +70,22 @@ export function AvatarPlayground() {
 							<NumberControl label="Max, 0 for none" value={max} onChange={setMax} minValue={0} maxValue={20} />
 						</>
 					)}
+				</>
+			}
+			controls={
+				<>
+					<ControlGroup label="Content">
+						<Choice label="Name" options={Object.keys(names) as NameKind[]} value={kind} onChange={chooseKind} />
+						<TextControl label="Name, as typed" value={name} onChange={setName} />
+						<Choice label="Image" options={images} value={image} onChange={setImage} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
+						<Choice label="Shape" options={['circle', 'square'] as const} value={shape} onChange={setShape} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Status" options={statuses} value={status} onChange={setStatus} />
+					</ControlGroup>
 				</>
 			}
 		>
@@ -145,7 +157,7 @@ export function AvatarGroups() {
 				))}
 			</AvatarGroup>
 			{/* On a raised card, the rings take the card's colour */}
-			<div className="flex items-center gap-3 rounded-xl bg-raised p-3 shadow-raised [--avatar-ring:var(--color-raised)] [--bleed:var(--raised-bleed)]">
+			<div className="flex items-center gap-3 rounded-xl bg-raised p-3 shadow-panel [--avatar-ring:var(--color-raised)] [--bleed:var(--raised-bleed)]">
 				<AvatarGroup max={4} size={24}>
 					{people.slice(3, 10).map((person) => (
 						<Avatar key={person} name={person} />

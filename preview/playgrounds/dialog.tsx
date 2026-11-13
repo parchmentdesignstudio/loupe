@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Modal, TextField } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 import { type Length, bodyOf, lengths } from './overlay.js';
 
 const sizes = ['small', 'medium', 'large'] as const;
@@ -38,16 +38,24 @@ export function DialogPlayground() {
 			onRandom={shuffle}
 			controls={
 				<>
-					<TextControl label="Trigger" value={trigger} onChange={setTrigger} />
-					<Choice label="Size" options={sizes} value={size} onChange={setSize} />
-					<Choice label="Heading" options={headings} value={heading} onChange={setHeading} />
-					{heading === 'short' && <TextControl label="Heading text" value={title} onChange={setTitle} />}
-					<Choice label="Body" options={lengths} value={body} onChange={setBody} />
-					<SwitchControl label="Text field" value={hasField} onChange={setHasField} />
-					<Choice label="Actions" options={actionSets} value={actions} onChange={setActions} />
-					<SwitchControl label="Close button" value={hasClose} onChange={setHasClose} />
-					<SwitchControl label="Click outside closes" value={isDismissable} onChange={setDismissable} />
-					<SwitchControl label="Escape closes" value={escapeCloses} onChange={setEscapeCloses} />
+					<ControlGroup label="Content">
+						<Choice label="Heading" options={headings} value={heading} onChange={setHeading} />
+						{heading === 'short' && <TextControl label="Heading text" value={title} onChange={setTitle} />}
+						<Choice label="Body" options={lengths} value={body} onChange={setBody} />
+						<SwitchControl label="Text field" value={hasField} onChange={setHasField} />
+						<Choice label="Actions" options={actionSets} value={actions} onChange={setActions} />
+						<SwitchControl label="Close button" value={hasClose} onChange={setHasClose} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<SwitchControl label="Click outside closes" value={isDismissable} onChange={setDismissable} />
+						<SwitchControl label="Escape closes" value={escapeCloses} onChange={setEscapeCloses} />
+					</ControlGroup>
+					<ControlGroup label="Trigger">
+						<TextControl label="Trigger" value={trigger} onChange={setTrigger} />
+					</ControlGroup>
 				</>
 			}
 		>

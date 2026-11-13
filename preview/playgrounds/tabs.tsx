@@ -3,7 +3,7 @@ import { type Key, RouterProvider } from 'react-aria-components';
 import { type IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Tab, TabList, TabPanel, Tabs } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, solidIcons } from '../playground.js';
 
 const pages = [
 	{ name: 'Brief', icon: 'note-text', panel: 'A studio site that shows the work first, then the people behind it.' },
@@ -62,13 +62,21 @@ export function TabsPlayground() {
 			box="items-start"
 			controls={
 				<>
-					<Choice label="Orientation" options={orientations} value={orientation} onChange={setOrientation} />
-					<Choice label="Tabs" options={counts} value={count} onChange={setCount} />
-					<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
-					<SwitchControl label="Long tab name" value={isLongLabel} onChange={setLongLabel} />
-					<SwitchControl label="Long panel" value={isLongPanel} onChange={setLongPanel} />
-					<SwitchControl label="A disabled tab" value={hasDisabled} onChange={setHasDisabled} />
-					<SwitchControl label="Tabs are links" value={asLinks} onChange={setAsLinks} />
+					<ControlGroup label="Content">
+						<Choice label="Tabs" options={counts} value={count} onChange={setCount} />
+						<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
+						<SwitchControl label="Long tab name" value={isLongLabel} onChange={setLongLabel} />
+						<SwitchControl label="Long panel" value={isLongPanel} onChange={setLongPanel} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Orientation" options={orientations} value={orientation} onChange={setOrientation} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<SwitchControl label="Tabs are links" value={asLinks} onChange={setAsLinks} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="A disabled tab" value={hasDisabled} onChange={setHasDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

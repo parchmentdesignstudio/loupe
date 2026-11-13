@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type ColorChannel, type ColorSpace, parseColor } from 'react-aria-components';
 import { ColorArea, ColorSlider } from '../../src/index.js';
-import { Choice, ControlRow, Playground, SwitchControl, pick } from '../playground.js';
+import { Choice, ControlGroup, ControlRow, Playground, SwitchControl, pick } from '../playground.js';
 import { ColourControl, channels, randomColour, spaces } from './colour.js';
 
 const sizes = { small: 'w-32', medium: 'w-56', large: 'w-80' } as const;
@@ -38,18 +38,26 @@ export function ColorAreaPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
-			controls={
+			preview={
 				<>
-					<ColourControl value={color} onChange={(next) => setColor(next.toFormat(space))} />
-					<Choice label="Colour space" options={spaces} value={space} onChange={(next) => setChannels(next, channels[next][1], channels[next][2])} />
-					<Choice label="Across" options={channels[space]} value={x} onChange={(channel) => setAxis('x', channel)} />
-					<Choice label="Up" options={channels[space]} value={y} onChange={(channel) => setAxis('y', channel)} />
 					<Choice label="Size" options={Object.keys(sizes) as Size[]} value={size} onChange={setSize} />
 					<SwitchControl label="Slider for the third channel" value={hasSlider} onChange={setSlider} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
-					<ControlRow label="Value">
-						<span className="text-control text-ink tabular-nums">{color.toString('css')}</span>
-					</ControlRow>
+				</>
+			}
+			controls={
+				<>
+					<ControlGroup label="Behaviour">
+						<Choice label="Colour space" options={spaces} value={space} onChange={(next) => setChannels(next, channels[next][1], channels[next][2])} />
+						<Choice label="Across" options={channels[space]} value={x} onChange={(channel) => setAxis('x', channel)} />
+						<Choice label="Up" options={channels[space]} value={y} onChange={(channel) => setAxis('y', channel)} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<ColourControl value={color} onChange={(next) => setColor(next.toFormat(space))} />
+						<ControlRow label="Value">
+							<span className="text-control text-ink tabular-nums">{color.toString('css')}</span>
+						</ControlRow>
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

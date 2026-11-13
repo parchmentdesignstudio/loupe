@@ -12,7 +12,7 @@ export const link = tv({
 			true: 'font-medium no-underline',
 		},
 		isDisabled: {
-			true: 'no-underline opacity-40',
+			true: 'text-muted no-underline',
 		},
 	},
 });

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Breadcrumb, Breadcrumbs } from '../../src/index.js';
-import { Choice, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const counts = { two: 2, four: 4, eight: 8 } as const;
 type Count = keyof typeof counts;
@@ -36,15 +36,21 @@ export function BreadcrumbsPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Crumbs" options={Object.keys(counts) as Count[]} value={count} onChange={setCount} />
-					<Choice label="Text" options={['short', 'long'] as const} value={text} onChange={setText} />
-					<Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />
-					<SwitchControl label="A group with no page" value={hasGroup} onChange={setGroup} />
-					<SwitchControl label="Limit how many show" value={hasLimit} onChange={setLimit} />
-					{hasLimit && <NumberControl label="Most to show" value={maxVisible} onChange={setMaxVisible} minValue={2} maxValue={8} />}
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Content">
+						<Choice label="Crumbs" options={Object.keys(counts) as Count[]} value={count} onChange={setCount} />
+						<Choice label="Text" options={['short', 'long'] as const} value={text} onChange={setText} />
+						<SwitchControl label="A group with no page" value={hasGroup} onChange={setGroup} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<SwitchControl label="Limit how many show" value={hasLimit} onChange={setLimit} />
+						{hasLimit && <NumberControl label="Most to show" value={maxVisible} onChange={setMaxVisible} minValue={2} maxValue={8} />}
+					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

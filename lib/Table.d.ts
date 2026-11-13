@@ -3,7 +3,16 @@ import { type MenuProps } from './Menu.js';
 export type { RowProps, TableBodyProps, TableHeaderProps, TableLoadMoreItemProps };
 type Align = 'start' | 'end';
 type Density = 'compact' | 'comfortable';
-export declare const table: import("tailwind-variants").TVReturnType<{}, {
+export declare const table: import("tailwind-variants").TVReturnType<{
+    variant: {
+        raised: {
+            container: string;
+        };
+        flush: {
+            container: string;
+        };
+    };
+}, {
     container: string;
     grid: string;
 }, undefined, undefined, undefined, undefined>;
@@ -14,7 +23,7 @@ export declare const tableColumn: import("tailwind-variants").TVReturnType<{
     isSorted: {
         true: string;
     };
-}, undefined, "sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-raised px-3 py-2 text-start text-label font-medium text-muted transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none", {
+}, undefined, "sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label font-medium text-muted transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;
@@ -67,6 +76,8 @@ export declare const tableCell: import("tailwind-variants").TVReturnType<{}, und
 export interface TableProps extends Omit<AriaTableProps, 'className'> {
     /** Compact rows are 32px, as tall as a control, for dense data. Comfortable rows are 40px */
     density?: Density;
+    /** Raised sits in a box of its own. Flush has none, for a table that fills a page's content edge to edge; on anything but a panel, set --table-fill to its colour */
+    variant?: 'raised' | 'flush';
     /** Classes for the box around the table. Give it a height, as in max-h-96, and the rows scroll under a header that stays put */
     className?: string;
 }
@@ -74,7 +85,7 @@ export interface TableProps extends Omit<AriaTableProps, 'className'> {
  * Rows of records under sortable columns, such as customers, invoices or members, on a raised box. Set isRowHeader on
  * the column that names each row, and give the table an aria-label
  */
-export declare function Table({ density, className, ...props }: TableProps): import("react").JSX.Element;
+export declare function Table({ density, variant, className, ...props }: TableProps): import("react").JSX.Element;
 /** The header row, holding a Column for each column. With several rows to choose, it starts with a checkbox that chooses them all */
 export declare function TableHeader<T extends object>({ columns, children, ...props }: TableHeaderProps<T>): import("react").JSX.Element;
 export interface ColumnProps extends AriaColumnProps {

@@ -39,6 +39,7 @@ import {
 	Tabs,
 } from '../../src/index.js';
 import { CalendarGlyph } from '../../src/glyphs.js';
+import doris from '../assets/doris.jpg';
 
 // Dummy leads for a CRM, to put the components under the load of a real screen: long names, empty cells, many pages
 
@@ -215,7 +216,7 @@ function Sidebar({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: (isO
 				<Link href="#/screens" aria-label="Back to loupe’s screens" className="flex size-8 items-center justify-center rounded-lg text-ink no-underline hover:bg-bleed/4">
 					<Icon name="house" />
 				</Link>
-				<Button variant="ghost" shape="square" size="small" aria-label="Hide the menu">
+				<Button variant="ghost" size="small" aria-label="Hide the menu">
 					<Icon name="sidebar-left" />
 				</Button>
 			</div>
@@ -256,7 +257,7 @@ function Sidebar({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: (isO
 				</NavigationTreeSection>
 			</NavigationTree>
 			<div className="mt-auto flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-bleed/4">
-				<Avatar name="Steve" size={24} status="online" />
+				<Avatar name="Steve" size={24} src={doris} status="online" />
 				<span className="flex-1 truncate text-control font-medium">Steve</span>
 			</div>
 		</Navigation>
@@ -282,7 +283,7 @@ function Toolbar({ onMenu, search, onSearch, filters, onFilters, period, onPerio
 	const isPhone = usePhone();
 	const [isSearching, setSearching] = useState(false);
 	// On phones each button is its icon alone, named for screen readers, as a square
-	const compact = (label: string) => (isPhone ? { shape: 'square' as const, 'aria-label': label } : {});
+	const compact = (label: string) => (isPhone ? { 'aria-label': label } : {});
 	const searchField = (
 		<SearchField
 			aria-label="Search leads"
@@ -296,7 +297,7 @@ function Toolbar({ onMenu, search, onSearch, filters, onFilters, period, onPerio
 	return (
 		<header className="flex min-h-12 shrink-0 flex-wrap items-center gap-2 border-b border-bleed/8 px-4 py-2">
 			{isPhone && (
-				<Button variant="ghost" shape="square" aria-label="Menu" onPress={onMenu} className="-ms-2">
+				<Button variant="ghost" aria-label="Menu" onPress={onMenu} className="-ms-2">
 					<Icon name="line-2-horizontal" variant="line" />
 				</Button>
 			)}
@@ -308,7 +309,7 @@ function Toolbar({ onMenu, search, onSearch, filters, onFilters, period, onPerio
 			{/* On phones the buttons sit at the end of the bar, after the title */}
 			<div className="contents max-md:ms-auto max-md:flex max-md:items-center max-md:gap-2">
 			{isPhone && (
-				<Button variant="outline" shape="square" aria-label="Search" aria-expanded={isSearching} onPress={() => setSearching(!isSearching)}>
+				<Button variant="outline" aria-label="Search" aria-expanded={isSearching} onPress={() => setSearching(!isSearching)}>
 					<Icon name="magnifyingglass" />
 				</Button>
 			)}
@@ -575,7 +576,7 @@ export function LeadsScreen() {
 	return (
 		<div className="font-sans text-body text-ink md:flex md:h-dvh">
 			<Sidebar isOpen={isMenuOpen} onOpenChange={setMenuOpen} />
-			<div className="flex min-w-0 flex-1 flex-col bg-panel max-md:min-h-dvh md:relative md:z-1 md:my-2 md:mr-2 md:overflow-hidden md:rounded-xl md:shadow-raised [--bleed:var(--panel-bleed)]">
+			<div className="flex min-w-0 flex-1 flex-col bg-panel max-md:min-h-dvh md:relative md:z-1 md:my-2 md:mr-2 md:overflow-hidden md:rounded-xl md:shadow-panel [--bleed:var(--panel-bleed)]">
 				<Toolbar
 					onMenu={() => setMenuOpen(true)}
 					search={search}

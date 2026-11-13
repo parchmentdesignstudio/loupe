@@ -80,10 +80,10 @@ describe('Button', () => {
 	it('keeps a circle round at either size', () => {
 		render(
 			<>
-				<Button shape="circle" aria-label="Send">
+				<Button shape="full" aria-label="Send">
 					<svg aria-hidden="true" />
 				</Button>
-				<Button shape="circle" size="small" aria-label="Close">
+				<Button shape="full" size="small" aria-label="Close">
 					<svg aria-hidden="true" />
 				</Button>
 			</>,
@@ -120,7 +120,7 @@ describe('Button', () => {
 		const { container } = render(
 			<>
 				<Button>Schedule call</Button>
-				<Button variant="secondary" shape="circle" aria-label="Email Steve">
+				<Button variant="secondary" shape="full" aria-label="Email Steve">
 					<svg aria-hidden="true" />
 				</Button>
 			</>,

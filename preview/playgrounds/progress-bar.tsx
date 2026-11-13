@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Meter, ProgressBar, ProgressCircle } from '../../src/index.js';
-import { Choice, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const kinds = ['bar', 'circle', 'meter'] as const;
 const labels = ['none', 'short', 'long'] as const;
@@ -42,16 +42,22 @@ export function ProgressBarPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={!isCircle && <Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
-					<Choice label="Kind" options={kinds} value={kind} onChange={setKind} />
-					<Choice label={isCircle ? 'Label, read out' : 'Label'} options={labels} value={label} onChange={setLabel} />
-					<NumberControl label="Value" value={value} onChange={setValue} minValue={0} maxValue={100} />
-					<SwitchControl label="Running" value={isRunning} onChange={setRunning} />
-					{!isMeter && <SwitchControl label="Indeterminate" value={isIndeterminate} onChange={setIndeterminate} />}
-					{!isCircle && <Choice label="Value text" options={values} value={valueText} onChange={setValueText} />}
-					{isCircle && <Choice label="Size" options={['medium', 'large'] as const} value={size} onChange={setSize} />}
-					{!isCircle && <Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
+					<ControlGroup label="Content">
+						<Choice label={isCircle ? 'Label, read out' : 'Label'} options={labels} value={label} onChange={setLabel} />
+						{!isCircle && <Choice label="Value text" options={values} value={valueText} onChange={setValueText} />}
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Kind" options={kinds} value={kind} onChange={setKind} />
+						{isCircle && <Choice label="Size" options={['medium', 'large'] as const} value={size} onChange={setSize} />}
+					</ControlGroup>
+					<ControlGroup label="State">
+						<NumberControl label="Value" value={value} onChange={setValue} minValue={0} maxValue={100} />
+						<SwitchControl label="Running" value={isRunning} onChange={setRunning} />
+						{!isMeter && <SwitchControl label="Indeterminate" value={isIndeterminate} onChange={setIndeterminate} />}
+					</ControlGroup>
 				</>
 			}
 		>

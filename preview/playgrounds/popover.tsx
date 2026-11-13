@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Popover, TextField } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
 import { type Align, type Length, type Side, aligns, bodyOf, lengths, placementOf, sides } from './overlay.js';
 
 const headings = ['none', 'short', 'long'] as const;
@@ -46,20 +46,32 @@ export function PopoverPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
+			preview={
+				<>
+					<Choice label="Width" options={widths} value={width} onChange={setWidth} />
+					<SwitchControl label="Keep open" value={keepOpen} onChange={keep} />
+				</>
+			}
 			controls={
 				<>
-					<SwitchControl label="Keep open" value={keepOpen} onChange={keep} />
-					<TextControl label="Trigger" value={trigger} onChange={setTrigger} />
-					<Choice label="Side" options={sides} value={side} onChange={setSide} />
-					<Choice label="Align" options={aligns} value={align} onChange={setAlign} />
-					<SwitchControl label="Arrow" value={showArrow} onChange={setShowArrow} />
-					<Choice label="Width" options={widths} value={width} onChange={setWidth} />
-					<Choice label="Heading" options={headings} value={heading} onChange={setHeading} />
-					{heading === 'short' && <TextControl label="Heading text" value={title} onChange={setTitle} />}
-					<Choice label="Body" options={lengths} value={body} onChange={setBody} />
-					<SwitchControl label="Text field" value={hasField} onChange={setHasField} />
-					<SwitchControl label="Actions" value={hasActions} onChange={setHasActions} />
-					<SwitchControl label="Close button" value={hasClose} onChange={setHasClose} />
+					<ControlGroup label="Content">
+						<Choice label="Heading" options={headings} value={heading} onChange={setHeading} />
+						{heading === 'short' && <TextControl label="Heading text" value={title} onChange={setTitle} />}
+						<Choice label="Body" options={lengths} value={body} onChange={setBody} />
+						<SwitchControl label="Text field" value={hasField} onChange={setHasField} />
+						<SwitchControl label="Actions" value={hasActions} onChange={setHasActions} />
+						<SwitchControl label="Close button" value={hasClose} onChange={setHasClose} />
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<SwitchControl label="Arrow" value={showArrow} onChange={setShowArrow} />
+					</ControlGroup>
+					<ControlGroup label="Placement">
+						<Choice label="Side" options={sides} value={side} onChange={setSide} />
+						<Choice label="Align" options={aligns} value={align} onChange={setAlign} />
+					</ControlGroup>
+					<ControlGroup label="Trigger">
+						<TextControl label="Trigger" value={trigger} onChange={setTrigger} />
+					</ControlGroup>
 				</>
 			}
 		>

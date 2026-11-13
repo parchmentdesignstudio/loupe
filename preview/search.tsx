@@ -15,7 +15,7 @@ const pages = [
 /** Opens the search, with a press or ⌘K */
 export function SearchButton({ onPress }: { onPress: () => void }) {
 	return (
-		<Button variant="ghost" shape="circle" size="small" aria-label="Search" onPress={onPress}>
+		<Button variant="ghost" shape="full" size="small" aria-label="Search" onPress={onPress}>
 			<Icon name="magnifyingglass" />
 		</Button>
 	);

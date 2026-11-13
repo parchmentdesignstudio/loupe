@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type DateValue, parseDate } from '@internationalized/date';
 import { Calendar, RangeCalendar } from '../../src/index.js';
-import { Choice, Playground, SwitchControl, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, pick } from '../playground.js';
 import { InLocale, type LocaleName, limits, locales, now, weekends } from './dates.js';
 
 const kinds = ['single', 'range'] as const;
@@ -63,16 +63,22 @@ export function CalendarPlayground() {
 			onRandom={shuffle}
 			controls={
 				<>
-					<Choice label="Kind" options={kinds} value={kind} onChange={setKind} />
-					<Choice label="Value" options={values} value={content} onChange={fill} />
-					<Choice label="Months shown" options={months} value={visible} onChange={setVisible} />
-					<Choice label="Locale" options={Object.keys(locales) as LocaleName[]} value={locale} onChange={setLocale} />
-					<Choice label="Week starts" options={firstDays} value={firstDay} onChange={setFirstDay} />
-					<SwitchControl label="A month either side of today" value={hasLimits} onChange={setLimits} />
-					<SwitchControl label="Weekends unavailable" value={hasWeekends} onChange={setWeekends} />
-					<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-					<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
-					<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					<ControlGroup label="Appearance">
+						<Choice label="Months shown" options={months} value={visible} onChange={setVisible} />
+					</ControlGroup>
+					<ControlGroup label="Behaviour">
+						<Choice label="Kind" options={kinds} value={kind} onChange={setKind} />
+						<Choice label="Locale" options={Object.keys(locales) as LocaleName[]} value={locale} onChange={setLocale} />
+						<Choice label="Week starts" options={firstDays} value={firstDay} onChange={setFirstDay} />
+						<SwitchControl label="A month either side of today" value={hasLimits} onChange={setLimits} />
+						<SwitchControl label="Weekends unavailable" value={hasWeekends} onChange={setWeekends} />
+					</ControlGroup>
+					<ControlGroup label="State">
+						<Choice label="Value" options={values} value={content} onChange={fill} />
+						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
+						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
+						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
+					</ControlGroup>
 				</>
 			}
 		>

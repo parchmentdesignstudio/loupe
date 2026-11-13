@@ -316,7 +316,7 @@ function read(root, ui, packages) {
 		if (declaration) return { source, ...declaration };
 		const binding = source.imports.get(name) ?? source.reexports.get(name);
 		if (!binding) return;
-		if (binding.from === 'react-aria-components') return { source, aria: binding.name, node: binding.node };
+		if (binding.from === 'react-aria-components' || binding.from.startsWith('react-aria-components/')) return { source, aria: binding.name, node: binding.node };
 		if (!binding.from.startsWith('.')) return { source, from: binding.from, name: binding.name };
 		const target = fileOf(source, binding.from);
 		return target && resolve(target, binding.name, seen);
