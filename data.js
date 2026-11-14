@@ -79,6 +79,10 @@ export default {
     "viewBox": "0 0 16 16",
     "body": "<g stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"12\" height=\"4\" x=\"2\" y=\"2\" rx=\"1\" style=\"fill:var(--icon-fill, Canvas)\"/><rect width=\"12\" height=\"4\" x=\"2\" y=\"10\" rx=\"1\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
   },
+  "line/16/batteryblock": {
+    "viewBox": "0 0 16 16",
+    "body": "<g stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"2\" height=\"2\" x=\"4.5\" y=\"4\" rx=\".5\" style=\"fill:var(--icon-fill, Canvas)\"/><rect width=\"2\" height=\"2\" x=\"9.5\" y=\"4\" rx=\".5\" style=\"fill:var(--icon-fill, Canvas)\"/><rect width=\"12\" height=\"8\" x=\"2\" y=\"6\" rx=\"1.5\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
+  },
   "line/16/blog": {
     "viewBox": "0 0 16 16",
     "body": "<g stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M10.667 13.333H5.333L3 7l5-6 5 6z\" style=\"fill:var(--icon-fill, Canvas)\"/><path d=\"M12 15H4v-2h8zM8 1v7\"/></g>"
@@ -415,6 +419,10 @@ export default {
     "viewBox": "0 0 24 24",
     "body": "<path stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m17 15-5-8-5 8z\" style=\"fill:var(--icon-fill, Canvas)\"/>"
   },
+  "line/24/batteryblock": {
+    "viewBox": "0 0 24 24",
+    "body": "<g stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><rect width=\"3\" height=\"3\" x=\"6.5\" y=\"5\" rx=\"1\" style=\"fill:var(--icon-fill, Canvas)\"/><rect width=\"3\" height=\"3\" x=\"14.5\" y=\"5\" rx=\"1\" style=\"fill:var(--icon-fill, Canvas)\"/><rect width=\"18\" height=\"11\" x=\"3\" y=\"9\" rx=\"2\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
+  },
   "line/24/bee": {
     "viewBox": "0 0 24 24",
     "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M10 6c0-3-1-4-4-4m8 4c0-3 1-4 4-4\"/><path fill=\"currentColor\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8\"/><path stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 21a6 6 0 1 0 0-12 6 6 0 0 0 0 12\" style=\"fill:var(--icon-fill, Canvas)\"/><path fill=\"currentColor\" d=\"M7 12c3.871 1.341 6.058 1.325 10 0\"/><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M7 16c3.871 1.341 6.058 1.325 10 0\"/><path stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M22 17.667A8.667 8.667 0 0 0 13.333 9H12v1.333A8.667 8.667 0 0 0 20.667 19c.736 0 1.333-.597 1.333-1.333m-20 0A8.667 8.667 0 0 1 10.667 9H12v1.333A8.667 8.667 0 0 1 3.333 19 1.333 1.333 0 0 1 2 17.667\" style=\"fill:var(--icon-fill, Canvas)\"/>"
@@ -699,6 +707,10 @@ export default {
     "viewBox": "0 0 24 24",
     "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 19 5 5m14 0L5 19\"/>"
   },
+  "solid/16/accessibility": {
+    "viewBox": "0 0 16 16",
+    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M8 1a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3M2.5 5.25h11a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H9.75a.5.5 0 0 0-.5.5v2.677a.5.5 0 0 0 .021.143l1.334 4.447a.375.375 0 0 1-.359.483h-.717a.375.375 0 0 1-.36-.267l-.69-2.303a.5.5 0 0 0-.958 0l-.69 2.303a.375.375 0 0 1-.36.267h-.717a.375.375 0 0 1-.36-.483L6.73 10.07a.5.5 0 0 0 .021-.143V7.25a.5.5 0 0 0-.5-.5H2.5a.5.5 0 0 1-.5-.5v-.5a.5.5 0 0 1 .5-.5\"/>"
+  },
   "solid/16/airplane-arrival-belly": {
     "viewBox": "0 0 16 16",
     "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><path d=\"M13 14.5V14a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5\" data-part=\"shadow\" opacity=\".6\"/><path d=\"M14.285 9.173a1.25 1.25 0 0 0-.436-1.232c-.233-.189-.575-.261-1.26-.407l-2.1-.446c-.321-.069-.483-.103-.606-.168a1 1 0 0 1-.289-.23c-.091-.106-.16-.256-.299-.555l-.912-1.967c-.189-.408-.283-.611-.465-.686a.5.5 0 0 0-.477.054c-.16.113-.207.333-.3.772l-.338 1.587c-.03.137-.044.206-.081.252a.25.25 0 0 1-.13.085c-.058.015-.126 0-.263-.029l-.873-.185c-.644-.137-.966-.205-1.214-.337a2 2 0 0 1-.591-.477C3.478 5 3.352 4.73 3.102 4.19l-.188-.407c-.07-.15-.104-.224-.15-.277a.5.5 0 0 0-.144-.115c-.062-.033-.143-.05-.304-.084l-.552-.118c-.162-.034-.243-.051-.31-.027a.25.25 0 0 0-.136.119c-.033.062-.028.145-.016.31l.18 2.611c.013.195.02.292.052.368a.5.5 0 0 0 .126.178c.061.055.15.094.33.17l2.288.987c.771.332 1.157.498 1.491.62a12 12 0 0 0 .903.287c.343.094.754.181 1.575.356l3.822.812c.685.146 1.027.219 1.317.141a1.25 1.25 0 0 0 .9-.947\" data-part=\"plane\"/></g>",
@@ -957,6 +969,10 @@ export default {
     "viewBox": "0 0 16 16",
     "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><rect width=\"13\" height=\"5\" x=\"1.5\" y=\"2\" rx=\".5\"/><rect width=\"13\" height=\"5\" x=\"1.5\" y=\"9\" rx=\".5\"/></g>"
   },
+  "solid/16/batteryblock": {
+    "viewBox": "0 0 16 16",
+    "body": "<g fill=\"currentColor\"><rect width=\"3.5\" height=\"3.5\" x=\"3.5\" y=\"2.5\" rx=\"1\"/><rect width=\"3.5\" height=\"3.5\" x=\"9\" y=\"2.5\" rx=\"1\"/><rect width=\"13\" height=\"8.5\" x=\"1.5\" y=\"5\" rx=\"2\"/></g>"
+  },
   "solid/16/bed-double": {
     "viewBox": "0 0 16 16",
     "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><rect width=\"1.5\" height=\"2.5\" x=\"2\" y=\"10\" rx=\".5\"/><rect width=\"1.5\" height=\"2.5\" x=\"12.5\" y=\"10\" rx=\".5\"/><rect width=\"14\" height=\"3.75\" x=\"1\" y=\"7.25\" rx=\"1\"/><rect width=\"5.5\" height=\"3\" x=\"2\" y=\"3.5\" rx=\"1.25\"/><rect width=\"5.5\" height=\"3\" x=\"8.5\" y=\"3.5\" rx=\"1.25\"/></g>"
@@ -975,7 +991,7 @@ export default {
   },
   "solid/16/building": {
     "viewBox": "0 0 16 16",
-    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M4 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2v-2.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V15H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m1.5 2h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m-4 3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m-4 3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5\"/>"
+    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M4 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-2H6v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m2 2h1a.5.5 0 0 1 .5.5v1A.5.5 0 0 1 7 5H6a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 6 3m3 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 9 3M6 6h1a.5.5 0 0 1 .5.5v1A.5.5 0 0 1 7 8H6a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 6 6m3 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 9 6M6 9h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 6 9m3 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 9 9\"/>"
   },
   "solid/16/bus-side": {
     "viewBox": "0 0 16 16",
@@ -1032,6 +1048,10 @@ export default {
   "solid/16/chevron-up": {
     "viewBox": "0 0 16 16",
     "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"m3.177 10.942-.354-.354a.5.5 0 0 1 0-.707l4.823-4.823a.5.5 0 0 1 .708 0l4.823 4.823a.5.5 0 0 1 0 .707l-.354.354a.5.5 0 0 1-.707 0L8 6.826l-4.116 4.116a.5.5 0 0 1-.707 0\"/>"
+  },
+  "solid/16/circle-lefthalf-filled": {
+    "viewBox": "0 0 16 16",
+    "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><path d=\"M7.75 2.75A.25.25 0 0 1 8 2.5a5.5 5.5 0 0 1 0 11 .25.25 0 0 1-.25-.25z\" opacity=\".2\"/><path d=\"M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1m-.25 1.75A.25.25 0 0 1 8 2.5a5.5 5.5 0 0 1 0 11 .25.25 0 0 1-.25-.25z\"/></g>"
   },
   "solid/16/component": {
     "viewBox": "0 0 16 16",
@@ -1156,6 +1176,10 @@ export default {
   "solid/16/note": {
     "viewBox": "0 0 16 16",
     "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><path d=\"M4 1h8a1 1 0 0 1 1 1v6.25a1 1 0 0 1-1 1H8.75a1.5 1.5 0 0 0-1.5 1.5v3.75a.5.5 0 0 1-.5.5H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1\"/><path d=\"M8.75 10h3.896a.25.25 0 0 1 .177.427l-4.396 4.396A.25.25 0 0 1 8 14.646V10.75a.75.75 0 0 1 .75-.75\"/></g>"
+  },
+  "solid/16/paintpalette": {
+    "viewBox": "0 0 16 16",
+    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M1 8a7 7 0 1 1 13.811 1.615.5.5 0 0 1-.486.385H11.5a1.5 1.5 0 0 0-1.5 1.5v2.825a.5.5 0 0 1-.385.486A7 7 0 0 1 1 8m6-3.5a1.25 1.25 0 1 0 2.5 0 1.25 1.25 0 0 0-2.5 0M3.25 7.25a1.25 1.25 0 1 0 2.5 0 1.25 1.25 0 0 0-2.5 0m7.25-1a1.25 1.25 0 1 0 2.5 0 1.25 1.25 0 0 0-2.5 0m-5.75 5a1.25 1.25 0 1 0 2.5 0 1.25 1.25 0 0 0-2.5 0\"/>"
   },
   "solid/16/paperclip": {
     "viewBox": "0 0 16 16",

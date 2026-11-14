@@ -1,0 +1,7 @@
+<svg viewBox="0 0 24 24">
+  <g class="copy">
+    <rect width="3" height="3" x="6.5" y="5" class="fill-(--icon-fill) stroke-current stroke-2 sl-r" rx="1"/>
+    <rect width="3" height="3" x="14.5" y="5" class="fill-(--icon-fill) stroke-current stroke-2 sl-r" rx="1"/>
+    <rect width="18" height="11" x="3" y="9" class="fill-(--icon-fill) stroke-current stroke-2 sl-r" rx="2"/>
+  </g>
+</svg>

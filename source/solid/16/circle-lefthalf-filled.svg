@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/circle-lefthalf-filled</title>
+    <g id="solid/16/circle-lefthalf-filled" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M7.75,2.75 C7.75,2.61192881 7.86192881,2.5 8,2.5 C11.0375661,2.5 13.5,4.96243388 13.5,8 C13.5,11.0375661 11.0375661,13.5 8,13.5 C7.86192881,13.5 7.75,13.3880712 7.75,13.25 L7.75,2.75 Z" id="tint" fill="color(display-p3 0.035 0.180 0.141)" opacity="0.2"></path>
+        <path d="M8,1 C11.8659932,1 15,4.13400675 15,8 C15,11.8659932 11.8659932,15 8,15 C4.13400675,15 1,11.8659932 1,8 C1,4.13400675 4.13400675,1 8,1 L8,1 Z M7.75,2.75 C7.75,2.61192881 7.86192881,2.5 8,2.5 C11.0375661,2.5 13.5,4.96243388 13.5,8 C13.5,11.0375661 11.0375661,13.5 8,13.5 C7.86192881,13.5 7.75,13.3880712 7.75,13.25 L7.75,2.75 Z" id="fill" fill="color(display-p3 0.035 0.180 0.141)"></path>
+    </g>
+</svg>
