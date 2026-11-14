@@ -10,6 +10,8 @@ const icons: IconName[] = ['text-alignleft', 'text-aligncenter', 'text-alignrigh
 const counts = ['2', '3', '5', '8'] as const;
 const contents = ['text', 'icon', 'both'] as const;
 const lengths = ['short', 'long', 'mixed'] as const;
+const gaps = ['0', '1', '2', '4'] as const;
+const variants = ['auto', 'well', 'raised'] as const;
 
 // Going back to one choice keeps only the first of several, as a single-choice group can't hold more
 export function ToggleButtonGroupPlayground() {
@@ -21,6 +23,10 @@ export function ToggleButtonGroupPlayground() {
 	const [length, setLength] = useState<(typeof lengths)[number]>('short');
 	const [iconSet, setIconSet] = useState<IconName[]>(icons);
 	const [selected, setSelected] = useState<Set<Key>>(new Set(['button-1']));
+	const [gap, setGap] = useState<(typeof gaps)[number]>('2');
+	const [hasDividers, setDividers] = useState(true);
+	const [width, setWidth] = useState<'hug' | 'fill'>('hug');
+	const [variant, setVariant] = useState<(typeof variants)[number]>('auto');
 	const [allowsEmpty, setAllowsEmpty] = useState(false);
 	const [hasDisabledButton, setDisabledButton] = useState(false);
 	const [isDisabled, setDisabled] = useState(false);
@@ -56,8 +62,12 @@ export function ToggleButtonGroupPlayground() {
 						<Choice label="Text" options={lengths} value={length} onChange={setLength} isDisabled={content === 'icon'} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
 						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+						<Choice label="Width" options={['hug', 'fill'] as const} value={width} onChange={setWidth} />
 						<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
+						<Choice label="Gap" options={gaps} value={gap} onChange={setGap} />
+						<SwitchControl label="Dividers" value={hasDividers} onChange={setDividers} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						<Choice label="Selection" options={['single', 'multiple'] as const} value={selectionMode} onChange={changeMode} />
@@ -76,6 +86,10 @@ export function ToggleButtonGroupPlayground() {
 				disallowEmptySelection={isSingle || !allowsEmpty}
 				size={size}
 				orientation={orientation}
+				gap={Number(gap) as 0 | 1 | 2 | 4}
+				hasDividers={hasDividers}
+				variant={variant === 'auto' ? undefined : variant}
+				width={width}
 				selectedKeys={selected}
 				onSelectionChange={setSelected}
 				isDisabled={isDisabled}
