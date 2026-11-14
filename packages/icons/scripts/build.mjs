@@ -34,7 +34,12 @@ const ICON_FILL = 'var(--icon-fill, Canvas)'
 
 // Dark paint follows the text colour. Light paint is the knock-out behind a
 // line icon, which sites theme through --icon-fill (the page background, Canvas, by default).
-const recolour = {
+// In a solid icon it's a tint inside the shape, such as a screen, so it's the text colour
+// faintly, as an area fill is (20%), and reads on any background rather than as a
+// white patch on a dark one or a grey one.
+const TINT = '0.2'
+
+const recolour = (isSolid) => ({
   name: 'recolour',
   fn: () => ({
     element: {
@@ -50,7 +55,10 @@ const recolour = {
           const rgb = rgbOf(value)
           if (!rgb) continue
           const light = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2] > 0.5
-          if (light && attr === 'fill') {
+          if (light && attr === 'fill' && isSolid) {
+            node.attributes.fill = 'currentColor'
+            node.attributes.opacity = TINT
+          } else if (light && attr === 'fill') {
             delete node.attributes.fill
             node.attributes.style = `fill:${ICON_FILL}`
           } else {
@@ -60,7 +68,7 @@ const recolour = {
       },
     },
   }),
-}
+})
 
 // The line icons come from iamsteve, styled with its Tailwind utilities
 // (stroke-current stroke-2 sl-r) rather than attributes.
@@ -256,7 +264,7 @@ function clean(raw, id) {
     plugins: [
       markParts,
       classesToAttributes,
-      recolour,
+      recolour(id.startsWith('solid-')),
       {
         name: 'preset-default',
         params: { overrides: { convertColors: false } },
