@@ -26,6 +26,13 @@ export const ChevronDown = ({ className = glyph }: { className?: string }) => (
 	</svg>
 );
 
+// From the icons package, as solid/16/arrowtriangle-down
+export const TriangleDown = ({ className = 'size-4 shrink-0 fill-current' }: { className?: string }) => (
+	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
+		<path d="M11.066 6H4.934a.5.5 0 0 0-.416.777l3.065 4.599a.5.5 0 0 0 .832 0l3.067-4.599A.5.5 0 0 0 11.066 6" />
+	</svg>
+);
+
 export const ChevronRight = ({ className = glyph }: { className?: string }) => (
 	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
 		<path d="m6 4 4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />

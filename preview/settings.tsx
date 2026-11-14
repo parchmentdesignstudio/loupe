@@ -66,12 +66,12 @@ export function OnOffLabels() {
 	);
 }
 
-// One section at a time, as an inspector, so the column has room for more of them. Named rather than drawn until the
-// icon set has icons for them, and in short words, as the full names don't fit the column side by side
+// One section at a time, as an inspector, so the column has room for more of them. Icons, as the names don't fit the
+// column side by side, with each name in a tooltip
 const panels = [
-	{ id: 'appearance', name: 'Display' },
-	{ id: 'accessibility', name: 'a11y' },
-	{ id: 'theme', name: 'Theme' },
+	{ id: 'appearance', name: 'Appearance', icon: 'circle-lefthalf-filled' },
+	{ id: 'accessibility', name: 'Accessibility', icon: 'accessibility' },
+	{ id: 'theme', name: 'Theme', icon: 'paintpalette' },
 ] as const;
 
 type Panel = (typeof panels)[number]['id'];
@@ -96,10 +96,13 @@ export function SettingsPanels() {
 					remember('settings-panel', next);
 				}}
 			>
-				{panels.map(({ id, name }) => (
-					<ToggleButton key={id} id={id}>
-						{name}
-					</ToggleButton>
+				{panels.map(({ id, name, icon }) => (
+					<TooltipTrigger key={id}>
+						<ToggleButton id={id} aria-label={name}>
+							<Icon name={icon} />
+						</ToggleButton>
+						<Tooltip>{name}</Tooltip>
+					</TooltipTrigger>
 				))}
 			</ToggleButtonGroup>
 			{panel === 'appearance' && <Appearance />}

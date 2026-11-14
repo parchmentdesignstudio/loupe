@@ -6,7 +6,7 @@ import { href } from './routes.js';
 import { areas, blocks, library } from './stories.js';
 
 const pages = [
-	{ id: '#/ui', name: 'All components', group: 'Loupe' },
+	{ id: '#/ui', name: 'Components', group: 'Loupe' },
 	...areas.map((area) => ({ id: href(area), name: area.name, group: 'Loupe' })),
 	...blocks.map((entry) => ({ id: href(entry), name: entry.name, group: 'Blocks' })),
 	...library.flatMap((group) => group.components.map((entry) => ({ id: href(entry), name: entry.name, group: group.name }))),

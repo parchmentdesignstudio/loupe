@@ -22,7 +22,7 @@ const uses: Record<string, string> = {
 };
 
 // Written out, as Tailwind only finds whole class names
-const classes: Record<string, string> = { title: 'text-title font-medium', body: 'text-body', control: 'text-control', label: 'text-label' };
+const classes: Record<string, string> = { title: 'text-title', body: 'text-body', control: 'text-control', label: 'text-label' };
 const faces: Record<string, string> = { sans: 'font-sans', mono: 'font-mono' };
 
 const samples: Record<string, string> = {
@@ -57,7 +57,7 @@ export function Scale() {
 }
 
 const families: Record<string, { name: string; role: string }> = {
-	sans: { name: 'Elza Round', role: 'Everything, in 400 and 500' },
+	sans: { name: 'Elza Round', role: 'Everything, in 400 and 500, and 700 for titles' },
 	mono: { name: 'Auger Mono', role: 'Code, tokens and file names' },
 };
 
@@ -133,7 +133,7 @@ export function Together() {
 	return (
 		<div className="flex w-full max-w-md flex-col gap-6">
 			<header className="flex flex-col gap-2">
-				<h3 className="text-title font-medium text-balance text-ink">Notifications</h3>
+				<h3 className="text-title text-balance text-ink">Notifications</h3>
 				<p className="text-pretty text-muted">Choose what reaches you and how often, so the important things stand out from the rest</p>
 			</header>
 			<section className="flex flex-col gap-3">
@@ -156,7 +156,7 @@ export function Article() {
 		<article className="flex w-full max-w-[36rem] flex-col gap-6 text-body text-ink">
 			<header className="flex flex-col gap-4">
 				<p className="text-label text-muted">Process</p>
-				<h3 className="text-title font-medium text-balance">Why we write the brief last</h3>
+				<h3 className="text-title text-balance">Why we write the brief last</h3>
 				<p className="text-pretty text-muted">A brief written on day one describes the project we imagined. One written after the first fortnight describes the one we’re actually building.</p>
 				<div className="flex items-center gap-3">
 					<Avatar name="Parchment" shape="square" size={32} />

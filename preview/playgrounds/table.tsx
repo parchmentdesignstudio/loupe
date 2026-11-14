@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Collection, type Selection, type SortDescriptor } from 'react-aria-components';
-import { Avatar, Cell, Column, EmptyState, MenuItem, MenuSeparator, Row, RowActions, Table, TableBody, TableHeader, TableLoadMore } from '../../src/index.js';
+import { Cell, Column, EmptyState, MenuItem, MenuSeparator, Row, RowActions, Table, TableBody, TableHeader, TableLoadMore } from '../../src/index.js';
 import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const firsts = ['Ada', 'Grace', 'Alan', 'Katherine', 'Tim', 'Margaret', 'Linus', 'Barbara', 'Dennis', 'Radia', 'Ken', 'Frances', 'Donald', 'Hedy', 'Edsger', 'Joan'];
@@ -171,117 +171,6 @@ export function TablePlayground() {
 }
 
 // The stories below the playground
-
-const team = people.slice(0, 6).map((person, index) => ({ ...person, role: index === 0 ? 'Owner' : person.role }));
-/** A members table: an avatar, name over email, and a menu on each row */
-export function MembersTable() {
-	const [sort, setSort] = useState<SortDescriptor>({ column: 'name', direction: 'ascending' });
-	const rows = team.toSorted((a, b) => String(a[sort.column as keyof Person]).localeCompare(String(b[sort.column as keyof Person])) * (sort.direction === 'ascending' ? 1 : -1));
-	return (
-		<Table aria-label="Members" selectionMode="multiple" sortDescriptor={sort} onSortChange={setSort} className="w-full">
-			<TableHeader>
-				<Column id="name" isRowHeader allowsSorting defaultWidth="2fr" minWidth={200}>
-					Name
-				</Column>
-				<Column id="role" allowsSorting minWidth={96}>
-					Role
-				</Column>
-				<Column id="active" allowsSorting minWidth={112}>
-					Last active
-				</Column>
-				<Column id="actions" width={52} minWidth={52}>
-					<span className="sr-only">Actions</span>
-				</Column>
-			</TableHeader>
-			<TableBody items={rows}>
-				{(person) => (
-					<Row textValue={person.name}>
-						<Cell>
-							<Avatar name={person.name} aria-hidden="true" className="shrink-0" />
-							<span className="flex min-w-0 flex-col">
-								<span className="truncate font-medium">{person.name}</span>
-								<span className="truncate text-label text-muted">{person.email}</span>
-							</span>
-						</Cell>
-						<Cell>{person.role}</Cell>
-						<Cell className="text-muted">{person.active}</Cell>
-						<Cell>
-							<RowActions aria-label={`Actions for ${person.name}`}>
-								<MenuItem>Change role</MenuItem>
-								<MenuItem>Resend invite</MenuItem>
-								<MenuSeparator />
-								<MenuItem variant="danger">Remove from team</MenuItem>
-							</RowActions>
-						</Cell>
-					</Row>
-				)}
-			</TableBody>
-		</Table>
-	);
-}
-
-const invoiceList = [
-	{ id: 'INV-0142', customer: 'Northwind Traders', issued: '12 Nov 2026', amount: 4820, status: 'Overdue' },
-	{ id: 'INV-0141', customer: 'Fabrikam', issued: '8 Nov 2026', amount: 1250, status: 'Due' },
-	{ id: 'INV-0140', customer: 'Contoso', issued: '1 Nov 2026', amount: 18400.5, status: 'Paid' },
-	{ id: 'INV-0139', customer: 'Tailspin Toys', issued: '28 Oct 2026', amount: 96, status: 'Paid' },
-	{ id: 'INV-0138', customer: 'Wide World Importers', issued: '21 Oct 2026', amount: 2310.75, status: 'Paid' },
-	{ id: 'INV-0137', customer: 'Adventure Works Cycles and Outdoor Equipment', issued: '14 Oct 2026', amount: 740, status: 'Draft' },
-] as const;
-
-const statusTone = {
-	Paid: 'text-ink',
-	Due: 'text-muted',
-	Overdue: 'text-danger',
-	Draft: 'text-muted',
-} as const;
-
-/** An invoices table: numbers aligned by their digits, a status, and rows that open the invoice */
-export function InvoicesTable() {
-	const [sort, setSort] = useState<SortDescriptor>({ column: 'issued', direction: 'descending' });
-	const [opened, setOpened] = useState('');
-	const rows = sort.column === 'amount' ? invoiceList.toSorted((a, b) => (a.amount - b.amount) * (sort.direction === 'ascending' ? 1 : -1)) : sort.direction === 'descending' ? invoiceList : invoiceList.toReversed();
-	return (
-		<div className="flex w-full flex-col gap-2">
-			<Table aria-label="Invoices" density="compact" sortDescriptor={sort} onSortChange={setSort} onRowAction={(key) => setOpened(`Opened ${key}`)} className="w-full">
-				<TableHeader>
-					<Column id="number" isRowHeader width={104} minWidth={104}>
-						Invoice
-					</Column>
-					<Column id="customer" defaultWidth="2fr" minWidth={160}>
-						Customer
-					</Column>
-					<Column id="issued" allowsSorting minWidth={112}>
-						Issued
-					</Column>
-					<Column id="status" minWidth={96}>
-						Status
-					</Column>
-					<Column id="amount" align="end" allowsSorting minWidth={112}>
-						Amount
-					</Column>
-				</TableHeader>
-				<TableBody items={rows}>
-					{(invoice) => (
-						<Row id={invoice.id}>
-							<Cell className="font-mono text-label">{invoice.id}</Cell>
-							<Cell>{invoice.customer}</Cell>
-							<Cell className="text-muted">{invoice.issued}</Cell>
-							<Cell className={statusTone[invoice.status]}>
-								<span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-current" />
-								{invoice.status}
-							</Cell>
-							<Cell>{money.format(invoice.amount)}</Cell>
-						</Row>
-					)}
-				</TableBody>
-			</Table>
-			<p aria-live="polite" className="min-h-4 text-label text-muted">
-				{opened}
-			</p>
-		</div>
-	);
-}
 
 /** Nothing to show yet, with the library's EmptyState in place of the rows */
 export function EmptyTable() {

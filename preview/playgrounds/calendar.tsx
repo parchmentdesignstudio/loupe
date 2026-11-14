@@ -92,15 +92,3 @@ export function CalendarPlayground() {
 		</Playground>
 	);
 }
-
-export function PickADay() {
-	return <Calendar aria-label="Delivery" defaultValue={now().add({ days: 3 })} />;
-}
-
-export function WeekendsUnavailable() {
-	return <Calendar aria-label="Delivery" isDateUnavailable={weekends(navigator.language)} minValue={now()} />;
-}
-
-export function TwoMonths() {
-	return <RangeCalendar aria-label="Away from the studio" visibleDuration={{ months: 2 }} defaultValue={{ start: now().set({ day: 24 }), end: now().set({ day: 24 }).add({ days: 12 }) }} />;
-}

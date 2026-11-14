@@ -122,23 +122,3 @@ export function DateFieldPlayground() {
 		</Playground>
 	);
 }
-
-export function DateAndTime() {
-	return (
-		<div className="grid w-full max-w-sm grid-cols-2 gap-2.5">
-			<DateField label="Date" defaultValue={parseDate('2026-06-25')} />
-			<TimeField label="Time" defaultValue={parseTime('14:30')} />
-		</div>
-	);
-}
-
-export function DateFieldStates() {
-	return (
-		<div className="flex w-full max-w-56 flex-col gap-4">
-			<DateField label="Deadline" description="When the first draft is due" isRequired />
-			<DateField label="Signed off" defaultValue={parseDate('2026-03-12')} isReadOnly />
-			<DateField label="Launch" defaultValue={parseDate('2026-12-25')} isInvalid errorMessage="The studio is closed on Christmas Day" />
-			<DateField label="Archived" defaultValue={parseDate('2024-09-02')} isDisabled />
-		</div>
-	);
-}
