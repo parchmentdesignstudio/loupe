@@ -1,4 +1,5 @@
 import { Icon } from '@parchment/icons/react';
+import { useState } from 'react';
 import { ThemeSettings } from './theme.js';
 import { type Appearance as Scheme, Switch, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger, useAppearance, useOnOffLabels } from '../src/index.js';
 
@@ -65,13 +66,53 @@ export function OnOffLabels() {
 	);
 }
 
+// One section at a time, as an inspector, so the column has room for more of them. Line icons, as the solid set has none for these
+const panels = [
+	{ id: 'appearance', name: 'Appearance', icon: 'shadow' },
+	{ id: 'accessibility', name: 'Accessibility', icon: 'accessibility' },
+	{ id: 'theme', name: 'Theme', icon: 'paintpalette' },
+] as const;
+
+type Panel = (typeof panels)[number]['id'];
+
+/** The settings sections behind a row of icons */
+export function SettingsPanels() {
+	const [panel, setPanel] = useState<Panel>(() => remembered('settings-panel', 'appearance'));
+
+	return (
+		<div className="flex flex-col gap-6">
+			<ToggleButtonGroup
+				aria-label="Settings"
+				selectionMode="single"
+				disallowEmptySelection
+				selectedKeys={[panel]}
+				onSelectionChange={(keys) => {
+					const next = [...keys][0] as Panel;
+					setPanel(next);
+					remember('settings-panel', next);
+				}}
+			>
+				{panels.map(({ id, name, icon }) => (
+					<TooltipTrigger key={id}>
+						<ToggleButton id={id} aria-label={name}>
+							<Icon name={icon} variant="line" />
+						</ToggleButton>
+						<Tooltip>{name}</Tooltip>
+					</TooltipTrigger>
+				))}
+			</ToggleButtonGroup>
+			{panel === 'appearance' && <Appearance />}
+			{panel === 'accessibility' && <OnOffLabels />}
+			{panel === 'theme' && <ThemeSettings />}
+		</div>
+	);
+}
+
 /** The preview's own settings, in the column on the right */
 export function Settings() {
 	return (
-		<aside aria-label="Preview settings" className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-6 overflow-y-auto px-6 py-6 md:flex">
-			<Appearance />
-			<OnOffLabels />
-			<ThemeSettings />
+		<aside aria-label="Preview settings" className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col overflow-y-auto px-6 py-6 md:flex">
+			<SettingsPanels />
 		</aside>
 	);
 }

@@ -23,8 +23,7 @@ import { Inspector } from './inspector.js';
 import { Reference, hasReference } from './reference.js';
 import { Lockup, ParchmentLogo } from './logo.js';
 import { Search, SearchButton } from './search.js';
-import { ThemeSettings } from './theme.js';
-import { Appearance, OnOffLabels, Settings, remember, remembered } from './settings.js';
+import { Settings, SettingsPanels, remember, remembered } from './settings.js';
 import { type Crumb, forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
 import { type Entry, areas, blocks, library } from './stories.js';
@@ -141,9 +140,7 @@ function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void
 						<div className="flex flex-col gap-6">
 							<Tree current={current} />
 							<div className="flex flex-col gap-6 px-3">
-								<Appearance />
-								<OnOffLabels />
-								<ThemeSettings />
+								<SettingsPanels />
 							</div>
 						</div>
 					</Sheet>
