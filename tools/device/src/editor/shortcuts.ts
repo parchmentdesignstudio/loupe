@@ -1,14 +1,18 @@
 import * as actions from './actions'
 import { get, redo, set, undo } from './store'
 
-function typing(target: EventTarget | null) {
-  return target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
+/** A field being typed in, or a list or menu that’s open, keeps its keys from the canvas */
+function keepsKeys(target: EventTarget | null) {
+  return (
+    target instanceof HTMLElement &&
+    (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.closest('[role="listbox"], [role="menu"]') !== null)
+  )
 }
 
 const arrows: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }
 
 function keyDown(event: KeyboardEvent) {
-  if (typing(event.target)) return
+  if (keepsKeys(event.target)) return
   const { settings } = get()
   const command = event.metaKey || event.ctrlKey
 
@@ -67,6 +71,29 @@ function keyDown(event: KeyboardEvent) {
   }
 }
 
+// React Aria’s controls keep focus after a click, or get it back as their menu closes, and take Space and the
+// arrows. Focus that came by the pointer gives those back to the canvas. :focus-visible can’t tell, as any key sets it
+let pointerLast = false
+let focusByPointer = false
+
+function pointerDown() {
+  pointerLast = true
+}
+
+function focusIn() {
+  focusByPointer = pointerLast
+}
+
+function beforeControls(event: KeyboardEvent) {
+  pointerLast = false
+  const target = event.target
+  if (!focusByPointer || !(target instanceof HTMLElement) || target === document.body || keepsKeys(target)) return
+  if (event.code !== 'Space' && !(event.code in arrows)) return
+  event.stopPropagation()
+  target.blur()
+  keyDown(event)
+}
+
 function keyUp(event: KeyboardEvent) {
   if (event.code === 'Space') set({ spaceHeld: false })
 }
@@ -76,7 +103,7 @@ function release() {
 }
 
 function copy(event: ClipboardEvent) {
-  if (typing(event.target) || get().selection.length === 0) return
+  if (keepsKeys(event.target) || get().selection.length === 0) return
   // Clears an image from the clipboard, so a paste brings back the devices
   const count = actions.copySelection()
   event.clipboardData?.setData('text/plain', count === 1 ? '1 device' : `${count} devices`)
@@ -84,14 +111,14 @@ function copy(event: ClipboardEvent) {
 }
 
 function cut(event: ClipboardEvent) {
-  if (typing(event.target) || get().selection.length === 0) return
+  if (keepsKeys(event.target) || get().selection.length === 0) return
   copy(event)
   actions.removeSelected()
 }
 
 /** Pastes a screenshot onto the device selected, or as a new device, or else copied devices */
 function paste(event: ClipboardEvent) {
-  if (typing(event.target)) return
+  if (keepsKeys(event.target)) return
   const files = [...(event.clipboardData?.files ?? [])].filter((file) => file.type.startsWith('image/'))
   event.preventDefault()
   if (files.length > 0) void actions.pasteImages(files)
@@ -99,6 +126,9 @@ function paste(event: ClipboardEvent) {
 }
 
 export function installShortcuts() {
+  window.addEventListener('pointerdown', pointerDown, true)
+  window.addEventListener('focusin', focusIn, true)
+  window.addEventListener('keydown', beforeControls, true)
   window.addEventListener('keydown', keyDown)
   window.addEventListener('keyup', keyUp)
   window.addEventListener('blur', release)
@@ -106,6 +136,9 @@ export function installShortcuts() {
   document.addEventListener('cut', cut)
   document.addEventListener('paste', paste)
   return () => {
+    window.removeEventListener('pointerdown', pointerDown, true)
+    window.removeEventListener('focusin', focusIn, true)
+    window.removeEventListener('keydown', beforeControls, true)
     window.removeEventListener('keydown', keyDown)
     window.removeEventListener('keyup', keyUp)
     window.removeEventListener('blur', release)

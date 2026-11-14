@@ -1,6 +1,6 @@
 # Loupe
 
-Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. Packages, under `packages/`, are what sites install, and each is released to its own branch. Tools, under `tools/`, are what you open to make things, and they’re never released.
+Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. Packages, under `packages/`, are what sites install, and each is released to its own branch. Tools, under `tools/`, are what you open to make things, and they’re never released. Designs, under `design/`, are an Elyx project built on the same tokens.
 
 | Package | What it is |
 |---|---|
@@ -88,22 +88,89 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 
 | Component | What it’s for |
 |---|---|
-| `Button` | Any action, as solid, plain or quiet, and a circle for an icon |
+| `Button` | Any action, as primary in marigold, secondary in white, accent in slate, outline or ghost, with an icon at either end, and a circle for an icon |
 | `Chip`, `ChipGroup` | Suggestions to tap |
+| `Toolbar` | Controls in a row, such as an editor’s tools: one Tab stop, with the arrow keys between them |
+| `Separator` | A line between groups of controls, or sections of a panel. In a toolbar it stands upright |
+| `Keyboard` | A keyboard shortcut, such as ⌘Z, in a sentence, a tooltip, or at the end of a menu item |
 | `Composer` | A message field with its send button |
 | `TextField` | Text, or several lines with `multiline` |
+| `NumberField` | A number, typed or stepped with the arrow keys and its buttons, within its limits |
+| `SearchField` | Searching, with a button that clears what’s typed. Escape clears it too |
+| `Slider` | A number between two limits, dragged or moved with the arrow keys, with its value beside the label. Two values make a range, with a thumb for each |
 | `Checkbox`, `CheckboxGroup` | Ticking any number of options |
 | `RadioGroup`, `Radio` | Choosing one option |
 | `Switch` | A setting that takes effect straight away |
+| `ToggleButtonGroup`, `ToggleButton` | A segmented control: a few options side by side, with a fill that slides to the chosen one |
 | `Select` | Choosing one option from a list that opens |
 | `ComboBox` | Typing to filter a list of options |
-| `ListBoxItem`, `ListBoxSection` | The options in a select or combo box, optionally under headings |
+| `ListBoxItem`, `ListBoxSection` | The options in a select or combo box, optionally grouped in sections |
+| `Header` | A section’s heading, first inside a `ListBoxSection` or `MenuSection` |
+| `ColorPicker` | A colour, shown as a swatch and its hex in a button like a field’s, that opens a colour area, a hue slider and a hex field |
+| `ColorSwatchPicker`, `ColorSwatchPickerItem` | A colour picked from a few set ones, as a row of swatches |
+| `ColorSwatch` | A colour on its own, over a checkerboard that shows through where it’s see-through |
+| `ColorArea`, `ColorSlider`, `ColorField` | A colour picker’s parts, to make your own: two channels at once on an area, one along a track, and the hex typed in |
+| `GridList`, `GridListItem` | Items to choose or act on, as rows or as tiles, which can hold buttons of their own. `GridListSection` and `GridListHeader` group them under headings, and choosing several shows a checkbox in each |
+| `TagGroup`, `Tag` | Short labels to choose from or remove, such as sizes or filters, under a label like a field’s |
+| `DropZone` | Somewhere to drop files, or paste them: dashed, or quiet for a panel or canvas, which shows an outline only while files are over it |
+| `FileTrigger` | Opens the file picker from the button inside it |
 | `Modal`, `Dialog`, `DialogTrigger` | A dialog over the page, with `DialogHeading`, `DialogActions` and `DialogClose` |
+| `Sheet`, `SheetTrigger` | A panel that slides in from an edge of the screen, and swipes back out |
 | `Popover` | A dialog beside what opened it |
 | `Menu`, `MenuTrigger` | Actions in a list that opens, with `MenuItem`, `MenuSection` and `MenuSeparator` |
 | `Tooltip`, `TooltipTrigger` | A short label for a control, on hover and keyboard focus |
+| `ToastQueue`, `ToastRegion`, `Toast` | Short messages at the bottom of the screen, such as an export finishing, that close themselves after 5 seconds. An app adds them to one queue, which one region shows. React Aria’s toasts are still unstable, so these may change |
+| `Navigation` | A page’s navigation: a column beside the page on wider screens, and a sheet behind a button on phones |
+| `Link` | A link to another page, or a place on this one |
+| `NavigationTree` | Links to the pages of a site or tool, in sections, with the current page marked, through `NavigationTreeSection`, `NavigationTreeHeader`, `NavigationTreeItem` and `NavigationTreeItemContent` |
+| `Disclosure`, `DisclosureGroup` | A heading that shows or hides what’s under it, through `DisclosureHeader` and `DisclosurePanel`: medium for questions and answers, small for navigation or a title over its description |
+| `Tabs` | Panels shown one at a time, picked from a `TabList` of `Tab`s, in a row or a column, with a bar that slides to the chosen one. A `TabPanel` shares its tab’s id, and a tab with an `href` is a link |
 
-Fields share a `Label`, `Description` and `FieldError`, and each takes `label`, `description` and `errorMessage`. Overlays come and go with the `animate-enter` and `animate-exit` keyframes in `tokens.css`, and fade instead when reduced motion is on.
+Fields share a `Label`, `Description` and `FieldError`, and each takes `label`, `description` and `errorMessage`. Overlays come and go with the `animate-enter` and `animate-exit` keyframes in `tokens.css`, and fade instead when reduced motion is on. Popovers and tooltips have no arrow unless you pass `showArrow`.
+
+`FileTrigger` and `isFileDropItem` are React Aria’s own, passed through as they are. Wrap a `Button` in `FileTrigger` to open the file picker, and pick the files out of a `DropZone`’s drop with `isFileDropItem`.
+
+Buttons, chips and fields have no set height. Control text sits on a 20px line, and the padding adds to it: 6px above and below makes a button, field, option or tab 32px tall, and 4px makes a small button 28px. An icon in a button or toggle sits on the line, as text does, so the padding is the same whether a control holds text, an icon or both. Text sits 12px in from the sides, or 10px on a small button, and an icon at the end, such as a select’s chevron, sits 8px in, as a circle button’s does. A select is a button, so its text is medium, as a button’s is. Corners are 8px, except on modals and sheets, and on things round by nature, such as circle buttons, radios and switches.
+
+What the library is still missing is in `packages/ui/BACKLOG.md`, found by building the device and favicon tools with it.
+
+A dialog or sheet with a field puts focus in the first one: give it `autoFocus`, as React Aria’s own examples do. Lint allows `autoFocus` on the package’s components, but not on plain HTML elements.
+
+### Colours and elevation
+
+Dark mode follows the system, with no toggle. Each colour is a role set with `light-dark()`, so the tokens alone give a site both modes. To keep a site light, set `color-scheme: light` on `:root`, and `scheme-light` or `scheme-dark` sets one for part of a page. `light-dark()` needs Safari 17.5 or later.
+
+`tokens.css` has two tiers. The palette holds the raw colours, named by hue and lightness, so `pine-26` is `oklch(0.26 …)`, and the further apart two numbers, the stronger the contrast. Parchment’s own five are `cream-99`, `blush-95`, `pine-26`, `rust-60` and `lime-91`, and the roles work out the rest of their colours from them. The roles are what components use, and each points at one palette colour in the light and another in the dark.
+
+The palette also has nine hues, `red`, `orange`, `yellow`, `green`, `teal`, `sky`, `blue`, `violet` and `pink`, each light, mid and dark, such as `teal-88`, `teal-69` and `teal-48`. Two greys come at the same ten steps, from 97 to 26: `sand` for the cream ground, in the light yellow’s hue, warming a little as it darkens, and `grey`, a neutral one for white. On the layer each is for, 56 and darker pass 4.5:1 for text, and 66 and darker 3:1 for a control’s edge. No role uses them yet, so take one as it is, as in `var(--sand-56)`. The preview’s Colour page shows the whole palette.
+
+| Role | What it’s for |
+|---|---|
+| `ink`, `muted` | Text, and quieter text |
+| `danger` | Errors, and the ring on a field whose value is wrong |
+| `paper` | Marks on ink or the accent, such as a button’s text or a checkbox’s tick |
+| `accent` | What a page leads with, such as a solid button. It stays rust in the dark |
+| `highlight` | The light accent, a fill behind ink to mark something out |
+| `ground` | The page |
+| `panel` | An area on the page, such as a tool’s side panel |
+| `raised` | A control’s fill, such as a button’s, a field’s or a checkbox’s, which turns `surface` on hover |
+| `overlay` | Popovers, menus, dialogs, sheets and floating toolbars |
+| `inverse` | Ink as a surface, such as a toast or a tooltip, with paper text |
+| `knob` | A switch’s handle when it’s off, and a slider’s thumb, so they stay lighter than their track |
+| `scrim` | Behind a sheet |
+
+The layers go from the page up: ground, panel, raised and overlay. In the light, panel, raised and overlay are all white, and shadows part them. In the dark, each is lighter than the one below.
+
+Hover, pressed and current states, and the lines between things, use `bleed` at 4, 8, 12, 16, 24 or 32%, such as `bg-bleed/8`. Each layer sets the bleed its tints mix from, so a tint suits what it sits on: see-through ink would grey the cream ground, so there it’s ink in the ground’s hue. A new surface that holds states or lines sets its own, as an overlay does with `bg-overlay [--bleed:var(--overlay-bleed)]`. Elyx has a tint for each strength, so `pnpm test` fails on any other.
+
+| Shadow | What it’s for |
+|---|---|
+| `shadow-raised` | Buttons, chips and fields |
+| `shadow-floating` | Floating toolbars |
+| `shadow-overlay` | Popovers, menus, dialogs and sheets |
+| `shadow-invalid` | A field whose value is wrong, in place of its shadow |
+
+The raised, floating and overlay shadows are each a 1px edge and a stack of soft drops, deeper and darker at each level. They have colours of their own, so they stay dark in the dark.
 
 ### Using it in a site
 
@@ -122,22 +189,24 @@ The site needs React 19, and for Astro, `@astrojs/react`. Import the tokens afte
 import { Button, Chip, ChipGroup } from '@parchment/ui'
 
 <Button onPress={schedule}>Schedule call</Button>
-<Button variant="plain" shape="circle" aria-label="Email Steve"><Icon name="envelope" /></Button>
+<Button variant="ghost" shape="full" aria-label="Email Steve"><Icon name="envelope" /></Button>
 <ChipGroup aria-label="Or start with">
   <Chip onPress={start}>A new website</Chip>
 </ChipGroup>
 ```
 
-To change a token, set its variable on `:root`, such as `--ink` or `--text-size`.
+Each token is one of Tailwind’s own variables, set once in `tokens.css`, so `--color-ink` is `bg-ink` and `text-ink`, and `--text-label` is `text-label`. To change one, set its variable on `:root`, such as `--text-body`. A colour takes both modes, as in `--color-ink: light-dark(var(--color-pine-20), var(--color-cream-99))`, or one value for both. The type is Elza Round Variable, with Auger Mono for small labels, both from Adobe Fonts: load a kit with both, or set `--font-sans` and `--font-mono` to your own.
 
 ### Writing a component
+
+A component takes the name and props of the React Aria component it wraps: React Aria’s `Link` is our `Link`, and its `NavigationTree` is ours, down to `NavigationTreeItemContent`. React Aria is the primitive, and the package adds Parchment’s styling. Where React Aria has nothing, use the HTML element’s name.
 
 Wrap the React Aria component and style it with a `tv()` recipe. Name the variants after React Aria’s render props (`isHovered`, `isPressed`, `isFocusVisible`, `isDisabled`), so each state’s classes live in the recipe rather than in conditions. `composeRenderProps` hands React Aria’s state to the recipe, and keeps a `className` prop working, as a string or a function.
 
 ```tsx
 export const chip = tv({
   extend: focusRing,
-  base: 'rounded-full bg-paper px-3.5 py-2 text-body shadow-raised',
+  base: 'rounded-lg bg-raised px-3 py-1.5 text-control shadow-raised',
   variants: {
     isPressed: { true: 'scale-97' },
     isDisabled: { true: 'opacity-40' },
@@ -149,16 +218,40 @@ export function Chip(props: ChipProps) {
 }
 ```
 
-Import `tv` from `src/tv.ts` rather than tailwind-variants itself. It teaches the merge the tokens’ names, so `text-body` (a size) and `text-ink` (a colour) don’t cancel each other out. Inputs keep 16px text, as iOS zooms into anything smaller.
+Import `tv` from `src/tv.ts` rather than tailwind-variants itself. It teaches the merge the tokens’ names, so `text-body` (a size) and `text-ink` (a colour) don’t cancel each other out. Text in a control, from a button’s to a field’s and its label, is `text-control`: 13px with a mouse or trackpad, and 16px on a touch screen, where iOS zooms into a field with smaller text. Change `--text-control` to change it everywhere. It sits on `--text-control--line-height`, a fixed 20px rather than a multiple, so a control keeps its height at either size. A 16px line, to match an icon, would be too tight for 16px text, and Chrome ignores a field’s line when it’s no taller than the text. Instead, a control that can hold just an icon gives the icon the line’s height, as `Button` and `ToggleButton` do with `[&>svg]:my-[calc((1lh-1rem)/2)]`.
+
+Size bars, headers and rows by padding around their content, not a fixed height, so they fit whatever they hold: `py-2` around a 28px button rather than `h-11`. Set a height only where something else has to know it, such as the offset of a sticky element below another, and then say in a comment which content and padding it adds up to, so a change to one shows up in the other.
 
 ### Checks
 
 | Command | What it does |
 |---|---|
-| `pnpm ui` | The preview page, every component in its states, at localhost:5199 |
-| `pnpm test` | Vitest across the workspace, with an axe check for each component |
+| `pnpm ui` | The preview page, the palette and every component in its states, at localhost:5199 |
+| `pnpm test` | Vitest across the workspace, with an axe check for each component, then a check that the Elyx tokens match `tokens.css` |
 | `pnpm lint` | oxlint, with the accessibility rules on. The icons package and device aren’t linted yet |
 | `pnpm --filter @parchment/ui build` | Builds `lib`, which is committed so releases can install it |
+
+## Elyx
+
+`design/` is the Elyx project, with `packages/ui` and `packages/icons` as its dependencies. `foundations.elyx` shows the colour roles, elevation, type, corners and spacing together, as the components use them: switch the theme to see them in the dark, and the pointer to coarse to see control text as it is on a touch screen.
+
+Its colours, type, corners, spacing and shadows are written from `packages/ui/tokens.css`, so change the CSS, then run:
+
+```sh
+pnpm elyx:tokens
+```
+
+That writes the tokens in `design/tokens` (`colors.elyx`, `colors-dark.elyx`, `typography.elyx`, `typography-coarse.elyx`, `lengths.elyx` and `fonts.elyx`) and the components in `design/components` (`elevation.elyx` and `text.elyx`). Don’t edit them by hand, as `pnpm test` fails when they don’t match the CSS.
+
+`colors` holds the palette, in hex, and the roles. `colors-dark.elyx` gives every role its dark value, in the `theme=dark` context, even a role that only names another, such as `inverse`, as Elyx would keep its light value. Elyx can’t mix a colour by the theme, so each tint is a token of its own in `tints`, named for its layer and strength: `tints.overlay-8` is `bg-bleed/8` on an overlay. Its tokens can’t hold a shadow either, so each level is a component in `elevation.elyx`, with the fill it goes with and its corners from `lengths`. Instance one, then give it a size and contents. CSS paints a shadow’s first layer on top and Elyx its last, so a level’s layers are in the opposite order to `tokens.css`.
+
+`typography` holds each text style’s size, in points, and its leading, as a multiple of the size, and `typography-coarse.elyx` gives control text its touch-screen 16 in the `pointer=coarse` context. `fonts` names the families as the desktop does, so Elyx draws Elza Round Variable and Auger Mono once they’re activated in Adobe Fonts. Each text style is a text layer in `text.elyx`: instance `body`, `control`, `label` or `title`, then set its contents. Weights aren’t tokens, so set `font-style: "Medium"` where a component does: each style’s caption says where. A new text style needs a caption, and a new family its desktop name, in `scripts/elyx-tokens.mjs`. The script stops and says which.
+
+`control-leading` is 20px in the CSS, but Elyx takes leading only as a multiple of the size, so there it’s a multiple of `control-size`: 1.54, and 1.25 in the `pointer=coarse` context, which Elyx draws as 20px either way. So `control` text with 6px padding above and below comes out 32px tall, as in code.
+
+`lengths` holds the corners and spacing, in pixels, under Tailwind’s names: `radius-lg` is `rounded-lg`, and `spacing-3` is `p-3` or `gap-3`. A half step takes a dash, so `spacing-1-5` is `p-1.5`. `tokens.css` sets them in an `@theme` block of their own, so the components’ classes didn’t change. Tailwind spaces by any multiple of `--spacing`, but Elyx needs a token for each step, so it gets the 14 that `tokens.css` lists, from 2px to 64px. `pnpm test` fails when a component rounds to a corner or spaces by a step that has no token.
+
+`packages/ui/elyx/README.md` covers placing the components themselves, as code layers.
 
 ## Releasing
 

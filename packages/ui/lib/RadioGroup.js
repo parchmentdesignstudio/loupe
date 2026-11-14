@@ -3,34 +3,34 @@ import { Radio as AriaRadio, RadioGroup as AriaRadioGroup, composeRenderProps } 
 import { choice } from './Checkbox.js';
 import { Description, FieldError, Label } from './Field.js';
 import { composeClassName, focusRing, tv } from './tv.js';
+// White whether chosen or not, as a checkbox is, with an ink dot that grows in when it's chosen
 const dot = tv({
-    extend: focusRing,
-    base: 'flex size-5 shrink-0 items-center justify-center rounded-full transition-[scale,background-color] duration-150 ease-out motion-reduce:transition-none',
+    slots: {
+        base: 'my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-full bg-raised shadow-raised transition-[scale] duration-150 ease-out motion-reduce:transition-none',
+        mark: 'size-2 rounded-full bg-ink transition-[scale] motion-reduce:transition-none',
+    },
     variants: {
         isSelected: {
-            false: 'bg-paper shadow-raised',
-            true: 'bg-ink',
-        },
-        isHovered: {
-            true: '',
+            false: { mark: 'scale-0 duration-100 ease-in' },
+            true: { mark: 'scale-100 duration-200 ease-out' },
         },
         isPressed: {
-            true: 'scale-90',
+            true: { base: 'scale-90' },
         },
         isInvalid: {
-            true: '',
+            true: { base: 'shadow-invalid', mark: 'bg-danger' },
+        },
+        isDisabled: {
+            true: { base: 'bg-bleed/12 shadow-none', mark: 'bg-muted' },
         },
     },
-    compoundVariants: [
-        { isSelected: false, isHovered: true, class: 'bg-surface' },
-        { isSelected: true, isHovered: true, class: 'bg-ink/88' },
-        { isSelected: false, isInvalid: true, class: 'shadow-[0_0_0_1px_var(--color-danger)]' },
-        { isSelected: true, isInvalid: true, class: 'bg-danger' },
-    ],
 });
 /** One option in a RadioGroup, with its label as children */
 export function Radio(props) {
-    return (_jsx(AriaRadio, { ...props, className: composeRenderProps(props.className, (className, state) => choice({ ...state, className })), children: composeRenderProps(props.children, (children, state) => (_jsxs(_Fragment, { children: [_jsx("span", { className: dot(state), children: state.isSelected && _jsx("span", { className: "size-2 rounded-full bg-paper" }) }), children] }))) }));
+    return (_jsx(AriaRadio, { ...props, className: composeRenderProps(props.className, (className, state) => choice({ ...state, className })), children: composeRenderProps(props.children, (children, state) => {
+            const styles = dot(state);
+            return (_jsxs(_Fragment, { children: [_jsx("span", { className: styles.base({ className: focusRing({ isFocusVisible: state.isFocusVisible }) }), children: _jsx("span", { className: styles.mark() }) }), children] }));
+        }) }));
 }
 /** Options where only one can be chosen. Set orientation to horizontal to lay them in a row */
 export function RadioGroup({ label, description, errorMessage, children, ...props }) {

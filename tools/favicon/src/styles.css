@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@import "@parchment/ui/tokens.css";
+
+@theme {
+  --breakpoint-wide: 68.75rem;
+}

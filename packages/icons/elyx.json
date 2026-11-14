@@ -1,0 +1,7 @@
+{
+  "assets": { "include": ["svg"] },
+  "exports": {
+    "./svg/*": "./svg/*"
+  },
+  "files": { "exclude": ["lib", "scripts", "source", "sprite"] }
+}

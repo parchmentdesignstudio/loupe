@@ -21,17 +21,22 @@
     "build": "tsc -p tsconfig.build.json",
     "check": "tsc -p tsconfig.json",
     "test": "vitest run",
-    "dev": "vite --port 5199 --strictPort"
+    "dev": "vite --port 5199 --strictPort",
+    "elyx:css": "node elyx/build-css.ts"
   },
   "peerDependencies": {
     "react": ">=19",
     "react-dom": ">=19"
   },
   "dependencies": {
+    "@internationalized/date": "^3.12.4",
     "react-aria-components": "^1.22.1",
     "tailwind-variants": "^4.0.0"
   },
   "devDependencies": {
+    "@parchment/icons": "workspace:*",
+    "@tailwindcss/node": "^4.3.3",
+    "@tailwindcss/oxide": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",

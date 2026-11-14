@@ -2,3 +2,198 @@
 @import '../tokens.css';
 @source '../src';
 @source './';
+
+
+/* Long-form text as plain HTML styles it, for the typography page. Only the tokens, so a gap in the scale shows as one.
+   :where() keeps it as weak as a utility's, so a class on an element still wins */
+@layer components {
+	.prose {
+		font-size: var(--text-body);
+		line-height: var(--text-body--line-height);
+		color: var(--color-ink);
+		text-wrap: pretty;
+
+		:where(* + *) {
+			margin-top: 1em;
+		}
+		:where(h1, h2, h3, h4, h5, h6) {
+			font-weight: 500;
+			text-wrap: balance;
+		}
+		:where(* + h2, * + h3) {
+			margin-top: 2em;
+		}
+		:where(* + h4, * + h5, * + h6) {
+			margin-top: 1.5em;
+		}
+		:where(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *) {
+			margin-top: 0.5em;
+		}
+		:where(h1) {
+			font-size: var(--text-title);
+			line-height: var(--text-title--line-height);
+		}
+		:where(h3) {
+			font-size: var(--text-control);
+			line-height: var(--text-control--line-height);
+		}
+		:where(h4, h5, h6) {
+			font-size: var(--text-label);
+			line-height: var(--text-label--line-height);
+		}
+		:where(h6) {
+			color: var(--color-muted);
+		}
+		:where(a) {
+			text-decoration: underline;
+			text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
+			text-underline-offset: 2px;
+		}
+		:where(a:hover) {
+			text-decoration-color: currentColor;
+		}
+		:where(strong, b) {
+			font-weight: 500;
+		}
+		:where(small, figcaption, caption, footer) {
+			font-size: var(--text-label);
+			line-height: var(--text-label--line-height);
+			color: var(--color-muted);
+		}
+		:where(mark) {
+			border-radius: 2px;
+			background: color-mix(in oklab, var(--color-marigold-83) 48%, transparent);
+			color: inherit;
+		}
+		:where(del, s) {
+			color: var(--color-muted);
+		}
+		:where(ins) {
+			text-decoration-color: var(--color-green-68);
+		}
+		:where(abbr[title]) {
+			text-decoration: underline dotted;
+			text-underline-offset: 2px;
+			cursor: help;
+		}
+		:where(sub, sup) {
+			font-size: 0.75em;
+			line-height: 0;
+		}
+		:where(code, kbd, samp, pre) {
+			font-family: var(--font-mono);
+			font-size: 0.875em;
+		}
+		:where(code, samp) {
+			border-radius: 4px;
+			background: color-mix(in oklab, var(--bleed) 8%, transparent);
+			padding: 0.125em 0.25em;
+		}
+		:where(kbd) {
+			border-radius: 4px;
+			box-shadow: var(--shadow-raised);
+			background: var(--color-raised);
+			padding: 0.0625em 0.375em;
+		}
+		:where(pre) {
+			overflow-x: auto;
+			border-radius: var(--radius-lg);
+			background: color-mix(in oklab, var(--bleed) 6%, transparent);
+			padding: 0.75rem 1rem;
+			font-size: var(--text-label);
+			line-height: 1.6;
+		}
+		:where(pre code) {
+			background: none;
+			padding: 0;
+			font-size: inherit;
+		}
+		:where(blockquote) {
+			border-inline-start: 2px solid color-mix(in oklab, var(--bleed) 16%, transparent);
+			padding-inline-start: 1rem;
+			color: var(--color-muted);
+		}
+		:where(blockquote footer) {
+			margin-top: 0.5em;
+		}
+		:where(ul, ol) {
+			padding-inline-start: 1.25rem;
+		}
+		:where(ul) {
+			list-style: disc;
+		}
+		:where(ol) {
+			list-style: decimal;
+		}
+		:where(li + li, li > ul, li > ol) {
+			margin-top: 0.375em;
+		}
+		:where(li::marker) {
+			color: var(--color-muted);
+		}
+		:where(dt) {
+			font-weight: 500;
+		}
+		:where(dd) {
+			margin-top: 0.125em;
+			color: var(--color-muted);
+		}
+		:where(dd + dt) {
+			margin-top: 0.75em;
+		}
+		:where(hr) {
+			margin-block: 2em;
+			border-top: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
+		}
+		:where(table) {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: var(--text-control);
+			line-height: var(--text-control--line-height);
+			font-variant-numeric: tabular-nums;
+		}
+		:where(caption) {
+			caption-side: bottom;
+			padding-top: 0.5rem;
+			text-align: start;
+		}
+		:where(th, td) {
+			border-bottom: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
+			padding: 0.5rem 0.75rem 0.5rem 0;
+			text-align: start;
+		}
+		:where(thead th) {
+			font-size: var(--text-label);
+			font-weight: 500;
+			color: var(--color-muted);
+		}
+		:where(tfoot td, tfoot th) {
+			border-bottom: 0;
+			font-weight: 500;
+		}
+		:where(figure > div) {
+			border-radius: var(--radius-lg);
+		}
+		:where(figcaption) {
+			margin-top: 0.5rem;
+		}
+		:where(details) {
+			border-radius: var(--radius-lg);
+			box-shadow: var(--shadow-panel);
+			background: var(--color-raised);
+			padding: 0.5rem 0.75rem;
+		}
+		:where(summary) {
+			cursor: default;
+			font-size: var(--text-control);
+			font-weight: 500;
+		}
+		:where(address) {
+			font-style: normal;
+			color: var(--color-muted);
+		}
+		:where(dfn, cite, var) {
+			font-style: italic;
+		}
+	}
+}

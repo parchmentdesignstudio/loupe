@@ -1,12 +1,16 @@
-import { type FormEvent, type ReactNode, useState } from 'react';
-import { Form, Group, Input, TextField as AriaTextField } from 'react-aria-components';
+import { type FormEvent, type KeyboardEvent, type ReactNode, useState } from 'react';
+import { Form, Group, TextArea, TextField as AriaTextField } from 'react-aria-components';
 import { Button } from './Button.js';
 import { tv } from './tv.js';
 
 const composer = tv({
 	slots: {
-		group: 'flex items-end gap-2 rounded-[1.25rem] bg-paper py-2 pr-2 pl-4 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]',
-		input: 'min-w-0 flex-1 bg-transparent py-2 text-base text-ink outline-none placeholder:text-muted',
+		group: 'flex items-end gap-2 rounded-lg bg-raised py-2 pr-3.5 pl-3 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]',
+		// One line to begin with, growing with what's written up to about six, then it scrolls
+		input: 'max-h-40 min-w-0 flex-1 resize-none bg-transparent py-2 text-control leading-6 text-ink outline-none field-sizing-content placeholder:text-muted',
+		// Centres the send button on the line of text. It sits further in than the box's radius, so it takes the smallest
+		// corner rather than a concentric one, which would be square
+		send: 'mb-1.5 [--button-radius:var(--radius-sm)]',
 	},
 	variants: {
 		isFocusWithin: {
@@ -14,7 +18,7 @@ const composer = tv({
 			true: { group: 'outline-2' },
 		},
 		isDisabled: {
-			true: { group: 'opacity-50' },
+			true: { group: 'bg-bleed/12 shadow-none', input: 'text-muted' },
 		},
 	},
 });
@@ -27,31 +31,49 @@ export interface ComposerProps {
 	submitLabel?: string;
 	/** The send button's icon, such as arrow-up from @parchment/icons */
 	submitIcon: ReactNode;
-	/** Gets the message, trimmed. The field then clears */
+	/** Gets the message, trimmed. The field then clears, unless its value is controlled, when that's up to you */
 	onSubmit: (message: string) => void;
+	/** The message, to control it, such as a draft kept elsewhere */
+	value?: string;
+	/** The message it starts with */
+	defaultValue?: string;
+	onChange?: (message: string) => void;
 	isDisabled?: boolean;
 	className?: string;
 }
 
-/** A message field with its send button, as in the chat. Enter sends, and an empty message can't be sent */
-export function Composer({ label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, isDisabled = false, className }: ComposerProps) {
-	const [message, setMessage] = useState('');
+/** A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line, and an empty message can't be sent */
+export function Composer({ label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, isDisabled = false, className }: ComposerProps) {
+	const [draft, setDraft] = useState(defaultValue);
+	const message = value ?? draft;
 	const empty = message.trim() === '';
 	const slots = composer();
+
+	const change = (next: string) => {
+		if (value === undefined) setDraft(next);
+		onChange?.(next);
+	};
 
 	const send = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		if (empty || isDisabled) return;
 		onSubmit(message.trim());
-		setMessage('');
+		if (value === undefined) setDraft('');
+	};
+
+	// While an input method is composing, Enter picks the characters rather than sending
+	const sendOnEnter = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+		if (event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) return;
+		event.preventDefault();
+		event.currentTarget.form?.requestSubmit();
 	};
 
 	return (
 		<Form onSubmit={send} className={className}>
-			<AriaTextField aria-label={label} value={message} onChange={setMessage} isDisabled={isDisabled}>
+			<AriaTextField aria-label={label} value={message} onChange={change} isDisabled={isDisabled}>
 				<Group className={(state) => slots.group(state)}>
-					<Input placeholder={placeholder} className={slots.input()} />
-					<Button type="submit" aria-label={submitLabel} shape="circle" size="small" isDisabled={isDisabled || empty}>
+					<TextArea rows={1} placeholder={placeholder} onKeyDown={sendOnEnter} className={slots.input()} />
+					<Button type="submit" aria-label={submitLabel} size="small" isDisabled={isDisabled || empty} className={slots.send()}>
 						{submitIcon}
 					</Button>
 				</Group>

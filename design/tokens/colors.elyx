@@ -1,0 +1,190 @@
+import "./colors-dark.elyx" as dark
+
+// Parchment’s colours: the palette, and the roles components use. colors-dark.elyx holds the roles’ dark values.
+// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+file {}
+
+@variants(dark.dark-colors)
+export colors = tokens {
+  // The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
+  // two numbers, the stronger the contrast. Components use the roles below rather than these, though each is a
+  // utility too, as in bg-teal-48. First the colours the roles work out from, then Parchment's own
+  white: .white,
+  black: .black,
+  cream-95: #f3eee6,
+  cream-80: #c3bdb4,
+  umber-30: #3d2a08,
+  // A paler, greyer cream for the light mode's ground and panels, so white controls stand out on them, and a
+  // dark in its hue for their tints and lines
+  linen-99: #fbfaf9,
+  linen-97: #f6f3f1,
+  linen-30: #362c21,
+  linen-18: #191006,
+  pine-95: #ccfbe9,
+  pine-50: #566861,
+  pine-35: #254137,
+  pine-32: #1f3930,
+  pine-29: #183129,
+  pine-26: #0c2920,
+  pine-24: #0b251d,
+  pine-20: #081a14,
+  pine-16: #04100c,
+  red-81: #ffa699,
+  red-50: #b3261e,
+  // Parchment's own, as the parchment-brand board in Sketch has them, with linen-99, linen-97 and pine-26 above
+  marigold-83: #f5c03c,
+  apricot-73: #f68543,
+  claret-79: #eea3a3,
+  claret-36: #64262b,
+  olive-47: #516426,
+  slate-86: #bdd6d6,
+  // Worked out from them for the roles: apricot at the lightness white text needs on it, and olive light enough
+  // to sit behind ink
+  apricot-60: #c6611f,
+  olive-91: #d3eda3,
+  // Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet
+  red-87: #f9c7c8,
+  red-67: #f75860,
+  red-35: #720006,
+  orange-89: #f9d2c7,
+  orange-72: #f77a58,
+  orange-41: #852106,
+  yellow-91: #fedf95,
+  yellow-76: #e7a221,
+  yellow-40: #713501,
+  green-89: #cbe996,
+  green-68: #6dac0d,
+  green-46: #196a06,
+  teal-88: #aae4dd,
+  teal-69: #05b59d,
+  teal-48: #026e60,
+  sky-85: #a8d6f4,
+  sky-69: #34a3ea,
+  sky-37: #03436c,
+  blue-82: #b1c2f5,
+  blue-56: #3b65eb,
+  blue-29: #0b2167,
+  violet-82: #cfb8f5,
+  violet-54: #743ff2,
+  violet-27: #250969,
+  pink-87: #f5c1df,
+  pink-70: #f162af,
+  pink-56: #bf3584,
+  pink-33: #64093a,
+  // Greys for the cream ground, in the light yellow's hue. As they darken they warm towards the yellow's mid and
+  // gain a little chroma, as the ground's bleed does, so they stay warm rather than dull
+  sand-97: #f7f5f0,
+  sand-94: #edebe5,
+  sand-90: #e0ded7,
+  sand-84: #cecac3,
+  sand-76: #b5b1a7,
+  sand-66: #979187,
+  sand-56: #7b7468,
+  sand-46: #5f5749,
+  sand-36: #453c2d,
+  sand-26: #2c2213,
+  // Neutral greys for white, at sand's steps. On the layer each is for, 56 and darker pass 4.5:1 for text, and 66
+  // and darker 3:1 for a control's edge
+  grey-97: .whitesmoke,
+  grey-94: #ebebeb,
+  grey-90: #dedede,
+  grey-84: #cacaca,
+  grey-76: #b1b1b1,
+  grey-66: #929292,
+  grey-56: #747474,
+  grey-46: #585858,
+  grey-36: #3d3d3d,
+  grey-26: #242424,
+  // The roles components use, each light-dark(light, dark). The dark mode inverts the light one: the ground
+  // takes ink's pine, and ink takes the ground's cream
+  ink: pine-26,
+  muted: pine-50,
+  danger: red-50,
+  // Marks on ink or the accent, such as a button's text or a checkbox's tick
+  paper: white,
+  // What a page leads with, in apricot rather than a button’s marigold. It stays apricot in the dark, where paper turns dark
+  accent: apricot-60,
+  // The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on
+  highlight: olive-91,
+  // The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
+  // overlay are white, and shadows part them. In the dark, each is lighter than the one below, starting near black
+  // so there's room above the controls for hover and what's chosen
+  ground: linen-97,
+  // An area on the page, such as a tool's side panel
+  panel: linen-99,
+  // A control's fill, such as a button's, a field's or a checkbox's
+  raised: white,
+  // What raised turns on hover. In the light, a see-through dark linen, so it suits the ground or a panel under it
+  // rather than one of them. In the dark, a step lighter than raised, as each layer there is lighter than the last
+  surface: opacity(linen-18, 4%),
+  // Popovers, menus, dialogs, sheets and floating toolbars. In the dark it's a control's fill, and its edges and shadow lift it
+  overlay: white,
+  // Ink as a surface, such as a toast or a tooltip, with paper text
+  inverse: ink,
+  // A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track
+  knob: white,
+  // Behind a sheet
+  scrim: opacity(pine-26, 32%),
+  // Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
+  // ink would grey the linen ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
+  // as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on
+  ground-bleed: linen-30,
+  panel-bleed: linen-30,
+  raised-bleed: pine-26,
+  overlay-bleed: pine-26,
+  inverse-bleed: white,
+  bleed: ground-bleed,
+  // Shadows have their own colours, so they stay dark in the dark. In the light, the edge is the ground's line
+  // colour, and the drops take the ground's hue, as the tints do. In the dark, the edge is a shade darker than
+  // what's behind it, so it's crisp without being bright. A component that sets its own edge takes --dark-edge for
+  // the dark
+  dark-edge: opacity(black, 32%),
+  edge: opacity(bleed, 12%),
+  // In the dark, a faint light line just inside the edge, and on controls a little more along the top, as if lit
+  // from above. They're shadows, so they go when something is disabled or pressed flat
+  sheen: opacity(black, 0%),
+  toplight: opacity(black, 0%),
+  drop-raised: opacity(bleed, 12%),
+  drop-floating: opacity(bleed, 12%),
+  // Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it
+  drop-deep: opacity(black, 0%),
+  drop-overlay: opacity(bleed, 12%),
+  drop-handle: opacity(bleed, 12%),
+  drop-well: opacity(bleed, 16%)
+}
+
+// A tint is a layer’s bleed at 4, 8, 12, 16, 24 or 32%, named for the layer it sits on, such as overlay-8 for a
+// hovered menu item
+@variants(dark.dark-tints)
+export tints = tokens {
+  ground-4: opacity(colors.ground-bleed, 4%),
+  ground-8: opacity(colors.ground-bleed, 8%),
+  ground-12: opacity(colors.ground-bleed, 12%),
+  ground-16: opacity(colors.ground-bleed, 16%),
+  ground-24: opacity(colors.ground-bleed, 24%),
+  ground-32: opacity(colors.ground-bleed, 32%),
+  panel-4: opacity(colors.panel-bleed, 4%),
+  panel-8: opacity(colors.panel-bleed, 8%),
+  panel-12: opacity(colors.panel-bleed, 12%),
+  panel-16: opacity(colors.panel-bleed, 16%),
+  panel-24: opacity(colors.panel-bleed, 24%),
+  panel-32: opacity(colors.panel-bleed, 32%),
+  raised-4: opacity(colors.raised-bleed, 4%),
+  raised-8: opacity(colors.raised-bleed, 8%),
+  raised-12: opacity(colors.raised-bleed, 12%),
+  raised-16: opacity(colors.raised-bleed, 16%),
+  raised-24: opacity(colors.raised-bleed, 24%),
+  raised-32: opacity(colors.raised-bleed, 32%),
+  overlay-4: opacity(colors.overlay-bleed, 4%),
+  overlay-8: opacity(colors.overlay-bleed, 8%),
+  overlay-12: opacity(colors.overlay-bleed, 12%),
+  overlay-16: opacity(colors.overlay-bleed, 16%),
+  overlay-24: opacity(colors.overlay-bleed, 24%),
+  overlay-32: opacity(colors.overlay-bleed, 32%),
+  inverse-4: opacity(colors.inverse-bleed, 4%),
+  inverse-8: opacity(colors.inverse-bleed, 8%),
+  inverse-12: opacity(colors.inverse-bleed, 12%),
+  inverse-16: opacity(colors.inverse-bleed, 16%),
+  inverse-24: opacity(colors.inverse-bleed, 24%),
+  inverse-32: opacity(colors.inverse-bleed, 32%)
+}

@@ -1,12 +1,44 @@
+import {
+  Button,
+  ColorArea,
+  ColorField,
+  ColorSlider,
+  ColorSwatch,
+  ColorSwatchPicker,
+  ColorSwatchPickerItem,
+  Dialog,
+  DialogTrigger,
+  FileTrigger,
+  Header,
+  ListBoxItem,
+  ListBoxSection,
+  NumberField,
+  Popover,
+  Select,
+  Switch,
+  ToggleButton,
+  ToggleButtonGroup,
+  type ColorAreaProps,
+} from '@parchment/ui'
+import { useState } from 'react'
 import { layoutOf } from '../devices/frames'
 import { kinds, modelById, models, screenSize, type Orientation } from '../devices/models'
-import { Check, cx, IconButton, Note, NumberField, Section, Segmented, Select, TextButton } from '../ui/controls'
-import { Icon } from '../ui/icon'
+import { BoundsField, cx, Note, Section, WithTooltip } from '../ui/controls'
+import { Icon, type Name } from '../ui/icon'
 import * as actions from './actions'
 import { artboardSizes, fills, rectOf, type Device, type Layout, type StatusBar } from './document'
 import { round, union } from './geometry'
 import { useImageUrl } from './images'
 import { useStore } from './store'
+
+// Without grouping, so 1776 doesn’t show as 1,776
+const points: Intl.NumberFormatOptions = { useGrouping: false, maximumFractionDigits: 2 }
+const whole: Intl.NumberFormatOptions = { useGrouping: false, maximumFractionDigits: 0 }
+
+/** A cleared field gives NaN, and leaves the value as it was */
+const numeric = (apply: (value: number) => void) => (value: number) => {
+  if (!Number.isNaN(value)) apply(value)
+}
 
 export function Inspector() {
   const devices = useStore((state) => state.doc.devices)
@@ -26,34 +58,42 @@ function Devices({ devices }: { devices: Device[] }) {
   return (
     <>
       <Section title={single ? 'Device' : `${devices.length} devices`}>
-        <Select label="Device" value={model?.id ?? ''} onChange={(value) => actions.switchModel(ids, value)}>
-          {!model && (
-            <option value="" disabled>
-              Mixed
-            </option>
-          )}
+        <Select
+          variant="filled"
+          size="small"
+          aria-label="Device"
+          placeholder="Mixed"
+          value={model?.id ?? null}
+          onChange={(id) => {
+            if (id !== null) actions.switchModel(ids, String(id))
+          }}
+        >
+          {/* React Aria keeps sections’ and items’ ids together, and mcknny’s phone and desktop share their kinds’ names */}
           {kinds.map(({ kind, name }) => (
-            <optgroup key={kind} label={name}>
+            <ListBoxSection key={kind} id={name}>
+              <Header>{name}</Header>
               {models
                 .filter((each) => each.kind === kind)
                 .map((each) => (
-                  <option key={each.id} value={each.id}>
+                  <ListBoxItem key={each.id} id={each.id}>
                     {each.name}
-                  </option>
+                  </ListBoxItem>
                 ))}
-            </optgroup>
+            </ListBoxSection>
           ))}
         </Select>
         {model?.rotates && (
-          <Segmented<Orientation>
-            label="Orientation"
-            value={orientation}
-            options={[
-              { value: 'portrait', label: 'Portrait' },
-              { value: 'landscape', label: 'Landscape' },
-            ]}
-            onChange={(next) => actions.rotate(devices.filter((device) => device.orientation !== next).map((device) => device.id))}
-          />
+          <ToggleButtonGroup
+            aria-label="Orientation"
+            selectedKeys={orientation ? [orientation] : []}
+            onSelectionChange={(keys) => {
+              const [next] = keys as Set<Orientation>
+              if (next) actions.rotate(devices.filter((device) => device.orientation !== next).map((device) => device.id))
+            }}
+          >
+            <ToggleButton id="portrait">Portrait</ToggleButton>
+            <ToggleButton id="landscape">Landscape</ToggleButton>
+          </ToggleButtonGroup>
         )}
       </Section>
 
@@ -61,12 +101,12 @@ function Devices({ devices }: { devices: Device[] }) {
         <div className="grid grid-cols-2 gap-2">
           {!row && (
             <>
-              <NumberField label="X" title="From the left" value={bounds.x} onChange={(x) => actions.setBounds({ x })} />
-              <NumberField label="Y" title="From the top" value={bounds.y} onChange={(y) => actions.setBounds({ y })} />
+              <BoundsField label="X" title="From the left" value={bounds.x} onChange={(x) => actions.setBounds({ x })} />
+              <BoundsField label="Y" title="From the top" value={bounds.y} onChange={(y) => actions.setBounds({ y })} />
             </>
           )}
-          <NumberField label="W" title="Width" value={bounds.width} min={8} onChange={(width) => actions.setBounds({ width })} />
-          <NumberField label="H" title="Height" value={bounds.height} min={8} onChange={(height) => actions.setBounds({ height })} />
+          <BoundsField label="W" title="Width" value={bounds.width} min={8} onChange={(width) => actions.setBounds({ width })} />
+          <BoundsField label="H" title="Height" value={bounds.height} min={8} onChange={(height) => actions.setBounds({ height })} />
         </div>
         {single && <Note>Drawn at {round((single.width / layoutOf(single.model, single.orientation).width) * 100)}% of its size in points.</Note>}
       </Section>
@@ -83,22 +123,31 @@ function Screen({ device }: { device: Device }) {
   const size = screenSize(model, device.orientation)
   const phone = model.kind === 'phone'
   const capture = `${size.width * model.density} × ${size.height * model.density}`
+  const choose = (files: FileList | null) => {
+    const file = files?.[0]
+    if (file) void actions.placeScreen(device.id, file)
+  }
 
   return (
     <Section title="Screen">
       <div className="flex items-center gap-3">
-        <button
-          type="button"
-          aria-label={url ? 'Replace the screenshot' : 'Choose a screenshot'}
-          onClick={() => actions.chooseScreen(device.id)}
-          className="grid h-16 shrink-0 place-items-center overflow-hidden rounded-md bg-olive-100 text-olive-975/50 outline-avocado shadow-hairline hover:bg-olive-120 focus-visible:outline-2 dark:bg-olive-950 dark:text-pearl/50 dark:shadow-dark-hairline"
-          style={{ aspectRatio: `${size.width} / ${size.height}`, maxWidth: 112 }}
-        >
-          {url ? <img src={url} alt="" className="size-full object-cover object-top" /> : <Icon name="photo" />}
-        </button>
-        <div className="flex flex-col gap-1.5">
-          <TextButton onClick={() => actions.chooseScreen(device.id)}>{url ? 'Replace…' : 'Choose…'}</TextButton>
-          {device.screen && <TextButton onClick={() => actions.updateDevices([device.id], () => ({ screen: null }))}>Remove</TextButton>}
+        <FileTrigger acceptedFileTypes={['image/*']} onSelect={choose}>
+          <Button
+            variant="secondary"
+            aria-label={url ? 'Replace the screenshot' : 'Choose a screenshot'}
+            className={({ isHovered }) => cx('grid place-items-center overflow-hidden p-0 text-muted', 'h-16', isHovered ? 'bg-bleed/12' : 'bg-bleed/8')}
+            style={{ aspectRatio: `${size.width} / ${size.height}`, maxWidth: 112 }}
+          >
+            {url ? <img src={url} alt="" className="size-full object-cover object-top" /> : <Icon name="photo" />}
+          </Button>
+        </FileTrigger>
+        <div className="flex flex-col items-start gap-1.5">
+          <FileTrigger acceptedFileTypes={['image/*']} onSelect={choose}>
+            <Button variant="secondary" size="small">{url ? 'Replace…' : 'Choose…'}</Button>
+          </FileTrigger>
+          {device.screen && (
+            <Button variant="ghost" size="small" onPress={() => actions.updateDevices([device.id], () => ({ screen: null }))}>Remove</Button>
+          )}
         </div>
       </div>
       <Note>
@@ -108,18 +157,30 @@ function Screen({ device }: { device: Device }) {
         Or drop one onto the device.
       </Note>
       {phone && (
-        <Segmented<StatusBar>
-          label="Status bar"
-          value={device.statusBar}
-          options={[
-            { value: 'dark', label: 'Dark' },
-            { value: 'light', label: 'Light' },
-            { value: 'none', label: 'None' },
-          ]}
-          onChange={(statusBar) => actions.updateDevices([device.id], () => ({ statusBar }))}
-        />
+        <ToggleButtonGroup
+          aria-label="Status bar"
+          selectedKeys={[device.statusBar]}
+          onSelectionChange={(keys) => {
+            const [statusBar] = keys as Set<StatusBar>
+            if (statusBar) actions.updateDevices([device.id], () => ({ statusBar }))
+          }}
+        >
+          <ToggleButton id="dark">Dark</ToggleButton>
+          <ToggleButton id="light">Light</ToggleButton>
+          <ToggleButton id="none">None</ToggleButton>
+        </ToggleButtonGroup>
       )}
     </Section>
+  )
+}
+
+function ArrangeButton({ icon, tooltip, shortcut, onPress }: { icon: Name; tooltip: string; shortcut?: string; onPress: () => void }) {
+  return (
+    <WithTooltip tooltip={tooltip} shortcut={shortcut}>
+      <Button variant="ghost" shape="full" aria-label={tooltip} onPress={onPress}>
+        <Icon name={icon} />
+      </Button>
+    </WithTooltip>
   )
 }
 
@@ -128,25 +189,25 @@ function Arrange({ count }: { count: number }) {
   return (
     <Section title="Arrange">
       <div className="-mx-1 flex justify-between">
-        <IconButton icon="align-horizontal-left" label="Align left" onClick={() => actions.align('left')} />
-        <IconButton icon="align-horizontal-center" label="Align centre" onClick={() => actions.align('centre')} />
-        <IconButton icon="align-horizontal-right" label="Align right" onClick={() => actions.align('right')} />
-        <IconButton icon="align-vertical-top" label="Align top" onClick={() => actions.align('top')} />
-        <IconButton icon="align-vertical-center" label="Align middle" onClick={() => actions.align('middle')} />
-        <IconButton icon="align-vertical-bottom" label="Align bottom" onClick={() => actions.align('bottom')} />
+        <ArrangeButton icon="align-horizontal-left" tooltip="Align left" onPress={() => actions.align('left')} />
+        <ArrangeButton icon="align-horizontal-center" tooltip="Align centre" onPress={() => actions.align('centre')} />
+        <ArrangeButton icon="align-horizontal-right" tooltip="Align right" onPress={() => actions.align('right')} />
+        <ArrangeButton icon="align-vertical-top" tooltip="Align top" onPress={() => actions.align('top')} />
+        <ArrangeButton icon="align-vertical-center" tooltip="Align middle" onPress={() => actions.align('middle')} />
+        <ArrangeButton icon="align-vertical-bottom" tooltip="Align bottom" onPress={() => actions.align('bottom')} />
       </div>
       {count === 1 && <Note>One device lines up with the artboard.</Note>}
       <div className="-mx-1 flex gap-1">
         {count >= 3 && (
           <>
-            <IconButton icon="distribute-horizontal-center" label="Space evenly across" onClick={() => actions.distribute('x')} />
-            <IconButton icon="distribute-vertical-center" label="Space evenly down" onClick={() => actions.distribute('y')} />
+            <ArrangeButton icon="distribute-horizontal-center" tooltip="Space evenly across" onPress={() => actions.distribute('x')} />
+            <ArrangeButton icon="distribute-vertical-center" tooltip="Space evenly down" onPress={() => actions.distribute('y')} />
           </>
         )}
-        <IconButton icon="square-3-layers-3d-top-filled" label="Bring forward" shortcut="⌘]" onClick={() => actions.reorder('forward')} />
-        <IconButton icon="square-3-layers-3d-bottom-filled" label="Send backward" shortcut="⌘[" onClick={() => actions.reorder('backward')} />
-        <IconButton icon="square-on-square" label="Duplicate" shortcut="⌘D" onClick={() => actions.duplicate()} />
-        <IconButton icon="trash" label="Delete" shortcut="⌫" onClick={actions.removeSelected} />
+        <ArrangeButton icon="square-3-layers-3d-top-filled" tooltip="Bring forward" shortcut="⌘]" onPress={() => actions.reorder('forward')} />
+        <ArrangeButton icon="square-3-layers-3d-bottom-filled" tooltip="Send backward" shortcut="⌘[" onPress={() => actions.reorder('backward')} />
+        <ArrangeButton icon="square-on-square" tooltip="Duplicate" shortcut="⌘D" onPress={() => actions.duplicate()} />
+        <ArrangeButton icon="trash" tooltip="Delete" shortcut="⌫" onPress={actions.removeSelected} />
       </div>
     </Section>
   )
@@ -154,39 +215,88 @@ function Arrange({ count }: { count: number }) {
 
 const sizeKey = (width: number, height: number) => `${width}x${height}`
 
+type Color = Parameters<NonNullable<ColorAreaProps['onChange']>>[0]
+
+const isHex = (value: string) => /^#(?:[\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i.test(value)
+
+/** A hex as React Aria keys its swatches, eight upper-case digits, so #fff and #FFFFFFFF match */
+function hexa(hex: string) {
+  const digits = hex.slice(1)
+  const full = digits.length <= 4 ? [...digits].map((digit) => digit + digit).join('') : digits
+  return `#${full.length === 6 ? `${full}ff` : full}`.toUpperCase()
+}
+
+/** The preset a fill is, by its value, or by a hex the same as its swatch */
+const presetOf = (fill: string | null) => fills.find((each) => each.value === fill || (fill !== null && isHex(fill) && hexa(fill) === hexa(each.swatch)))
+
 function Fill() {
   const fill = useStore((state) => state.doc.artboard.fill)
-  const custom = fill !== null && !fills.some((each) => each.value === fill)
-  const swatch = 'size-6 shrink-0 rounded-full outline-offset-2 outline-avocado shadow-hairline [corner-shape:round]! aria-pressed:outline-2 focus-visible:outline-2 dark:shadow-dark-hairline'
+  const preset = presetOf(fill)
+  const custom = !preset && fill !== null && isHex(fill) ? fill : null
 
+  // Eight squares to a row: the presets take seven columns of the eight, so their squares match the last one
   return (
-    <div role="group" aria-label="Fill" className="flex flex-wrap items-center gap-2">
-      {fills.map((each) => (
-        <button
-          key={each.name}
-          type="button"
-          title={each.name}
-          aria-label={each.name}
-          aria-pressed={fill === each.value}
-          onClick={() => actions.setArtboard({ fill: each.value })}
-          className={swatch}
-          style={{ background: each.value ?? 'repeating-conic-gradient(#fff 0 25%, oklch(88% 0.004 130) 0 50%) 0 0 / 8px 8px' }}
-        />
-      ))}
-      <label
-        title="Another colour"
-        className={cx(swatch, 'relative grid place-items-center bg-olive-100 text-olive-975/60 focus-within:outline-2 dark:bg-olive-950 dark:text-pearl/60', custom && 'outline-2')}
-        style={custom ? { background: fill } : undefined}
+    <div className="grid grid-cols-8 gap-1.5">
+      <ColorSwatchPicker
+        aria-label="Fill"
+        // A colour none of the presets has, so none of them shows as chosen while another colour is
+        value={preset?.swatch ?? custom ?? '#fffffe'}
+        onChange={(color) => {
+          const chosen = fills.find((each) => hexa(each.swatch) === color.toString('hexa'))
+          if (chosen) actions.setArtboard({ fill: chosen.value })
+        }}
+        className="col-span-7 grid grid-cols-7 gap-1.5"
       >
-        {!custom && <Icon name="plus" />}
-        <input
-          type="color"
-          aria-label="Another colour"
-          value={custom && fill.startsWith('#') && fill.length === 7 ? fill : '#ffffff'}
-          onChange={(event) => actions.setArtboard({ fill: event.target.value })}
-          className="absolute inset-0 size-full cursor-pointer opacity-0"
-        />
-      </label>
+        {fills.map((each) => (
+          <ColorSwatchPickerItem key={each.name} color={each.swatch} aria-label={each.name} className="aspect-square size-auto w-full" />
+        ))}
+      </ColorSwatchPicker>
+      <AnotherColour custom={custom} start={custom ?? (preset?.value ? preset.swatch : '#fff')} />
+    </div>
+  )
+}
+
+/** Any other colour, from a square after the presets: a plus until one’s chosen, then that colour */
+function AnotherColour({ custom, start }: { custom: string | null; start: string }) {
+  const label = custom ? `Another colour, ${custom}` : 'Another colour'
+  return (
+    <DialogTrigger>
+      <WithTooltip tooltip="Another colour">
+        <Button
+          variant="secondary"
+          aria-label={label}
+          className={cx(
+            'relative aspect-square size-auto w-full p-0 text-muted outline-offset-4',
+            // Chosen, it’s ringed as a chosen swatch is: paper inside an ink line
+            custom && 'after:absolute after:inset-0 after:rounded-[inherit] after:border-2 after:border-paper after:outline-2 after:outline-ink',
+          )}
+        >
+          {custom ? <ColorSwatch color={custom} className="size-full rounded-[inherit]" /> : <Icon name="plus" />}
+        </Button>
+      </WithTooltip>
+      <Popover placement="bottom end">
+        <Dialog aria-label="Another colour" className="w-64">
+          <ColourControls start={start} />
+        </Dialog>
+      </Popover>
+    </DialogTrigger>
+  )
+}
+
+/** The area, hue and hex, sharing one colour while the popover’s open, so the hue holds through greys */
+function ColourControls({ start }: { start: string }) {
+  const [color, setColor] = useState<Color | string>(start)
+  const change = (next: Color | null) => {
+    if (!next) return
+    setColor(next)
+    const preset = fills.find((each) => hexa(each.swatch) === next.toString('hexa'))
+    actions.setArtboard({ fill: preset ? preset.value : next.toString('hex').toLowerCase() })
+  }
+  return (
+    <div className="flex flex-col gap-3">
+      <ColorArea colorSpace="hsb" xChannel="saturation" yChannel="brightness" value={color} onChange={change} />
+      <ColorSlider colorSpace="hsb" channel="hue" value={color} onChange={change} />
+      <ColorField label="Hex" value={color} onChange={change} />
     </div>
   )
 }
@@ -199,41 +309,45 @@ function Artboard() {
     <>
       <Section title="Artboard">
         <Select
-          label="Size"
-          value={preset ? sizeKey(preset.width, preset.height) : 'custom'}
-          onChange={(value) => {
-            const found = artboardSizes.find((each) => sizeKey(each.width, each.height) === value)
+          variant="filled"
+          size="small"
+          aria-label="Size"
+          placeholder="Custom"
+          value={preset ? sizeKey(preset.width, preset.height) : null}
+          onChange={(key) => {
+            const found = artboardSizes.find((each) => sizeKey(each.width, each.height) === key)
             if (found) actions.setArtboard({ width: found.width, height: found.height })
           }}
         >
           {artboardSizes.map((each) => (
-            <option key={each.name} value={sizeKey(each.width, each.height)}>
-              {each.name}, {each.width} × {each.height}
-            </option>
+            <ListBoxItem key={each.name} id={sizeKey(each.width, each.height)}>
+              {`${each.name}, ${each.width} × ${each.height}`}
+            </ListBoxItem>
           ))}
-          {!preset && <option value="custom">Custom</option>}
         </Select>
         <div className="grid grid-cols-2 gap-2">
-          <NumberField label="W" title="Width" value={artboard.width} min={16} onChange={(width) => actions.setArtboard({ width: Math.round(width) })} />
-          <NumberField label="H" title="Height" value={artboard.height} min={16} onChange={(height) => actions.setArtboard({ height: Math.round(height) })} />
+          <NumberField variant="filled" size="small" label="Width" value={artboard.width} minValue={16} formatOptions={whole} onChange={numeric((width) => actions.setArtboard({ width }))} />
+          <NumberField variant="filled" size="small" label="Height" value={artboard.height} minValue={16} formatOptions={whole} onChange={numeric((height) => actions.setArtboard({ height }))} />
         </div>
         <Fill />
       </Section>
 
       <Section title="Layout">
-        <Segmented<Layout>
-          label="Layout"
-          value={artboard.layout}
-          options={[
-            { value: 'row', label: 'Automatic' },
-            { value: 'free', label: 'Free' },
-          ]}
-          onChange={actions.setLayout}
-        />
+        <ToggleButtonGroup
+          aria-label="Layout"
+          selectedKeys={[artboard.layout]}
+          onSelectionChange={(keys) => {
+            const [layout] = keys as Set<Layout>
+            if (layout) actions.setLayout(layout)
+          }}
+        >
+          <ToggleButton id="row">Automatic</ToggleButton>
+          <ToggleButton id="free">Free</ToggleButton>
+        </ToggleButtonGroup>
         {artboard.layout === 'row' ? (
           <>
             <div className="grid grid-cols-2 gap-2">
-              <NumberField label="Gap" title="Between devices" value={artboard.gap} onChange={(gap) => actions.setArtboard({ gap })} />
+              <NumberField variant="filled" size="small" label="Gap" value={artboard.gap} formatOptions={points} onChange={numeric((gap) => actions.setArtboard({ gap }))} />
             </div>
             <Note>A centred row, as a flexbox lays it out. Drag a device along it, or use the arrow keys.</Note>
           </>
@@ -256,32 +370,36 @@ function Placing() {
     <>
       <Section title="Grid">
         <div className="grid grid-cols-2 gap-2">
-          <NumberField label="Size" title="Grid size" value={settings.grid.size} min={1} onChange={(size) => actions.setGrid({ size })} />
+          <NumberField variant="filled" size="small" label="Size" value={settings.grid.size} minValue={1} formatOptions={points} onChange={numeric((size) => actions.setGrid({ size }))} />
         </div>
-        <Check label="Show the grid" checked={settings.grid.visible} onChange={(visible) => actions.setGrid({ visible })} />
-        <Check label="Snap to the grid" checked={settings.grid.snap} onChange={(snap) => actions.setGrid({ snap })} />
+        <Switch isSelected={settings.grid.visible} onChange={(visible) => actions.setGrid({ visible })}>Show the grid</Switch>
+        <Switch isSelected={settings.grid.snap} onChange={(snap) => actions.setGrid({ snap })}>Snap to the grid</Switch>
       </Section>
 
       <Section title="Columns">
         <div className="grid grid-cols-2 gap-2">
-          <NumberField label="Count" title="Columns" value={settings.columns.count} min={1} onChange={(count) => actions.setColumns({ count: Math.round(count) })} />
-          <NumberField label="Gutter" title="Gutter" value={settings.columns.gutter} min={0} onChange={(gutter) => actions.setColumns({ gutter })} />
-          <NumberField label="Margin" title="Margin" value={settings.columns.margin} min={0} onChange={(margin) => actions.setColumns({ margin })} />
+          <NumberField variant="filled" size="small" label="Count" value={settings.columns.count} minValue={1} formatOptions={whole} onChange={numeric((count) => actions.setColumns({ count }))} />
+          <NumberField variant="filled" size="small" label="Gutter" value={settings.columns.gutter} minValue={0} formatOptions={points} onChange={numeric((gutter) => actions.setColumns({ gutter }))} />
+          <NumberField variant="filled" size="small" label="Margin" value={settings.columns.margin} minValue={0} formatOptions={points} onChange={numeric((margin) => actions.setColumns({ margin }))} />
         </div>
-        <Check label="Show them, and snap to them" checked={settings.columns.visible} onChange={(visible) => actions.setColumns({ visible })} />
+        <Switch isSelected={settings.columns.visible} onChange={(visible) => actions.setColumns({ visible })}>Show them, and snap to them</Switch>
       </Section>
 
       <Section
         title={guides === 1 ? '1 guide' : `${guides || 'No'} guides`}
-        action={guides > 0 && <TextButton onClick={actions.clearGuides}>Clear</TextButton>}
+        action={
+          guides > 0 && (
+            <Button variant="ghost" size="small" onPress={actions.clearGuides}>Clear</Button>
+          )
+        }
       >
         <Note>Drag from a ruler for a guide, and back onto it to remove one.</Note>
-        <Check label="Show them, and snap to them" checked={settings.guides} onChange={() => actions.toggle('guides')} />
+        <Switch isSelected={settings.guides} onChange={() => actions.toggle('guides')}>Show them, and snap to them</Switch>
       </Section>
 
       <Section title="Snapping">
-        <Check label="Snap" checked={settings.snap} onChange={() => actions.toggle('snap')} />
-        <Check label="To other devices, their spacing and the artboard" checked={settings.objects} onChange={() => actions.toggle('objects')} />
+        <Switch isSelected={settings.snap} onChange={() => actions.toggle('snap')}>Snap</Switch>
+        <Switch isSelected={settings.objects} onChange={() => actions.toggle('objects')}>To other devices, their spacing and the artboard</Switch>
         <Note>Hold ⌘ while dragging to place something freely, or shift to keep to one axis.</Note>
       </Section>
     </>

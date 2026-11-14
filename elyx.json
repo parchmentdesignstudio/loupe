@@ -1,0 +1,12 @@
+{
+  "workspace": {
+    "members": [
+      "design",
+      "packages/ui",
+      "packages/icons"
+    ]
+  },
+  "git": {
+    "flow": "relaxed"
+  }
+}

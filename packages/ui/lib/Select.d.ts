@@ -1,9 +1,14 @@
 import type { ReactNode } from 'react';
 import { type SelectProps as AriaSelectProps } from 'react-aria-components';
-import { type FieldTextProps } from './Field.js';
+import { type FieldSize, type FieldTextProps, type FieldVariant } from './Field.js';
 export declare const trigger: import("tailwind-variants").TVReturnType<{
-    isHovered: {
-        true: string;
+    variant: {
+        raised: string;
+        filled: string;
+    };
+    size: {
+        medium: string;
+        small: string;
     };
     isInvalid: {
         true: string;
@@ -11,7 +16,7 @@ export declare const trigger: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "flex min-h-11 w-full cursor-default items-center gap-2 rounded-2xl bg-paper py-2.5 pr-3 pl-4 text-left text-base text-ink shadow-raised outline-offset-0 [-webkit-tap-highlight-color:transparent]", {
+}, undefined, "flex w-full cursor-default items-center gap-2 rounded-lg text-left text-control font-medium text-ink outline-offset-0 [-webkit-tap-highlight-color:transparent]", {
     isFocusVisible: {
         false: string;
         true: string;
@@ -26,6 +31,10 @@ export interface SelectProps<T extends object> extends Omit<AriaSelectProps<T>, 
     items?: Iterable<T>;
     /** ListBoxItems, or a function that makes one from each of items */
     children: ReactNode | ((item: T) => ReactNode);
+    /** Raised, white with a lift, by default. Filled is flat and grey, for a dense panel of settings */
+    variant?: FieldVariant;
+    /** 32px tall, or 28px when small, as a button is */
+    size?: FieldSize;
 }
 /** Picks one option from a list that opens below it */
-export declare function Select<T extends object>({ label, description, errorMessage, items, children, ...props }: SelectProps<T>): import("react").JSX.Element;
+export declare function Select<T extends object>({ label, description, errorMessage, items, children, variant, size, ...props }: SelectProps<T>): import("react").JSX.Element;

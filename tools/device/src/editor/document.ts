@@ -192,13 +192,14 @@ export const artboardSizes = [
 ]
 
 // mcknny’s backgrounds, opaque: its page, and the cards its Mockup stories
-// sit on, olive-200 over the page and olive-900 over the dark page
+// sit on, olive-200 over the page and olive-900 over the dark page. React Aria’s
+// colours can’t read oklch or none, so each swatch shows the nearest hex
 export const fills = [
-  { name: 'None', value: null },
-  { name: 'White', value: '#fff' },
-  { name: 'Page', value: 'oklch(98.3% 0.004 130.6)' },
-  { name: 'Card', value: 'oklch(90.5% 0.009 130.6)' },
-  { name: 'Pearl', value: 'oklch(94.9% 0.009 26)' },
-  { name: 'Dark card', value: 'oklch(28.5% 0.038 132.5)' },
-  { name: 'Dark page', value: 'oklch(17.3% 0.027 148)' },
+  { name: 'None', value: null, swatch: '#0000' },
+  { name: 'White', value: '#fff', swatch: '#fff' },
+  { name: 'Page', value: 'oklch(98.3% 0.004 130.6)', swatch: '#f8faf7' },
+  { name: 'Card', value: 'oklch(90.5% 0.009 130.6)', swatch: '#dde1db' },
+  { name: 'Pearl', value: 'oklch(94.9% 0.009 26)', swatch: '#f4eceb' },
+  { name: 'Dark card', value: 'oklch(28.5% 0.038 132.5)', swatch: '#232e1a' },
+  { name: 'Dark page', value: 'oklch(17.3% 0.027 148)', swatch: '#081309' },
 ]

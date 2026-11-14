@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
-import { type ListBoxItemProps, type ListBoxProps, type SectionProps } from 'react-aria-components';
+import { type ListBoxItemProps, type ListBoxProps, type ListBoxSectionProps } from 'react-aria-components';
+import { type ReactNode } from 'react';
+export type { ListBoxSectionProps };
 /** A list of options, as in a select or combo box */
 export declare function ListBox<T extends object>(props: ListBoxProps<T>): import("react").JSX.Element;
 export declare const option: import("tailwind-variants").TVReturnType<{
@@ -12,15 +13,10 @@ export declare const option: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "group flex cursor-default items-center gap-3 rounded-xl px-3 py-2 text-body text-ink outline-0 select-none forced-color-adjust-none", undefined, undefined, undefined>;
+}, undefined, "group flex cursor-default items-center gap-3 rounded-sm px-3 py-1.5 text-control text-ink outline-0 select-none forced-color-adjust-none", undefined, undefined, undefined>;
+export declare function truncateText(children: ReactNode): (bigint | import("react").JSX.Element | Iterable<ReactNode> | Promise<string | number | bigint | boolean | Iterable<ReactNode> | import("react").ReactElement<unknown, string | import("react").JSXElementConstructor<any>> | import("react").ReactPortal | null | undefined>)[] | null | undefined;
 /** An option with its text as children. It's ticked when selected */
 export declare function ListBoxItem(props: ListBoxItemProps): import("react").JSX.Element;
-/** A heading within a list or menu */
-export declare function SectionHeader({ children }: {
-    children: ReactNode;
-}): import("react").JSX.Element;
-export interface ListBoxSectionProps<T> extends SectionProps<T> {
-    title?: string;
-}
-/** Options grouped under a heading */
-export declare function ListBoxSection<T extends object>({ title, items, children, ...props }: ListBoxSectionProps<T>): import("react").JSX.Element;
+export declare const section: import("tailwind-variants").TVReturnType<{}, undefined, "not-first:mt-1.5 not-first:border-t not-first:border-bleed/8 not-first:pt-1.5", undefined, undefined, undefined>;
+/** Options grouped under a Header, which goes first inside it */
+export declare function ListBoxSection<T extends object>(props: ListBoxSectionProps<T>): import("react").JSX.Element;

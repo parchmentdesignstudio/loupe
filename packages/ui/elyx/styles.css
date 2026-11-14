@@ -1,0 +1,15 @@
+/* The stylesheet code layers render with: the preview's Tailwind setup, compiled by pnpm elyx:css into compiled/styles.css */
+@import 'tailwindcss';
+@import '../tokens.css';
+@source '../src';
+@source './';
+
+@layer base {
+	body {
+		background: var(--color-ground);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		font-size: var(--text-body);
+		line-height: var(--text-body--line-height);
+	}
+}

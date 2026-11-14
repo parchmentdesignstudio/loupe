@@ -5,8 +5,8 @@ import { createTV, extendTailwindMerge } from 'tailwind-variants/config';
 const twMergeConfig = {
     extend: {
         theme: {
-            text: ['body', 'label', 'title'],
-            shadow: ['raised', 'overlay'],
+            text: ['body', 'control', 'label', 'title'],
+            shadow: ['raised', 'button', 'button-lifted', 'floating', 'overlay', 'invalid'],
         },
     },
 };

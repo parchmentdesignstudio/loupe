@@ -1,85 +1,15 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" class="antialiased">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Icon sizes reference</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="styles.css">
-<style>
-  html, body { height: auto; }
-  .page {
-    max-width: 960px;
-    margin: 0 auto;
-    display: grid;
-    gap: 40px;
-    padding-block: 24px 64px;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
-  }
-  .page-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
-  .page-head p { margin: 0; color: var(--muted); }
-  #list { display: grid; gap: 40px; }
-  .platform { display: grid; gap: 12px; }
-  .table { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
-  table { width: 100%; border-collapse: collapse; font-size: var(--step-0); }
-  th, td { padding: 10px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
-  tr:last-child td { border-bottom: 0; }
-  th { font-weight: 500; color: var(--muted); background: var(--surface); }
-  td.size { font-family: var(--mono); font-size: var(--step--1); white-space: nowrap; font-variant-numeric: tabular-nums; }
-  td.size span { display: block; color: var(--muted); }
-  td.name { font-weight: 500; white-space: nowrap; }
-  td.note { color: var(--muted); min-width: 16rem; }
-  td.check { width: 2.5rem; text-align: center; color: var(--accent); font-weight: 600; }
-  .need { white-space: nowrap; }
-</style>
+<link rel="stylesheet" href="https://use.typekit.net/peo4gpu.css">
+<link rel="stylesheet" href="/src/styles.css">
 </head>
-<body>
-<div class="page">
-  <header class="page-head">
-    <h1>Icon sizes reference</h1>
-    <p id="last"><a href="index.html">Favicon</a></p>
-  </header>
-  <div id="list"></div>
-</div>
-<script type="module">
-  import { REFERENCE, STORAGE_KEY } from './src/specs.js'
-
-  let made = { files: [] }
-  try {
-    made = JSON.parse(localStorage.getItem(STORAGE_KEY)) || made
-  } catch {}
-  const have = new Set(made.files)
-
-  if (made.at) {
-    const when = new Date(made.at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-    document.getElementById('last').innerHTML = `Ticks show what you exported on ${when}. <a href="index.html">Favicon</a>`
-  }
-
-  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
-
-  document.getElementById('list').innerHTML = REFERENCE.map((group) => `
-    <section class="platform">
-      <h2>${esc(group.platform)}</h2>
-      <div class="table">
-        <table>
-          <thead><tr><th scope="col"><span hidden>Exported</span></th><th scope="col">File</th><th scope="col">Size</th><th scope="col">Needed</th><th scope="col">Notes</th></tr></thead>
-          <tbody>
-            ${group.items.map((item) => `
-              <tr>
-                <td class="check">${item.file && have.has(item.file) ? '<span aria-label="Exported">✓</span>' : ''}</td>
-                <td class="name">${esc(item.name)}</td>
-                <td class="size">${esc(item.size)}${item.also ? `<span>${esc(item.also)}</span>` : ''}</td>
-                <td class="need">${esc(item.need)}</td>
-                <td class="note">${esc(item.note)}</td>
-              </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
-    </section>`).join('')
-</script>
+<body class="bg-ground font-sans text-body text-ink">
+<div id="root"></div>
+<script type="module" src="/src/reference.tsx"></script>
 </body>
 </html>

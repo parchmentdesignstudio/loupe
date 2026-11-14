@@ -4,38 +4,45 @@ import { union, type Axis } from './geometry'
 import { useStore } from './store'
 import { RULER } from './viewport'
 
-const scheme = window.matchMedia('(prefers-color-scheme: dark)')
+const system = window.matchMedia('(prefers-color-scheme: dark)')
 
-function useDark() {
+/** Changes when the page turns light or dark, by the system or by the appearance set on the root */
+function useScheme() {
   return useSyncExternalStore(
     (listener) => {
-      scheme.addEventListener('change', listener)
-      return () => scheme.removeEventListener('change', listener)
+      system.addEventListener('change', listener)
+      const observer = new MutationObserver(listener)
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] })
+      return () => {
+        system.removeEventListener('change', listener)
+        observer.disconnect()
+      }
     },
-    () => scheme.matches,
+    () => `${document.documentElement.style.colorScheme}${system.matches}`,
   )
 }
 
-const palettes = {
-  light: {
-    background: '#fff',
-    edge: 'oklch(0.8 0.01 130.72 / 0.5)',
-    tick: 'oklch(0.5 0.03 131.1 / 0.45)',
-    text: 'oklch(21.5% 0.041338 133.3 / 0.6)',
-    band: 'oklch(57.5% 0.137842 120.7 / 0.16)',
-    guide: 'oklch(69.7% 0.169741 62.6)',
-  },
-  dark: {
-    background: 'oklch(21.5% 0.041338 133.3)',
-    edge: 'oklch(0.3 0.04 131.89 / 0.88)',
-    tick: 'oklch(94.9% 0.008774 26 / 0.3)',
-    text: 'oklch(94.9% 0.008774 26 / 0.6)',
-    band: 'oklch(57.5% 0.137842 120.7 / 0.28)',
-    guide: 'oklch(69.7% 0.169741 62.6)',
-  },
+// A canvas draws with colours, not classes, so the library’s tokens are resolved through the ruler itself
+const tokens = {
+  background: 'var(--color-panel)',
+  edge: 'color-mix(in oklab, var(--bleed) 12%, transparent)',
+  tick: 'color-mix(in oklab, var(--bleed) 40%, transparent)',
+  text: 'var(--color-muted)',
+  band: 'color-mix(in oklab, var(--color-avocado) 20%, transparent)',
+  guide: 'var(--color-tango)',
 }
 
-type Palette = (typeof palettes)['light']
+type Palette = typeof tokens
+
+function resolve(element: HTMLElement): Palette {
+  const resolved = { ...tokens }
+  for (const key of Object.keys(tokens) as (keyof Palette)[]) {
+    element.style.color = tokens[key]
+    resolved[key] = getComputedStyle(element).color
+  }
+  element.style.color = ''
+  return resolved
+}
 
 const spacings = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000]
 
@@ -120,7 +127,7 @@ export function Rulers() {
   const view = useStore((state) => state.view)
   const doc = useStore((state) => state.doc)
   const selection = useStore((state) => state.selection)
-  const dark = useDark()
+  const scheme = useScheme()
   const top = useRef<HTMLCanvasElement>(null)
   const side = useRef<HTMLCanvasElement>(null)
   const across = Math.max(0, view.width - RULER)
@@ -128,17 +135,18 @@ export function Rulers() {
 
   useEffect(() => {
     const bounds = union(doc.devices.filter((device) => selection.includes(device.id)).map(rectOf))
-    const colours = palettes[dark ? 'dark' : 'light']
+    if (!top.current) return
+    const colours = resolve(top.current)
     const guides = (axis: Axis) => doc.guides.filter((guide) => guide.axis === axis).map((guide) => guide.value)
     if (top.current) draw(top.current, 'x', across, viewport.x - RULER, viewport.zoom, bounds && [bounds.x, bounds.x + bounds.width], guides('x'), colours)
     if (side.current) draw(side.current, 'y', down, viewport.y - RULER, viewport.zoom, bounds && [bounds.y, bounds.y + bounds.height], guides('y'), colours)
-  }, [viewport, across, down, doc, selection, dark])
+  }, [viewport, across, down, doc, selection, scheme])
 
   return (
     <>
       <canvas ref={top} data-ruler="y" title="Drag down for a guide" className="absolute top-0 left-5 cursor-row-resize" style={{ width: across, height: RULER }} />
       <canvas ref={side} data-ruler="x" title="Drag across for a guide" className="absolute top-5 left-0 cursor-col-resize" style={{ width: RULER, height: down }} />
-      <div className="absolute top-0 left-0 size-5 border-r border-b border-olive-150 bg-white dark:border-olive-900 dark:bg-olive-975" />
+      <div className="absolute top-0 left-0 size-5 border-r border-b border-bleed/12 bg-panel" />
     </>
   )
 }

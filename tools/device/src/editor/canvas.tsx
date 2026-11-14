@@ -460,7 +460,7 @@ export function Canvas() {
   return (
     <div
       ref={element}
-      className="relative min-h-0 min-w-0 flex-1 touch-none overflow-hidden bg-workspace select-none dark:bg-dark-workspace"
+      className="relative min-h-0 min-w-0 flex-1 touch-none overflow-hidden select-none"
       style={{ cursor }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
