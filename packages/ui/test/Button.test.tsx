@@ -105,15 +105,15 @@ describe('Button', () => {
 			</>,
 		);
 		const [primary, accent] = screen.getAllByRole('button').map((button) => button.className.split(' '));
-		expect(primary).toEqual(expect.arrayContaining(['[--fill:oklch(0.834_0.153_85.6)]', 'text-pine-26']));
-		expect(accent).toEqual(expect.arrayContaining(['[--fill:oklch(0.858_0.027_196.7)]', 'text-pine-26']));
-		expect(accent).not.toContain('[--fill:oklch(0.834_0.153_85.6)]');
+		expect(primary).toEqual(expect.arrayContaining(['[--fill:var(--color-primary)]', 'text-on-primary']));
+		expect(accent).toEqual(expect.arrayContaining(['[--fill:var(--color-quiet)]', 'text-on-quiet']));
+		expect(accent).not.toContain('[--fill:var(--color-primary)]');
 	});
 
 	it('keeps text-body and text-ink apart when merging', () => {
 		render(<Button className="text-body">Schedule call</Button>);
 		expect(screen.getByRole('button').className).toContain('text-body');
-		expect(screen.getByRole('button').className).toContain('text-pine-26');
+		expect(screen.getByRole('button').className).toContain('text-on-primary');
 	});
 
 	it('has nothing for axe to flag', async () => {

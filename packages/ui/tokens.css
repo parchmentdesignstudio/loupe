@@ -120,6 +120,12 @@
 	--color-accent: var(--color-apricot-60);
 	/* The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on */
 	--color-highlight: light-dark(var(--color-olive-91), color-mix(in oklab, var(--color-olive-91) 24%, transparent));
+	/* A primary button's fill, marigold, and an accent button's, slate, each with the ink on it. Both themes share them,
+	   as the fills stay light */
+	--color-primary: var(--color-marigold-83);
+	--color-on-primary: var(--color-pine-26);
+	--color-quiet: var(--color-slate-86);
+	--color-on-quiet: var(--color-pine-26);
 
 	/* The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
 	   overlay are white, and shadows part them. In the dark, each is lighter than the one below, starting near black

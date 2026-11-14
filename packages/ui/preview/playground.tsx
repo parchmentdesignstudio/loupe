@@ -1,7 +1,7 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, type Ref, useLayoutEffect, useRef, useState } from 'react';
 import { type IconName, type IconVariant, iconNames } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
-import { Button, ComboBox, ListBoxItem, NumberField, Switch, TextField, ToggleButton, ToggleButtonGroup } from '../src/index.js';
+import { Button, ComboBox, ListBoxItem, NumberField, Select, Switch, TextField, ToggleButton, ToggleButtonGroup } from '../src/index.js';
 import { hex, surface } from './brand.js';
 
 // A kit for each component's "Build one" story: the component in a box, a row of controls under it, each named on the
@@ -22,9 +22,9 @@ export const grounds = {
 } as const;
 export type Ground = keyof typeof grounds;
 
-export function ControlRow({ label, children }: { label: string; children: ReactNode }) {
+export function ControlRow({ label, children, ref }: { label: string; children: ReactNode; ref?: Ref<HTMLDivElement> }) {
 	return (
-		<div className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-dotted border-bleed/8 py-1.5">
+		<div ref={ref} className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-dotted border-bleed/8 py-1.5">
 			<span className="text-control font-medium text-ink">{label}</span>
 			{children}
 		</div>
@@ -44,17 +44,55 @@ export function ControlGroup({ label, children }: { label: string; children: Rea
 	);
 }
 
-/** A few options side by side, for a variant, a size or anything else with a handful of values */
+/**
+ * A few options side by side, for a variant, a size or anything else with a handful of values. Where they won't fit on
+ * the row, even on a line of their own, as on a phone or with larger text, they fold into a select
+ */
 export function Choice<T extends string>({ label, options, value, onChange, isDisabled }: { label: string; options: readonly T[]; value: T; onChange: (value: T) => void; isDisabled?: boolean }) {
+	const row = useRef<HTMLDivElement>(null);
+	const group = useRef<HTMLDivElement>(null);
+	// The group's own width, kept from when it last showed, to know when there's room for it again
+	const wanted = useRef(0);
+	const [isFolded, setFolded] = useState(false);
+
+	useLayoutEffect(() => {
+		const element = row.current;
+		if (!element) return;
+		const measure = () => {
+			if (group.current) wanted.current = group.current.scrollWidth;
+			setFolded(wanted.current > element.clientWidth);
+		};
+		measure();
+		const observer = new ResizeObserver(measure);
+		observer.observe(element);
+		// The group too, as larger text widens it without the row changing
+		if (group.current?.firstElementChild) observer.observe(group.current.firstElementChild);
+		return () => observer.disconnect();
+		// isFolded isn't read, but each switch swaps the group in or out, so the observer starts again on what's there
+	}, [isFolded]);
+
 	return (
-		<ControlRow label={label}>
-			<ToggleButtonGroup aria-label={label} size="small" selectedKeys={[value]} onSelectionChange={(keys) => onChange([...keys][0] as T)} isDisabled={isDisabled}>
-				{options.map((option) => (
-					<ToggleButton key={option} id={option}>
-						{capitalise(option)}
-					</ToggleButton>
-				))}
-			</ToggleButtonGroup>
+		<ControlRow ref={row} label={label}>
+			{isFolded ? (
+				<Select aria-label={label} size="small" selectedKey={value} onSelectionChange={(key) => onChange(key as T)} isDisabled={isDisabled} className="w-40">
+					{options.map((option) => (
+						<ListBoxItem key={option} id={option}>
+							{capitalise(option)}
+						</ListBoxItem>
+					))}
+				</Select>
+			) : (
+				// Wrapped, as the group takes no ref, and its scrollWidth is the group's whole width even when it overflows
+				<div ref={group} className="flex min-w-0">
+					<ToggleButtonGroup aria-label={label} size="small" selectedKeys={[value]} onSelectionChange={(keys) => onChange([...keys][0] as T)} isDisabled={isDisabled}>
+						{options.map((option) => (
+							<ToggleButton key={option} id={option}>
+								{capitalise(option)}
+							</ToggleButton>
+						))}
+					</ToggleButtonGroup>
+				</div>
+			)}
 		</ControlRow>
 	);
 }

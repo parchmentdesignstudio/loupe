@@ -17,21 +17,21 @@ export const button = tv({
         // Primary is marigold, the brand's yellow, for what a page leads with. On a marigold ground it nearly blends in, and its
         // rim and shadow lift it. Secondary is white and raised, for most actions. Accent is slate, the brand's light partner
         // to pine, for a lead quieter than marigold. Primary and accent keep ink text in the dark too, as their fills stay light. Each sets a --fill, and a --rim a sixth darker for its
-        // border; primary's turns 16° on the wheel too, so it leans orange rather than olive. A trial: the fills move to
-        // tokens if they stay. The fill has to stay opaque, or the faux border shows through it, so hovers lay a wash over
+        // border; primary's turns 16° on the wheel too, so it leans orange rather than olive. The fills are --color-primary and
+        // --color-quiet. The fill has to stay opaque, or the faux border shows through it, so hovers lay a wash over
         // it rather than going translucent. Outline is secondary's edge alone, outside the box as the others' are, so it lines up with them
         variant: {
             primary: [
-                'text-pine-26',
-                '[--fill:oklch(0.834_0.153_85.6)]',
+                'text-on-primary',
+                '[--fill:var(--color-primary)]',
                 '[--rim:oklch(from_var(--fill)_calc(l*0.84)_c_calc(h-16))]',
             ],
             // In the dark, surface's fill and the dark edge, as a chosen toggle has, so it stands clear of the panel and of outline.
             // There the edge is half a pixel, as a field's is, since a full pixel of dark makes the button look a pixel smaller
             secondary: 'bg-[light-dark(var(--color-raised),var(--color-surface))] text-ink shadow-button [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),transparent)] [--fine-edge:light-dark(transparent,var(--dark-edge))] before:bg-[light-dark(var(--color-raised),var(--color-surface))]',
             accent: [
-                'text-pine-26',
-                '[--fill:oklch(0.858_0.027_196.7)]',
+                'text-on-quiet',
+                '[--fill:var(--color-quiet)]',
                 '[--rim:oklch(from_var(--fill)_calc(l*0.84)_calc(c*0.84)_h)]',
             ],
             // For an action that destroys something. Red in both themes, as the danger token turns light in the dark, so its
