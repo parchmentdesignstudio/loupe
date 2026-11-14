@@ -246,6 +246,17 @@ function coloursOf(theme, path, root) {
 	);
 }
 
+// Each size and family, for the typography page: what tokens.css sets it to, and where
+function typographyOf(theme, path, root) {
+	const declarations = declarationsOf(path, root);
+	const sizes = [...theme.text.keys()].map((name) => {
+		const size = declarations.get(`text-${name}`);
+		return { name, size: size?.value, lineHeight: declarations.get(`text-${name}--line-height`)?.value, place: size?.place };
+	});
+	const families = [...theme.fonts.keys()].map((name) => ({ name, value: declarations.get(`font-${name}`)?.value, place: declarations.get(`font-${name}`)?.place }));
+	return { sizes, families };
+}
+
 // A class’s utility without its variants, as bg-accent is in hover:bg-accent/88
 function utilityOf(candidate) {
 	let depth = 0;
@@ -301,7 +312,7 @@ function read(root, ui, packages) {
 		if (source) library.set(path, source);
 	}
 	const index = library.get(join(ui, 'src', 'index.ts'));
-	if (!index) return { project: basename(ui), components: {}, colours: {} };
+	if (!index) return { project: basename(ui), components: {}, colours: {}, type: { sizes: [], families: [] } };
 
 	const fileOf = (from, specifier) => {
 		const base = join(dirname(from.path), specifier).replace(/\.js$/, '');
@@ -521,5 +532,5 @@ function read(root, ui, packages) {
 		detail.uses.sort((a, b) => (a.project === own) - (b.project === own) || a.project.localeCompare(b.project) || a.path.localeCompare(b.path) || a.line - b.line);
 	}
 
-	return { project: own, components, colours: coloursOf(theme, join(ui, 'tokens.css'), root) };
+	return { project: own, components, colours: coloursOf(theme, join(ui, 'tokens.css'), root), type: typographyOf(theme, join(ui, 'tokens.css'), root) };
 }

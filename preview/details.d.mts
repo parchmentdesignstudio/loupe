@@ -62,9 +62,21 @@ export interface Colour {
 	dark?: string;
 }
 
+/** A size or a family token, as tokens.css sets it */
+export interface TypeToken {
+	name: string;
+	/** What it's set to, such as 0.9375rem, or a family's stack */
+	size?: string;
+	lineHeight?: string;
+	value?: string;
+	place?: Place;
+}
+
 export interface Details {
 	/** The library’s own package, as a Use’s project, such as ui */
 	project: string;
 	components: Record<string, Detail>;
 	colours: Record<string, Colour>;
+	/** The sizes and families, for the typography page */
+	type: { sizes: TypeToken[]; families: TypeToken[] };
 }

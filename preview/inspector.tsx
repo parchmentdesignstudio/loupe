@@ -1,7 +1,7 @@
 import { type ReactNode, useId } from 'react';
 import details from 'virtual:details';
 import { Link } from '../src/index.js';
-import type { Colour, Detail, Place, TokenKind, Use } from './details.mjs';
+import type { Colour, Detail, Place, TokenKind, TypeToken, Use } from './details.mjs';
 import { href } from './routes.js';
 import { type Entry, library } from './stories.js';
 
@@ -68,11 +68,11 @@ const plain = (name: string) => name.replace(/^UNSTABLE_/, '');
 
 const prefixes: Record<Exclude<TokenKind, 'colours'>, string> = { text: 'text-', fonts: 'font-', shadows: 'shadow-', corners: 'rounded-', animations: 'animate-' };
 
-// The components that use each colour, for the colour page
+// The components that use each token, by kind, for the colour and typography pages
 const users = new Map<string, string[]>();
 for (const detail of Object.values(details.components)) {
 	if (detail.kind !== 'component') continue;
-	for (const name of detail.tokens?.colours ?? []) users.set(name, [...(users.get(name) ?? []), detail.name]);
+	for (const [kind, names] of Object.entries(detail.tokens ?? {})) for (const name of names) users.set(`${kind}:${name}`, [...(users.get(`${kind}:${name}`) ?? []), detail.name]);
 }
 
 function groupBy<T>(items: T[], keyOf: (item: T) => string) {
@@ -299,7 +299,7 @@ function Shade({ value, when }: { value: string; when?: string }) {
 }
 
 function Role({ name, colour }: { name: string; colour: Colour }) {
-	const used = (users.get(name) ?? []).toSorted((a, b) => a.localeCompare(b));
+	const used = (users.get(`colours:${name}`) ?? []).toSorted((a, b) => a.localeCompare(b));
 	return (
 		<section className="flex flex-col gap-4 py-6 first:pt-0 last:pb-0">
 			<Header name={name} place={colour.place}>
@@ -310,26 +310,56 @@ function Role({ name, colour }: { name: string; colour: Colour }) {
 					</span>
 				)}
 			</Header>
-			<dl className="flex flex-col gap-4 text-label">
-				<Row term={used.length ? `Used by ${used.length} ${used.length === 1 ? 'component' : 'components'}` : 'Used by'}>
-					{used.length ? (
-						<List>
-							{used.map((component) => (
-								<li key={component}>
-									<Part name={component} />
-								</li>
-							))}
-						</List>
-					) : (
-						<p className="text-muted">No component yet</p>
-					)}
-				</Row>
-			</dl>
+			<UsedBy used={used} />
 		</section>
 	);
 }
 
-/** The code beside a page: each of its exports as the code has them, or on the colour page, each role and the components that use it */
+function UsedBy({ used }: { used: string[] }) {
+	return (
+		<dl className="flex flex-col gap-4 text-label">
+			<Row term={used.length ? `Used by ${used.length} ${used.length === 1 ? 'component' : 'components'}` : 'Used by'}>
+				{used.length ? (
+					<List>
+						{used.map((component) => (
+							<li key={component}>
+								<Part name={component} />
+							</li>
+						))}
+					</List>
+				) : (
+					<p className="text-muted">No component yet</p>
+				)}
+			</Row>
+		</dl>
+	);
+}
+
+// 0.9375rem as 15px
+const pixels = (value?: string) => (value?.endsWith('rem') ? `${parseFloat(value) * 16}px` : value);
+
+// A line in pixels, and a multiple as what it comes to, as 1.4 of 15px is 21px (1.4×)
+function lineOf({ size, lineHeight }: TypeToken) {
+	if (!lineHeight || lineHeight.endsWith('rem')) return pixels(lineHeight);
+	return `${Math.round(parseFloat(lineHeight) * parseFloat(size ?? '0') * 16)}px (${lineHeight}×)`;
+}
+
+const bySize = (a: TypeToken, b: TypeToken) => parseFloat(b.size ?? '0') - parseFloat(a.size ?? '0');
+
+/** A size or a family: what it's set to, where, and the components that use it */
+function Type({ token, kind }: { token: TypeToken; kind: 'text' | 'fonts' }) {
+	const used = (users.get(`${kind}:${token.name}`) ?? []).toSorted((a, b) => a.localeCompare(b));
+	return (
+		<section className="flex flex-col gap-4 py-6 first:pt-0 last:pb-0">
+			<Header name={`${kind === 'text' ? 'text' : 'font'}-${token.name}`} place={token.place}>
+				{kind === 'text' ? `${pixels(token.size)} on ${lineOf(token)}` : token.value}
+			</Header>
+			<UsedBy used={used} />
+		</section>
+	);
+}
+
+/** The code beside a page: each of its exports as the code has them, or on the colour and typography pages, each token and the components that use it */
 export function Inspector({ entry }: { entry: Entry }) {
 	const heading = useId();
 	const sections = entry.exports
@@ -337,7 +367,12 @@ export function Inspector({ entry }: { entry: Entry }) {
 				const detail = details.components[name];
 				return detail && <Export key={name} detail={detail} />;
 			})
-		: entry.id === 'colour' && Object.entries(details.colours).map(([name, colour]) => <Role key={name} name={name} colour={colour} />);
+		: entry.id === 'colour'
+			? Object.entries(details.colours).map(([name, colour]) => <Role key={name} name={name} colour={colour} />)
+			: entry.id === 'typography' && [
+					...details.type.sizes.toSorted(bySize).map((token) => <Type key={`text-${token.name}`} token={token} kind="text" />),
+					...details.type.families.map((token) => <Type key={`font-${token.name}`} token={token} kind="fonts" />),
+				];
 	if (!sections) return null;
 	return (
 		<aside

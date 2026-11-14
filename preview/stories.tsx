@@ -88,6 +88,7 @@ import {
 	isFileDropItem,
 } from '../src/index.js';
 import { ParchmentLogo } from './logo.js';
+import { Article, Families, Prose, Figures, Scale, Together, Weights } from './typography.js';
 import { AppIcons, BrandButtons, Cards, Crops, Curls, Lockups, OnColour, Pairings, Palette, ProjectCards, System } from './brand.js';
 import { AvatarGroups, AvatarPlayground, AvatarSizes, AvatarsInText, PeopleAndOrganisations, photos } from './playgrounds/avatar.js';
 import { ButtonPlayground } from './playgrounds/button.js';
@@ -479,7 +480,7 @@ const derived = [
 	['white', 'black'],
 	['linen-99', 'linen-97', 'linen-30'],
 	['cream-95', 'cream-80', 'umber-30'],
-	['pine-95', 'pine-50', 'pine-35', 'pine-32', 'pine-29', 'pine-20'],
+	['pine-95', 'pine-50', 'pine-35', 'pine-32', 'pine-29', 'pine-20', 'pine-16'],
 	['red-81', 'red-50'],
 ];
 
@@ -557,6 +558,21 @@ export const library: Group[] = [
 					{ name: 'Sand, for the cream ground', render: () => <Greys name="sand" />, box: 'scheme-light bg-ground text-ink' },
 					{ name: 'Grey, for white', render: () => <Greys name="grey" />, box: 'scheme-light bg-panel text-ink [--bleed:var(--panel-bleed)]' },
 					{ name: 'Worked out for the roles', render: Derived },
+				],
+			},
+			{
+				id: 'typography',
+				name: 'Typography',
+				description: 'Two families and four sizes. Elza Round for everything, in normal and medium, and Auger Mono for code. Controls sit on a 20px line, and on a touch screen their text grows to 16px so a field doesn’t zoom',
+				usage: 'text-body font-medium',
+				stories: [
+					{ name: 'The sizes, largest first', render: Scale },
+					{ name: 'Two families', render: Families },
+					{ name: 'Weights, as Elza Round is variable', render: Weights },
+					{ name: 'Figures that line up', render: Figures },
+					{ name: 'Together', render: Together, box: 'justify-center' },
+					{ name: 'A post, at length', render: Article, box: 'justify-center' },
+					{ name: 'Every element of prose', render: Prose, box: 'justify-center' },
 				],
 			},
 		],

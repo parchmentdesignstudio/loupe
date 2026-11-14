@@ -40,8 +40,8 @@ const useAddress = () => useSyncExternalStore(subscribe, () => window.location.h
 
 const { version } = JSON.parse(manifest) as { version: string };
 
-// A component page has its code beside it, and so does colour, with its roles. The other areas of loupe don't
-const hasCode = (entry?: Entry) => entry != null && (entry.exports != null || entry.id === 'colour');
+// A component page has its code beside it, and so do colour and typography, with their tokens. The other areas of loupe don't
+const hasCode = (entry?: Entry) => entry != null && (entry.exports != null || entry.id === 'colour' || entry.id === 'typography');
 
 function Tree({ current }: { current: string }) {
 	return (
