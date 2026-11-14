@@ -9,10 +9,8 @@ import {
 	Link,
 	Navigation,
 	NavigationTree,
-	NavigationTreeHeader,
 	NavigationTreeItem,
 	NavigationTreeItemContent,
-	NavigationTreeSection,
 	Sheet,
 	SheetTrigger,
 	Tooltip,
@@ -27,9 +25,8 @@ import { Settings, SettingsPanels, remember, remembered } from './settings.js';
 import { type Crumb, forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
 import { type Entry, areas, blocks, library } from './stories.js';
+import { Category, categoryId } from './blocks/card.js';
 
-// All components leaves out the tokens, such as colour, which export nothing
-const components = library.flatMap((group) => group.components).filter((entry) => entry.exports);
 
 const subscribe = (onChange: () => void) => {
 	window.addEventListener('hashchange', onChange);
@@ -43,40 +40,66 @@ const { version } = JSON.parse(manifest) as { version: string };
 // A component page has its code beside it, and so do colour and typography, with their tokens. The other areas of loupe don't
 const hasCode = (entry?: Entry) => entry != null && (entry.exports != null || entry.id === 'colour' || entry.id === 'typography');
 
+// A group isn't a page of its own, so its key can't be an entry's id, as Navigation is both
+const groupKey = (name: string) => `group-${name}`;
+
+const Page = ({ entry }: { entry: Entry }) => (
+	<NavigationTreeItem id={entry.id} href={href(entry)} textValue={entry.name}>
+		<NavigationTreeItemContent>{entry.name}</NavigationTreeItemContent>
+	</NavigationTreeItem>
+);
+
+const foundations = library.find((group) => group.name === 'Foundations');
+const componentGroups = library.filter((group) => group !== foundations);
+// Loupe's own pages, A–Z, with the foundations among them as a folder of their own
+const loupePages = [...areas.filter((area) => area.id !== 'blocks'), ...(foundations ? [{ id: groupKey(foundations.name), name: foundations.name }] : [])].sort((a, b) =>
+	a.name.localeCompare(b.name),
+);
+
+// Three titles that fold: Loupe's own pages, the components in their groups and the blocks. Components and Blocks are
+// pages too, so their titles link to them, and everything starts open so it's all in view
 function Tree({ current }: { current: string }) {
 	return (
-		<NavigationTree aria-label="Loupe" selectedRoute={`#/${current}`}>
-			<NavigationTreeSection id="loupe">
-				<NavigationTreeHeader>Loupe</NavigationTreeHeader>
-				<NavigationTreeItem id="all" href="#/ui" textValue="All components">
-					<NavigationTreeItemContent>All components</NavigationTreeItemContent>
-				</NavigationTreeItem>
-				{areas.map((area) => (
-					<NavigationTreeItem key={area.id} id={area.id} href={`#/${area.id}`} textValue={area.name}>
-						<NavigationTreeItemContent>{area.name}</NavigationTreeItemContent>
+		<NavigationTree
+			hasTitles
+			aria-label="Loupe"
+			selectedRoute={`#/${current}`}
+			defaultExpandedKeys={['loupe', 'components', 'blocks', ...library.map((group) => groupKey(group.name))]}
+		>
+			<NavigationTreeItem id="loupe" textValue="Loupe">
+				<NavigationTreeItemContent icon={<Icon name="books-vertical" />}>Loupe</NavigationTreeItemContent>
+				{loupePages.map((page) =>
+					page.id === groupKey('Foundations') && foundations ? (
+						<NavigationTreeItem key={page.id} id={page.id} textValue={page.name}>
+							<NavigationTreeItemContent>{page.name}</NavigationTreeItemContent>
+							{foundations.components.map((entry) => (
+								<Page key={entry.id} entry={entry} />
+							))}
+						</NavigationTreeItem>
+					) : (
+						<NavigationTreeItem key={page.id} id={page.id} href={`#/${page.id}`} textValue={page.name}>
+							<NavigationTreeItemContent>{page.name}</NavigationTreeItemContent>
+						</NavigationTreeItem>
+					),
+				)}
+			</NavigationTreeItem>
+			<NavigationTreeItem id="components" href="#/ui" textValue="Components">
+				<NavigationTreeItemContent icon={<Icon name="component" />}>Components</NavigationTreeItemContent>
+				{componentGroups.map((group) => (
+					<NavigationTreeItem key={group.name} id={groupKey(group.name)} textValue={group.name}>
+						<NavigationTreeItemContent>{group.name}</NavigationTreeItemContent>
+						{group.components.map((entry) => (
+							<Page key={entry.id} entry={entry} />
+						))}
 					</NavigationTreeItem>
 				))}
-			</NavigationTreeSection>
-			{blocks.length > 0 && (
-				<NavigationTreeSection id="blocks">
-					<NavigationTreeHeader>Blocks</NavigationTreeHeader>
-					{blocks.map((entry) => (
-						<NavigationTreeItem key={entry.id} id={entry.id} href={href(entry)} textValue={entry.name}>
-							<NavigationTreeItemContent>{entry.name}</NavigationTreeItemContent>
-						</NavigationTreeItem>
-					))}
-				</NavigationTreeSection>
-			)}
-			{library.map((group) => (
-				<NavigationTreeSection key={group.name} id={group.name}>
-					<NavigationTreeHeader>{group.name}</NavigationTreeHeader>
-					{group.components.map((entry) => (
-						<NavigationTreeItem key={entry.id} id={entry.id} href={href(entry)} textValue={entry.name}>
-							<NavigationTreeItemContent>{entry.name}</NavigationTreeItemContent>
-						</NavigationTreeItem>
-					))}
-				</NavigationTreeSection>
-			))}
+			</NavigationTreeItem>
+			<NavigationTreeItem id="blocks" href="#/blocks" textValue="Blocks">
+				<NavigationTreeItemContent icon={<Icon name="batteryblock" />}>Blocks</NavigationTreeItemContent>
+				{blocks.map((entry) => (
+					<Page key={entry.id} entry={entry} />
+				))}
+			</NavigationTreeItem>
 		</NavigationTree>
 	);
 }
@@ -221,7 +244,7 @@ function Stories({ entry, heading: Heading }: { entry: Entry; heading: 'h2' | 'h
 function Title({ entry }: { entry?: Entry }) {
 	return entry ? (
 		<header className="flex flex-col gap-2">
-			<h1 className="text-title font-medium">{entry.name}</h1>
+			<h1 className="text-title">{entry.name}</h1>
 			<p className="text-muted">{entry.description}</p>
 			{(entry.exports || entry.usage) && (
 				<code className="font-mono text-label text-muted">{entry.exports ? `import { ${entry.exports.join(', ')} } from '@parchment/ui'` : entry.usage}</code>
@@ -229,7 +252,7 @@ function Title({ entry }: { entry?: Entry }) {
 		</header>
 	) : (
 		<header className="flex flex-col gap-2">
-			<h1 className="flex items-center gap-1.5 text-title font-medium">
+			<h1 className="flex items-center gap-1.5 text-title">
 				<ParchmentLogo size={24} />
 				loupe/ui
 			</h1>
@@ -242,7 +265,7 @@ function Title({ entry }: { entry?: Entry }) {
 function Overview({ entries }: { entries: Entry[] }) {
 	return entries.map((entry) => (
 		<section key={entry.id} id={entry.id} className="flex scroll-mt-25 md:scroll-mt-18 flex-col gap-6">
-			<h2 className="text-title font-medium">{entry.name}</h2>
+			<h2 className="text-title">{entry.name}</h2>
 			<Stories entry={entry} heading="h3" />
 		</section>
 	));
@@ -262,8 +285,9 @@ function Preview() {
 	const address = forward(asked) ?? asked;
 	const page = pageAt(address);
 	const entry = page?.entry;
-	// A page that lists others: ui its components, and Blocks its blocks once there are some
-	const listed = address === 'ui' ? components : entry?.id === 'blocks' && blocks.length > 0 ? blocks : undefined;
+	// A page that lists others: ui its components, as cards under each group, and Blocks its blocks once there are some
+	const isComponents = address === 'ui';
+	const listed = entry?.id === 'blocks' && blocks.length > 0 ? blocks : undefined;
 	const shown = useRef(address);
 	const scroller = useRef<HTMLDivElement>(null);
 	const [isOpen, setOpen] = useState(() => remembered<string>('settings', 'closed') === 'open');
@@ -272,12 +296,14 @@ function Preview() {
 
 	const headings = useMemo<Heading[]>(
 		() =>
-			listed
+			isComponents
+				? componentGroups.map(({ name }) => ({ id: categoryId(name), name }))
+				: listed
 				? listed.map(({ id, name }) => ({ id, name }))
 				: entry
 					? [...entry.stories.map((story, index) => ({ id: `${entry.id}-${index}`, name: story.name })), ...(hasReference(entry) ? [{ id: 'api', name: 'API reference' }] : [])]
 					: [],
-		[entry, listed],
+		[entry, listed, isComponents],
 	);
 
 	// An old address, such as #/button, is swapped for where it lives now, so going back skips it
@@ -328,7 +354,9 @@ function Preview() {
 						{headings.length > 0 && <Contents key={`contents-${address}`} headings={headings} scroller={scroller} />}
 						<div className="min-w-0 px-4 pb-10 md:px-10 xl:col-start-2 xl:row-start-2">
 							<div className="mx-auto flex max-w-[40rem] flex-col gap-10">
-								{listed ? (
+								{isComponents ? (
+									componentGroups.map((group) => <Category key={group.name} name={group.name} id={categoryId(group.name)} />)
+								) : listed ? (
 									<Overview entries={listed} />
 								) : entry ? (
 									<>

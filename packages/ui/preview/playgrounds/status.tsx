@@ -57,26 +57,6 @@ export function StatusPlayground() {
 	);
 }
 
-export function StatusTones() {
-	return (
-		<div className="flex flex-col gap-2">
-			{samples.slice(0, 5).map(([tone, label]) => (
-				<Status key={tone} tone={tone}>
-					{label}
-				</Status>
-			))}
-		</div>
-	);
-}
-
-export function StatusBadges() {
-	return samples.slice(0, 5).map(([tone, label]) => (
-		<Status key={tone} tone={tone} variant="badge">
-			{label}
-		</Status>
-	));
-}
-
 export function PaginationPlayground() {
 	const [count, setCount] = useState(8);
 	const [page, setPage] = useState(1);

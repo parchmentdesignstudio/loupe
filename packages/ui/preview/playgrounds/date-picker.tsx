@@ -126,15 +126,3 @@ export function DatePickerPlayground() {
 		</Playground>
 	);
 }
-
-export function PickADate() {
-	return <DatePicker label="Launch date" description="The site goes live at nine that morning" className="w-56" />;
-}
-
-export function PickARange() {
-	return <DateRangePicker label="Away from the studio" defaultValue={{ start: now(), end: now().add({ days: 9 }) }} className="w-72" />;
-}
-
-export function PickADateAndTime() {
-	return <DatePicker label="Call booked for" granularity="minute" defaultValue={toCalendarDateTime(now()).set({ hour: 10, minute: 30 })} isDateUnavailable={weekends(navigator.language)} className="w-64" />;
-}

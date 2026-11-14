@@ -198,42 +198,6 @@ export function DropZonePlayground() {
 	);
 }
 
-/** The pattern a site follows: the zone and its trigger add files, and the list under it shows how each is going */
-export function UploadingFiles() {
-	const { uploads, add, retry, remove } = useUploads([
-		{ ...listed('hero-photograph.jpg', 3_480_000, art('#c76024', '#0c2920')), status: 'done' },
-		{ ...listed('quarterly-report-for-the-board-with-appendices-final.pdf', 18_400_000), status: 'uploading', progress: 38 },
-		{ ...listed('fonts.zip', 212_000_000), status: 'failed', errorMessage: 'It’s over the 20 MB limit' },
-	]);
-	return (
-		<div className="flex w-full flex-col gap-3">
-			<DropZone label="Drop files to upload" onDrop={async (event) => add(await Promise.all(event.items.filter(isFileDropItem).map((item) => item.getFile())))} className="w-full">
-				<FileTrigger allowsMultiple onSelect={(files) => add([...(files ?? [])])}>
-					<Button variant="secondary" size="small">
-						Choose files
-					</Button>
-				</FileTrigger>
-			</DropZone>
-			<FileList aria-label="Uploads" items={uploads}>
-				{(upload) => (
-					<FileListItem
-						id={upload.id}
-						file={upload.file}
-						name={upload.name}
-						size={upload.size}
-						thumbnail={upload.thumbnail}
-						status={upload.status}
-						progress={upload.progress}
-						errorMessage={upload.errorMessage}
-						onRetry={() => retry(upload.id)}
-						onRemove={() => remove(upload.id)}
-					/>
-				)}
-			</FileList>
-		</div>
-	);
-}
-
 /** Each state a row can be in, held still */
 export function FileStates() {
 	return (

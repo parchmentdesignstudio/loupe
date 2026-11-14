@@ -3,6 +3,7 @@ import { type IconName, type IconVariant, iconNames } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, ComboBox, ListBoxItem, NumberField, Select, Switch, TextField, ToggleButton, ToggleButtonGroup } from '../src/index.js';
 import { hex, surface } from './brand.js';
+import { codeOf } from './code.js';
 
 // A kit for each component's "Build one" story: the component in a box, a row of controls under it, each named on the
 // left, a ground to set it on, and a Random button to shake it up. Solid is the icon set in use while the line icons are
@@ -143,19 +144,30 @@ export const solidIcons = () => iconNames({ variant: 'solid', size: 16 });
 
 /**
  * The component in a box on the chosen ground, with Random in its corner when there's something to shake up, then the
- * component's own controls in groups, then the ground and anything else that only changes the preview. `box` adds classes to the box, such as `items-start` for something tall
+ * component's own controls in groups, and Copy code for it as JSX, then the ground and anything else that only changes the preview. `box` adds classes to the box, such as `items-start` for something tall
  */
 export function Playground({ children, controls, preview, onRandom, box }: { children: ReactNode; controls: ReactNode; preview?: ReactNode; onRandom?: () => void; box?: string }) {
 	const [ground, setGround] = useState<Ground>('page');
+	const [isCopied, setCopied] = useState(false);
+	useLayoutEffect(() => {
+		if (!isCopied) return;
+		const timer = setTimeout(() => setCopied(false), 1500);
+		return () => clearTimeout(timer);
+	}, [isCopied]);
 	return (
 		<div className="flex w-full flex-col gap-4">
 			<div style={grounds[ground]?.()} className={['relative flex min-h-36 items-center justify-center rounded-lg bg-panel px-6 py-12', box].filter(Boolean).join(' ')}>
 				{children}
-				{onRandom && (
-					<Button variant="ghost" size="small" onPress={onRandom} className="absolute top-2 right-2">
-						Random
+				<div className="absolute top-2 right-2 flex gap-1">
+					<Button variant="ghost" size="small" onPress={() => void navigator.clipboard.writeText(codeOf(children)).then(() => setCopied(true))}>
+						{isCopied ? 'Copied' : 'Copy code'}
 					</Button>
-				)}
+					{onRandom && (
+						<Button variant="ghost" size="small" onPress={onRandom}>
+							Random
+						</Button>
+					)}
+				</div>
 			</div>
 			<div className="flex flex-col">
 				{controls}

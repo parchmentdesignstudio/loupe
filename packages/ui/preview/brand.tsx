@@ -39,7 +39,7 @@ const ramp: Record<Hue, [string, string | null, string]> = {
 };
 
 type Stepped = Exclude<Hue, 'Claret'>;
-type Name = (typeof neutrals)[number]['name'] | (typeof accents)[number]['name'] | 'Claret light' | 'Rose' | 'Claret' | Stepped | `${Stepped} light` | `${Stepped} dark`;
+export type Name = (typeof neutrals)[number]['name'] | (typeof accents)[number]['name'] | 'Claret light' | 'Rose' | 'Claret' | Stepped | `${Stepped} light` | `${Stepped} dark`;
 
 // Each step's name, light, base and dark
 const names = (hue: Hue): [Name, Name | null, Name] => (hue === 'Claret' ? ['Claret light', 'Rose', 'Claret'] : [`${hue} light`, hue, `${hue} dark`]);

@@ -4,97 +4,50 @@ import { type IconSize, type IconVariant, iconNames } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import {
 	Avatar,
-	Breadcrumb,
-	Breadcrumbs,
 	Button,
-	Checkbox,
-	CheckboxGroup,
-	Chip,
-	ChipGroup,
 	ColorArea,
 	ColorField,
-	ColorPicker,
 	ColorSlider,
 	ColorSwatch,
 	ColorSwatchPicker,
 	ColorSwatchPickerItem,
-	ComboBox,
 	Composer,
-	Dialog,
-	DialogActions,
-	DialogClose,
-	DialogHeading,
-	DialogTrigger,
-	Disclosure,
-	DisclosureGroup,
-	DisclosureHeader,
-	DisclosurePanel,
-	DropZone,
 	EmptyState,
-	FileList,
-	FileListItem,
 	FileTrigger,
 	GridList,
-	GridListHeader,
 	GridListItem,
-	GridListSection,
-	Header,
 	Keyboard,
 	Link,
-	ListBoxItem,
-	ListBoxSection,
 	Menu,
 	MenuItem,
-	MenuSection,
 	MenuSeparator,
 	MenuTrigger,
-	Modal,
 	NavigationTree,
 	NavigationTreeHeader,
 	NavigationTreeItem,
 	NavigationTreeItemContent,
 	NavigationTreeSection,
 	Meter,
-	NumberField,
-	Pagination,
 	Popover,
 	PreviewTrigger,
-	ProgressBar,
-	ProgressCircle,
-	Radio,
-	RadioGroup,
 	SearchField,
-	Select,
 	Separator,
-	Sheet,
-	SheetTrigger,
-	Slider,
-	Status,
 	Switch,
-	Tab,
-	TabList,
-	TabPanel,
-	Tabs,
-	Tag,
-	TagGroup,
-	TextField,
-	ToastQueue,
-	ToastRegion,
 	ToggleButton,
 	ToggleButtonGroup,
 	Toolbar,
 	Tooltip,
 	TooltipTrigger,
-	isFileDropItem,
 } from '../src/index.js';
 import { ParchmentLogo } from './logo.js';
 import { Article, Families, Prose, Figures, Scale, Together, Weights } from './typography.js';
 import { AppIcons, BrandButtons, Cards, Crops, Curls, Lockups, OnColour, Pairings, Palette, ProjectCards, System } from './brand.js';
-import { AvatarGroups, AvatarPlayground, AvatarSizes, AvatarsInText, PeopleAndOrganisations, photos } from './playgrounds/avatar.js';
+import { AvatarPlayground, AvatarsInText, photos } from './playgrounds/avatar.js';
 import { ButtonPlayground } from './playgrounds/button.js';
-import { CalendarPlayground, PickADay, TwoMonths, WeekendsUnavailable } from './playgrounds/calendar.js';
-import { DateAndTime, DateFieldPlayground, DateFieldStates } from './playgrounds/date-field.js';
-import { DatePickerPlayground, PickADate, PickADateAndTime, PickARange } from './playgrounds/date-picker.js';
+import { CardPlayground, Category } from './blocks/card.js';
+import { CalendarPlayground } from './playgrounds/calendar.js';
+import { DateFieldPlayground } from './playgrounds/date-field.js';
+import { DatePickerPlayground } from './playgrounds/date-picker.js';
 import { CheckboxPlayground } from './playgrounds/checkbox.js';
 import { ChipPlayground } from './playgrounds/chip.js';
 import { ColorAreaPlayground } from './playgrounds/color-area.js';
@@ -106,7 +59,7 @@ import { ComboBoxPlayground } from './playgrounds/combo-box.js';
 import { ComposerPlayground } from './playgrounds/composer.js';
 import { DialogPlayground } from './playgrounds/dialog.js';
 import { DisclosurePlayground } from './playgrounds/disclosure.js';
-import { DropZonePlayground, FileStates, UploadingFiles } from './playgrounds/drop-zone.js';
+import { DropZonePlayground, FileStates } from './playgrounds/drop-zone.js';
 import { EmptyStatePlayground } from './playgrounds/empty-state.js';
 import { FileTriggerPlayground } from './playgrounds/file-trigger.js';
 import { GridListPlayground } from './playgrounds/grid-list.js';
@@ -120,14 +73,14 @@ import { NumberFieldPlayground } from './playgrounds/number-field.js';
 import { PopoverPlayground } from './playgrounds/popover.js';
 import { ProgressBarPlayground, Saving } from './playgrounds/progress-bar.js';
 import { screens } from './screens/index.js';
-import { PaginationPlayground, PaginationUnderTable, StatusBadges, StatusPlayground, StatusTones } from './playgrounds/status.js';
+import { PaginationPlayground, PaginationUnderTable, StatusPlayground } from './playgrounds/status.js';
 import { RadioGroupPlayground } from './playgrounds/radio-group.js';
 import { SearchFieldPlayground } from './playgrounds/search-field.js';
 import { SelectPlayground } from './playgrounds/select.js';
 import { SheetPlayground } from './playgrounds/sheet.js';
 import { SliderPlayground } from './playgrounds/slider.js';
 import { SwitchPlayground } from './playgrounds/switch.js';
-import { EmptyTable, InvoicesTable, LoadingMoreTable, MembersTable, TablePlayground } from './playgrounds/table.js';
+import { EmptyTable, LoadingMoreTable, TablePlayground } from './playgrounds/table.js';
 import { TabsPlayground } from './playgrounds/tabs.js';
 import { TagGroupPlayground } from './playgrounds/tag-group.js';
 import { TextFieldPlayground } from './playgrounds/text-field.js';
@@ -149,6 +102,8 @@ export interface Entry {
 	id: string;
 	name: string;
 	description: ReactNode;
+	/** A line short enough for a card, where the description's first sentence runs longer than two lines */
+	summary?: string;
 	/** What a component page imports. A foundation, such as colour, has none, and says how a site uses it in `usage` */
 	exports?: string[];
 	usage?: string;
@@ -240,37 +195,6 @@ function Editing({ className }: { className?: string }) {
 	);
 }
 
-function EditMenu() {
-	return (
-		<MenuTrigger>
-			<Button variant="secondary">Edit</Button>
-			<Menu>
-				<MenuItem textValue="Undo">
-					Undo
-					<Keyboard>⌘Z</Keyboard>
-				</MenuItem>
-				<MenuItem textValue="Redo">
-					Redo
-					<Keyboard>⇧⌘Z</Keyboard>
-				</MenuItem>
-				<MenuSeparator />
-				<MenuItem textValue="Cut">
-					Cut
-					<Keyboard>⌘X</Keyboard>
-				</MenuItem>
-				<MenuItem textValue="Copy">
-					Copy
-					<Keyboard>⌘C</Keyboard>
-				</MenuItem>
-				<MenuItem textValue="Paste">
-					Paste
-					<Keyboard>⌘V</Keyboard>
-				</MenuItem>
-			</Menu>
-		</MenuTrigger>
-	);
-}
-
 function Sending() {
 	const [sent, setSent] = useState<string[]>([]);
 	return (
@@ -300,9 +224,6 @@ function FindingTypefaces() {
 	);
 }
 
-// One queue for the preview, so its toasts stack in one place
-const toasts = new ToastQueue();
-
 // The router keeps each click inside the story, moving the current page rather than leaving the preview
 function CurrentPage() {
 	const [route, setRoute] = useState('#website');
@@ -322,101 +243,12 @@ function CurrentPage() {
 	);
 }
 
-const projects = [
-	{ id: 'parchment', name: 'Parchment', detail: 'Studio site' },
-	{ id: 'loupe', name: 'Loupe', detail: 'Icons and components' },
-	{ id: 'favicon', name: 'Favicon', detail: 'A tool' },
-];
-
-const outputs = [
-	{
-		id: 'browser',
-		name: 'Browser',
-		items: [
-			{ id: 'favicon-16', name: 'Favicon', size: '16 × 16' },
-			{ id: 'favicon-32', name: 'Favicon', size: '32 × 32' },
-		],
-	},
-	{
-		id: 'home-screen',
-		name: 'Home screen',
-		items: [
-			{ id: 'apple-touch', name: 'Apple touch icon', size: '180 × 180' },
-			{ id: 'android', name: 'Android', size: '192 × 192' },
-			{ id: 'android-large', name: 'Android', size: '512 × 512' },
-		],
-	},
-];
-
-const artwork = ['favicon.svg', 'favicon-16.svg', 'apple-touch-icon.png', 'og-image.png'].map((name) => ({ id: name, name }));
-
 const icons = [
 	{ id: 'favicon-16', name: 'Favicon', size: '16 × 16', preview: 'size-8', mark: 16 },
 	{ id: 'favicon-32', name: 'Favicon', size: '32 × 32', preview: 'size-12', mark: 16 },
 	{ id: 'apple-touch', name: 'Apple touch icon', size: '180 × 180', preview: 'size-24', mark: 24 },
 	{ id: 'android', name: 'Android', size: '512 × 512', preview: 'size-32', mark: 24 },
 ] as const;
-
-// The mark on paper, as a tile's preview
-const Preview = () => (
-	<span aria-hidden="true" className="flex aspect-square items-center justify-center bg-paper">
-		<ParchmentLogo size={24} />
-	</span>
-);
-
-function RemovingTags() {
-	const [names, setNames] = useState(['Fraunces', 'Literata', 'Newsreader', 'Work Sans']);
-	return (
-		<TagGroup
-			label="Typefaces to compare"
-			description="Remove one with its cross, or with Backspace"
-			items={names.map((name) => ({ id: name, name }))}
-			onRemove={(keys) => setNames((list) => list.filter((name) => !keys.has(name)))}
-			renderEmptyState={() => 'None left to compare'}
-		>
-			{(item) => <Tag>{item.name}</Tag>}
-		</TagGroup>
-	);
-}
-
-function DroppingFiles() {
-	const [files, setFiles] = useState<File[]>([]);
-	return (
-		<div className="flex w-full flex-col gap-3">
-			<DropZone
-				label="Drop an SVG or a large PNG"
-				onDrop={async (event) => setFiles(await Promise.all(event.items.filter(isFileDropItem).map((item) => item.getFile())))}
-				className="w-full"
-			>
-				<FileTrigger acceptedFileTypes={['image/svg+xml', 'image/png']} allowsMultiple onSelect={(chosen) => setFiles([...(chosen ?? [])])}>
-					<Button variant="secondary" size="small">
-						Choose files
-					</Button>
-				</FileTrigger>
-			</DropZone>
-			<FileList aria-label="Chosen files">
-				{files.map((file, index) => (
-					<FileListItem key={index} id={index} file={file} onRemove={() => setFiles((list) => list.filter((other) => other !== file))} />
-				))}
-			</FileList>
-		</div>
-	);
-}
-
-function DroppingQuietly() {
-	const [names, setNames] = useState<string[]>([]);
-	return (
-		<DropZone
-			variant="quiet"
-			aria-label="Drop artwork"
-			onDrop={(event) => setNames(event.items.filter(isFileDropItem).map((item) => item.name))}
-			className="flex min-h-40 w-full flex-col items-center justify-center gap-1 p-6 text-center"
-		>
-			<p className="font-medium">A panel that takes files</p>
-			<p className="text-label text-muted">{names.length > 0 ? names.join(', ') : 'Drag a file over it, and an outline shows it’ll take it'}</p>
-		</DropZone>
-	);
-}
 
 function ChoosingFiles() {
 	const [names, setNames] = useState<string[]>([]);
@@ -537,7 +369,7 @@ function Derived() {
 	);
 }
 
-export const library: Group[] = [
+const groups: Group[] = [
 	{
 		name: 'Tokens',
 		components: [
@@ -563,7 +395,7 @@ export const library: Group[] = [
 			{
 				id: 'typography',
 				name: 'Typography',
-				description: 'Two families and four sizes. Elza Round for everything, in normal and medium, and Auger Mono for code. Controls sit on a 20px line, and on a touch screen their text grows to 16px so a field doesn’t zoom',
+				description: 'Two families and four sizes. Elza Round for everything, in normal and medium with bold titles, and Auger Mono for code. Controls sit on a 20px line, and on a touch screen their text grows to 16px so a field doesn’t zoom',
 				usage: 'text-body font-medium',
 				stories: [
 					{ name: 'The sizes, largest first', render: Scale },
@@ -584,72 +416,11 @@ export const library: Group[] = [
 				id: 'button',
 				name: 'Button',
 				description: 'Any action, as primary in marigold, secondary in white, accent in slate, outline or ghost, with an icon at either end or just an icon, and rounded corners or full ones for a pill or a circle',
+				summary: 'Any action, in marigold, white or slate, outline or ghost, with or without an icon',
 				exports: ['Button'],
 				sample: (props) => <Button {...props}>New project</Button>,
 				stories: [
 					{ name: 'Build one', render: ButtonPlayground },
-					{
-						name: 'Primary, secondary, accent, outline and ghost',
-						render: () => (
-							<>
-								<Button>Schedule call</Button>
-								<Button variant="secondary">Send an email</Button>
-								<Button variant="accent">Book a visit</Button>
-								<Button variant="outline">Call back</Button>
-								<Button variant="ghost">Not now</Button>
-							</>
-						),
-					},
-					{
-						name: 'With an icon at the start or end',
-						render: () => (
-							<>
-								<Button start={<Icon name="plus" />}>New project</Button>
-								<Button variant="accent" end={<Icon name="arrow-right" />}>
-									Continue
-								</Button>
-								<Button variant="secondary" start={<Icon name="envelope" />}>
-									Send an email
-								</Button>
-								<Button variant="outline" size="small" end={<Icon name="chevron-down" />}>
-									Sort by
-								</Button>
-							</>
-						),
-					},
-					{
-						name: 'Just an icon, rounded or full',
-						render: () => (
-							<>
-								<Button variant="secondary" aria-label="Send">
-									<Icon name="arrow-up" />
-								</Button>
-								<Button variant="secondary" shape="full" aria-label="Send">
-									<Icon name="arrow-up" />
-								</Button>
-								<Button shape="full" size="small" aria-label="Send">
-									<Icon name="arrow-up" />
-								</Button>
-								<Button variant="ghost" shape="full" size="small" aria-label="Send">
-									<Icon name="arrow-up" />
-								</Button>
-							</>
-						),
-					},
-					{
-						name: 'Full, as a pill',
-						render: () => (
-							<>
-								<Button shape="full" start={<Icon name="plus" />}>
-									New project
-								</Button>
-								<Button variant="secondary" shape="full">
-									Cancel
-								</Button>
-							</>
-						),
-					},
-					{ name: 'Disabled', render: () => <Button isDisabled>Disabled</Button> },
 				],
 			},
 			{
@@ -659,16 +430,6 @@ export const library: Group[] = [
 				exports: ['Chip', 'ChipGroup'],
 				stories: [
 					{ name: 'Build one', render: ChipPlayground },
-					{
-						name: 'In a group',
-						render: () => (
-							<ChipGroup aria-label="Or start with">
-								<Chip>A new website</Chip>
-								<Chip>Rework my site</Chip>
-								<Chip>Not sure yet</Chip>
-							</ChipGroup>
-						),
-					},
 				],
 			},
 			{
@@ -679,27 +440,6 @@ export const library: Group[] = [
 				stories: [
 					{ name: 'Build one', render: ToolbarPlayground },
 					{ name: 'Tools, history and zoom', render: () => <Editing /> },
-					{ name: 'Floating', render: () => <Editing className="rounded-xl bg-overlay p-1 shadow-floating [--bleed:var(--overlay-bleed)]" /> },
-					{
-						name: 'In a column',
-						render: () => (
-							<Toolbar aria-label="Tools" orientation="vertical" className="rounded-xl bg-overlay p-1 shadow-floating [--bleed:var(--overlay-bleed)]">
-								<Button variant="ghost" shape="full" aria-label="Select">
-									<Icon name="cursorarrow" />
-								</Button>
-								<Button variant="ghost" shape="full" aria-label="Pan">
-									<Icon name="arrow-up-and-down-and-arrow-left-and-right" />
-								</Button>
-								<Separator />
-								<Button variant="ghost" shape="full" aria-label="Undo">
-									<Icon name="arrow-uturn-left" />
-								</Button>
-								<Button variant="ghost" shape="full" aria-label="Redo">
-									<Icon name="arrow-uturn-right" />
-								</Button>
-							</Toolbar>
-						),
-					},
 				],
 			},
 			{
@@ -709,29 +449,6 @@ export const library: Group[] = [
 				exports: ['Keyboard'],
 				stories: [
 					{ name: 'Build one', render: KeyboardPlayground },
-					{
-						name: 'In a sentence',
-						render: () => (
-							<p>
-								Hold <Keyboard>Space</Keyboard> and drag to move around the canvas.
-							</p>
-						),
-					},
-					{
-						name: 'In a tooltip',
-						render: () => (
-							<TooltipTrigger delay={300}>
-								<Button variant="secondary" shape="full" aria-label="Undo">
-									<Icon name="arrow-uturn-left" />
-								</Button>
-								<Tooltip>
-									Undo
-									<Keyboard>⌘Z</Keyboard>
-								</Tooltip>
-							</TooltipTrigger>
-						),
-					},
-					{ name: 'In a menu', render: EditMenu },
 				],
 			},
 		],
@@ -750,18 +467,6 @@ export const library: Group[] = [
 				exports: ['TextField'],
 				stories: [
 					{ name: 'Build one', render: TextFieldPlayground },
-					{ name: 'With a description', render: () => <TextField label="Your name" placeholder="Sam Smith" description="As you’d like Steve to say it" className="w-full" /> },
-					{ name: 'Invalid', render: () => <TextField label="Email" defaultValue="sam@" isInvalid errorMessage="Enter an email address" className="w-full" /> },
-					{ name: 'Multiline', render: () => <TextField label="What are you working on?" placeholder="A few lines is plenty" multiline className="w-full" /> },
-					{
-						name: 'Filled',
-						render: () => (
-							<div className="flex w-full flex-col gap-4">
-								<TextField label="Your name" variant="filled" placeholder="Sam Smith" className="w-full" />
-								<TextField label="Small" variant="filled" size="small" placeholder="Sam Smith" className="w-full" />
-							</div>
-						),
-					},
 				],
 			},
 			{
@@ -771,26 +476,6 @@ export const library: Group[] = [
 				exports: ['NumberField'],
 				stories: [
 					{ name: 'Build one', render: NumberFieldPlayground },
-					{
-						name: 'Within limits',
-						render: () => <NumberField label="Width" description="In pixels, from 320 to 3840" defaultValue={1440} minValue={320} maxValue={3840} step={10} formatOptions={{ useGrouping: false }} className="w-56" />,
-					},
-					{
-						name: 'As a percentage',
-						render: () => <NumberField label="Opacity" defaultValue={0.8} minValue={0} maxValue={1} step={0.05} formatOptions={{ style: 'percent' }} className="w-56" />,
-					},
-					{
-						name: 'Filled and small, for an inspector',
-						render: () => (
-							<div className="flex w-full flex-col gap-2">
-								<div className="flex gap-2">
-									<NumberField aria-label="Width" variant="filled" size="small" defaultValue={52} minValue={1} formatOptions={{ useGrouping: false }} className="w-28" />
-									<NumberField aria-label="Height" variant="filled" size="small" defaultValue={52} minValue={1} formatOptions={{ useGrouping: false }} className="w-28" />
-								</div>
-								<TextField aria-label="Layer name" variant="filled" size="small" defaultValue="App icon" className="w-58" />
-							</div>
-						),
-					},
 				],
 			},
 			{
@@ -800,7 +485,6 @@ export const library: Group[] = [
 				exports: ['SearchField'],
 				stories: [
 					{ name: 'Build one', render: SearchFieldPlayground },
-					{ name: 'Without a label', render: () => <SearchField aria-label="Search projects" placeholder="Search projects" className="w-64" /> },
 					{ name: 'Filtering a list', render: FindingTypefaces },
 				],
 			},
@@ -811,33 +495,6 @@ export const library: Group[] = [
 				exports: ['Slider'],
 				stories: [
 					{ name: 'Build one', render: SliderPlayground },
-					{
-						name: 'As a percentage',
-						render: () => <Slider label="Padding" defaultValue={0.12} minValue={0} maxValue={0.4} step={0.01} formatOptions={{ style: 'percent' }} className="w-64" />,
-					},
-					{
-						name: 'A range',
-						render: () => (
-							<Slider
-								label="Budget"
-								defaultValue={[5000, 15000]}
-								minValue={0}
-								maxValue={30000}
-								step={500}
-								thumbLabels={['Minimum', 'Maximum']}
-								formatOptions={{ style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }}
-								className="w-64"
-							/>
-						),
-					},
-					{
-						name: 'Vertical',
-						render: () => <Slider label="Size" orientation="vertical" defaultValue={1} minValue={0.1} maxValue={1.5} step={0.01} formatOptions={{ style: 'percent' }} className="h-48" />,
-					},
-					{
-						name: 'Disabled',
-						render: () => <Slider label="Size" defaultValue={1} minValue={0.1} maxValue={1.5} step={0.01} formatOptions={{ style: 'percent' }} isDisabled className="w-64" />,
-					},
 				],
 			},
 			{
@@ -860,34 +517,6 @@ export const library: Group[] = [
 				exports: ['Checkbox', 'CheckboxGroup'],
 				stories: [
 					{ name: 'Build one', render: CheckboxPlayground },
-					{
-						name: 'In a group',
-						render: () => (
-							<CheckboxGroup label="What do you need?" defaultValue={['website']}>
-								{services.map((service) => (
-									<Checkbox key={service.id} value={service.id}>
-										{service.name}
-									</Checkbox>
-								))}
-							</CheckboxGroup>
-						),
-					},
-					{ name: 'Indeterminate', render: () => <Checkbox isIndeterminate>All services</Checkbox> },
-					{ name: 'Invalid', render: () => <Checkbox isInvalid>I’ve read the terms</Checkbox> },
-					{
-						name: 'Disabled',
-						render: () => (
-							<div className="flex flex-col">
-								<Checkbox isDisabled defaultSelected>
-									Ticked
-								</Checkbox>
-								<Checkbox isDisabled>Not ticked</Checkbox>
-								<Checkbox isDisabled isIndeterminate>
-									Mixed
-								</Checkbox>
-							</div>
-						),
-					},
 				],
 			},
 			{
@@ -897,66 +526,22 @@ export const library: Group[] = [
 				exports: ['RadioGroup', 'Radio'],
 				stories: [
 					{ name: 'Build one', render: RadioGroupPlayground },
-					{
-						name: 'With a disabled option',
-						render: () => (
-							<RadioGroup label="Budget" defaultValue="mid">
-								<Radio value="small">Under £5k</Radio>
-								<Radio value="mid">£5–15k</Radio>
-								<Radio value="large">Over £15k</Radio>
-								<Radio value="unsure" isDisabled>
-									Not sure yet
-								</Radio>
-							</RadioGroup>
-						),
-					},
-					{
-						name: 'Disabled',
-						render: () => (
-							<RadioGroup label="Budget" defaultValue="mid" isDisabled>
-								<Radio value="small">Under £5k</Radio>
-								<Radio value="mid">£5–15k</Radio>
-							</RadioGroup>
-						),
-					},
 				],
 			},
 			{
 				id: 'switch',
 				name: 'Switch',
 				description: 'A setting that takes effect straight away, with rounded corners or full ones for a pill. With on/off labels turned on, or where the system asks for more contrast, a | and an O say its state too',
+				summary: 'A setting that takes effect straight away',
 				exports: ['Switch'],
 				stories: [
 					{ name: 'Build one', render: SwitchPlayground },
-					{ name: 'On', render: () => <Switch defaultSelected>Send me the newsletter</Switch> },
-					{
-						name: 'Rounded or full',
-						render: () => (
-							<>
-								<Switch defaultSelected>Rounded</Switch>
-								<Switch shape="full" defaultSelected>
-									Full
-								</Switch>
-							</>
-						),
-					},
 					{
 						name: 'With on/off labels',
 						render: () => (
 							<div data-on-off-labels className="flex flex-col">
 								<Switch defaultSelected>On</Switch>
 								<Switch>Off</Switch>
-							</div>
-						),
-					},
-					{
-						name: 'Disabled',
-						render: () => (
-							<div className="flex flex-col">
-								<Switch isDisabled defaultSelected>
-									On
-								</Switch>
-								<Switch isDisabled>Off</Switch>
 							</div>
 						),
 					},
@@ -969,36 +554,6 @@ export const library: Group[] = [
 				exports: ['ToggleButtonGroup', 'ToggleButton'],
 				stories: [
 					{ name: 'Build one', render: ToggleButtonGroupPlayground },
-					{
-						name: 'One choice',
-						render: () => (
-							<ToggleButtonGroup aria-label="View" defaultSelectedKeys={['week']}>
-								<ToggleButton id="day">Day</ToggleButton>
-								<ToggleButton id="week">Week</ToggleButton>
-								<ToggleButton id="month">Month</ToggleButton>
-							</ToggleButtonGroup>
-						),
-					},
-					{
-						name: 'Small',
-						render: () => (
-							<ToggleButtonGroup aria-label="Device" size="small" defaultSelectedKeys={['phone']}>
-								<ToggleButton id="phone">Phone</ToggleButton>
-								<ToggleButton id="tablet">Tablet</ToggleButton>
-								<ToggleButton id="desktop">Desktop</ToggleButton>
-							</ToggleButtonGroup>
-						),
-					},
-					{
-						name: 'Several at once',
-						render: () => (
-							<ToggleButtonGroup aria-label="Show" selectionMode="multiple" defaultSelectedKeys={['grid', 'rulers']}>
-								<ToggleButton id="grid">Grid</ToggleButton>
-								<ToggleButton id="rulers">Rulers</ToggleButton>
-								<ToggleButton id="guides">Guides</ToggleButton>
-							</ToggleButtonGroup>
-						),
-					},
 				],
 			},
 		],
@@ -1013,31 +568,6 @@ export const library: Group[] = [
 				exports: ['Select', 'ListBoxItem', 'ListBoxSection'],
 				stories: [
 					{ name: 'Build one', render: SelectPlayground },
-					{
-						name: 'Options',
-						render: () => (
-							<Select label="Service" placeholder="Choose a service" items={services} className="w-full">
-								{(item) => <ListBoxItem id={item.id}>{item.name}</ListBoxItem>}
-							</Select>
-						),
-					},
-					{
-						name: 'Under headings',
-						render: () => (
-							<Select label="Timing" placeholder="When do you want to start?" className="w-full">
-								<ListBoxSection>
-									<Header>Soon</Header>
-									<ListBoxItem id="now">Straight away</ListBoxItem>
-									<ListBoxItem id="month">Within a month</ListBoxItem>
-								</ListBoxSection>
-								<ListBoxSection>
-									<Header>Later</Header>
-									<ListBoxItem id="quarter">Next quarter</ListBoxItem>
-									<ListBoxItem id="unsure">Not sure yet</ListBoxItem>
-								</ListBoxSection>
-							</Select>
-						),
-					},
 				],
 			},
 			{
@@ -1047,14 +577,6 @@ export const library: Group[] = [
 				exports: ['ComboBox', 'ListBoxItem'],
 				stories: [
 					{ name: 'Build one', render: ComboBoxPlayground },
-					{
-						name: 'Filtering',
-						render: () => (
-							<ComboBox label="Typeface" placeholder="Search typefaces" defaultItems={typefaces} className="w-full">
-								{(item) => <ListBoxItem id={item.id}>{item.name}</ListBoxItem>}
-							</ComboBox>
-						),
-					},
 				],
 			},
 			{
@@ -1064,20 +586,16 @@ export const library: Group[] = [
 				exports: ['DateField', 'TimeField'],
 				stories: [
 					{ name: 'Build one', render: DateFieldPlayground },
-					{ name: 'Date and time', render: DateAndTime },
-					{ name: 'States', render: DateFieldStates },
 				],
 			},
 			{
 				id: 'date-picker',
 				name: 'Date picker',
 				description: 'A date or a range of dates, typed or picked from a calendar that opens below the field',
+				summary: 'A date or a range, typed or picked from a calendar below the field',
 				exports: ['DatePicker', 'DateRangePicker'],
 				stories: [
 					{ name: 'Build one', render: DatePickerPlayground },
-					{ name: 'A date', render: PickADate },
-					{ name: 'A range', render: PickARange },
-					{ name: 'A date and time, on weekdays', render: PickADateAndTime },
 				],
 			},
 			{
@@ -1087,9 +605,6 @@ export const library: Group[] = [
 				exports: ['Calendar', 'RangeCalendar'],
 				stories: [
 					{ name: 'Build one', render: CalendarPlayground },
-					{ name: 'A date', render: PickADay },
-					{ name: 'Weekends unavailable', render: WeekendsUnavailable },
-					{ name: 'A range across two months', render: TwoMonths },
 				],
 			},
 		],
@@ -1101,18 +616,10 @@ export const library: Group[] = [
 				id: 'color-picker',
 				name: 'Colour picker',
 				description: 'A colour, shown as a swatch and its hex, that opens an area, a hue slider and a hex field',
+				summary: 'A colour as a swatch and its hex, opening an area, a hue slider and a field',
 				exports: ['ColorPicker'],
 				stories: [
 					{ name: 'Build one', render: ColorPickerPlayground },
-					{
-						name: 'Side by side',
-						render: () => (
-							<div className="grid w-full max-w-sm grid-cols-2 gap-2.5">
-								<ColorPicker label="Background" defaultValue="#fffdf8" />
-								<ColorPicker label="Theme" defaultValue="#0c2920" />
-							</div>
-						),
-					},
 				],
 			},
 			{
@@ -1122,16 +629,6 @@ export const library: Group[] = [
 				exports: ['ColorSwatchPicker', 'ColorSwatchPickerItem', 'ColorSwatch'],
 				stories: [
 					{ name: 'Build one', render: ColorSwatchPickerPlayground },
-					{
-						name: 'Parchment’s palette',
-						render: () => (
-							<ColorSwatchPicker aria-label="Colour" defaultValue="#c76024">
-								{palette.map((color) => (
-									<ColorSwatchPickerItem key={color} color={color} />
-								))}
-							</ColorSwatchPicker>
-						),
-					},
 					{
 						name: 'With none',
 						render: () => (
@@ -1163,8 +660,6 @@ export const library: Group[] = [
 				exports: ['ColorSlider'],
 				stories: [
 					{ name: 'Build one', render: ColorSliderPlayground },
-					{ name: 'Hue', render: () => <ColorSlider colorSpace="hsb" channel="hue" defaultValue="#c76024" className="w-64" /> },
-					{ name: 'Opacity', render: () => <ColorSlider label="Opacity" channel="alpha" defaultValue="#0c2920" className="w-64" /> },
 				],
 			},
 			{
@@ -1188,58 +683,6 @@ export const library: Group[] = [
 				stories: [
 					{ name: 'Build one', render: GridListPlayground },
 					{
-						name: 'Rows',
-						render: () => (
-							<GridList aria-label="Projects" items={projects} selectionMode="single" defaultSelectedKeys={['parchment']} className="w-full max-w-sm">
-								{(project) => (
-									<GridListItem textValue={project.name}>
-										<span className="flex min-w-0 flex-1 flex-col">
-											<span className="font-medium">{project.name}</span>
-											<span className="text-label text-muted">{project.detail}</span>
-										</span>
-										<Button variant="ghost" size="small">
-											Open
-										</Button>
-									</GridListItem>
-								)}
-							</GridList>
-						),
-					},
-					{
-						name: 'Tiles, under headings',
-						render: () => (
-							<GridList aria-label="Outputs" layout="grid" selectionMode="single" disallowEmptySelection defaultSelectedKeys={['apple-touch']} className="w-full">
-								{outputs.map((group) => (
-									<GridListSection key={group.id} id={group.id}>
-										<GridListHeader>{group.name}</GridListHeader>
-										{group.items.map((output) => (
-											<GridListItem key={output.id} id={output.id} textValue={`${output.name}, ${output.size}`}>
-												<Preview />
-												<span className="flex flex-col">
-													<span className="font-medium">{output.name}</span>
-													<span className="font-mono text-label text-muted">{output.size}</span>
-												</span>
-											</GridListItem>
-										))}
-									</GridListSection>
-								))}
-							</GridList>
-						),
-					},
-					{
-						name: 'Several at once',
-						render: () => (
-							<GridList aria-label="Artwork to export" layout="grid" items={artwork} selectionMode="multiple" defaultSelectedKeys={['favicon.svg', 'og-image.png']} className="w-full">
-								{(file) => (
-									<GridListItem textValue={file.name}>
-										<Preview />
-										<span className="truncate font-mono text-label">{file.name}</span>
-									</GridListItem>
-								)}
-							</GridList>
-						),
-					},
-					{
 						name: 'Mixed sizes, in a row that wraps',
 						render: () => (
 							<GridList aria-label="Icons" layout="grid" items={icons} selectionMode="single" disallowEmptySelection defaultSelectedKeys={['apple-touch']} className="flex w-full flex-wrap items-end">
@@ -1260,11 +703,10 @@ export const library: Group[] = [
 				id: 'table',
 				name: 'Table',
 				description: 'Rows of records under sortable columns, such as customers, invoices or members, with rows to choose, open or act on',
+				summary: 'Rows of records under sortable columns, to choose, open or act on',
 				exports: ['Table', 'TableHeader', 'Column', 'TableBody', 'Row', 'Cell', 'RowActions', 'TableLoadMore'],
 				stories: [
 					{ name: 'Build one', render: TablePlayground },
-					{ name: 'Members', render: MembersTable },
-					{ name: 'Invoices', render: InvoicesTable },
 					{ name: 'Empty', render: EmptyTable },
 					{ name: 'Loading more as it scrolls', render: LoadingMoreTable },
 				],
@@ -1276,31 +718,16 @@ export const library: Group[] = [
 				exports: ['TagGroup', 'Tag'],
 				stories: [
 					{ name: 'Build one', render: TagGroupPlayground },
-					{
-						name: 'Choosing',
-						render: () => (
-							<TagGroup label="Sizes" selectionMode="multiple" defaultSelectedKeys={['32', '180']}>
-								{['16', '32', '48', '180', '192', '512'].map((size) => (
-									<Tag key={size} id={size} className="font-mono">
-										{size}
-									</Tag>
-								))}
-							</TagGroup>
-						),
-					},
-					{ name: 'Removing', render: RemovingTags },
 				],
 			},
 			{
 				id: 'avatar',
 				name: 'Avatar',
 				description: 'A person, round, or an organisation or project, square, as a photo or their initials on a tint. A group overlaps them and counts the rest',
+				summary: 'A person, organisation or project, as a photo or their initials',
 				exports: ['Avatar', 'AvatarGroup'],
 				stories: [
 					{ name: 'Build one', render: AvatarPlayground },
-					{ name: 'Sizes, with initials and with a photo', render: AvatarSizes },
-					{ name: 'People and organisations', render: PeopleAndOrganisations },
-					{ name: 'In a group', render: AvatarGroups },
 					{ name: 'Beside text, on a 20px line', render: AvatarsInText },
 				],
 			},
@@ -1311,27 +738,6 @@ export const library: Group[] = [
 				exports: ['EmptyState'],
 				stories: [
 					{ name: 'Build one', render: EmptyStatePlayground },
-					{
-						name: 'With a first step',
-						render: () => (
-							<EmptyState
-								icon={<Icon name="note-text-badge-plus" />}
-								title="No briefs yet"
-								actions={<Button start={<Icon name="plus" />}>New brief</Button>}
-								className="w-full"
-							>
-								A brief sets out what a project is for, so start one before the first call
-							</EmptyState>
-						),
-					},
-					{
-						name: 'Just saying so',
-						render: () => (
-							<EmptyState title="No matches" className="w-full">
-								Try fewer words, or check the spelling
-							</EmptyState>
-						),
-					},
 				],
 			},
 		],
@@ -1346,9 +752,6 @@ export const library: Group[] = [
 				exports: ['DropZone', 'FileTrigger', 'FileList', 'FileListItem', 'isFileDropItem'],
 				stories: [
 					{ name: 'Build one', render: DropZonePlayground },
-					{ name: 'Dashed', render: DroppingFiles },
-					{ name: 'Quiet, for a panel', render: DroppingQuietly },
-					{ name: 'Uploading what’s dropped', render: UploadingFiles },
 					{ name: 'Each state of a file', render: FileStates },
 				],
 			},
@@ -1372,36 +775,6 @@ export const library: Group[] = [
 				exports: ['ProgressBar', 'ProgressCircle', 'Meter'],
 				stories: [
 					{ name: 'Build one', render: ProgressBarPlayground },
-					{
-						name: 'With a label and value',
-						render: () => (
-							<div className="flex w-full max-w-md flex-col gap-6">
-								<ProgressBar label="Uploading artwork" value={45} />
-								<ProgressBar label="Exporting icons" value={3} maxValue={8} valueLabel="3 of 8 files" />
-								<ProgressBar label="Preparing the download" isIndeterminate />
-							</div>
-						),
-					},
-					{
-						name: 'In a row, without a label',
-						render: () => (
-							<div className="flex w-full max-w-md flex-col gap-3">
-								<ProgressBar aria-label="Uploading brief.pdf" value={72} />
-								<ProgressBar aria-label="Uploading fonts.zip" isIndeterminate />
-							</div>
-						),
-					},
-					{
-						name: 'Spinners and rings',
-						render: () => (
-							<div className="flex items-center gap-6">
-								<ProgressCircle aria-label="Loading" isIndeterminate />
-								<ProgressCircle aria-label="Loading projects" isIndeterminate size="large" />
-								<ProgressCircle aria-label="Syncing" value={30} />
-								<ProgressCircle aria-label="Syncing" value={70} size="large" />
-							</div>
-						),
-					},
 					{ name: 'A button while it saves', render: Saving },
 					{ name: 'A meter', render: () => <Meter label="Storage" value={7.2} maxValue={10} valueLabel="7.2 of 10 GB" className="w-full max-w-md" /> },
 				],
@@ -1410,12 +783,10 @@ export const library: Group[] = [
 				id: 'status',
 				name: 'Status',
 				description: 'Where something is up to, such as a lead that’s qualified or an invoice that’s overdue, as a coloured dot and a label. The colour backs up the label, so the label has to say it all',
+				summary: 'Where something is up to, as a coloured dot and a label',
 				exports: ['Status'],
 				stories: [
 					{ name: 'Build one', render: StatusPlayground },
-					{ name: 'Tones', render: StatusTones },
-					{ name: 'With a detail', render: () => <div className="flex flex-col gap-2"><Status tone="info" detail="25 Sept">Call arranged</Status><Status tone="info" detail={<><span>4 calls</span> · <span className="text-danger">22 Sept</span></>}>Call arranged</Status></div> },
-					{ name: 'As badges', render: StatusBadges },
 				],
 			},
 		],
@@ -1430,27 +801,6 @@ export const library: Group[] = [
 				exports: ['DialogTrigger', 'Modal', 'Dialog', 'DialogHeading', 'DialogActions', 'DialogClose'],
 				stories: [
 					{ name: 'Build one', render: DialogPlayground },
-					{
-						name: 'Modal',
-						render: () => (
-							<DialogTrigger>
-								<Button variant="secondary">Rename project</Button>
-								<Modal>
-									<Dialog>
-										<DialogHeading>Rename project</DialogHeading>
-										<DialogClose />
-										<TextField label="Name" defaultValue="Loupe" autoFocus className="mt-4" />
-										<DialogActions>
-											<Button slot="close" variant="secondary">
-												Cancel
-											</Button>
-											<Button slot="close">Save</Button>
-										</DialogActions>
-									</Dialog>
-								</Modal>
-							</DialogTrigger>
-						),
-					},
 				],
 			},
 			{
@@ -1460,38 +810,6 @@ export const library: Group[] = [
 				exports: ['SheetTrigger', 'Sheet'],
 				stories: [
 					{ name: 'Build one', render: SheetPlayground },
-					{
-						name: 'From the bottom',
-						render: () => (
-							<SheetTrigger>
-								<Button variant="secondary">Rename project</Button>
-								<Sheet>
-									<DialogHeading>Rename project</DialogHeading>
-									<DialogClose />
-									<TextField label="Name" defaultValue="Loupe" autoFocus className="mt-4" />
-									<DialogActions>
-										<Button slot="close" variant="secondary">
-											Cancel
-										</Button>
-										<Button slot="close">Save</Button>
-									</DialogActions>
-								</Sheet>
-							</SheetTrigger>
-						),
-					},
-					{
-						name: 'From the start edge',
-						render: () => (
-							<SheetTrigger>
-								<Button variant="secondary">Share</Button>
-								<Sheet position="start">
-									<DialogHeading className="text-body">Share link</DialogHeading>
-									<DialogClose />
-									<p className="mt-1 text-label text-muted">Anyone with the link can view this project.</p>
-								</Sheet>
-							</SheetTrigger>
-						),
-					},
 				],
 			},
 			{
@@ -1501,34 +819,6 @@ export const library: Group[] = [
 				exports: ['DialogTrigger', 'Popover', 'Dialog', 'DialogHeading'],
 				stories: [
 					{ name: 'Build one', render: PopoverPlayground },
-					{
-						name: 'Beside its button',
-						render: () => (
-							<DialogTrigger>
-								<Button variant="secondary">Share</Button>
-								<Popover className="w-64">
-									<Dialog>
-										<DialogHeading className="text-body">Share link</DialogHeading>
-										<p className="mt-1 text-label text-muted">Anyone with the link can view this project.</p>
-									</Dialog>
-								</Popover>
-							</DialogTrigger>
-						),
-					},
-					{
-						name: 'With an arrow',
-						render: () => (
-							<DialogTrigger>
-								<Button variant="secondary">Share</Button>
-								<Popover showArrow className="w-64">
-									<Dialog>
-										<DialogHeading className="text-body">Share link</DialogHeading>
-										<p className="mt-1 text-label text-muted">Anyone with the link can view this project.</p>
-									</Dialog>
-								</Popover>
-							</DialogTrigger>
-						),
-					},
 				],
 			},
 			{
@@ -1538,44 +828,13 @@ export const library: Group[] = [
 				exports: ['MenuTrigger', 'Menu', 'MenuItem', 'MenuSection', 'MenuSeparator'],
 				stories: [
 					{ name: 'Build one', render: MenuPlayground },
-					{
-						name: 'Actions',
-						render: () => (
-							<MenuTrigger>
-								<Button variant="secondary">Project</Button>
-								<Menu>
-									<MenuSection>
-										<Header>Project</Header>
-										<MenuItem>Rename</MenuItem>
-										<MenuItem>Duplicate</MenuItem>
-										<MenuItem isDisabled>Move</MenuItem>
-									</MenuSection>
-									<MenuSeparator />
-									<MenuItem variant="danger">Delete</MenuItem>
-								</Menu>
-							</MenuTrigger>
-						),
-					},
-					{
-						name: 'Single selection',
-						render: () => (
-							<MenuTrigger>
-								<Button variant="ghost">Sort by</Button>
-								<Menu selectionMode="single" defaultSelectedKeys={['updated']}>
-									<MenuItem id="name">Name</MenuItem>
-									<MenuItem id="updated">Last updated</MenuItem>
-									<MenuItem id="created">Created</MenuItem>
-								</Menu>
-							</MenuTrigger>
-						),
-					},
-					{ name: 'With shortcuts', render: EditMenu },
 				],
 			},
 			{
 				id: 'preview-trigger',
 				name: 'Preview trigger',
 				description: 'A popover on hover, focus or a long press, for a closer look at what a link points to. Unlike a tooltip, what’s in it can be used',
+				summary: 'A popover on hover, focus or a long press, for a closer look at a link',
 				exports: ['PreviewTrigger'],
 				stories: [
 					{
@@ -1611,56 +870,16 @@ export const library: Group[] = [
 				exports: ['TooltipTrigger', 'Tooltip'],
 				stories: [
 					{ name: 'Build one', render: TooltipPlayground },
-					{
-						name: 'On a round icon button',
-						render: () => (
-							<TooltipTrigger delay={300}>
-								<Button variant="secondary" shape="full" aria-label="Send">
-									<Icon name="arrow-up" />
-								</Button>
-								<Tooltip>Send message</Tooltip>
-							</TooltipTrigger>
-						),
-					},
-					{
-						name: 'With an arrow',
-						render: () => (
-							<TooltipTrigger delay={300}>
-								<Button variant="secondary" shape="full" aria-label="Send">
-									<Icon name="arrow-up" />
-								</Button>
-								<Tooltip showArrow>Send message</Tooltip>
-							</TooltipTrigger>
-						),
-					},
 				],
 			},
 			{
 				id: 'toast',
 				name: 'Toast',
 				description: 'A short message at the bottom of the screen, such as an export finishing, that closes itself',
+				summary: 'A short message at the bottom of the screen that closes itself',
 				exports: ['ToastQueue', 'ToastRegion', 'Toast'],
 				stories: [
 					{ name: 'Build one', render: ToastPlayground },
-					{
-						name: 'With a title',
-						render: () => (
-							<>
-								<Button variant="secondary" onPress={() => toasts.add({ title: 'Link copied' })}>
-									Copy link
-								</Button>
-								<ToastRegion queue={toasts} />
-							</>
-						),
-					},
-					{
-						name: 'With a description',
-						render: () => (
-							<Button variant="secondary" onPress={() => toasts.add({ title: 'Export ready', description: 'favicon.zip is in your downloads, with all 16 files.' })}>
-								Export
-							</Button>
-						),
-					},
 				],
 			},
 		],
@@ -1672,6 +891,7 @@ export const library: Group[] = [
 				id: 'navigation',
 				name: 'Navigation',
 				description: 'A page’s navigation: a column beside the page on wider screens, and a sheet behind a button on phones. This sidebar is one, so narrow the window to see its sheet',
+				summary: 'A page’s navigation, a sidebar on wide screens and a sheet on phones',
 				exports: ['Navigation'],
 				stories: [
 					{ name: 'Build one', render: NavigationPlayground },],
@@ -1683,42 +903,6 @@ export const library: Group[] = [
 				exports: ['Breadcrumbs', 'Breadcrumb'],
 				stories: [
 					{ name: 'Build one', render: BreadcrumbsPlayground },
-					{
-						name: 'A trail',
-						render: () => (
-							<Breadcrumbs>
-								<Breadcrumb href="#/ui">ui</Breadcrumb>
-								<Breadcrumb>Navigation</Breadcrumb>
-								<Breadcrumb>Breadcrumbs</Breadcrumb>
-							</Breadcrumbs>
-						),
-					},
-					{
-						name: 'Folded to fit',
-						render: () => (
-							<div className="w-full max-w-72">
-								<Breadcrumbs>
-									{['Parchment', 'Clients', 'Hartley & Webb', 'Projects', 'Brand identity', 'Logo'].map((name) => (
-										<Breadcrumb key={name} href="#/ui/breadcrumbs">
-											{name}
-										</Breadcrumb>
-									))}
-								</Breadcrumbs>
-							</div>
-						),
-					},
-					{
-						name: 'No more than three',
-						render: () => (
-							<Breadcrumbs maxVisible={3}>
-								{['Parchment', 'Clients', 'Hartley & Webb', 'Projects', 'Website'].map((name) => (
-									<Breadcrumb key={name} href="#/ui/breadcrumbs">
-										{name}
-									</Breadcrumb>
-								))}
-							</Breadcrumbs>
-						),
-					},
 				],
 			},
 			{
@@ -1729,7 +913,6 @@ export const library: Group[] = [
 				stories: [
 					{ name: 'Build one', render: PaginationPlayground },
 					{ name: 'Under a table', render: PaginationUnderTable },
-					{ name: 'A few pages', render: () => <Pagination page={2} count={3} onChange={() => {}} /> },
 				],
 			},
 			{
@@ -1739,31 +922,6 @@ export const library: Group[] = [
 				exports: ['Link'],
 				stories: [
 					{ name: 'Build one', render: LinkPlayground },
-					{
-						name: 'In a sentence',
-						render: () => (
-							<p>
-								Anyone with the <Link href="#/ui/link">link</Link> can view this project.
-							</p>
-						),
-					},
-					{
-						name: 'Current page',
-						render: () =>
-							services.map((service) => (
-								<Link key={service.id} href="#/ui/link" aria-current={service.id === 'website' ? 'page' : undefined}>
-									{service.name}
-								</Link>
-							)),
-					},
-					{
-						name: 'Disabled',
-						render: () => (
-							<Link href="#/ui/link" isDisabled>
-								Disabled
-							</Link>
-						),
-					},
 				],
 			},
 			{
@@ -1781,72 +939,6 @@ export const library: Group[] = [
 				exports: ['DisclosureGroup', 'Disclosure', 'DisclosureHeader', 'DisclosurePanel'],
 				stories: [
 					{ name: 'Build one', render: DisclosurePlayground },
-					{
-						name: 'Medium, in a group',
-						render: () => (
-							<DisclosureGroup defaultExpandedKeys={['what']}>
-								<Disclosure id="what">
-									<DisclosureHeader>What’s a disclosure?</DisclosureHeader>
-									<DisclosurePanel>A heading that shows or hides what’s under it, such as an answer under its question.</DisclosurePanel>
-								</Disclosure>
-								<Disclosure id="several">
-									<DisclosureHeader>Can several be open at once?</DisclosureHeader>
-									<DisclosurePanel>In a group, opening one closes the others, unless the group has allowsMultipleExpanded.</DisclosurePanel>
-								</Disclosure>
-								<Disclosure id="motion">
-									<DisclosureHeader>Does it animate?</DisclosureHeader>
-									<DisclosurePanel>Its panel grows to fit what’s in it, and opens at once when reduced motion is on.</DisclosurePanel>
-								</Disclosure>
-							</DisclosureGroup>
-						),
-					},
-					{
-						name: 'Small, as navigation',
-						render: () => (
-							<DisclosureGroup size="small" allowsMultipleExpanded defaultExpandedKeys={['overlays']} className="w-56">
-								<Disclosure id="pickers">
-									<DisclosureHeader className="px-3 font-mono text-label font-normal text-muted">Pickers</DisclosureHeader>
-									<DisclosurePanel>
-										<NavigationTree aria-label="Pickers">
-											<NavigationTreeItem id="select" href="#/ui/select" textValue="Select">
-												<NavigationTreeItemContent>Select</NavigationTreeItemContent>
-											</NavigationTreeItem>
-											<NavigationTreeItem id="combo-box" href="#/ui/combo-box" textValue="Combo box">
-												<NavigationTreeItemContent>Combo box</NavigationTreeItemContent>
-											</NavigationTreeItem>
-										</NavigationTree>
-									</DisclosurePanel>
-								</Disclosure>
-								<Disclosure id="overlays">
-									<DisclosureHeader className="px-3 font-mono text-label font-normal text-muted">Overlays</DisclosureHeader>
-									<DisclosurePanel>
-										<NavigationTree aria-label="Overlays">
-											<NavigationTreeItem id="dialog" href="#/ui/dialog" textValue="Dialog">
-												<NavigationTreeItemContent>Dialog</NavigationTreeItemContent>
-											</NavigationTreeItem>
-											<NavigationTreeItem id="sheet" href="#/ui/sheet" textValue="Sheet">
-												<NavigationTreeItemContent>Sheet</NavigationTreeItemContent>
-											</NavigationTreeItem>
-											<NavigationTreeItem id="popover" href="#/ui/popover" textValue="Popover">
-												<NavigationTreeItemContent>Popover</NavigationTreeItemContent>
-											</NavigationTreeItem>
-										</NavigationTree>
-									</DisclosurePanel>
-								</Disclosure>
-							</DisclosureGroup>
-						),
-					},
-					{
-						name: 'Small, over a description',
-						render: () => (
-							<Disclosure size="small" className="max-w-sm">
-								<DisclosureHeader>What happens to my files?</DisclosureHeader>
-								<DisclosurePanel>
-									<p className="text-muted">They stay in your browser, and nothing is uploaded.</p>
-								</DisclosurePanel>
-							</Disclosure>
-						),
-					},
 				],
 			},
 			{
@@ -1856,46 +948,33 @@ export const library: Group[] = [
 				exports: ['Tabs', 'TabList', 'Tab', 'TabPanel'],
 				stories: [
 					{ name: 'Build one', render: TabsPlayground },
-					{
-						name: 'In a row',
-						render: () => (
-							<Tabs defaultSelectedKey="type" className="w-full">
-								<TabList aria-label="Project">
-									<Tab id="brief">Brief</Tab>
-									<Tab id="type">Type</Tab>
-									<Tab id="colour">Colour</Tab>
-									<Tab id="files">Files</Tab>
-								</TabList>
-								<TabPanel id="brief">A studio site that shows the work first, then the people behind it.</TabPanel>
-								<TabPanel id="type">Elza Round for text, with Auger Mono for small labels.</TabPanel>
-								<TabPanel id="colour">Ink on a cream ground, with white for anything you can press.</TabPanel>
-								<TabPanel id="files">The Sketch library, its exports and the type kit, in one shared folder.</TabPanel>
-							</Tabs>
-						),
-					},
-					{
-						name: 'In a column',
-						render: () => (
-							<Tabs orientation="vertical" defaultSelectedKey="website" className="w-full">
-								<TabList aria-label="Services">
-									{services.map((service) => (
-										<Tab key={service.id} id={service.id}>
-											{service.name}
-										</Tab>
-									))}
-								</TabList>
-								<TabPanel id="identity">A name, a mark, and the colours and type to carry them.</TabPanel>
-								<TabPanel id="website">Designed and built together, so the details make it to the browser.</TabPanel>
-								<TabPanel id="design-system">Components in code, with the guidance for using them beside each one.</TabPanel>
-								<TabPanel id="illustration">Drawn to sit with the type and the layout around it.</TabPanel>
-							</Tabs>
-						),
-					},
 				],
 			},
 		],
 	},
 ];
+
+// Grouped by what you're building rather than by kind of control, so a form's pieces are all in one place. The groups
+// go in the order you'd build in, and each one's pages A to Z
+const regrouped: Record<string, string[]> = {
+	Foundations: ['Colour', 'Typography'],
+	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
+	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Composer', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
+	Data: ['Avatar', 'Grid list', 'Table', 'Tag group'],
+	Feedback: ['Empty state', 'Progress bar', 'Status', 'Toast'],
+	Overlays: ['Dialog', 'Menu', 'Popover', 'Preview trigger', 'Sheet', 'Tooltip'],
+	Navigation: ['Breadcrumbs', 'Disclosure', 'Link', 'Navigation', 'Navigation tree', 'Pagination', 'Tabs'],
+};
+const entries = new Map(groups.flatMap((group) => group.components).map((entry) => [entry.name, entry]));
+export const library: Group[] = Object.entries(regrouped).map(([name, names]) => ({
+	name,
+	components: names.map((entry) => {
+		const found = entries.get(entry);
+		if (!found) throw new Error(`No page called ${entry}`);
+		return found;
+	}),
+}));
+if (entries.size !== library.reduce((count, group) => count + group.components.length, 0)) throw new Error('A page is in no group');
 
 // The guides: a dotted cross through the middle of each square, light enough to sit behind the icon, and the edge of the
 // icon's own canvas around it
@@ -1927,7 +1006,18 @@ function Icons({ variant, size }: { variant: IconVariant; size: IconSize }) {
 }
 
 // Pieces made from the components, each with its own page under Blocks, as #/blocks/sign-up-form
-export const blocks: Entry[] = [];
+export const blocks: Entry[] = [
+	{
+		id: 'card',
+		name: 'Card',
+		description: 'An image area, a title and a line under it, and a button or two, on a raised, quiet or brand fill. The image area’s corners are the card’s less its padding, so they stay concentric, and it can hold a component drawn live',
+		stories: [
+			{ name: 'Build one', render: CardPlayground },
+			{ name: 'A category', render: () => <Category name="Actions" /> },
+			{ name: 'A category, on pine', render: () => <Category name="Actions" fill="pine" /> },
+		],
+	},
+];
 
 // The rest of loupe beside the components. Each has its own page, and shows an empty state until there's something in it
 export const areas: Entry[] = [

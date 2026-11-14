@@ -13,15 +13,18 @@ export const hasReference = (entry?: Entry) => entry?.exports?.some((name) => do
 
 const chip = 'rounded-md bg-bleed/8 px-1.5 py-0.5 font-mono text-label text-ink';
 
+// Text with a dotted underline rather than a chip, as a term with a definition behind it, so it reads as something to hover
+const previewable = 'cursor-default rounded-xs font-mono text-label text-ink underline decoration-bleed/40 decoration-dotted decoration-1 underline-offset-4 outline-offset-2 outline-ink transition-[text-decoration-color] duration-150 hover:decoration-ink focus-visible:outline-2 motion-reduce:transition-none';
+
 // An option, and with a sample, the component drawn with it on hover, focus or a long press. A button, so it can be
 // tabbed to and a screen reader says it opens something. Focusable lends it the trigger's handlers
 function Option({ prop, value, sample }: { prop: string; value: string; sample?: Entry['sample'] }) {
-	if (!sample) return <code className={chip}>'{value}'</code>;
+	if (!sample) return <code className={chip}>{value}</code>;
 	return (
 		<PreviewTrigger>
 			<Focusable>
-				<button type="button" aria-label={`${prop} '${value}', preview`} className={`${chip} cursor-default outline-offset-2 outline-ink hover:bg-bleed/12 focus-visible:outline-2`}>
-					'{value}'
+				<button type="button" aria-label={`${prop} ${value}, preview`} className={previewable}>
+					{value}
 				</button>
 			</Focusable>
 			<Popover placement="top" showArrow className="p-4">
@@ -34,7 +37,7 @@ function Option({ prop, value, sample }: { prop: string; value: string; sample?:
 function Type({ prop, sample }: { prop: Prop; sample?: Entry['sample'] }) {
 	if (prop.options)
 		return (
-			<span className="flex flex-wrap gap-1">
+			<span className={sample ? 'flex flex-wrap gap-x-3 gap-y-1' : 'flex flex-wrap gap-1'}>
 				{prop.options.map((option) => (
 					<Option key={option} prop={prop.name} value={option} sample={sample} />
 				))}
@@ -77,7 +80,7 @@ function Table({ detail, sample }: { detail: Detail; sample?: Entry['sample'] })
 							<td className={cell}>
 								<Type prop={prop} sample={sample} />
 							</td>
-							<td className={cell}>{prop.default ? <code className="font-mono">{prop.default}</code> : <span className="text-muted">–</span>}</td>
+							<td className={cell}>{prop.default ? <code className="font-mono">{prop.default.replace(/^'(.*)'$/, '$1')}</code> : <span className="text-muted">–</span>}</td>
 							<td className={`${cell} text-muted`}>
 								{prop.doc}
 								{prop.from && <span className="block">From React Aria’s {prop.from}</span>}
