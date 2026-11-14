@@ -1,5 +1,6 @@
 import { Icon } from '@parchment/icons/react';
-import { type Appearance as Scheme, Switch, ToggleButton, ToggleButtonGroup, useAppearance, useOnOffLabels } from '../src/index.js';
+import { ThemeSettings } from './theme.js';
+import { type Appearance as Scheme, Switch, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger, useAppearance, useOnOffLabels } from '../src/index.js';
 
 // Kept between visits where the browser lets it, and forgotten quietly where it doesn't
 export function remembered<T extends string>(key: string, fallback: T): T {
@@ -16,6 +17,13 @@ export function remember(key: string, value: string) {
 	} catch {}
 }
 
+// Each as an icon alone, so the three fit the column at any text size, with its name in a tooltip
+const schemes = [
+	{ id: 'light', name: 'Light', icon: 'sun-max' },
+	{ id: 'auto', name: 'Auto', icon: 'display' },
+	{ id: 'dark', name: 'Dark', icon: 'moon' },
+] as const;
+
 /** Light, dark, or as the system has it, for the whole preview */
 export function Appearance() {
 	const [appearance, setAppearance] = useAppearance();
@@ -30,15 +38,14 @@ export function Appearance() {
 				selectedKeys={[appearance]}
 				onSelectionChange={(keys) => setAppearance([...keys][0] as Scheme)}
 			>
-				<ToggleButton id="light">
-					<Icon name="sun-max" />
-					Light
-				</ToggleButton>
-				<ToggleButton id="auto">Auto</ToggleButton>
-				<ToggleButton id="dark">
-					<Icon name="moon" />
-					Dark
-				</ToggleButton>
+				{schemes.map(({ id, name, icon }) => (
+					<TooltipTrigger key={id}>
+						<ToggleButton id={id} aria-label={name}>
+							<Icon name={icon} />
+						</ToggleButton>
+						<Tooltip>{name}</Tooltip>
+					</TooltipTrigger>
+				))}
 			</ToggleButtonGroup>
 		</section>
 	);
@@ -64,6 +71,7 @@ export function Settings() {
 		<aside aria-label="Preview settings" className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-6 overflow-y-auto px-6 py-6 md:flex">
 			<Appearance />
 			<OnOffLabels />
+			<ThemeSettings />
 		</aside>
 	);
 }
