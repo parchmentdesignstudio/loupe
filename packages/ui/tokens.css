@@ -41,6 +41,7 @@
 	--color-pine-26: oklch(0.256 0.039 169.9);
 	--color-pine-24: oklch(0.24 0.035 169.9);
 	--color-pine-20: oklch(0.2 0.027 169.9);
+	--color-pine-16: oklch(0.16 0.022 169.9);
 	--color-red-81: oklch(0.81 0.108 28.7);
 	--color-red-50: oklch(0.501 0.178 28.7);
 	/* Parchment's own, as the parchment-brand board in Sketch has them, with linen-99, linen-97 and pine-26 above */
@@ -81,6 +82,7 @@
 	--color-violet-27: oklch(0.27 0.146 284.1);
 	--color-pink-87: oklch(0.866 0.071 343.1);
 	--color-pink-70: oklch(0.699 0.193 349.8);
+	--color-pink-56: oklch(0.56 0.19 350);
 	--color-pink-33: oklch(0.335 0.128 354.9);
 	/* Greys for the cream ground, in the light yellow's hue. As they darken they warm towards the yellow's mid and
 	   gain a little chroma, as the ground's bleed does, so they stay warm rather than dull */
@@ -120,17 +122,18 @@
 	--color-highlight: light-dark(var(--color-olive-91), color-mix(in oklab, var(--color-olive-91) 24%, transparent));
 
 	/* The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
-	   overlay are white, and shadows part them. In the dark, each is lighter than the one below, and the panel only just, so the controls on it stand out */
-	--color-ground: light-dark(var(--color-linen-97), var(--color-pine-20));
+	   overlay are white, and shadows part them. In the dark, each is lighter than the one below, starting near black
+	   so there's room above the controls for hover and what's chosen */
+	--color-ground: light-dark(var(--color-linen-97), var(--color-pine-16));
 	/* An area on the page, such as a tool's side panel */
-	--color-panel: light-dark(var(--color-linen-99), var(--color-pine-24));
+	--color-panel: light-dark(var(--color-linen-99), var(--color-pine-20));
 	/* A control's fill, such as a button's, a field's or a checkbox's */
-	--color-raised: light-dark(var(--color-white), var(--color-pine-29));
+	--color-raised: light-dark(var(--color-white), var(--color-pine-24));
 	/* What raised turns on hover. In the light, a see-through dark linen, so it suits the ground or a panel under it
 	   rather than one of them. In the dark, a step lighter than raised, as each layer there is lighter than the last */
-	--color-surface: light-dark(color-mix(in oklab, var(--color-linen-18) 4%, transparent), var(--color-pine-35));
-	/* Popovers, menus, dialogs, sheets and floating toolbars */
-	--color-overlay: light-dark(var(--color-white), var(--color-pine-32));
+	--color-surface: light-dark(color-mix(in oklab, var(--color-linen-18) 4%, transparent), var(--color-pine-29));
+	/* Popovers, menus, dialogs, sheets and floating toolbars. In the dark it's a control's fill, and its edges and shadow lift it */
+	--color-overlay: light-dark(var(--color-white), var(--color-pine-24));
 	/* Ink as a surface, such as a toast or a tooltip, with paper text */
 	--color-inverse: var(--color-ink);
 	/* A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track */
@@ -159,15 +162,17 @@
 	--color-bleed: var(--bleed);
 	/* A level for controls, one for floating toolbars and one for overlays, each a soft drop and an edge. Raised's edge
 	   is half a pixel, a hint of depth for fields, chips and checkboxes. A button is raised with a 1px edge, as it's
-	   pressed, and lifted a little on hover by two wider layers, short of floating. Only controls take the top light: a
-	   panel or card is raised the same way with an even edge all round. The geometry is the same in both modes, and the
-	   colours come from :root, below */
-	--shadow-raised: 0 -.5px 0 var(--toplight), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-	--shadow-panel: 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-	--shadow-button: 0 -1px 0 var(--toplight), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-	--shadow-button-lifted: 0 -1px 0 var(--toplight), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised), 0 3px 6px -3px var(--drop-raised), 0 4px 8px -4px var(--drop-raised);
-	--shadow-floating: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-floating), 0 1px 3px -1.5px var(--drop-floating), 0 2px 4px -2px var(--drop-floating), 0 3px 6px -3px var(--drop-floating), 0 6px 12px -6px var(--drop-floating), 0 12px 24px -12px var(--drop-floating);
-	--shadow-overlay: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-overlay), 0 1px 3px -1.5px var(--drop-overlay), 0 2px 4px -2px var(--drop-overlay), 0 3px 6px -3px var(--drop-overlay), 0 8px 16px -12px var(--drop-overlay), 0 12px 32px -24px var(--drop-overlay);
+	   pressed, and lifted a little on hover by two wider layers, short of floating. A button can set --fine-edge to
+	   draw a half-pixel edge as well, and clear --edge to have only that one. In the dark, the fills sit close
+	   together and the edges carry the depth: a dark ring outside, a faint light one just inside it, and on controls a
+	   fainter light along the top. A panel or card has the rings without the top light. The geometry is the same in both
+	   modes, and the colours come from :root, below */
+	--shadow-raised: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
+	--shadow-panel: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
+	--shadow-button: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
+	--shadow-button-lifted: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised), 0 3px 6px -3px var(--drop-raised), 0 4px 8px -4px var(--drop-raised);
+	--shadow-floating: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-floating), 0 1px 3px -1.5px var(--drop-floating), 0 2px 4px -2px var(--drop-floating), 0 3px 6px -3px var(--drop-floating), 0 6px 12px -6px var(--drop-floating), 0 12px 24px -12px var(--drop-floating);
+	--shadow-overlay: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-overlay), 0 1px 3px -1.5px var(--drop-overlay), 0 2px 4px -2px var(--drop-overlay), 0 3px 6px -3px var(--drop-overlay), 0 8px 16px -12px var(--drop-overlay), 0 12px 32px -24px var(--drop-overlay), 0 12px 24px -6px var(--drop-deep), 0 24px 48px -12px var(--drop-deep);
 	/* Floating, for the handle of a switch or slider that lifts off its well. In the dark the drop is darker than a
 	   raised one's, so the handle stands off the track rather than sitting in it */
 	--shadow-handle: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-handle), 0 1px 3px -1.5px var(--drop-handle), 0 2px 4px -2px var(--drop-handle), 0 3px 6px -3px var(--drop-handle), 0 6px 12px -6px var(--drop-handle), 0 12px 24px -12px var(--drop-handle);
@@ -281,15 +286,20 @@
 		--inverse-bleed: light-dark(var(--color-white), var(--color-umber-30));
 		--bleed: var(--ground-bleed);
 
-		/* Shadows have their own colours, so they stay dark in the dark. The edge is the ground's line colour, and the
-		   drops take the ground's hue in the light, as the tints do */
-		--edge: color-mix(in oklab, var(--bleed) 12%, transparent);
-		/* In the dark, what's raised is lit from straight above, so its edge is brighter along the top. The light sits on
-		   the edge, as thick as it and drawn over it, so the two read as one line that fades round the corners rather than
-		   two side by side. Its shadow carries it, so it goes with the shadow when something is disabled or pressed flat */
-		--toplight: light-dark(transparent, color-mix(in oklab, var(--bleed) 12%, transparent));
+		/* Shadows have their own colours, so they stay dark in the dark. In the light, the edge is the ground's line
+		   colour, and the drops take the ground's hue, as the tints do. In the dark, the edge is a shade darker than
+		   what's behind it, so it's crisp without being bright. A component that sets its own edge takes --dark-edge for
+		   the dark */
+		--dark-edge: color-mix(in oklab, var(--color-black) 32%, transparent);
+		--edge: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), var(--dark-edge));
+		/* In the dark, a faint light line just inside the edge, and on controls a little more along the top, as if lit
+		   from above. They're shadows, so they go when something is disabled or pressed flat */
+		--sheen: light-dark(transparent, color-mix(in oklab, var(--bleed) 5%, transparent));
+		--toplight: light-dark(transparent, color-mix(in oklab, var(--bleed) 6%, transparent));
 		--drop-raised: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
 		--drop-floating: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
+		/* Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it */
+		--drop-deep: light-dark(transparent, color-mix(in oklab, var(--color-black) 32%, transparent));
 		--drop-overlay: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 		--drop-handle: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 40%, transparent));
 		--drop-well: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), transparent);

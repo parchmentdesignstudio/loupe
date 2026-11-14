@@ -18,9 +18,9 @@ const toggle = tv({
         // On, it sits against the far end: the track's 32px inside less its own width, as a translate's percentage is of
         // the handle itself. So however wide it stretches, it stays against that end and reaches into the track, with
         // nothing to flip as it crosses. On, the track turns the green a success status uses, under a white handle. Off in
-        // the dark, the track is a toggle group's tray, raised's fill with a fainter edge, so the handle is what stands out
+        // the dark, the track is a toggle group's tray, raised's fill with the dark edge, so the handle is what stands out
         isSelected: {
-            false: { track: 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--color-raised))] [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_6%,transparent))]' },
+            false: { track: 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--color-raised))] [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),var(--dark-edge))]' },
             true: { track: 'bg-green-68', handle: 'translate-x-[calc(2rem-100%)] bg-white rtl:translate-x-[calc(100%-2rem)]' },
         },
         // Anywhere on the switch or its label, not just the handle, stretches it a little, and a press a little further

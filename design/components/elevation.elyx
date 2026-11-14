@@ -39,7 +39,8 @@ export raised = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
-    {drop-shadow: {color: base.colors.toplight, offset: point(0px, -0.5px)}}
+    {drop-shadow: {color: base.colors.sheen}},
+    {drop-shadow: {color: base.colors.toplight, blur-radius: 0.5px}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
@@ -77,7 +78,8 @@ export panel = frame {
         spread: -1px
       }
     },
-    {drop-shadow: {color: base.colors.edge, spread: 0.5px}}
+    {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
+    {drop-shadow: {color: base.colors.sheen}}
   ],
   corner-radius: l.lengths.radius-xl,
   slot: .true
@@ -116,7 +118,8 @@ export button = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 1px}},
-    {drop-shadow: {color: base.colors.toplight, offset: point(0px, -1px)}}
+    {drop-shadow: {color: base.colors.sheen}},
+    {drop-shadow: {color: base.colors.toplight, blur-radius: 0.5px}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
@@ -171,7 +174,8 @@ export button-lifted = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 1px}},
-    {drop-shadow: {color: base.colors.toplight, offset: point(0px, -1px)}}
+    {drop-shadow: {color: base.colors.sheen}},
+    {drop-shadow: {color: base.colors.toplight, blur-radius: 0.5px}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
@@ -233,7 +237,8 @@ export floating = frame {
         spread: -0.5px
       }
     },
-    {drop-shadow: {color: base.colors.edge, spread: 0.5px}}
+    {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
+    {drop-shadow: {color: base.colors.sheen}}
   ],
   corner-radius: l.lengths.radius-xl,
   slot: .true
@@ -247,6 +252,22 @@ export overlay = frame {
   height: 96px,
   fill: base.colors.overlay,
   shadow: [
+    {
+      drop-shadow: {
+        color: base.colors.drop-deep,
+        offset: point(0px, 24px),
+        blur-radius: 48px,
+        spread: -12px
+      }
+    },
+    {
+      drop-shadow: {
+        color: base.colors.drop-deep,
+        offset: point(0px, 12px),
+        blur-radius: 24px,
+        spread: -6px
+      }
+    },
     {
       drop-shadow: {
         color: base.colors.drop-overlay,
@@ -295,7 +316,9 @@ export overlay = frame {
         spread: -0.5px
       }
     },
-    {drop-shadow: {color: base.colors.edge, spread: 0.5px}}
+    {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
+    {drop-shadow: {color: base.colors.sheen}},
+    {drop-shadow: {color: base.colors.toplight, blur-radius: 0.5px}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true

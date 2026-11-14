@@ -112,6 +112,7 @@
     --color-pine-26: oklch(25.6% .039 169.9);
     --color-pine-24: oklch(24% .035 169.9);
     --color-pine-20: oklch(20% .027 169.9);
+    --color-pine-16: oklch(16% .022 169.9);
     --color-red-81: oklch(81% .108 28.7);
     --color-marigold-83: oklch(83.4% .1525 85.6);
     --color-apricot-73: oklch(73.1% .159 48.5);
@@ -147,6 +148,7 @@
     --color-violet-27: oklch(27% .146 284.1);
     --color-pink-87: oklch(86.6% .071 343.1);
     --color-pink-70: oklch(69.9% .193 349.8);
+    --color-pink-56: oklch(56% .19 350);
     --color-pink-33: oklch(33.5% .128 354.9);
     --color-sand-97: oklch(97% .007 87.7);
     --color-sand-94: oklch(94% .008 87.2);
@@ -191,8 +193,8 @@
     --text-title: 1.25rem;
     --text-title--line-height: 1.1;
     --color-bleed: var(--bleed);
-    --shadow-button: 0 -1px 0 var(--toplight), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-    --shadow-button-lifted: 0 -1px 0 var(--toplight), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised), 0 3px 6px -3px var(--drop-raised), 0 4px 8px -4px var(--drop-raised);
+    --shadow-button: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
+    --shadow-button-lifted: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised), 0 3px 6px -3px var(--drop-raised), 0 4px 8px -4px var(--drop-raised);
     --animate-enter: enter .16s cubic-bezier(.2, .9, .3, 1);
     --animate-exit: exit .11s ease-in forwards;
     --animate-fade-in: fade-in .16s ease-out;
@@ -452,10 +454,13 @@
     --overlay-bleed: var(--color-pine-26);
     --inverse-bleed: var(--color-white);
     --bleed: var(--ground-bleed);
+    --dark-edge: color-mix(in oklab, var(--color-black) 32%, transparent);
     --edge: color-mix(in oklab, var(--bleed) 12%, transparent);
+    --sheen: transparent;
     --toplight: transparent;
     --drop-raised: color-mix(in oklab, var(--bleed) 12%, transparent);
     --drop-floating: color-mix(in oklab, var(--bleed) 12%, transparent);
+    --drop-deep: transparent;
     --drop-overlay: color-mix(in oklab, var(--bleed) 12%, transparent);
     --drop-handle: color-mix(in oklab, var(--bleed) 12%, transparent);
     --drop-well: color-mix(in oklab, var(--bleed) 16%, transparent);
@@ -1535,6 +1540,10 @@
     background-color: color-mix(in oklab,var(--status) 16%,transparent);
   }
 
+  .bg-\[light-dark\(color-mix\(in_oklab\,var\(--bleed\)_4\%\,transparent\)\,var\(--color-panel\)\)\] {
+    background-color: color-mix(in oklab,var(--bleed) 4%,transparent);
+  }
+
   .bg-\[light-dark\(color-mix\(in_oklab\,var\(--bleed\)_8\%\,transparent\)\,var\(--color-raised\)\)\] {
     background-color: color-mix(in oklab,var(--bleed) 8%,transparent);
   }
@@ -2046,8 +2055,8 @@
     color: var(--avatar-text);
   }
 
-  .text-\[light-dark\(var\(--color-accent\)\,var\(--color-apricot-73\)\)\] {
-    color: var(--color-accent);
+  .text-\[light-dark\(var\(--color-pink-56\)\,var\(--color-pink-70\)\)\] {
+    color: var(--color-pink-56);
   }
 
   .text-danger {
@@ -2166,12 +2175,12 @@
   }
 
   .shadow-button {
-    --tw-shadow: 0 -1px 0 var(--tw-shadow-color, var(--toplight)), 0 0 0 1px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--drop-raised)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-raised)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-raised));
+    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 1px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--drop-raised)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-raised)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-raised));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .shadow-button-lifted {
-    --tw-shadow: 0 -1px 0 var(--tw-shadow-color, var(--toplight)), 0 0 0 1px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--drop-raised)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-raised)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-raised)), 0 3px 6px -3px var(--tw-shadow-color, var(--drop-raised)), 0 4px 8px -4px var(--tw-shadow-color, var(--drop-raised));
+    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 1px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--drop-raised)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-raised)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-raised)), 0 3px 6px -3px var(--tw-shadow-color, var(--drop-raised)), 0 4px 8px -4px var(--tw-shadow-color, var(--drop-raised));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
@@ -2191,17 +2200,17 @@
   }
 
   .shadow-overlay {
-    --tw-shadow: 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -.5px var(--tw-shadow-color, var(--drop-overlay)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-overlay)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-overlay)), 0 3px 6px -3px var(--tw-shadow-color, var(--drop-overlay)), 0 8px 16px -12px var(--tw-shadow-color, var(--drop-overlay)), 0 12px 32px -24px var(--tw-shadow-color, var(--drop-overlay));
+    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -.5px var(--tw-shadow-color, var(--drop-overlay)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-overlay)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-overlay)), 0 3px 6px -3px var(--tw-shadow-color, var(--drop-overlay)), 0 8px 16px -12px var(--tw-shadow-color, var(--drop-overlay)), 0 12px 32px -24px var(--tw-shadow-color, var(--drop-overlay)), 0 12px 24px -6px var(--tw-shadow-color, var(--drop-deep)), 0 24px 48px -12px var(--tw-shadow-color, var(--drop-deep));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .shadow-panel {
-    --tw-shadow: 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--drop-raised)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-raised)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-raised));
+    --tw-shadow: inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--drop-raised)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-raised)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-raised));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .shadow-raised {
-    --tw-shadow: 0 -.5px 0 var(--tw-shadow-color, var(--toplight)), 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--drop-raised)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-raised)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-raised));
+    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--drop-raised)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--drop-raised)), 0 2px 4px -2px var(--tw-shadow-color, var(--drop-raised));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
@@ -2579,7 +2588,7 @@
     --button-radius: var(--radius-sm);
   }
 
-  .\[--chosen-edge\:color-mix\(in_oklab\,var\(--bleed\)_16\%\,transparent\)\] {
+  .\[--chosen-edge\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_16\%\,transparent\)\,var\(--dark-edge\)\)\] {
     --chosen-edge: color-mix(in oklab,var(--bleed) 16%,transparent);
   }
 
@@ -2595,19 +2604,11 @@
     --drop-raised: transparent;
   }
 
-  .\[--edge\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_12\%\,transparent\)\,color-mix\(in_oklab\,var\(--bleed\)_6\%\,transparent\)\)\] {
-    --edge: color-mix(in oklab,var(--bleed) 12%,transparent);
-  }
-
   .\[--edge\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_12\%\,transparent\)\,color-mix\(in_oklab\,var\(--bleed\)_8\%\,transparent\)\)\] {
     --edge: color-mix(in oklab,var(--bleed) 12%,transparent);
   }
 
-  .\[--edge\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_12\%\,transparent\)\,color-mix\(in_oklab\,var\(--bleed\)_16\%\,transparent\)\)\] {
-    --edge: color-mix(in oklab,var(--bleed) 12%,transparent);
-  }
-
-  .\[--edge\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_12\%\,transparent\)\,color-mix\(in_oklab\,var\(--bleed\)_24\%\,transparent\)\)\] {
+  .\[--edge\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_12\%\,transparent\)\,var\(--dark-edge\)\)\] {
     --edge: color-mix(in oklab,var(--bleed) 12%,transparent);
   }
 

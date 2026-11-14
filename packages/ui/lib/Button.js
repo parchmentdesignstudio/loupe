@@ -26,8 +26,9 @@ export const button = tv({
                 '[--fill:oklch(0.834_0.153_85.6)]',
                 '[--rim:oklch(from_var(--fill)_calc(l*0.84)_c_calc(h-16))]',
             ],
-            // In the dark, surface's fill and a stronger edge, as a chosen toggle has, so it stands clear of the panel and of outline
-            secondary: 'bg-[light-dark(var(--color-raised),var(--color-surface))] text-ink shadow-button [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_16%,transparent))] before:bg-[light-dark(var(--color-raised),var(--color-surface))]',
+            // In the dark, surface's fill and the dark edge, as a chosen toggle has, so it stands clear of the panel and of outline.
+            // There the edge is half a pixel, as a field's is, since a full pixel of dark makes the button look a pixel smaller
+            secondary: 'bg-[light-dark(var(--color-raised),var(--color-surface))] text-ink shadow-button [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),transparent)] [--fine-edge:light-dark(transparent,var(--dark-edge))] before:bg-[light-dark(var(--color-raised),var(--color-surface))]',
             accent: [
                 'text-pine-26',
                 '[--fill:oklch(0.858_0.027_196.7)]',
@@ -81,10 +82,13 @@ export const button = tv({
                 'before:bg-linear-to-b',
                 'before:from-[color-mix(in_oklab,var(--fill),white_4%)]',
                 'before:to-(color:--fill)',
-                // A line inside the edge, a shade lighter, and twice that in the dark, where it's the only edge
-                'before:inset-ring-[1px] before:inset-ring-[light-dark(color-mix(in_oklab,var(--fill),white_20%),color-mix(in_oklab,var(--fill),white_40%))]',
+                // A line inside the edge, a shade lighter. In the dark, where it's the only edge, it's lighter still and brightest
+                // along the top, as secondary's sheen and top light are. Through variables, as Tailwind can't tell an arbitrary
+                // light-dark() is a colour and drops the class
+                '[--inner:light-dark(color-mix(in_oklab,var(--fill),white_20%),color-mix(in_oklab,var(--fill),white_32%))] before:inset-ring before:inset-ring-(color:--inner)',
+                '[--inner-top:light-dark(transparent,color-mix(in_oklab,var(--fill),white_64%))]',
                 // A bevel along the bottom in the --rim's tint: a crisp line, then a soft band above it. Tailwind adds the inset
-                'before:inset-shadow-[0_1px_1px_-.5px_color-mix(in_oklab,var(--fill),white_20%),0_1px_3px_-1.5px_color-mix(in_oklab,var(--fill),white_20%),0_-1px_3px_-1.5px_color-mix(in_oklab,var(--rim)_20%,transparent)]',
+                'before:inset-shadow-[0_1px_1px_-.5px_color-mix(in_oklab,var(--fill),white_20%),0_1px_3px_-1.5px_color-mix(in_oklab,var(--fill),white_20%),0_-1px_3px_-1.5px_color-mix(in_oklab,var(--rim)_20%,transparent),0_1px_0_var(--inner-top)]',
             ],
         },
         {
