@@ -66,11 +66,12 @@ export function OnOffLabels() {
 	);
 }
 
-// One section at a time, as an inspector, so the column has room for more of them. Line icons, as the solid set has none for these
+// One section at a time, as an inspector, so the column has room for more of them. Named rather than drawn until the
+// icon set has icons for them, and in short words, as the full names don't fit the column side by side
 const panels = [
-	{ id: 'appearance', name: 'Appearance', icon: 'shadow' },
-	{ id: 'accessibility', name: 'Accessibility', icon: 'accessibility' },
-	{ id: 'theme', name: 'Theme', icon: 'paintpalette' },
+	{ id: 'appearance', name: 'Display' },
+	{ id: 'accessibility', name: 'a11y' },
+	{ id: 'theme', name: 'Theme' },
 ] as const;
 
 type Panel = (typeof panels)[number]['id'];
@@ -83,6 +84,9 @@ export function SettingsPanels() {
 		<div className="flex flex-col gap-6">
 			<ToggleButtonGroup
 				aria-label="Settings"
+				variant="raised"
+				size="small"
+				width="fill"
 				selectionMode="single"
 				disallowEmptySelection
 				selectedKeys={[panel]}
@@ -92,13 +96,10 @@ export function SettingsPanels() {
 					remember('settings-panel', next);
 				}}
 			>
-				{panels.map(({ id, name, icon }) => (
-					<TooltipTrigger key={id}>
-						<ToggleButton id={id} aria-label={name}>
-							<Icon name={icon} variant="line" />
-						</ToggleButton>
-						<Tooltip>{name}</Tooltip>
-					</TooltipTrigger>
+				{panels.map(({ id, name }) => (
+					<ToggleButton key={id} id={id}>
+						{name}
+					</ToggleButton>
 				))}
 			</ToggleButtonGroup>
 			{panel === 'appearance' && <Appearance />}

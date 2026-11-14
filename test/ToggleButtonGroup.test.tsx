@@ -62,6 +62,18 @@ describe('ToggleButtonGroup', () => {
 		expect(rulers.getAttribute('aria-pressed')).toBe('false');
 	});
 
+	it('divides its buttons at any gap, unless told not to', () => {
+		const { rerender } = render(views);
+		expect(screen.getByRole('radiogroup').hasAttribute('data-divided')).toBe(true);
+		rerender(
+			<ToggleButtonGroup aria-label="View" gap={4} hasDividers={false} defaultSelectedKeys={['week']}>
+				<ToggleButton id="day">Day</ToggleButton>
+				<ToggleButton id="week">Week</ToggleButton>
+			</ToggleButtonGroup>,
+		);
+		expect(screen.getByRole('radiogroup').hasAttribute('data-divided')).toBe(false);
+	});
+
 	it('has nothing for axe to flag', async () => {
 		const { container } = render(views);
 		await expectAccessible(container);
