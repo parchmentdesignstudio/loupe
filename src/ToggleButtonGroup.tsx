@@ -14,18 +14,18 @@ export type { ToggleButtonProps };
 
 // The track pads its buttons by --inset, and each button's corners are the track's less that inset, so they stay concentric.
 // With one choice, the track is a well darker than the fill that slides in it: in the light, a tint under a white button,
-// and in the dark, raised's fill under surface's lighter one. Its edge drops back and the chosen button's comes forward.
+// and in the dark, raised's fill under surface's lighter one, each with the dark edge that carries depth there.
 // With several, the group is one raised control, in the fill buttons and fields have, and its buttons are flat inside
 // it, a pixel apart, so two chosen side by side don't share an edge
 export const toggleButtonGroup = tv({
-	base: 'group/toggle isolate inline-flex w-fit rounded-lg p-(--inset) [--chosen-edge:color-mix(in_oklab,var(--bleed)_16%,transparent)] [--chosen:light-dark(var(--color-raised),var(--color-surface))] [--inset:--spacing(0.75)]',
+	base: 'group/toggle isolate inline-flex w-fit rounded-lg p-(--inset) [--chosen-edge:light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--dark-edge))] [--chosen:light-dark(var(--color-raised),var(--color-surface))] [--inset:--spacing(0.75)]',
 	variants: {
 		orientation: {
 			horizontal: '',
 			vertical: 'flex-col',
 		},
 		isMultiple: {
-			false: 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_8%,transparent),var(--color-raised))] [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_6%,transparent))]',
+			false: 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_8%,transparent),var(--color-raised))] [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),var(--dark-edge))]',
 			true: 'gap-px bg-raised [--edge:var(--chosen-edge)]',
 		},
 		isDisabled: {
@@ -60,8 +60,8 @@ export const toggleButton = tv({
 			false: 'px-3 py-1.5',
 		},
 		// Only a single-choice group slides a fill between its buttons. In a multi-choice group a chosen one is a ghost with
-		// accent text, a lighter apricot in the dark so it reads on pine, and a grey fill when disabled so it still shows as
-		// chosen. On its own, a toggle fills itself as a raised button
+		// pink text: the brand board's pink in the dark, and a darker one in the light so it reads on white. Disabled, it
+		// keeps a grey fill so it still shows as chosen. On its own, a toggle fills itself as a raised button
 		hasIndicator: {
 			false: '',
 		},
@@ -69,10 +69,11 @@ export const toggleButton = tv({
 	compoundVariants: [
 		{ isInGroup: false, isSelected: true, class: 'bg-(--chosen) shadow-raised' },
 		{ isInGroup: false, isSelected: true, isDisabled: true, class: 'bg-bleed/12 shadow-none' },
-		{ hasIndicator: false, isInGroup: true, isSelected: true, class: 'text-[light-dark(var(--color-accent),var(--color-apricot-73))]' },
-		{ hasIndicator: false, isInGroup: true, isSelected: true, isHovered: true, class: 'bg-bleed/4' },
+		{ hasIndicator: false, isInGroup: true, isSelected: true, class: 'text-[light-dark(var(--color-pink-56),var(--color-pink-70))]' },
 		{ hasIndicator: false, isInGroup: true, isSelected: true, isDisabled: true, class: 'bg-bleed/12 text-muted' },
 		{ hasIndicator: false, isSelected: false, isHovered: true, class: 'bg-bleed/4' },
+		// In a multi-choice group, the hovered one sinks in the dark, to the panel's fill below the group's, rather than lift
+		{ hasIndicator: false, isInGroup: true, isHovered: true, class: 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_4%,transparent),var(--color-panel))]' },
 	],
 });
 

@@ -141,8 +141,8 @@ export function Table({ density = 'comfortable', variant, className, ...props }:
 	);
 }
 
-// An unticked box is raised, like the table under it, so in the dark its edge is drawn stronger to stand apart
-const selectionBox = 'py-0 [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_24%,transparent))]';
+// An unticked box is raised, like the table under it, so its edge mixes from the table's own bleed to stand apart
+const selectionBox = 'py-0 [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),var(--dark-edge))]';
 
 // With no rows, React Aria counts them all as chosen and ticks the box, so an empty table shows it clear instead
 function SelectAll() {

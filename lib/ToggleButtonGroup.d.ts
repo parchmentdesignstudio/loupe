@@ -12,7 +12,7 @@ export declare const toggleButtonGroup: import("tailwind-variants").TVReturnType
     isDisabled: {
         false: string;
     };
-}, undefined, "group/toggle isolate inline-flex w-fit rounded-lg p-(--inset) [--chosen-edge:color-mix(in_oklab,var(--bleed)_16%,transparent)] [--chosen:light-dark(var(--color-raised),var(--color-surface))] [--inset:--spacing(0.75)]", undefined, undefined, undefined>;
+}, undefined, "group/toggle isolate inline-flex w-fit rounded-lg p-(--inset) [--chosen-edge:light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--dark-edge))] [--chosen:light-dark(var(--color-raised),var(--color-surface))] [--inset:--spacing(0.75)]", undefined, undefined, undefined>;
 export declare const toggleButton: import("tailwind-variants").TVReturnType<{
     isSelected: {
         true: string;
