@@ -975,7 +975,7 @@ export default {
   },
   "solid/16/building": {
     "viewBox": "0 0 16 16",
-    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M4 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H9.25v-2.5a.5.5 0 0 0-.5-.5h-1.5a.5.5 0 0 0-.5.5V15H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m1.25 1.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5m4.5 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5m-4.5 3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5m4.5 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5m-4.5 3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V9a.5.5 0 0 1 .5-.5m4.5 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V9a.5.5 0 0 1 .5-.5\"/>"
+    "body": "<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M4 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2v-2.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V15H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m1.5 2h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m-4 3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m-4 3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5m4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5\"/>"
   },
   "solid/16/bus-side": {
     "viewBox": "0 0 16 16",
@@ -1043,11 +1043,11 @@ export default {
   },
   "solid/16/desktopcomputer": {
     "viewBox": "0 0 16 16",
-    "body": "<g fill=\"none\" fill-rule=\"evenodd\"><path fill=\"currentColor\" d=\"M3 1h10a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m.5 1.5v8h9v-8zM7.75 12h.5A2.75 2.75 0 0 1 11 14.75a.25.25 0 0 1-.25.25h-5.5a.25.25 0 0 1-.25-.25A2.75 2.75 0 0 1 7.75 12\"/><path d=\"M12.5 10.5v-8h-9v8z\" opacity=\".6\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
+    "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><path d=\"M3 1h10a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m.5 1.5v8h9v-8zM7.75 12h.5A2.75 2.75 0 0 1 11 14.75a.25.25 0 0 1-.25.25h-5.5a.25.25 0 0 1-.25-.25A2.75 2.75 0 0 1 7.75 12\"/><path d=\"M12.5 10.5v-8h-9v8z\" opacity=\".2\"/></g>"
   },
   "solid/16/display": {
     "viewBox": "0 0 16 16",
-    "body": "<g fill=\"none\" fill-rule=\"evenodd\"><path fill=\"currentColor\" d=\"M2 1h12a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m.5 1.5v8h11v-8z\"/><path d=\"M13.5 10.5v-8h-11v8z\" opacity=\".6\" style=\"fill:var(--icon-fill, Canvas)\"/><path fill=\"currentColor\" d=\"M5 12.75h6v1.75a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5z\"/></g>"
+    "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><path d=\"M2 1h12a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m.5 1.5v8h11v-8z\"/><path d=\"M13.5 10.5v-8h-11v8z\" opacity=\".2\"/><path d=\"M5 12.75h6v1.75a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5z\"/></g>"
   },
   "solid/16/ellipsis-message": {
     "viewBox": "0 0 16 16",
@@ -1093,6 +1093,10 @@ export default {
     "viewBox": "0 0 16 16",
     "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><path d=\"M1.924 6.935 8 6l6.076.935a.5.5 0 0 1 .424.494v.902a1.5 1.5 0 0 1-1.133 1.455l-3.284.828a3.8 3.8 0 0 0-1.333.636 1.25 1.25 0 0 1-1.5 0 3.8 3.8 0 0 0-1.333-.636l-3.284-.828A1.5 1.5 0 0 1 1.5 8.33v-.9a.5.5 0 0 1 .424-.494\"/><path d=\"M2.224 12.237a2 2 0 0 0 .976-.387 3 3 0 0 1 3.6 0 2 2 0 0 0 2.4 0 3 3 0 0 1 3.6 0 2 2 0 0 0 .976.387.25.25 0 0 1 .224.251v.5a.25.25 0 0 1-.276.25 3 3 0 0 1-1.524-.588 2 2 0 0 0-2.4 0 3 3 0 0 1-3.6 0 2 2 0 0 0-2.4 0 3 3 0 0 1-1.524.587.25.25 0 0 1-.276-.249v-.5a.25.25 0 0 1 .224-.25M3.5 5.942V3.5A.5.5 0 0 1 4 3h1.75A.25.25 0 0 0 6 2.75V2a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v.75c0 .138.112.25.25.25H12a.5.5 0 0 1 .5.5v2.442l-1.5-.23V4.25a.25.25 0 0 0-.25-.25H9a.25.25 0 0 0-.25.25v1.115L8 5.25l-.75.115V4.25A.25.25 0 0 0 7 4H5.25a.25.25 0 0 0-.25.25v1.462z\"/></g>"
   },
+  "solid/16/font": {
+    "viewBox": "0 0 16 16",
+    "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><rect width=\"1.5\" height=\"10\" x=\"7.25\" y=\"3.25\" rx=\".5\"/><path d=\"M5.5 13.75v-.5a.25.25 0 0 1 .25-.25h1a.5.5 0 0 0 .5-.5V12h1.5v.5a.5.5 0 0 0 .5.5h1a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-4.5a.25.25 0 0 1-.25-.25M3 3.174V2a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1.174a.25.25 0 0 1-.458.139l-.394-.59a.5.5 0 0 0-.416-.223H9.25a.5.5 0 0 0-.5.5v.5h-1.5V3a.5.5 0 0 0-.5-.5H4.268a.5.5 0 0 0-.416.223l-.394.59A.25.25 0 0 1 3 3.174\"/></g>"
+  },
   "solid/16/frame": {
     "viewBox": "0 0 16 16",
     "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><rect width=\"1.5\" height=\"12\" x=\"4\" y=\"2\" rx=\".5\"/><path d=\"M5.5 5.5h5v5h-5z\" opacity=\".2\"/><rect width=\"1.5\" height=\"12\" x=\"10.5\" y=\"2\" rx=\".5\"/><rect width=\"12\" height=\"1.5\" x=\"2\" y=\"4\" rx=\".5\"/><rect width=\"12\" height=\"1.5\" x=\"2\" y=\"10.5\" rx=\".5\"/></g>"
@@ -1127,7 +1131,7 @@ export default {
   },
   "solid/16/monitor": {
     "viewBox": "0 0 16 16",
-    "body": "<g fill=\"none\" fill-rule=\"evenodd\"><path fill=\"currentColor\" d=\"M2 2h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1m.5 1.5v7h11v-7z\"/><rect width=\"6\" height=\"1.5\" x=\"5\" y=\"12.75\" fill=\"currentColor\" rx=\".5\"/><path fill=\"currentColor\" d=\"M6 11.75h4v1.5H6z\"/><path d=\"M13.5 10.5v-7h-11v7z\" opacity=\".6\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
+    "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><path d=\"M2 2h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1m.5 1.5v7h11v-7z\"/><rect width=\"6\" height=\"1.5\" x=\"5\" y=\"12.75\" rx=\".5\"/><path d=\"M6 11.75h4v1.5H6z\"/><path d=\"M13.5 10.5v-7h-11v7z\" opacity=\".2\"/></g>"
   },
   "solid/16/moon-right": {
     "viewBox": "0 0 16 16",
@@ -1299,7 +1303,7 @@ export default {
   },
   "solid/16/tv": {
     "viewBox": "0 0 16 16",
-    "body": "<g fill=\"none\" fill-rule=\"evenodd\"><path fill=\"currentColor\" d=\"M2 2h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1m.5 1.5v7h11v-7z\"/><rect width=\"6\" height=\"1.5\" x=\"5\" y=\"12.75\" fill=\"currentColor\" rx=\".5\"/><path d=\"M13.5 10.5v-7h-11v7z\" opacity=\".6\" style=\"fill:var(--icon-fill, Canvas)\"/></g>"
+    "body": "<g fill=\"currentColor\" fill-rule=\"evenodd\"><path d=\"M2 2h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1m.5 1.5v7h11v-7z\"/><rect width=\"6\" height=\"1.5\" x=\"5\" y=\"12.75\" rx=\".5\"/><path d=\"M13.5 10.5v-7h-11v7z\" opacity=\".2\"/></g>"
   },
   "solid/16/vector-square": {
     "viewBox": "0 0 16 16",
