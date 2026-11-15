@@ -1,4 +1,13 @@
 import { useEffect, useState } from 'react';
+import {
+	transformerMetaHighlight,
+	transformerMetaWordHighlight,
+	transformerNotationDiff,
+	transformerNotationErrorLevel,
+	transformerNotationFocus,
+	transformerNotationHighlight,
+	transformerNotationWordHighlight,
+} from '@shikijs/transformers';
 import type { HighlighterCore, ShikiTransformer, ThemeRegistration } from 'shiki/core';
 
 // Loupe's Shiki theme, transformers and a highlighter, as @parchment/ui/shiki, apart from the components so a site that
@@ -7,7 +16,8 @@ import type { HighlighterCore, ShikiTransformer, ThemeRegistration } from 'shiki
 // A hast element, as Shiki's hooks hand them over
 type Element = Parameters<NonNullable<ShikiTransformer['code']>>[0];
 
-const role = (name: string) => `var(--color-code-${name})`;
+// A role a theme can leave unset, as the role it falls back to, so a new one doesn't change a theme that predates it
+const role = (name: string, fallback?: string) => (fallback ? `var(--color-code-${name}, var(--color-code-${fallback}))` : `var(--color-code-${name})`);
 
 /**
  * One theme for light and dark, as each colour is a role token (tokens.css) that's already light-dark(). A site sets
@@ -23,28 +33,29 @@ export const codeTheme: ThemeRegistration = {
 	tokenColors: [
 		{ scope: ['comment', 'punctuation.definition.comment'], settings: { foreground: role('comment') } },
 		{ scope: ['punctuation', 'keyword.operator', 'variable', 'variable.other', 'entity.name.namespace', 'entity.name.scope-resolution'], settings: { foreground: role('text') } },
-		{ scope: ['string', 'string.quoted', 'string.template', 'punctuation.definition.string', 'meta.attribute string'], settings: { foreground: role('string') } },
+		{ scope: ['string', 'string.quoted', 'string.template', 'meta.attribute string'], settings: { foreground: role('string') } },
+		// A string's quotes, which a theme can set apart from the string as a darker shade of it
+		{ scope: ['punctuation.definition.string'], settings: { foreground: role('quote', 'string') } },
 		{
 			scope: [
-				'constant.numeric',
 				'constant.language',
 				'constant.other',
 				'support.constant',
 				'support.type.builtin',
-				'keyword.other.unit',
 				'constant.other.color.rgb-value.hex.css',
 				'punctuation.definition.constant.css',
 				'keyword.other.important',
 			],
 			settings: { foreground: role('constant') },
 		},
+		// Numbers and their units, which a theme can set apart from booleans and the other constants
+		{ scope: ['constant.numeric', 'keyword.other.unit'], settings: { foreground: role('number', 'constant') } },
 		{ scope: ['keyword', 'keyword.control', 'keyword.operator.new', 'keyword.operator.expression', 'storage.type', 'storage.modifier'], settings: { foreground: role('keyword') } },
 		{
 			scope: [
 				'entity.name.function',
 				'support.function',
 				'meta.function-call entity.name.function',
-				'entity.other.attribute-name',
 				'support.type.property-name',
 				'meta.property-name.css',
 				'variable.css',
@@ -62,6 +73,8 @@ export const codeTheme: ThemeRegistration = {
 			settings: { foreground: role('builtin') },
 		},
 		{ scope: ['entity.name.tag', 'support.class.component', 'punctuation.definition.tag'], settings: { foreground: role('tag') } },
+		// A tag's attributes, which a theme can set apart from functions as a lighter shade of the tag
+		{ scope: ['entity.other.attribute-name'], settings: { foreground: role('attribute', 'function') } },
 		// A selector's tags, classes and pseudo-classes, and a property's keyword values, read as plain CSS
 		{
 			scope: [
@@ -179,8 +192,23 @@ const classes = (element: Element) => {
 	return (Array.isArray(value) ? value.map(String) : String(value ?? '').split(/\s+/)).filter(Boolean);
 };
 
-/** Loupe's transformers, in the order they run. Add Shiki's own, such as @shikijs/transformers, alongside */
-export const codeTransformers = () => [transformerCssProperties(), transformerCssTheme(), transformerLineNumbers()];
+/**
+ * Loupe's transformers, for a site's own Shiki, such as @shikijs/rehype. Code styles the lines each marks: {6-8} or
+ * /word/ in a fence's meta, and // [!code highlight], [!code ++], [!code --], [!code focus], [!code error],
+ * [!code warning] and [!code word:name] in the code. Then Tailwind's @theme, bare custom properties and line numbers
+ */
+export const codeTransformers = (): ShikiTransformer[] => [
+	transformerMetaHighlight(),
+	transformerMetaWordHighlight(),
+	transformerNotationHighlight(),
+	transformerNotationWordHighlight(),
+	transformerNotationDiff(),
+	transformerNotationFocus(),
+	transformerNotationErrorLevel(),
+	transformerCssProperties(),
+	transformerCssTheme(),
+	transformerLineNumbers(),
+];
 
 // Each language's grammar, loaded the first time it's asked for
 const grammars = {
@@ -215,25 +243,30 @@ export interface HighlightOptions {
 	language?: CodeLanguage;
 	/** Numbers each line, from 1, or from the number given */
 	lineNumbers?: boolean | number;
+	/** What a code fence's meta would say, such as {6-8} to highlight lines 6 to 8, or /gap/ to highlight a word */
+	meta?: string;
+	/** A line of code in running text, as spans to put in a <code>, without Code's <pre> or its line marks */
+	isInline?: boolean;
 }
 
 /** Code as Shiki's highlighted HTML, in Loupe's theme, for Code's html */
-export async function highlight(code: string, { language = 'tsx', lineNumbers }: HighlightOptions = {}) {
+export async function highlight(code: string, { language = 'tsx', lineNumbers, meta = '', isInline }: HighlightOptions = {}) {
 	const shiki = await highlighterFor(language);
-	const meta = lineNumbers ? `showLineNumbers${typeof lineNumbers === 'number' ? `=${lineNumbers}` : ''}` : '';
-	return shiki.codeToHtml(code.replace(/\n$/, ''), { lang: names[language], theme: 'loupe', meta: { __raw: meta }, transformers: codeTransformers() });
+	if (isInline) return shiki.codeToHtml(code.replace(/\n$/, ''), { lang: names[language], theme: 'loupe', structure: 'inline' });
+	const numbers = lineNumbers ? `showLineNumbers${typeof lineNumbers === 'number' ? `=${lineNumbers}` : ''}` : '';
+	return shiki.codeToHtml(code.replace(/\n$/, ''), { lang: names[language], theme: 'loupe', meta: { __raw: `${numbers} ${meta}`.trim() }, transformers: codeTransformers() });
 }
 
 /** Code highlighted in the browser, for Code's html: undefined until Shiki and the language have loaded */
-export function useHighlight(code: string, { language = 'tsx', lineNumbers }: HighlightOptions = {}) {
+export function useHighlight(code: string, { language = 'tsx', lineNumbers, meta, isInline }: HighlightOptions = {}) {
 	const [result, setResult] = useState<{ key: string; html: string }>();
-	const key = `${language} ${lineNumbers} ${code}`;
+	const key = `${language} ${lineNumbers} ${meta} ${isInline} ${code}`;
 	useEffect(() => {
 		let isCurrent = true;
-		void highlight(code, { language, lineNumbers }).then((html) => isCurrent && setResult({ key, html }));
+		void highlight(code, { language, lineNumbers, meta, isInline }).then((html) => isCurrent && setResult({ key, html }));
 		return () => {
 			isCurrent = false;
 		};
-	}, [code, language, lineNumbers, key]);
+	}, [code, language, lineNumbers, meta, isInline, key]);
 	return result?.key === key ? result.html : undefined;
 }

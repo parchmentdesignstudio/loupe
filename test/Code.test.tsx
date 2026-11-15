@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { withoutNotes } from '../src/Code.js';
 import { Code } from '../src/index.js';
 import { codeToHtml } from 'shiki';
 import { codeTheme, highlight, transformerLineNumbers } from '../src/shiki.js';
@@ -23,10 +24,36 @@ describe('Code', () => {
 		expect(await screen.findByRole('button', { name: 'Copied' })).toBeTruthy();
 	});
 
+	it('shows a path’s folders apart from its file, and what a diff changes', async () => {
+		const html = await highlight('a // [!code --]\nb // [!code ++]\nc // [!code ++]', { language: 'js' });
+		const { container } = render(<Code code="a" html={html} title="src/lib/a.ts" isCopyable={false} />);
+		const caption = container.querySelector('figcaption');
+		expect(caption?.textContent).toContain('src / lib / a.ts');
+		expect(screen.getByText('1 line removed, 2 added')).toBeTruthy();
+		expect(caption?.textContent).toContain('−1+2');
+		await expectAccessible(container);
+	});
+
+	it('copies with an icon, named in a tooltip, and swaps it once copied', async () => {
+		const writeText = vi.fn().mockResolvedValue(undefined);
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+		render(<Code code="a" title="a.ts" copyIcon={<svg data-testid="copy" />} copiedIcon={<svg data-testid="copied" />} />);
+		await userEvent.click(screen.getByRole('button', { name: 'Copy' }));
+		expect(await screen.findByRole('button', { name: 'Copied' })).toBeTruthy();
+		expect(screen.getByTestId('copied')).toBeTruthy();
+	});
+
 	it('takes another site’s colours by name', () => {
 		const { container } = render(<Code code="a" theme="iamsteve" isCopyable={false} />);
 		expect(container.querySelector('figure')?.dataset.codeTheme).toBe('iamsteve');
 		expect(screen.queryByRole('button')).toBeNull();
+	});
+});
+
+describe('withoutNotes', () => {
+	it('drops Shiki’s notes that end a line, the comments they leave empty, and lines that were only a note', () => {
+		const code = ['a(); // [!code ++]', 'b(); // keep [!code --]', '// [!code highlight:2]', 'c { color: red } /* [!code focus] */', '<p>{/* [!code error] */}</p>', '<b /> {/* [!code ++] */}'].join('\n');
+		expect(withoutNotes(code)).toBe(['a();', 'b(); // keep', 'c { color: red }', '<p>{/* [!code error] */}</p>', '<b />'].join('\n'));
 	});
 });
 
@@ -35,6 +62,12 @@ describe('highlight', () => {
 		const html = await highlight('const a = "b";', { language: 'ts' });
 		expect(html).toContain('var(--color-code-keyword)');
 		expect(html).toContain('var(--color-code-string)');
+	});
+
+	it('highlights a line inline, as spans without a <pre>', async () => {
+		const html = await highlight("import { a } from 'b'", { isInline: true });
+		expect(html).not.toContain('<pre');
+		expect(html).toContain('var(--color-code-keyword)');
 	});
 
 	it('reads Tailwind’s @theme and bare custom properties as CSS', async () => {
@@ -68,5 +101,15 @@ describe('highlight', () => {
 		});
 		const page = new DOMParser().parseFromString(html, 'text/html');
 		expect([...page.querySelectorAll('[data-line-number].highlighted')].map((each) => each.textContent)).toEqual(['2']);
+	});
+
+	it('marks lines from the meta and from notes in the code, and their numbers with them', async () => {
+		const html = await highlight('a\nb // [!code ++]\nc // [!code --]\nd', { language: 'js', lineNumbers: true, meta: '{1}' });
+		const page = new DOMParser().parseFromString(html, 'text/html');
+		const marked = (selector: string) => [...page.querySelectorAll(`[data-line-number]${selector}`)].map((each) => each.textContent);
+		expect(marked('.highlighted')).toEqual(['1']);
+		expect(marked('.add')).toEqual(['2']);
+		expect(marked('.remove')).toEqual(['3']);
+		expect(page.body.textContent).not.toContain('[!code');
 	});
 });

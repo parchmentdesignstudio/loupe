@@ -147,7 +147,6 @@
 
 	/* Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
 	   and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one */
-	--color-code-ground: var(--color-panel);
 	--color-code-text: var(--color-ink);
 	--color-code-comment: var(--color-muted);
 	--color-code-keyword: light-dark(var(--color-violet-54), var(--color-violet-82));
@@ -162,6 +161,14 @@
 	--color-code-builtin: light-dark(var(--color-teal-48), var(--color-teal-88));
 	/* JSX and HTML tags */
 	--color-code-tag: light-dark(var(--color-pink-56), var(--color-pink-87));
+	/* Lines marked out: highlighted, added and removed. Each ground tints the line, and a word marked in it again, and
+	   its edge colours the bar, a removal's stripes and the line's number. Errors take remove's, and warnings mark's */
+	--color-code-mark: color-mix(in oklch, var(--color-yellow-76) 20%, transparent);
+	--color-code-mark-edge: light-dark(var(--color-yellow-40), var(--color-yellow-91));
+	--color-code-add: color-mix(in oklch, var(--color-green-68) 16%, transparent);
+	--color-code-add-edge: light-dark(var(--color-green-46), var(--color-green-89));
+	--color-code-remove: color-mix(in oklch, var(--color-red-67) 16%, transparent);
+	--color-code-remove-edge: light-dark(var(--color-red-50), var(--color-red-81));
 
 	--font-sans: elza-round-variable, 'Helvetica Neue', Arial, sans-serif;
 	--font-mono: auger-mono, 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
@@ -185,6 +192,9 @@
    Tailwind writes the value into each utility, and the variable is read where the utility is used rather than on :root */
 @theme inline {
 	--color-bleed: var(--bleed);
+	/* Code's ground, a control's fill unless a theme sets --code-ground, read where it's used so it takes the raised of
+	   the ground it's on, a step lighter than it in the dark, as a button is */
+	--color-code-ground: var(--code-ground, var(--color-raised));
 	/* A level for controls, one for floating toolbars and one for overlays, each a soft drop and an edge. Raised's edge
 	   is half a pixel, a hint of depth for fields, chips and checkboxes. A button is raised with a 1px edge, as it's
 	   pressed, and lifted a little on hover by two wider layers, short of floating. A button can set --fine-edge to
@@ -342,7 +352,7 @@
 	   is written out here, copied from the site's own tokens */
 	[data-code-theme='iamsteve'] {
 		/* neutral-01-50 and fern-1200 */
-		--color-code-ground: light-dark(oklch(0.984 0.003 39.5), oklch(0.229 0.039 171.7));
+		--code-ground: light-dark(oklch(0.984 0.003 39.5), oklch(0.229 0.039 171.7));
 		/* fern-900 and fern-200 */
 		--color-code-text: light-dark(oklch(0.396 0.082 174), oklch(0.839 0.048 174.3));
 		/* neutral-02-400 and neutral-03-400 */
@@ -359,10 +369,17 @@
 		/* cornflour-700 and cornflour-300 */
 		--color-code-builtin: light-dark(oklch(0.55 0.15 262.7), oklch(0.771 0.096 258.8));
 		--color-code-tag: var(--color-code-text);
+		/* dandelion-100, and a deep blue in the dark */
+		--color-code-mark: light-dark(color-mix(in oklch, oklch(0.919 0.109 97.4) 16%, transparent), oklch(0.327 0.109 258.5));
+		--color-code-mark-edge: light-dark(oklch(0.368 0.107 52.8), oklch(0.824 0.193 88.5));
+		--color-code-add: light-dark(oklch(0.955 0.05 153), oklch(0.347 0.087 153));
+		--color-code-add-edge: light-dark(oklch(0.62 0.15 145), oklch(0.68 0.15 145));
+		--color-code-remove: light-dark(oklch(0.95 0.03 27.9), oklch(0.236 0.105 27.9));
+		--color-code-remove-edge: light-dark(oklch(0.62 0.15 27), oklch(0.55 0.15 27));
 	}
 	[data-code-theme='mcknny'] {
 		/* olive-25 and olive-950 */
-		--color-code-ground: light-dark(oklch(0.983 0.004 130.6), oklch(0.247 0.039 132.5));
+		--code-ground: light-dark(oklch(0.983 0.004 130.6), oklch(0.247 0.039 132.5));
 		/* olive-975 and pearl */
 		--color-code-text: light-dark(oklch(0.215 0.041 133.3), oklch(0.949 0.009 26));
 		--color-code-comment: light-dark(oklch(0.56 0.02 131), oklch(0.68 0.02 131));
@@ -380,6 +397,13 @@
 		--color-code-builtin: light-dark(oklch(0.5 0.045 186.4), oklch(0.856 0.03 127.9));
 		/* thulian, deepened for the light, and amaranth */
 		--color-code-tag: light-dark(oklch(0.52 0.15 350.8), oklch(0.795 0.107 357.8));
+		/* jasmine, fern and contessa, as tints, with type, string and constant's colours for their edges */
+		--color-code-mark: light-dark(color-mix(in oklch, oklch(0.905 0.119 89.3) 36%, transparent), color-mix(in oklch, oklch(0.905 0.119 89.3) 16%, transparent));
+		--color-code-mark-edge: var(--color-code-type);
+		--color-code-add: color-mix(in oklch, oklch(0.711 0.221 134.2) 16%, transparent);
+		--color-code-add-edge: var(--color-code-string);
+		--color-code-remove: color-mix(in oklch, oklch(0.62 0.15 29.7) 16%, transparent);
+		--color-code-remove-edge: var(--color-code-constant);
 	}
 
 	/* An overlay slides in from the side it opens on */

@@ -19,7 +19,11 @@ export declare function transformerCssTheme(): ShikiTransformer;
  * showLineNumbers in a code fence's meta, or showLineNumbers=12 to start at 12, as in ```css showLineNumbers
  */
 export declare function transformerLineNumbers(): ShikiTransformer;
-/** Loupe's transformers, in the order they run. Add Shiki's own, such as @shikijs/transformers, alongside */
+/**
+ * Loupe's transformers, for a site's own Shiki, such as @shikijs/rehype. Code styles the lines each marks: {6-8} or
+ * /word/ in a fence's meta, and // [!code highlight], [!code ++], [!code --], [!code focus], [!code error],
+ * [!code warning] and [!code word:name] in the code. Then Tailwind's @theme, bare custom properties and line numbers
+ */
 export declare const codeTransformers: () => ShikiTransformer[];
 declare const grammars: {
     tsx: () => Promise<typeof import("shiki/dist/langs/tsx.mjs")>;
@@ -36,9 +40,13 @@ export interface HighlightOptions {
     language?: CodeLanguage;
     /** Numbers each line, from 1, or from the number given */
     lineNumbers?: boolean | number;
+    /** What a code fence's meta would say, such as {6-8} to highlight lines 6 to 8, or /gap/ to highlight a word */
+    meta?: string;
+    /** A line of code in running text, as spans to put in a <code>, without Code's <pre> or its line marks */
+    isInline?: boolean;
 }
 /** Code as Shiki's highlighted HTML, in Loupe's theme, for Code's html */
-export declare function highlight(code: string, { language, lineNumbers }?: HighlightOptions): Promise<string>;
+export declare function highlight(code: string, { language, lineNumbers, meta, isInline }?: HighlightOptions): Promise<string>;
 /** Code highlighted in the browser, for Code's html: undefined until Shiki and the language have loaded */
-export declare function useHighlight(code: string, { language, lineNumbers }?: HighlightOptions): string | undefined;
+export declare function useHighlight(code: string, { language, lineNumbers, meta, isInline }?: HighlightOptions): string | undefined;
 export {};
