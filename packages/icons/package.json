@@ -18,6 +18,10 @@
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
+    "./motion": {
+      "types": "./lib/motion.d.ts",
+      "default": "./lib/motion.js"
+    },
     "./astro": "./lib/astro/Icon.astro",
     "./react": {
       "types": "./lib/react/index.d.ts",
