@@ -16,6 +16,14 @@ if (!name || !fs.existsSync(`packages/${name}/package.json`)) {
 const run = (cmd) => execSync(cmd, { stdio: 'inherit' })
 const read = (cmd) => execSync(cmd, { encoding: 'utf8' }).trim()
 
+// Loupe has one version (pnpm bump), so a package can't go out under another
+const versionOf = (file) => JSON.parse(fs.readFileSync(file, 'utf8')).version
+const loupe = versionOf('package.json')
+if (versionOf(`packages/${name}/package.json`) !== loupe) {
+  console.error(`packages/${name} isn't at Loupe's version, ${loupe}. Run pnpm bump ${loupe}, or pnpm bump to a new one.`)
+  process.exit(1)
+}
+
 run(`pnpm --filter ./packages/${name} build`)
 if (read(`git status --porcelain packages/${name}`)) {
   console.error(`packages/${name} has uncommitted changes after building. Commit them first.`)
@@ -24,8 +32,7 @@ if (read(`git status --porcelain packages/${name}`)) {
 
 run(`git subtree split --prefix packages/${name} -b ${name}`)
 run(`git push origin ${name} --force`)
-const { version } = JSON.parse(fs.readFileSync(`packages/${name}/package.json`, 'utf8'))
-const tag = `${name}@${version}`
+const tag = `${name}@${loupe}`
 if (!read(`git tag -l ${tag}`)) {
   run(`git tag ${tag} ${name}`)
   run(`git push origin ${tag}`)
