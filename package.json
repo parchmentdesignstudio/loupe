@@ -10,6 +10,7 @@
     "sprite",
     "data.js",
     "data.d.ts",
+    "terms.js",
     "icons.json",
     "parts.json"
   ],
