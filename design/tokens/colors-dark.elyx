@@ -9,7 +9,7 @@ export dark-colors = tokens : base.colors {
   // The roles components use, each light-dark(light, dark). The dark mode inverts the light one: the ground
   // takes ink's pine, and ink takes the ground's cream
   ink: base.colors.cream-95,
-  muted: base.colors.cream-80,
+  muted: base.colors.linen-90,
   danger: base.colors.red-81,
   // Marks on ink, such as a button's text or a checkbox's tick
   paper: base.colors.pine-20,
@@ -44,21 +44,26 @@ export dark-colors = tokens : base.colors {
   scrim: opacity(base.colors.black, 48%),
   // Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
   // and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one
-  code-ground: panel,
   code-text: ink,
   code-comment: muted,
+  // Keywords, and storage such as const and function
   code-keyword: base.colors.violet-82,
   code-string: base.colors.green-89,
-  // Numbers, units, booleans and hex colours
+  // A string's quotes
+  code-quote: base.colors.green-89,
+  // Booleans, hex colours and the other constants
   code-constant: base.colors.orange-89,
-  // Functions, and the names given values: properties, attributes and custom properties
+  // Numbers and their units
+  code-number: base.colors.orange-89,
+  // Functions, and the names given values: properties and custom properties
   code-function: base.colors.blue-82,
   // Types, classes and at-rules
   code-type: base.colors.yellow-91,
   // CSS's own functions, such as calc() and light-dark()
   code-builtin: base.colors.teal-88,
-  // JSX and HTML tags
+  // JSX and HTML tags, and their attributes
   code-tag: base.colors.pink-87,
+  code-attribute: base.colors.blue-82,
   code-mark-edge: base.colors.yellow-91,
   code-add-edge: base.colors.green-89,
   code-remove-edge: base.colors.red-81,

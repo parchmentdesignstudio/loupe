@@ -1,6 +1,6 @@
 import { type ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import details from 'virtual:details';
-import { Avatar, Button, Link, Switch, TextField } from '../src/index.js';
+import { Avatar, Button, Link, Prose, Switch, TextField } from '../src/index.js';
 
 // What a size comes to in pixels where it's shown, so a touch screen's 16px control text shows as 16px
 function useMeasure<T extends HTMLElement>() {
@@ -23,7 +23,7 @@ const uses: Record<string, string> = {
 
 // Written out, as Tailwind only finds whole class names
 const classes: Record<string, string> = { title: 'text-title', body: 'text-body', control: 'text-control', label: 'text-label' };
-const faces: Record<string, string> = { sans: 'font-sans', mono: 'font-mono' };
+const faces: Record<string, string> = { sans: 'font-sans', mono: 'font-mono', serif: 'font-serif italic' };
 
 const samples: Record<string, string> = {
 	title: 'Quarterly review',
@@ -59,6 +59,7 @@ export function Scale() {
 const families: Record<string, { name: string; role: string }> = {
 	sans: { name: 'Elza Round', role: 'Everything, in 400 and 500, and 700 for titles' },
 	mono: { name: 'Auger Mono', role: 'Code, tokens and file names' },
+	serif: { name: 'Livory', role: 'Quotes, in italic' },
 };
 
 /** Each family, its alphabet and figures */
@@ -194,10 +195,10 @@ export function Article() {
 	);
 }
 
-/** Plain HTML as .prose in preview.css styles it, as many elements as a page of writing is likely to use */
-export function Prose() {
+/** Plain HTML as Prose sets it, as many elements as a page of writing is likely to use */
+export function Writing() {
 	return (
-		<div className="prose w-full max-w-[36rem]">
+		<Prose className="w-full max-w-[36rem]">
 			<h1>A guide to the studio handbook</h1>
 			<p>
 				This handbook covers how we plan, design and ship work. It’s <em>a living document</em>, so if something here doesn’t match how we work, <strong>change it</strong>. Start with the{' '}
@@ -264,7 +265,10 @@ export function Save() {
 			<h2>Quotes and figures</h2>
 			<blockquote>
 				<p>We thought we needed a website. It turned out we needed a better way to answer the phone.</p>
-				<footer>A client, on the first fortnight</footer>
+				<footer>
+					<cite>Mara Lindqvist</cite>
+					Founder, Halden Studio
+				</footer>
 			</blockquote>
 			<figure>
 				<div className="aspect-[3/1] bg-linear-to-br from-marigold-83 to-green-68" />
@@ -333,6 +337,6 @@ export function Save() {
 					<sup>1</sup> Rounds after the second are billed by the hour.
 				</small>
 			</p>
-		</div>
+		</Prose>
 	);
 }

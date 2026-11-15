@@ -43,7 +43,7 @@ import {
 	TooltipTrigger,
 } from '../src/index.js';
 import { ParchmentLogo } from './logo.js';
-import { Article, Families, Prose, Figures, Scale, Together, Weights } from './typography.js';
+import { Article, Families, Figures, Scale, Together, Weights, Writing } from './typography.js';
 import { AppIcons, BrandButtons, Cards, Crops, Curls, Lockups, OnColour, Pairings, Palette, ProjectCards, System } from './brand.js';
 import { AvatarPlayground, AvatarsInText, photos } from './playgrounds/avatar.js';
 import { ButtonPlayground } from './playgrounds/button.js';
@@ -406,7 +406,6 @@ const groups: Group[] = [
 					{ name: 'Figures that line up', render: Figures },
 					{ name: 'Together', render: Together, box: 'justify-center' },
 					{ name: 'A post, at length', render: Article, box: 'justify-center' },
-					{ name: 'Every element of prose', render: Prose, box: 'justify-center' },
 				],
 			},
 		],
@@ -459,6 +458,15 @@ const groups: Group[] = [
 				exports: ['Code'],
 				stories: [
 					{ name: 'Build one', render: CodePlayground },
+				],
+			},
+			{
+				id: 'prose',
+				name: 'Prose',
+				description: 'Writing at length as plain HTML, such as a post from Markdown or a CMS, set in Loupe’s type with no classes inside. A site without React, such as one in Astro, puts the prose class from tokens.css on what holds it',
+				exports: ['Prose'],
+				stories: [
+					{ name: 'Every element of prose', render: Writing, box: 'justify-center' },
 				],
 			},
 		],
@@ -967,7 +975,7 @@ const groups: Group[] = [
 // Grouped by what you're building rather than by kind of control, so a form's pieces are all in one place. The groups
 // go in the order you'd build in, and each one's pages A to Z
 const regrouped: Record<string, string[]> = {
-	Foundations: ['Colour', 'Typography'],
+	Foundations: ['Colour', 'Prose', 'Typography'],
 	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
 	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Composer', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
 	Data: ['Avatar', 'Code', 'Grid list', 'Table', 'Tag group'],

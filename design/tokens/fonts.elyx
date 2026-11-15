@@ -5,5 +5,7 @@ file {}
 
 export fonts = tokens {
   sans: "Elza Round Variable",
-  mono: "Auger Mono"
+  mono: "Auger Mono",
+  // Quotes, in italic. Loupe only uses Livory's italic, so a kit needs no more of it
+  serif: "Livory"
 }

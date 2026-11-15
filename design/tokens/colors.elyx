@@ -18,6 +18,8 @@ export colors = tokens {
   // dark in its hue for their tints and lines
   linen-99: #fbfaf9,
   linen-97: #f6f3f1,
+  // Muted text in the dark: linen taken darker and a touch warmer, so it reads as quieter ink rather than beige
+  linen-90: #e6ddd7,
   linen-30: #362c21,
   linen-18: #191006,
   pine-95: #ccfbe9,
@@ -31,6 +33,17 @@ export colors = tokens {
   pine-16: #04100c,
   red-81: #ffa699,
   red-50: #b3261e,
+  // For code's roles in the light, on Nova's rules: one hue for keywords, tags and booleans, the rest a walk round
+  // the wheel from it at one lightness, and each string's quotes a darker shade of it. Jade, cyan and sky as vivid as
+  // sRGB holds, and more on a wide-gamut screen, at the end of this file
+  jade-49: #02715d,
+  mint-58: #3c8c66,
+  cyan-50: #02717b,
+  sky-52: #0171a3,
+  violet-58: #7b5ce6,
+  plum-55: #9b43ba,
+  plum-43: #6e2d86,
+  moss-45: #4a5c38,
   // Parchment's own, as the parchment-brand board in Sketch has them, with linen-99, linen-97 and pine-26 above
   marigold-83: #f5c03c,
   apricot-73: #f68543,
@@ -131,21 +144,26 @@ export colors = tokens {
   scrim: opacity(pine-26, 32%),
   // Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
   // and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one
-  code-ground: panel,
   code-text: ink,
   code-comment: muted,
-  code-keyword: violet-54,
-  code-string: green-46,
-  // Numbers, units, booleans and hex colours
-  code-constant: orange-41,
-  // Functions, and the names given values: properties, attributes and custom properties
-  code-function: blue-56,
+  // Keywords, and storage such as const and function
+  code-keyword: jade-49,
+  code-string: plum-55,
+  // A string's quotes
+  code-quote: plum-43,
+  // Booleans, hex colours and the other constants
+  code-constant: jade-49,
+  // Numbers and their units
+  code-number: violet-58,
+  // Functions, and the names given values: properties and custom properties
+  code-function: sky-52,
   // Types, classes and at-rules
-  code-type: yellow-40,
+  code-type: moss-45,
   // CSS's own functions, such as calc() and light-dark()
-  code-builtin: teal-48,
-  // JSX and HTML tags
-  code-tag: pink-56,
+  code-builtin: cyan-50,
+  // JSX and HTML tags, and their attributes
+  code-tag: jade-49,
+  code-attribute: mint-58,
   code-mark-edge: yellow-40,
   code-add-edge: green-46,
   code-remove-edge: red-50,

@@ -34,7 +34,7 @@ const levels = {
 
 // The families tokens.css names, from their Adobe Fonts web names to the names the same fonts have on the desktop,
 // which is where Elyx finds them
-const families = { 'elza-round-variable': 'Elza Round Variable', 'auger-mono': 'Auger Mono' }
+const families = { 'elza-round-variable': 'Elza Round Variable', 'auger-mono': 'Auger Mono', livory: 'Livory' }
 
 // What each text style is for. Weights aren’t tokens, so the captions say where the components change one
 const styles = {
@@ -270,8 +270,9 @@ for (const level of Object.values(levels)) {
   if (!corners.some(({ name }) => name === level.corners)) throw new Error(`A level in scripts/elyx-tokens.mjs rounds to --${level.corners}, which tokens.css doesn’t set`)
 }
 
-// A media query that changes the type, such as control text on touch screens, becomes a context of its own
-const contexts = [...css.matchAll(/(?:\/\*((?:[^*]|\*(?!\/))*)\*\/\s*)?@media \(([\w-]+): ([\w-]+)\) \{/g)].map(([, note, feature, choice]) => {
+// A media query that changes the type, such as control text on touch screens, becomes a context of its own. A wide
+// gamut's colours stay out, as hex only holds sRGB
+const contexts = [...css.matchAll(/(?:\/\*((?:[^*]|\*(?!\/))*)\*\/\s*)?@media \(([\w-]+): ([\w-]+)\) \{/g)].filter(([, , feature]) => feature !== 'color-gamut').map(([, note, feature, choice]) => {
   const changes = declarations(block(`@media (${feature}: ${choice})`)).map((change) => ({ ...change, name: typeName(change.name) }))
   for (const { name } of changes) {
     if (!typeNames.has(name)) throw new Error(`--${name} changes in @media (${feature}: ${choice}), and only the type carries into Elyx as a context`)

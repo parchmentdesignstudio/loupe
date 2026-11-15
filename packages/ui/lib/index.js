@@ -26,6 +26,7 @@ export { GridList, GridListHeader, GridListItem, GridListSection, gridList, grid
 export { Header, header } from './Header.js';
 export { Code } from './Code.js';
 export { Keyboard } from './Keyboard.js';
+export { Prose } from './Prose.js';
 export { Link, link } from './Link.js';
 export { ListBox, ListBoxItem, ListBoxSection, listBoxItem } from './ListBox.js';
 export { Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger } from './Menu.js';
