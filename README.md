@@ -88,13 +88,13 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 
 | Component | What it’s for |
 |---|---|
-| `Button` | Any action, as primary in marigold, secondary in white, accent in slate, outline or ghost, with an icon at either end, and a circle for an icon |
+| `Button` | Any action, as primary in marigold, secondary in white, quiet in slate, outline or ghost, with an icon at either end, and a circle for an icon |
 | `Chip`, `ChipGroup` | Suggestions to tap |
 | `Toolbar` | Controls in a row, such as an editor’s tools: one Tab stop, with the arrow keys between them |
 | `Separator` | A line between groups of controls, or sections of a panel. In a toolbar it stands upright |
 | `Keyboard` | A keyboard shortcut, such as ⌘Z, in a sentence, a tooltip, or at the end of a menu item |
 | `Composer` | A message field with its send button |
-| `TextField` | Text, or several lines with `multiline` |
+| `TextField` | Text, or several lines with `isMultiline` |
 | `NumberField` | A number, typed or stepped with the arrow keys and its buttons, within its limits |
 | `SearchField` | Searching, with a button that clears what’s typed. Escape clears it too |
 | `Slider` | A number between two limits, dragged or moved with the arrow keys, with its value beside the label. Two values make a range, with a thumb for each |
@@ -148,8 +148,8 @@ The palette also has nine hues, `red`, `orange`, `yellow`, `green`, `teal`, `sky
 |---|---|
 | `ink`, `muted` | Text, and quieter text |
 | `danger` | Errors, and the ring on a field whose value is wrong |
-| `paper` | Marks on ink or the accent, such as a button’s text or a checkbox’s tick |
-| `accent` | What a page leads with, such as a solid button. It stays rust in the dark |
+| `paper` | Marks on ink, such as a button’s text or a checkbox’s tick |
+| `accent` | What a page leads with, and what marks the current page or today. Marigold, as a primary button is, in both themes |
 | `highlight` | The light accent, a fill behind ink to mark something out |
 | `ground` | The page |
 | `panel` | An area on the page, such as a tool’s side panel |
@@ -201,6 +201,8 @@ Each token is one of Tailwind’s own variables, set once in `tokens.css`, so `-
 
 A component takes the name and props of the React Aria component it wraps: React Aria’s `Link` is our `Link`, and its `NavigationTree` is ours, down to `NavigationTreeItemContent`. React Aria is the primitive, and the package adds Parchment’s styling. Where React Aria has nothing, use the HTML element’s name.
 
+Name props as React Aria does, too. A boolean starts with `is` for a state, as in `isMultiline`, or `has` for a part, as in `hasTitles`. `showArrow`, from React Aria’s starter kit, is the one exception. `label` is always text you can see, and a name only screen readers get is `aria-label`, as on `Composer` and `DialogClose`. A props type is the component’s name and `Props`, and where a component adds nothing, it re-exports React Aria’s own. A recipe is the component’s name in camelCase, and a part’s name follows it, as in `selectTrigger`. Export a recipe when something outside its file draws with it, as `ColorField` does with `textFieldInput`.
+
 Wrap the React Aria component and style it with a `tv()` recipe. Name the variants after React Aria’s render props (`isHovered`, `isPressed`, `isFocusVisible`, `isDisabled`), so each state’s classes live in the recipe rather than in conditions. `composeRenderProps` hands React Aria’s state to the recipe, and keeps a `className` prop working, as a string or a function.
 
 ```tsx
@@ -245,7 +247,7 @@ That writes the tokens in `design/tokens` (`colors.elyx`, `colors-dark.elyx`, `t
 
 `colors` holds the palette, in hex, and the roles. `colors-dark.elyx` gives every role its dark value, in the `theme=dark` context, even a role that only names another, such as `inverse`, as Elyx would keep its light value. Elyx can’t mix a colour by the theme, so each tint is a token of its own in `tints`, named for its layer and strength: `tints.overlay-8` is `bg-bleed/8` on an overlay. Its tokens can’t hold a shadow either, so each level is a component in `elevation.elyx`, with the fill it goes with and its corners from `lengths`. Instance one, then give it a size and contents. CSS paints a shadow’s first layer on top and Elyx its last, so a level’s layers are in the opposite order to `tokens.css`.
 
-`typography` holds each text style’s size, in points, and its leading, as a multiple of the size, and `typography-coarse.elyx` gives control text its touch-screen 16 in the `pointer=coarse` context. `fonts` names the families as the desktop does, so Elyx draws Elza Round Variable and Auger Mono once they’re activated in Adobe Fonts. Each text style is a text layer in `text.elyx`: instance `body`, `control`, `label` or `title`, then set its contents. Weights aren’t tokens, so set `font-style: "Medium"` where a component does: each style’s caption says where. A new text style needs a caption, and a new family its desktop name, in `scripts/elyx-tokens.mjs`. The script stops and says which.
+`typography` holds each text style’s size, in points, and its leading, as a multiple of the size, and `typography-coarse.elyx` gives control text its touch-screen 16 in the `pointer=coarse` context. `fonts` names the families as the desktop does, so Elyx draws Elza Round Variable and Auger Mono once they’re activated in Adobe Fonts. Each text style is a text layer in `text.elyx`: instance `body`, `control`, `label` or `title`, then set its contents. A weight or tracking that `tokens.css` sets for a style goes on its layer, as `title` is Bold and drawn in by 1%. Otherwise weights aren’t tokens, so set `font-style: "Medium"` where a component does. A new text style needs a caption, and a new family its desktop name, in `scripts/elyx-tokens.mjs`. The script stops and says which.
 
 `control-leading` is 20px in the CSS, but Elyx takes leading only as a multiple of the size, so there it’s a multiple of `control-size`: 1.54, and 1.25 in the `pointer=coarse` context, which Elyx draws as 20px either way. So `control` text with 6px padding above and below comes out 32px tall, as in code.
 
@@ -257,11 +259,14 @@ That writes the tokens in `design/tokens` (`colors.elyx`, `colors-dark.elyx`, `t
 
 Each package is published to its own branch, so npm and pnpm can both install it from GitHub.
 
+Loupe has one version, in the root `package.json`, which the preview shows beside the logo. Below 1.0 it's marked alpha there: usable, as React Aria stands behind it, but not yet at the quality to rely on in production. 1.0 is when it is. The UI and icons share it, so they move together even when only one of them changed. `pnpm bump` sets it everywhere:
+
 ```sh
+pnpm bump 0.9.0
 pnpm release icons
 ```
 
-This builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Bump the version in `packages/icons/package.json` first, then sites can pin with `#icons@0.2.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`.
+Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`.
 
 ## Device
 

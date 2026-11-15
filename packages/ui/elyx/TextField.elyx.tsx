@@ -7,7 +7,7 @@ export function TextField({
 	description = '',
 	value = '',
 	errorMessage = '',
-	multiline = false,
+	isMultiline = false,
 	isInvalid = false,
 	isDisabled = false,
 }: {
@@ -16,7 +16,7 @@ export function TextField({
 	description?: string;
 	value?: string;
 	errorMessage?: string;
-	multiline?: boolean;
+	isMultiline?: boolean;
 	isInvalid?: boolean;
 	isDisabled?: boolean;
 }) {
@@ -28,7 +28,7 @@ export function TextField({
 			value={value}
 			onChange={() => {}}
 			errorMessage={errorMessage || undefined}
-			multiline={multiline}
+			isMultiline={isMultiline}
 			isInvalid={isInvalid}
 			isDisabled={isDisabled}
 			className="w-72"

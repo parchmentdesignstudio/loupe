@@ -7,7 +7,7 @@ import { Popover } from './Popover.js';
 import { composeClassName, focusRing, tv } from './tv.js';
 // Looks like a text field, but it's a button, so its text is medium like a button's, and its ring shows for keyboard
 // focus only. The chevron sits 8px in, as a circle button's icon does
-export const trigger = tv({
+export const selectTrigger = tv({
     extend: focusRing,
     base: 'flex w-full cursor-default items-center gap-2 rounded-lg text-left text-control font-medium text-ink outline-offset-0 [-webkit-tap-highlight-color:transparent]',
     variants: {
@@ -32,5 +32,5 @@ export const trigger = tv({
 });
 /** Picks one option from a list that opens below it */
 export function Select({ label, description, errorMessage, items, children, variant, size, ...props }) {
-    return (_jsx(AriaSelect, { ...props, className: composeClassName(props.className, 'flex flex-col gap-1.5'), children: ({ isInvalid }) => (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Button, { className: (state) => trigger({ ...state, isInvalid, variant, size }), children: [_jsx(SelectValue, { className: "min-w-0 flex-1 truncate data-[placeholder]:text-muted", children: ({ isPlaceholder, selectedText, defaultChildren }) => (isPlaceholder ? defaultChildren : selectedText) }), _jsx(ChevronDown, { className: "size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage }), _jsx(Popover, { className: "max-w-[max(var(--trigger-width),20rem)] min-w-(--trigger-width)", children: _jsx(ListBox, { items: items, children: children }) })] })) }));
+    return (_jsx(AriaSelect, { ...props, className: composeClassName(props.className, 'flex flex-col gap-1.5'), children: ({ isInvalid }) => (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Button, { className: (state) => selectTrigger({ ...state, isInvalid, variant, size }), children: [_jsx(SelectValue, { className: "min-w-0 flex-1 truncate data-[placeholder]:text-muted", children: ({ isPlaceholder, selectedText, defaultChildren }) => (isPlaceholder ? defaultChildren : selectedText) }), _jsx(ChevronDown, { className: "size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage }), _jsx(Popover, { className: "max-w-[max(var(--trigger-width),20rem)] min-w-(--trigger-width)", children: _jsx(ListBox, { items: items, children: children }) })] })) }));
 }

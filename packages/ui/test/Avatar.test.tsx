@@ -93,7 +93,7 @@ describe('AvatarGroup', () => {
 
 	it('past its max, ends with a count of the rest', () => {
 		render(
-			<AvatarGroup max={4}>
+			<AvatarGroup maxVisible={4}>
 				{people.map((name) => (
 					<Avatar key={name} name={name} />
 				))}
@@ -108,7 +108,7 @@ describe('AvatarGroup', () => {
 
 	it('shows everyone when they fit, and takes an aria-label', () => {
 		render(
-			<AvatarGroup max={3} aria-label="Who’s editing">
+			<AvatarGroup maxVisible={3} aria-label="Who’s editing">
 				{people.slice(0, 3).map((name) => (
 					<Avatar key={name} name={name} />
 				))}
@@ -123,7 +123,7 @@ describe('AvatarGroup', () => {
 			<div>
 				<Avatar name="Sam Smith" src="/sam.jpg" status="online" />
 				<Avatar name="Parchment" shape="square" size={48} />
-				<AvatarGroup max={3} size={24}>
+				<AvatarGroup maxVisible={3} size={24}>
 					{people.map((name) => (
 						<Avatar key={name} name={name} />
 					))}

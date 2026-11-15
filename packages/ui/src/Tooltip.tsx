@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 import { OverlayArrow, Tooltip as AriaTooltip, type TooltipProps as AriaTooltipProps, composeRenderProps } from 'react-aria-components';
+import { KeyboardVariantContext } from './Keyboard.js';
 import { tv } from './tv.js';
 
 export { TooltipTrigger } from 'react-aria-components';
 
 const tooltip = tv({
-	base: 'max-w-64 rounded-lg bg-inverse px-2.5 py-1.5 text-label text-paper [&_kbd]:ms-2 [&_kbd]:bg-paper/12 [&_kbd]:text-paper [&_kbd]:shadow-none',
+	base: 'max-w-64 rounded-lg bg-inverse px-2.5 py-1.5 text-label text-paper [&_kbd]:ms-2',
 	variants: {
 		isEntering: {
 			true: 'animate-enter motion-reduce:animate-fade-in',
@@ -33,7 +34,7 @@ export function Tooltip({ showArrow = false, children, ...props }: TooltipProps)
 					</svg>
 				</OverlayArrow>
 			)}
-			{children}
+			<KeyboardVariantContext.Provider value="plain">{children}</KeyboardVariantContext.Provider>
 		</AriaTooltip>
 	);
 }

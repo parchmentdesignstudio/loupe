@@ -25,7 +25,6 @@ const dot = tv({
         },
     },
 });
-/** One option in a RadioGroup, with its label as children */
 export function Radio(props) {
     return (_jsx(AriaRadio, { ...props, className: composeRenderProps(props.className, (className, state) => choice({ ...state, className })), children: composeRenderProps(props.children, (children, state) => {
             const styles = dot(state);

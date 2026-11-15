@@ -1,6 +1,6 @@
 import { Menu as AriaMenu, MenuItem as AriaMenuItem, type MenuItemProps as AriaMenuItemProps, type MenuProps as AriaMenuProps, MenuSection as AriaMenuSection, type MenuSectionProps, Separator, composeRenderProps } from 'react-aria-components';
 import { Check, ChevronRight } from './glyphs.js';
-import { option, section, truncateText } from './ListBox.js';
+import { listBoxItem, section, truncateText } from './ListBox.js';
 import { Popover, type PopoverProps } from './Popover.js';
 import { tv } from './tv.js';
 
@@ -21,7 +21,7 @@ export function Menu<T extends object>({ placement, ...props }: MenuProps<T>) {
 }
 
 const menuItem = tv({
-	extend: option,
+	extend: listBoxItem,
 	variants: {
 		variant: {
 			default: '',
@@ -32,7 +32,7 @@ const menuItem = tv({
 
 export interface MenuItemProps extends AriaMenuItemProps {
 	/** danger for an action that destroys something */
-	variant?: 'default' | 'danger';
+	variant?: 'danger';
 }
 
 export function MenuItem({ variant, ...props }: MenuItemProps) {

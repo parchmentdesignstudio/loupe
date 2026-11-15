@@ -17,7 +17,7 @@ export const choice = tv({
 });
 
 // The box stays white whether it's ticked or not, and the tick draws itself in, so the mark alone says it's chosen
-export const box = tv({
+export const checkboxBox = tv({
 	extend: focusRing,
 	base: 'my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-md bg-raised text-ink shadow-raised transition-[scale] duration-150 ease-out motion-reduce:transition-none',
 	variants: {
@@ -45,12 +45,14 @@ const mark = tv({
 });
 
 /** A checkbox with its label as children. isIndeterminate shows a dash, for a parent of others that are mixed */
+export type { CheckboxProps };
+
 export function Checkbox(props: CheckboxProps) {
 	return (
 		<AriaCheckbox {...props} className={composeRenderProps(props.className, (className, state) => choice({ ...state, className }))}>
 			{composeRenderProps(props.children, (children, { isSelected, isIndeterminate, ...state }) => (
 				<>
-					<span className={box(state)}>
+					<span className={checkboxBox(state)}>
 						{/* One svg for the tick and the dash, so going from none to some chosen animates as going to all does */}
 						<svg aria-hidden="true" viewBox="0 0 16 16" className={mark({ isSelected: isSelected || isIndeterminate })}>
 							{isIndeterminate ? <path d="M4 8h8" strokeLinecap="round" /> : <path d="m3.5 8.5 3 3 6-7" strokeLinecap="round" strokeLinejoin="round" />}

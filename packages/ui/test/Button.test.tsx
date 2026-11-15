@@ -97,17 +97,17 @@ describe('Button', () => {
 		expect(small).not.toContain('px-2.5');
 	});
 
-	it('fills primary with marigold and accent with slate', () => {
+	it('fills primary with marigold and quiet with slate', () => {
 		render(
 			<>
 				<Button>Schedule call</Button>
-				<Button variant="accent">Book a visit</Button>
+				<Button variant="quiet">Book a visit</Button>
 			</>,
 		);
-		const [primary, accent] = screen.getAllByRole('button').map((button) => button.className.split(' '));
+		const [primary, quiet] = screen.getAllByRole('button').map((button) => button.className.split(' '));
 		expect(primary).toEqual(expect.arrayContaining(['[--fill:var(--color-primary)]', 'text-on-primary']));
-		expect(accent).toEqual(expect.arrayContaining(['[--fill:var(--color-quiet)]', 'text-on-quiet']));
-		expect(accent).not.toContain('[--fill:var(--color-primary)]');
+		expect(quiet).toEqual(expect.arrayContaining(['[--fill:var(--color-quiet)]', 'text-on-quiet']));
+		expect(quiet).not.toContain('[--fill:var(--color-primary)]');
 	});
 
 	it('keeps text-body and text-ink apart when merging', () => {

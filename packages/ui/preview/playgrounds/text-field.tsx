@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type FieldSize, type FieldVariant, TextField } from '../../src/index.js';
+import { type Size, type FieldVariant, TextField } from '../../src/index.js';
 import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
@@ -34,7 +34,7 @@ export function TextFieldPlayground() {
 	const [isReadOnly, setReadOnly] = useState(false);
 	const [isDisabled, setDisabled] = useState(false);
 	const [variant, setVariant] = useState<FieldVariant>('raised');
-	const [size, setSize] = useState<FieldSize>('medium');
+	const [size, setSize] = useState<Size>('medium');
 	const shuffle = () => {
 		setLabel(pick(lengths));
 		setDescription(pick(lengths));
@@ -81,7 +81,7 @@ export function TextFieldPlayground() {
 				description={descriptions[description]}
 				placeholder={placeholders[placeholder]}
 				defaultValue={contents[value]}
-				multiline={multiline}
+				isMultiline={multiline}
 				rows={rows}
 				isInvalid={isInvalid}
 				errorMessage={errors[error]}

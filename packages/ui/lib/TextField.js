@@ -5,7 +5,7 @@ import { composeClassName, tv } from './tv.js';
 // Control text, which is 16px on touch screens, as iOS zooms into anything smaller. Like a button, the padding and the
 // 20px line make it 32px tall. Chrome ignores an input's line if it's no taller than the text, so a 16px line, an
 // icon's, would make it 37px on a touch screen. A field shows its focus however it was focused
-export const input = tv({
+export const textFieldInput = tv({
     base: ['w-full rounded-lg text-control text-ink outline-offset-0 outline-ink placeholder:text-muted forced-colors:outline-[Highlight]', readOnly],
     variants: {
         // Before the states, so invalid's ring and disabled's fill win over them
@@ -34,6 +34,6 @@ export const input = tv({
     defaultVariants: { variant: 'raised', size: 'medium' },
 });
 /** A labelled text input, with an optional description and the error React Aria's validation gives it */
-export function TextField({ label, description, errorMessage, placeholder, multiline = false, rows = 4, variant, size, ...props }) {
-    return (_jsxs(AriaTextField, { ...props, className: composeClassName(props.className, 'flex flex-col gap-1.5'), children: [label && _jsx(Label, { children: label }), multiline ? (_jsx(TextArea, { placeholder: placeholder, rows: rows, className: (state) => input({ ...state, variant, size, className: 'resize-y leading-[1.5]' }) })) : (_jsx(Input, { placeholder: placeholder, className: (state) => input({ ...state, variant, size }) })), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
+export function TextField({ label, description, errorMessage, placeholder, isMultiline = false, rows = 4, variant, size, ...props }) {
+    return (_jsxs(AriaTextField, { ...props, className: composeClassName(props.className, 'flex flex-col gap-1.5'), children: [label && _jsx(Label, { children: label }), isMultiline ? (_jsx(TextArea, { placeholder: placeholder, rows: rows, className: (state) => textFieldInput({ ...state, variant, size, className: 'resize-y leading-[1.5]' }) })) : (_jsx(Input, { placeholder: placeholder, className: (state) => textFieldInput({ ...state, variant, size }) })), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
 }

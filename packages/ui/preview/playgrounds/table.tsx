@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Collection, type Selection, type SortDescriptor } from 'react-aria-components';
-import { Cell, Column, EmptyState, MenuItem, MenuSeparator, Row, RowActions, Table, TableBody, TableHeader, TableLoadMore } from '../../src/index.js';
+import { Cell, Column, EmptyState, MenuItem, MenuSeparator, Row, RowActions, Table, TableBody, TableHeader, TableLoadMoreItem } from '../../src/index.js';
 import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const firsts = ['Ada', 'Grace', 'Alan', 'Katherine', 'Tim', 'Margaret', 'Linus', 'Barbara', 'Dennis', 'Radia', 'Ken', 'Frances', 'Donald', 'Hedy', 'Edsger', 'Joan'];
@@ -221,7 +221,7 @@ export function LoadingMoreTable() {
 						</Row>
 					)}
 				</Collection>
-				<TableLoadMore isLoading={isLoading} onLoadMore={loadMore} />
+				<TableLoadMoreItem isLoading={isLoading} onLoadMore={loadMore} />
 			</TableBody>
 		</Table>
 	);

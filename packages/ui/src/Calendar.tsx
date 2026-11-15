@@ -163,7 +163,7 @@ function Day({ date, isRange }: { date: CalendarDate; isRange: boolean }) {
 }
 
 /** Some of each month to show at once, as `{ months: 2 }` */
-type VisibleDuration = { months?: number };
+export type VisibleDuration = { months?: number };
 
 export interface CalendarProps<T extends DateValue> extends Omit<AriaCalendarProps<T>, 'visibleDuration'> {
 	/** How many months show side by side, as `{ months: 2 }`. The arrows move one page of them at a time unless pageBehavior is single */

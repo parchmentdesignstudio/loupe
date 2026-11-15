@@ -1,4 +1,5 @@
 import { type ToggleButtonGroupProps as AriaToggleButtonGroupProps, type ToggleButtonProps } from 'react-aria-components';
+import type { Size } from './Field.js';
 export type { ToggleButtonProps };
 export declare const toggleButtonGroup: import("tailwind-variants").TVReturnType<{
     orientation: {
@@ -50,7 +51,7 @@ export declare const toggleButton: import("tailwind-variants").TVReturnType<{
 }, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
 export interface ToggleButtonGroupProps extends AriaToggleButtonGroupProps {
     /** 32px tall, or 28px when small, like a button */
-    size?: 'medium' | 'small';
+    size?: Size;
     /** Pixels between the buttons */
     gap?: 0 | 1 | 2 | 4;
     /** A hairline between each button and the next, which goes from beside the chosen one */

@@ -8,6 +8,7 @@ import {
 	ToggleGroupStateContext,
 	composeRenderProps,
 } from 'react-aria-components';
+import type { Size } from './Field.js';
 import { focusRing, tv } from './tv.js';
 
 export type { ToggleButtonProps };
@@ -130,7 +131,7 @@ const gaps = { 0: '[--gap:0px]', 1: '[--gap:1px]', 2: '[--gap:2px]', 4: '[--gap:
 
 export interface ToggleButtonGroupProps extends AriaToggleButtonGroupProps {
 	/** 32px tall, or 28px when small, like a button */
-	size?: 'medium' | 'small';
+	size?: Size;
 	/** Pixels between the buttons */
 	gap?: 0 | 1 | 2 | 4;
 	/** A hairline between each button and the next, which goes from beside the chosen one */

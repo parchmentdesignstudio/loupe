@@ -15,7 +15,7 @@ export const choice = tv({
     },
 });
 // The box stays white whether it's ticked or not, and the tick draws itself in, so the mark alone says it's chosen
-export const box = tv({
+export const checkboxBox = tv({
     extend: focusRing,
     base: 'my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-md bg-raised text-ink shadow-raised transition-[scale] duration-150 ease-out motion-reduce:transition-none',
     variants: {
@@ -40,9 +40,8 @@ const mark = tv({
         },
     },
 });
-/** A checkbox with its label as children. isIndeterminate shows a dash, for a parent of others that are mixed */
 export function Checkbox(props) {
-    return (_jsx(AriaCheckbox, { ...props, className: composeRenderProps(props.className, (className, state) => choice({ ...state, className })), children: composeRenderProps(props.children, (children, { isSelected, isIndeterminate, ...state }) => (_jsxs(_Fragment, { children: [_jsx("span", { className: box(state), children: _jsx("svg", { "aria-hidden": "true", viewBox: "0 0 16 16", className: mark({ isSelected: isSelected || isIndeterminate }), children: isIndeterminate ? _jsx("path", { d: "M4 8h8", strokeLinecap: "round" }) : _jsx("path", { d: "m3.5 8.5 3 3 6-7", strokeLinecap: "round", strokeLinejoin: "round" }) }) }), children] }))) }));
+    return (_jsx(AriaCheckbox, { ...props, className: composeRenderProps(props.className, (className, state) => choice({ ...state, className })), children: composeRenderProps(props.children, (children, { isSelected, isIndeterminate, ...state }) => (_jsxs(_Fragment, { children: [_jsx("span", { className: checkboxBox(state), children: _jsx("svg", { "aria-hidden": "true", viewBox: "0 0 16 16", className: mark({ isSelected: isSelected || isIndeterminate }), children: isIndeterminate ? _jsx("path", { d: "M4 8h8", strokeLinecap: "round" }) : _jsx("path", { d: "m3.5 8.5 3 3 6-7", strokeLinecap: "round", strokeLinejoin: "round" }) }) }), children] }))) }));
 }
 /** Checkboxes under one label, sent as one field */
 export function CheckboxGroup({ label, description, errorMessage, children, ...props }) {

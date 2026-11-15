@@ -161,7 +161,7 @@ export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, '
 	/** Avatars, in the order they overlap */
 	children: ReactNode;
 	/** How many avatars to show. Past it, the last one shows how many more there are, as in +3 */
-	max?: number;
+	maxVisible?: number;
 	/** Every avatar's size, in pixels */
 	size?: AvatarSize;
 	/** Every avatar's shape */
@@ -179,10 +179,10 @@ const listFormat = new Intl.ListFormat('en-GB', { type: 'conjunction' });
  * --avatar-ring to that colour off the panel. It's named for screen readers by the people in it, as in “Sam Smith,
  * Alex Lee and 3 others”, or by an aria-label
  */
-export function AvatarGroup({ children, max, size = 32, shape = 'circle', className, ...props }: AvatarGroupProps) {
+export function AvatarGroup({ children, maxVisible, size = 32, shape = 'circle', className, ...props }: AvatarGroupProps) {
 	const avatars = Children.toArray(children).filter(isValidElement);
-	// The count takes the last place, so a max of 4 shows 3 people and +2, rather than 4 and +1
-	const shown = max != null && avatars.length > max ? avatars.slice(0, Math.max(max - 1, 1)) : avatars;
+	// The count takes the last place, so a maxVisible of 4 shows 3 people and +2, rather than 4 and +1
+	const shown = maxVisible != null && avatars.length > maxVisible ? avatars.slice(0, Math.max(maxVisible - 1, 1)) : avatars;
 	const hidden = avatars.length - shown.length;
 	const names = shown.map((child) => (child.props as Partial<AvatarProps>).name).filter((name): name is string => Boolean(name));
 	const others = `${hidden} ${hidden === 1 ? 'other' : 'others'}`;

@@ -121,7 +121,6 @@
     --color-claret-36: oklch(36.1% .09 17.9);
     --color-olive-47: oklch(47.3% .09 124.1);
     --color-slate-86: oklch(85.8% .027 196.7);
-    --color-apricot-60: oklch(60.5% .149 48.5);
     --color-olive-91: oklch(90.9% .099 124.1);
     --color-red-87: oklch(87.4% .057 17);
     --color-red-67: oklch(67.5% .194 21.2);
@@ -175,7 +174,7 @@
     --color-muted: var(--color-pine-50);
     --color-danger: var(--color-red-50);
     --color-paper: var(--color-white);
-    --color-accent: var(--color-apricot-60);
+    --color-accent: var(--color-marigold-83);
     --color-highlight: var(--color-olive-91);
     --color-primary: var(--color-marigold-83);
     --color-on-primary: var(--color-pine-26);
@@ -583,10 +582,6 @@
     inset-inline-end: calc(var(--spacing) * .5);
   }
 
-  .end-1 {
-    inset-inline-end: calc(var(--spacing) * 1);
-  }
-
   .end-\[calc\(var\(--avatar-radius\)\*0\.2929-var\(--avatar-dot\)\/2\)\] {
     inset-inline-end: calc(var(--avatar-radius) * .2929 - var(--avatar-dot) / 2);
   }
@@ -743,10 +738,6 @@
 
   .my-\[calc\(\(1lh-1\.25rem\)\/2\)\] {
     margin-block: calc(.5lh - .625rem);
-  }
-
-  .my-auto {
-    margin-block: auto;
   }
 
   .ms-auto {
@@ -1193,10 +1184,6 @@
 
   .-rotate-90 {
     rotate: -90deg;
-  }
-
-  .rotate-90 {
-    rotate: 90deg;
   }
 
   .rotate-180 {
@@ -2096,6 +2083,10 @@
     color: var(--color-accent);
   }
 
+  .text-current\/64 {
+    color: color-mix(in oklab, currentcolor 64%, transparent);
+  }
+
   .text-danger {
     color: var(--color-danger);
   }
@@ -2409,12 +2400,6 @@
 
   .transition-\[rotate\,opacity\] {
     transition-property: rotate, opacity;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
-
-  .transition-\[rotate\] {
-    transition-property: rotate;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
@@ -3275,16 +3260,6 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
-  @media (hover: hover) {
-    .hover\:bg-bleed\/4:hover {
-      background-color: color-mix(in oklab, var(--bleed) 4%, transparent);
-    }
-
-    .hover\:text-ink:hover {
-      color: var(--color-ink);
-    }
-  }
-
   :where([data-readonly]) .in-data-readonly\:bg-transparent {
     background-color: #0000;
   }
@@ -3562,19 +3537,6 @@
     margin-inline-start: calc(var(--spacing) * 2);
   }
 
-  .\[\&_kbd\]\:bg-paper\/12 kbd {
-    background-color: color-mix(in oklab, var(--color-paper) 12%, transparent);
-  }
-
-  .\[\&_kbd\]\:text-paper kbd {
-    color: var(--color-paper);
-  }
-
-  .\[\&_kbd\]\:shadow-none kbd {
-    --tw-shadow: 0 0 #0000;
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-
   .\[\&_td\]\:p-0 td {
     padding: 0;
   }
@@ -3593,6 +3555,11 @@
 
   .\[\&\>svg\]\:my-\[calc\(\(1lh-1rem\)\/2\)\] > svg {
     margin-block: calc(.5lh - .5rem);
+  }
+
+  .\[\&\>svg\]\:size-3 > svg {
+    width: calc(var(--spacing) * 3);
+    height: calc(var(--spacing) * 3);
   }
 
   .\[\&\>td\]\:border-t > td {

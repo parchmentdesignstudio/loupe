@@ -18,6 +18,7 @@ export const chip = tv({
 });
 
 export type ChipProps = AriaButtonProps;
+export type ChipGroupProps = GroupProps;
 
 /** A suggestion to tap, such as a reply in the chat. Several sit in a ChipGroup */
 export function Chip(props: ChipProps) {
@@ -25,6 +26,6 @@ export function Chip(props: ChipProps) {
 }
 
 /** Chips that go together, under a name for screen readers: give it an aria-label, or aria-labelledby */
-export function ChipGroup(props: GroupProps) {
+export function ChipGroup(props: ChipGroupProps) {
 	return <Group {...props} className={composeClassName(props.className, 'flex flex-wrap gap-2')} />;
 }

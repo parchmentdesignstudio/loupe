@@ -6,7 +6,7 @@ export declare const choice: import("tailwind-variants").TVReturnType<{
         true: string;
     };
 }, undefined, "group relative flex cursor-default items-start gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]", undefined, undefined, undefined>;
-export declare const box: import("tailwind-variants").TVReturnType<{
+export declare const checkboxBox: import("tailwind-variants").TVReturnType<{
     isPressed: {
         true: string;
     };
@@ -28,6 +28,7 @@ export declare const box: import("tailwind-variants").TVReturnType<{
     };
 }, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
 /** A checkbox with its label as children. isIndeterminate shows a dash, for a parent of others that are mixed */
+export type { CheckboxProps };
 export declare function Checkbox(props: CheckboxProps): import("react").JSX.Element;
 export interface CheckboxGroupProps extends Omit<AriaCheckboxGroupProps, 'children'>, FieldTextProps {
     children?: ReactNode;

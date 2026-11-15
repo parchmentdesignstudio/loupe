@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type FieldSize, type FieldVariant, NumberField } from '../../src/index.js';
+import { type Size, type FieldVariant, NumberField } from '../../src/index.js';
 import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
@@ -37,7 +37,7 @@ export function NumberFieldPlayground() {
 	const [isReadOnly, setReadOnly] = useState(false);
 	const [isDisabled, setDisabled] = useState(false);
 	const [variant, setVariant] = useState<FieldVariant>('raised');
-	const [size, setSize] = useState<FieldSize>('medium');
+	const [size, setSize] = useState<Size>('medium');
 	const preset = formats[format];
 	// NaN is how a controlled number field shows empty
 	const fill = (next: Value, from: Format = format) => {

@@ -1,6 +1,6 @@
 import { ColorField as AriaColorField, type ColorFieldProps as AriaColorFieldProps, Input } from 'react-aria-components';
 import { Description, FieldError, type FieldTextProps, Label } from './Field.js';
-import { input } from './TextField.js';
+import { textFieldInput } from './TextField.js';
 import { composeClassName } from './tv.js';
 
 export interface ColorFieldProps extends AriaColorFieldProps, FieldTextProps {
@@ -12,7 +12,7 @@ export function ColorField({ label, description, errorMessage, placeholder, ...p
 	return (
 		<AriaColorField {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
 			{label && <Label>{label}</Label>}
-			<Input placeholder={placeholder} className={(state) => input(state)} />
+			<Input placeholder={placeholder} className={(state) => textFieldInput(state)} />
 			{description && <Description>{description}</Description>}
 			<FieldError>{errorMessage}</FieldError>
 		</AriaColorField>

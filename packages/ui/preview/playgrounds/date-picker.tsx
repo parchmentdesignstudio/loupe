@@ -119,7 +119,7 @@ export function DatePickerPlayground() {
 						{...shared}
 						value={range && { start: asValue(range.start)!, end: asValue(range.end)! }}
 						onChange={(next: DateRange | null) => setRange(next)}
-						visibleMonths={visible === 'auto' ? undefined : Number(visible)}
+						visibleDuration={visible === 'auto' ? undefined : { months: Number(visible) }}
 					/>
 				)}
 			</InLocale>

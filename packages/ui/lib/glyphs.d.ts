@@ -10,6 +10,9 @@ export declare const Plus: ({ className }: {
 export declare const ChevronDown: ({ className }: {
     className?: string;
 }) => import("react").JSX.Element;
+export declare const TriangleDown: ({ className }: {
+    className?: string;
+}) => import("react").JSX.Element;
 export declare const ChevronRight: ({ className }: {
     className?: string;
 }) => import("react").JSX.Element;

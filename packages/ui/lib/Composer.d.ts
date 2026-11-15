@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 export interface ComposerProps {
     /** Names the field for screen readers, as it has no visible label */
-    label: string;
+    'aria-label': string;
     placeholder?: string;
     /** Names the send button */
     submitLabel?: string;
@@ -18,4 +18,4 @@ export interface ComposerProps {
     className?: string;
 }
 /** A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line, and an empty message can't be sent */
-export declare function Composer({ label, placeholder, submitLabel, submitIcon, onSubmit, value, defaultValue, onChange, isDisabled, className }: ComposerProps): import("react").JSX.Element;
+export declare function Composer({ 'aria-label': label, placeholder, submitLabel, submitIcon, onSubmit, value, defaultValue, onChange, isDisabled, className }: ComposerProps): import("react").JSX.Element;

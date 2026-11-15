@@ -4,7 +4,7 @@ import { Icon } from '@parchment/icons/react';
 import { Button } from '../../src/index.js';
 import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, pick, sampleWords } from '../playground.js';
 
-const variants = ['primary', 'secondary', 'accent', 'danger', 'outline', 'ghost'] as const;
+const variants = ['primary', 'secondary', 'quiet', 'danger', 'outline', 'ghost'] as const;
 const places = ['none', 'start', 'end', 'both'] as const;
 
 // A style without the chosen icon leaves that end empty rather than failing

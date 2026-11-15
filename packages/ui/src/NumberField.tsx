@@ -1,5 +1,5 @@
 import { Button, Group, Input, NumberField as AriaNumberField, type NumberFieldProps as AriaNumberFieldProps } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, type FieldSize, type FieldVariant, Label, readOnly } from './Field.js';
+import { Description, FieldError, type FieldTextProps, type Size, type FieldVariant, Label, readOnly } from './Field.js';
 import { Dash, Plus } from './glyphs.js';
 import { composeClassName, tv } from './tv.js';
 
@@ -41,7 +41,7 @@ export interface NumberFieldProps extends AriaNumberFieldProps, FieldTextProps {
 	/** Raised, white with a lift, by default. Filled is flat and grey, for a dense panel of settings */
 	variant?: FieldVariant;
 	/** 32px tall, or 28px when small, as a button is */
-	size?: FieldSize;
+	size?: Size;
 }
 
 /** A number, typed or stepped. The arrow keys and its buttons move it by step, within minValue and maxValue, and formatOptions shows it as a percentage, currency or unit */

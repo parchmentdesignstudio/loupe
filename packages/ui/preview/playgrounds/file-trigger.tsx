@@ -5,7 +5,7 @@ import { Button, FileTrigger } from '../../src/index.js';
 import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, pick, sampleWords, solidIcons } from '../playground.js';
 import { type Accepts, type Seed, accepts, seeds } from './files.js';
 
-const variants = ['primary', 'secondary', 'accent', 'outline', 'ghost'] as const;
+const variants = ['primary', 'secondary', 'quiet', 'outline', 'ghost'] as const;
 const cameras = ['none', 'user', 'environment'] as const;
 
 // The camera only shows on a phone, where it opens the camera straight away rather than the picker

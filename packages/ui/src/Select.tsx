@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Button, Select as AriaSelect, type SelectProps as AriaSelectProps, SelectValue } from 'react-aria-components';
-import { Description, FieldError, type FieldSize, type FieldTextProps, type FieldVariant, Label } from './Field.js';
+import { Description, FieldError, type Size, type FieldTextProps, type FieldVariant, Label } from './Field.js';
 import { ChevronDown } from './glyphs.js';
 import { ListBox } from './ListBox.js';
 import { Popover } from './Popover.js';
@@ -8,7 +8,7 @@ import { composeClassName, focusRing, tv } from './tv.js';
 
 // Looks like a text field, but it's a button, so its text is medium like a button's, and its ring shows for keyboard
 // focus only. The chevron sits 8px in, as a circle button's icon does
-export const trigger = tv({
+export const selectTrigger = tv({
 	extend: focusRing,
 	base: 'flex w-full cursor-default items-center gap-2 rounded-lg text-left text-control font-medium text-ink outline-offset-0 [-webkit-tap-highlight-color:transparent]',
 	variants: {
@@ -39,7 +39,7 @@ export interface SelectProps<T extends object> extends Omit<AriaSelectProps<T>, 
 	/** Raised, white with a lift, by default. Filled is flat and grey, for a dense panel of settings */
 	variant?: FieldVariant;
 	/** 32px tall, or 28px when small, as a button is */
-	size?: FieldSize;
+	size?: Size;
 }
 
 /** Picks one option from a list that opens below it */
@@ -49,7 +49,7 @@ export function Select<T extends object>({ label, description, errorMessage, ite
 			{({ isInvalid }) => (
 				<>
 					{label && <Label>{label}</Label>}
-					<Button className={(state) => trigger({ ...state, isInvalid, variant, size })}>
+					<Button className={(state) => selectTrigger({ ...state, isInvalid, variant, size })}>
 						<SelectValue className="min-w-0 flex-1 truncate data-[placeholder]:text-muted">{({ isPlaceholder, selectedText, defaultChildren }) => (isPlaceholder ? defaultChildren : selectedText)}</SelectValue>
 						<ChevronDown className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" />
 					</Button>

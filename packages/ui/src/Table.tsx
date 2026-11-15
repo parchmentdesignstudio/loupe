@@ -281,7 +281,7 @@ export function RowActions<T extends object>({ 'aria-label': label, placement = 
 }
 
 /** The last thing in a TableBody when there's more to load: onLoadMore runs as it scrolls into view, and isLoading shows a row saying so */
-export function TableLoadMore({ children = 'Loading more…', className, ...props }: TableLoadMoreItemProps) {
+export function TableLoadMoreItem({ children = 'Loading more…', className, ...props }: TableLoadMoreItemProps) {
 	return (
 		<AriaTableLoadMoreItem {...props} className={['text-label text-muted [&>td]:border-t [&>td]:border-bleed/8 [&>td]:px-4 [&>td]:py-2.5 [&>td]:text-center', className].filter(Boolean).join(' ')}>
 			{children}

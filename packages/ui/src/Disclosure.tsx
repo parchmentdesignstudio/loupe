@@ -10,10 +10,10 @@ import {
 	DisclosureStateContext,
 	Heading,
 } from 'react-aria-components';
+import type { Size } from './Field.js';
 import { ChevronDown } from './glyphs.js';
 import { composeClassName, focusRing, tv } from './tv.js';
 
-type Size = 'medium' | 'small';
 
 // A group hands its size to each disclosure in it, and a disclosure to its header and panel
 const SizeContext = createContext<Size>('medium');

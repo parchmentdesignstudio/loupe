@@ -114,4 +114,4 @@ export interface RowActionsProps<T> extends Omit<MenuProps<T>, 'aria-label'> {
  */
 export declare function RowActions<T extends object>({ 'aria-label': label, placement, ...props }: RowActionsProps<T>): import("react").JSX.Element;
 /** The last thing in a TableBody when there's more to load: onLoadMore runs as it scrolls into view, and isLoading shows a row saying so */
-export declare function TableLoadMore({ children, className, ...props }: TableLoadMoreItemProps): import("react").JSX.Element;
+export declare function TableLoadMoreItem({ children, className, ...props }: TableLoadMoreItemProps): import("react").JSX.Element;

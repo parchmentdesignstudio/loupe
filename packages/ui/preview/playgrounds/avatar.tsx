@@ -90,7 +90,7 @@ export function AvatarPlayground() {
 			}
 		>
 			{isGroup ? (
-				<AvatarGroup size={Number(size) as AvatarSize} shape={shape} max={max || undefined}>
+				<AvatarGroup size={Number(size) as AvatarSize} shape={shape} maxVisible={max || undefined}>
 					{[name, ...people.filter((person) => person !== name)].slice(0, count).map((person, index) => (
 						<Avatar key={person} name={person} src={index === 0 ? src : index % 3 === 1 ? photos[index % photos.length] : undefined} status={index === 0 && status !== 'none' ? (status as AvatarStatus) : undefined} />
 					))}

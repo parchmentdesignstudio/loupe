@@ -5,7 +5,7 @@ import { ProgressCircle } from './ProgressBar.js';
 import { focusRing, tv } from './tv.js';
 
 // The states are React Aria's render props, so each variant is named for the one it answers to. The fill sits on a
-// ::before. Secondary insets it 1px so the root's background is a faux border; primary and accent fill the whole button
+// ::before. Secondary insets it 1px so the root's background is a faux border; primary and quiet fill the whole button
 // and take their edge from a shadow. Either way every variant is the same size, with a border or without
 export const button = tv({
 	extend: focusRing,
@@ -17,8 +17,8 @@ export const button = tv({
 	],
 	variants: {
 		// Primary is marigold, the brand's yellow, for what a page leads with. On a marigold ground it nearly blends in, and its
-		// rim and shadow lift it. Secondary is white and raised, for most actions. Accent is slate, the brand's light partner
-		// to pine, for a lead quieter than marigold. Primary and accent keep ink text in the dark too, as their fills stay light. Each sets a --fill, and a --rim a sixth darker for its
+		// rim and shadow lift it. Secondary is white and raised, for most actions. Quiet is slate, the brand's light partner
+		// to pine, for a lead quieter than marigold. Primary and quiet keep ink text in the dark too, as their fills stay light. Each sets a --fill, and a --rim a sixth darker for its
 		// border; primary's turns 16° on the wheel too, so it leans orange rather than olive. The fills are --color-primary and
 		// --color-quiet. The fill has to stay opaque, or the faux border shows through it, so hovers lay a wash over
 		// it rather than going translucent. Outline is secondary's edge alone, outside the box as the others' are, so it lines up with them
@@ -32,7 +32,7 @@ export const button = tv({
 			// There the edge is half a pixel, as a field's is, since a full pixel of dark makes the button look a pixel smaller
 			secondary:
 				'bg-[light-dark(var(--color-raised),var(--color-surface))] text-ink shadow-button [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),transparent)] [--fine-edge:light-dark(transparent,var(--dark-edge))] before:bg-[light-dark(var(--color-raised),var(--color-surface))]',
-			accent: [
+			quiet: [
 				'text-on-quiet',
 				'[--fill:var(--color-quiet)]',
 				'[--rim:oklch(from_var(--fill)_calc(l*0.84)_calc(c*0.84)_h)]',
@@ -73,9 +73,9 @@ export const button = tv({
 		},
 	},
 	compoundVariants: [
-		// Primary and accent. Each line is one part, and hover lightens the gradient
+		// Primary and quiet. Each line is one part, and hover lightens the gradient
 		{
-			variant: ['primary', 'accent', 'danger'],
+			variant: ['primary', 'quiet', 'danger'],
 			class: [
 				// Secondary's shadow, with its ring as the border, in the button's own --rim. The fill covers the whole button,
 				// so the ring is the only edge. In the dark a darker rim muddies the fill against the ground, so there's none,
@@ -95,7 +95,7 @@ export const button = tv({
 			],
 		},
 		{
-			variant: ['primary', 'accent', 'danger'],
+			variant: ['primary', 'quiet', 'danger'],
 			isHovered: true,
 			class: [
 				'shadow-button-lifted',
@@ -106,13 +106,13 @@ export const button = tv({
 		{ variant: 'secondary', isHovered: true, class: 'shadow-button-lifted bg-linear-to-r from-bleed/4 to-bleed/4 before:bg-linear-to-r before:from-bleed/4 before:to-bleed/4' },
 		{ variant: ['outline', 'ghost'], isHovered: true, class: 'bg-bleed/4' },
 		// Hovered, a raised button lifts a little, as --shadow-button-lifted. Pressed, it sits down: the drop goes, leaving
-		// the edge ring, and primary and accent lose their inner line and bevel as their fill flattens.
+		// the edge ring, and primary and quiet lose their inner line and bevel as their fill flattens.
 		// After the hovers, so it wins while both are true
-		{ variant: ['primary', 'secondary', 'accent', 'danger'], isPressed: true, class: '[--drop-raised:transparent]' },
-		{ variant: ['primary', 'accent', 'danger'], isPressed: true, class: 'before:from-(color:--fill) before:to-(color:--fill) before:inset-ring-0 before:inset-shadow-none' },
+		{ variant: ['primary', 'secondary', 'quiet', 'danger'], isPressed: true, class: '[--drop-raised:transparent]' },
+		{ variant: ['primary', 'quiet', 'danger'], isPressed: true, class: 'before:from-(color:--fill) before:to-(color:--fill) before:inset-ring-0 before:inset-shadow-none' },
 		// Disabled, a raised button goes flat and grey: the ::before goes, taking the fill, inner line and bevel with it,
 		// and so does the shadow. Outline keeps its line and ghost stays bare, both with muted text
-		{ variant: ['primary', 'secondary', 'accent', 'danger'], isDisabled: true, class: 'bg-bleed/12 shadow-none before:content-none' },
+		{ variant: ['primary', 'secondary', 'quiet', 'danger'], isDisabled: true, class: 'bg-bleed/12 shadow-none before:content-none' },
 	],
 	defaultVariants: {
 		variant: 'primary',
@@ -148,6 +148,9 @@ const isText = (children: ReactNode) => typeof children === 'string' || (Array.i
  * A button for any action, with an icon at the start or end if it helps. With just an icon as its child it's square, or
  * a circle when its shape is full, and needs an aria-label. isPending spins while its action runs
  */
+/** How a button looks, from primary for the main action to ghost for the least */
+export type ButtonVariant = NonNullable<ButtonProps['variant']>;
+
 export function Button({ variant, shape, size, start, end, ...props }: ButtonProps) {
 	return (
 		<AriaButton {...props} className={composeRenderProps(props.className, (className, state) => button({ ...state, variant, shape, size, className }))}>

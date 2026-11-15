@@ -1,6 +1,9 @@
 import { type ReactNode, useState } from 'react';
 import { RouterProvider, parseColor } from 'react-aria-components';
-import { type IconSize, type IconVariant, iconNames } from '@parchment/icons';
+import { type IconName, type IconSize, type IconVariant, iconNames } from '@parchment/icons';
+import { byCategory } from './icon-categories.js';
+// PROTOTYPE: icon motion
+import { IconMotionPrototype } from './proto/icon-motion.js';
 import { Icon } from '@parchment/icons/react';
 import {
 	Avatar,
@@ -199,7 +202,7 @@ function Sending() {
 	const [sent, setSent] = useState<string[]>([]);
 	return (
 		<>
-			<Composer label="Your message" placeholder="Tell me what you’re working on" submitIcon={<Icon name="arrow-up" />} onSubmit={(message) => setSent((list) => [...list, message])} className="w-full" />
+			<Composer aria-label="Your message" placeholder="Tell me what you’re working on" submitIcon={<Icon name="arrow-up" />} onSubmit={(message) => setSent((list) => [...list, message])} className="w-full" />
 			{sent.length > 0 && <p className="font-mono text-label">Sent: {sent.join(', ')}</p>}
 		</>
 	);
@@ -415,7 +418,7 @@ const groups: Group[] = [
 			{
 				id: 'button',
 				name: 'Button',
-				description: 'Any action, as primary in marigold, secondary in white, accent in slate, outline or ghost, with an icon at either end or just an icon, and rounded corners or full ones for a pill or a circle',
+				description: 'Any action, as primary in marigold, secondary in white, quiet in slate, outline or ghost, with an icon at either end or just an icon, and rounded corners or full ones for a pill or a circle',
 				summary: 'Any action, in marigold, white or slate, outline or ghost, with or without an icon',
 				exports: ['Button'],
 				sample: (props) => <Button {...props}>New project</Button>,
@@ -461,7 +464,7 @@ const groups: Group[] = [
 				name: 'Text field',
 				description: (
 					<>
-						Text, or several lines with <code className="font-mono text-label">multiline</code>
+						Text, or several lines with <code className="font-mono text-label">isMultiline</code>
 					</>
 				),
 				exports: ['TextField'],
@@ -704,7 +707,7 @@ const groups: Group[] = [
 				name: 'Table',
 				description: 'Rows of records under sortable columns, such as customers, invoices or members, with rows to choose, open or act on',
 				summary: 'Rows of records under sortable columns, to choose, open or act on',
-				exports: ['Table', 'TableHeader', 'Column', 'TableBody', 'Row', 'Cell', 'RowActions', 'TableLoadMore'],
+				exports: ['Table', 'TableHeader', 'Column', 'TableBody', 'Row', 'Cell', 'RowActions', 'TableLoadMoreItem'],
 				stories: [
 					{ name: 'Build one', render: TablePlayground },
 					{ name: 'Empty', render: EmptyTable },
@@ -983,24 +986,58 @@ const cross = [
 	'after:absolute after:inset-y-0 after:left-1/2 after:border-l after:border-dashed after:border-bleed/12',
 ].join(' ');
 
-// Every icon in a set, each in a square on a grid of hairlines, with the guides to turn off. Its name shows on hover,
-// and is its label for a screen reader
+// What the icons can be looked at in. Each is drawn at one size and scaled here, so 12px shows how it holds up small,
+// and 32px and 48px show its details
+const previewSizes = [12, 16, 24, 32, 48] as const;
+type PreviewSize = (typeof previewSizes)[number];
+
+// Every icon in a set, each in a square on a grid of hairlines, with the guides to turn off. The icons are in groups by
+// what they draw, or in one grid in the same order, so a family such as the train and its carriages stays together.
+// Its name shows on hover, and is its label for a screen reader
 function Icons({ variant, size }: { variant: IconVariant; size: IconSize }) {
 	const [hasGuides, setGuides] = useState(true);
+	const [isGrouped, setGrouped] = useState(true);
+	const [shown, setShown] = useState<PreviewSize>(size);
+	const groups = byCategory(iconNames({ variant, size }));
+	// The squares grow with the icons, so a 48px one keeps room around it
+	const grid = (names: IconName[]) => (
+		<ul className="grid border-t border-l border-bleed/8" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${Math.max(48, shown * 2.5)}px, 1fr))` }}>
+			{names.map((name) => (
+				<li key={name} title={name} className={`relative flex aspect-square items-center justify-center border-r border-b border-bleed/8 ${hasGuides ? cross : ''}`}>
+					<span className={`relative z-1 ${hasGuides ? 'outline outline-bleed/12' : ''}`}>
+						<Icon name={name} variant={variant} size={size} label={name} className="block" style={{ width: shown, height: shown }} />
+					</span>
+				</li>
+			))}
+		</ul>
+	);
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<Switch isSelected={hasGuides} onChange={setGuides}>
-				Guides
-			</Switch>
-			<ul className="grid grid-cols-[repeat(auto-fill,minmax(3rem,1fr))] border-t border-l border-bleed/8">
-				{iconNames({ variant, size }).map((name) => (
-					<li key={name} title={name} className={`relative flex aspect-square items-center justify-center border-r border-b border-bleed/8 ${hasGuides ? cross : ''}`}>
-						<span className={`relative z-1 ${hasGuides ? 'outline outline-bleed/12' : ''}`}>
-							<Icon name={name} variant={variant} size={size} label={name} className="block" />
-						</span>
-					</li>
-				))}
-			</ul>
+		<div className="flex w-full flex-col gap-6">
+			<div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+				<ToggleButtonGroup aria-label="Size" size="small" selectedKeys={[String(shown)]} onSelectionChange={(keys) => setShown(Number([...keys][0]) as PreviewSize)}>
+					{previewSizes.map((each) => (
+						<ToggleButton key={each} id={String(each)}>
+							{each}px
+						</ToggleButton>
+					))}
+				</ToggleButtonGroup>
+				<Switch isSelected={isGrouped} onChange={setGrouped}>
+					By category
+				</Switch>
+				<Switch isSelected={hasGuides} onChange={setGuides}>
+					Guides
+				</Switch>
+			</div>
+			{isGrouped
+				? groups.map(([category, names]) => (
+						<section key={category} aria-labelledby={`icons-${category.toLowerCase().replaceAll(' ', '-')}`} className="flex flex-col gap-3">
+							<h3 id={`icons-${category.toLowerCase().replaceAll(' ', '-')}`} className="text-control font-medium">
+								{category} <span className="font-normal text-muted tabular-nums">{names.length}</span>
+							</h3>
+							{grid(names)}
+						</section>
+					))
+				: grid(groups.flatMap(([, names]) => names))}
 		</div>
 	);
 }
@@ -1060,7 +1097,9 @@ export const areas: Entry[] = [
 		description: 'Solid icons, drawn in Sketch. Each is named for what it draws, not what it’s for',
 		usage: "<Icon name=\"plus\" variant=\"solid\" size={16} /> from '@parchment/icons/react'",
 		stories: [
-			{ name: 'Solid, 16px', render: () => <Icons variant="solid" size={16} /> },
+			{ name: 'Solid, drawn at 16px', render: () => <Icons variant="solid" size={16} /> },
+			// PROTOTYPE: icon motion, see proto/icon-motion.tsx
+			{ name: 'Motion, a prototype', render: IconMotionPrototype },
 		],
 	},
 	// A scratch page for colours with the mark, to drop along with brand.tsx if it isn't kept

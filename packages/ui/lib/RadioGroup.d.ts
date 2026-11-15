@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { type RadioGroupProps as AriaRadioGroupProps, type RadioProps } from 'react-aria-components';
 import { type FieldTextProps } from './Field.js';
 /** One option in a RadioGroup, with its label as children */
+export type { RadioProps };
 export declare function Radio(props: RadioProps): import("react").JSX.Element;
 export interface RadioGroupProps extends Omit<AriaRadioGroupProps, 'children'>, FieldTextProps {
     children?: ReactNode;

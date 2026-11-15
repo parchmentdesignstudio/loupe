@@ -51,9 +51,7 @@
 	--color-claret-36: oklch(0.361 0.09 17.9);
 	--color-olive-47: oklch(0.473 0.09 124.1);
 	--color-slate-86: oklch(0.858 0.027 196.7);
-	/* Worked out from them for the roles: apricot at the lightness white text needs on it, and olive light enough
-	   to sit behind ink */
-	--color-apricot-60: oklch(0.605 0.149 48.5);
+	/* Worked out from them for the roles: olive light enough to sit behind ink */
 	--color-olive-91: oklch(0.909 0.099 124.1);
 	/* Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet */
 	--color-red-87: oklch(0.874 0.057 17);
@@ -114,13 +112,13 @@
 	--color-ink: light-dark(var(--color-pine-26), var(--color-cream-95));
 	--color-muted: light-dark(var(--color-pine-50), var(--color-cream-80));
 	--color-danger: light-dark(var(--color-red-50), var(--color-red-81));
-	/* Marks on ink or the accent, such as a button's text or a checkbox's tick */
+	/* Marks on ink, such as a button's text or a checkbox's tick */
 	--color-paper: light-dark(var(--color-white), var(--color-pine-20));
-	/* What a page leads with, in apricot rather than a button’s marigold. It stays apricot in the dark, where paper turns dark */
-	--color-accent: var(--color-apricot-60);
+	/* What a page leads with, and what marks the current page or today: marigold, as a primary button is, in both themes */
+	--color-accent: var(--color-marigold-83);
 	/* The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on */
 	--color-highlight: light-dark(var(--color-olive-91), color-mix(in oklab, var(--color-olive-91) 24%, transparent));
-	/* A primary button's fill, marigold, and an accent button's, slate, each with the ink on it. Both themes share them,
+	/* A primary button's fill, marigold, and a quiet button's, slate, each with the ink on it. Both themes share them,
 	   as the fills stay light */
 	--color-primary: var(--color-marigold-83);
 	--color-on-primary: var(--color-pine-26);

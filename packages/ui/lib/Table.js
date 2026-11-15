@@ -152,6 +152,6 @@ export function RowActions({ 'aria-label': label, placement = 'bottom end', ...p
     return (_jsxs(MenuTrigger, { children: [_jsx(Button, { variant: "ghost", size: "small", "aria-label": label, className: "-my-1 text-muted data-[hovered]:text-ink aria-expanded:text-ink", children: _jsx(Ellipsis, {}) }), _jsx(Menu, { placement: placement, ...props })] }));
 }
 /** The last thing in a TableBody when there's more to load: onLoadMore runs as it scrolls into view, and isLoading shows a row saying so */
-export function TableLoadMore({ children = 'Loading more…', className, ...props }) {
+export function TableLoadMoreItem({ children = 'Loading more…', className, ...props }) {
     return (_jsx(AriaTableLoadMoreItem, { ...props, className: ['text-label text-muted [&>td]:border-t [&>td]:border-bleed/8 [&>td]:px-4 [&>td]:py-2.5 [&>td]:text-center', className].filter(Boolean).join(' '), children: children }));
 }
