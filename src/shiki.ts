@@ -4,6 +4,9 @@ import type { HighlighterCore, ShikiTransformer, ThemeRegistration } from 'shiki
 // Loupe's Shiki theme, transformers and a highlighter, as @parchment/ui/shiki, apart from the components so a site that
 // doesn't highlight never loads Shiki. Code shows what this makes
 
+// A hast element, as Shiki's hooks hand them over
+type Element = Parameters<NonNullable<ShikiTransformer['code']>>[0];
+
 const role = (name: string) => `var(--color-code-${name})`;
 
 /**
@@ -135,9 +138,11 @@ export function transformerCssTheme(): ShikiTransformer {
  * showLineNumbers in a code fence's meta, or showLineNumbers=12 to start at 12, as in ```css showLineNumbers
  */
 export function transformerLineNumbers(): ShikiTransformer {
+	let pairs: [Element, Element][] = [];
 	return {
 		name: 'loupe:line-numbers',
 		code(node) {
+			pairs = [];
 			const meta = /showLineNumbers(?:=(\d+))?/.exec(this.options.meta?.__raw ?? '');
 			if (!meta) return;
 			const lines = node.children.filter((child) => child.type === 'element');
@@ -145,18 +150,34 @@ export function transformerLineNumbers(): ShikiTransformer {
 			const last = lines.at(-1);
 			if (last && last.children.every((child) => child.type === 'text' && child.value === '')) lines.pop();
 			const start = Number(meta[1] ?? 1);
-			const numbers = lines.map((line, i) => {
+			const numbers = lines.map((line, i): Element => {
 				line.properties['data-line'] = String(start + i);
-				return { type: 'element' as const, tagName: 'span', properties: { 'data-line-number': '' }, children: [{ type: 'text' as const, value: String(start + i) }] };
+				return { type: 'element', tagName: 'span', properties: { 'data-line-number': '' }, children: [{ type: 'text', value: String(start + i) }] };
 			});
+			pairs = lines.map((line, i) => [line, numbers[i]]);
 			node.properties['data-line-numbers'] = '';
 			node.children = [
 				{ type: 'element', tagName: 'span', properties: { 'data-line-numbers-col': '', 'aria-hidden': 'true' }, children: numbers },
 				{ type: 'element', tagName: 'span', properties: { 'data-line-numbers-content': '' }, children: lines },
 			];
 		},
+		// Last, as other transformers, such as @shikijs/transformers' highlight and diff, mark the lines after this has
+		// numbered them. Each number takes its line's marks, so it can be coloured with it
+		root() {
+			for (const [line, number] of pairs) {
+				const marks = classes(line).filter((name) => lineMarks.has(name));
+				if (marks.length) number.properties.class = [...classes(number), ...marks].join(' ');
+			}
+			pairs = [];
+		},
 	};
 }
+
+const lineMarks = new Set(['highlighted', 'diff', 'add', 'remove', 'error', 'warning', 'focused']);
+const classes = (element: Element) => {
+	const value = element.properties.class ?? element.properties.className;
+	return (Array.isArray(value) ? value.map(String) : String(value ?? '').split(/\s+/)).filter(Boolean);
+};
 
 /** Loupe's transformers, in the order they run. Add Shiki's own, such as @shikijs/transformers, alongside */
 export const codeTransformers = () => [transformerCssProperties(), transformerCssTheme(), transformerLineNumbers()];

@@ -2,7 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Code } from '../src/index.js';
-import { highlight } from '../src/shiki.js';
+import { codeToHtml } from 'shiki';
+import { codeTheme, highlight, transformerLineNumbers } from '../src/shiki.js';
 import { expectAccessible } from './accessible.js';
 
 describe('Code', () => {
@@ -49,5 +50,23 @@ describe('highlight', () => {
 		const html = await highlight('a\nb', { language: 'text', lineNumbers: 9 });
 		const numbers = [...new DOMParser().parseFromString(html, 'text/html').querySelectorAll('[data-line-number]')].map((each) => each.textContent);
 		expect(numbers).toEqual(['9', '10']);
+	});
+
+	it('marks a line’s number as its line is marked, such as highlighted', async () => {
+		const html = await codeToHtml('a\nb\nc', {
+			lang: 'text',
+			theme: codeTheme,
+			meta: { __raw: 'showLineNumbers' },
+			transformers: [
+				transformerLineNumbers(),
+				{
+					line(node, line) {
+						if (line === 2) this.addClassToHast(node, 'highlighted');
+					},
+				},
+			],
+		});
+		const page = new DOMParser().parseFromString(html, 'text/html');
+		expect([...page.querySelectorAll('[data-line-number].highlighted')].map((each) => each.textContent)).toEqual(['2']);
 	});
 });
