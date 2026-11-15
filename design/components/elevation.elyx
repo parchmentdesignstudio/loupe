@@ -39,8 +39,8 @@ export raised = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
-    {drop-shadow: {color: base.colors.sheen}},
-    {drop-shadow: {color: base.colors.toplight, blur-radius: 0.5px}}
+    {inner-shadow: {color: base.colors.sheen, spread: 0.5px}},
+    {inner-shadow: {color: base.colors.toplight, offset: point(0px, 0.5px)}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
@@ -79,7 +79,7 @@ export panel = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
-    {drop-shadow: {color: base.colors.sheen}}
+    {inner-shadow: {color: base.colors.sheen, spread: 0.5px}}
   ],
   corner-radius: l.lengths.radius-xl,
   slot: .true
@@ -118,8 +118,8 @@ export button = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 1px}},
-    {drop-shadow: {color: base.colors.sheen}},
-    {drop-shadow: {color: base.colors.toplight, blur-radius: 0.5px}}
+    {inner-shadow: {color: base.colors.sheen, spread: 0.5px}},
+    {inner-shadow: {color: base.colors.toplight, offset: point(0px, 0.5px)}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
@@ -174,8 +174,8 @@ export button-lifted = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 1px}},
-    {drop-shadow: {color: base.colors.sheen}},
-    {drop-shadow: {color: base.colors.toplight, blur-radius: 0.5px}}
+    {inner-shadow: {color: base.colors.sheen, spread: 0.5px}},
+    {inner-shadow: {color: base.colors.toplight, offset: point(0px, 0.5px)}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true
@@ -238,7 +238,7 @@ export floating = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
-    {drop-shadow: {color: base.colors.sheen}}
+    {inner-shadow: {color: base.colors.sheen, spread: 0.5px}}
   ],
   corner-radius: l.lengths.radius-xl,
   slot: .true
@@ -317,8 +317,8 @@ export overlay = frame {
       }
     },
     {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
-    {drop-shadow: {color: base.colors.sheen}},
-    {drop-shadow: {color: base.colors.toplight, blur-radius: 0.5px}}
+    {inner-shadow: {color: base.colors.sheen, spread: 0.5px}},
+    {inner-shadow: {color: base.colors.toplight, offset: point(0px, 0.5px)}}
   ],
   corner-radius: l.lengths.radius-lg,
   slot: .true

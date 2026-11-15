@@ -38,9 +38,7 @@ export colors = tokens {
   claret-36: #64262b,
   olive-47: #516426,
   slate-86: #bdd6d6,
-  // Worked out from them for the roles: apricot at the lightness white text needs on it, and olive light enough
-  // to sit behind ink
-  apricot-60: #c6611f,
+  // Worked out from them for the roles: olive light enough to sit behind ink
   olive-91: #d3eda3,
   // Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet
   red-87: #f9c7c8,
@@ -100,12 +98,18 @@ export colors = tokens {
   ink: pine-26,
   muted: pine-50,
   danger: red-50,
-  // Marks on ink or the accent, such as a button's text or a checkbox's tick
+  // Marks on ink, such as a button's text or a checkbox's tick
   paper: white,
-  // What a page leads with, in apricot rather than a button’s marigold. It stays apricot in the dark, where paper turns dark
-  accent: apricot-60,
+  // What a page leads with, and what marks the current page or today: marigold, as a primary button is, in both themes
+  accent: marigold-83,
   // The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on
   highlight: olive-91,
+  // A primary button's fill, marigold, and a quiet button's, slate, each with the ink on it. Both themes share them,
+  // as the fills stay light
+  primary: marigold-83,
+  on-primary: pine-26,
+  quiet: slate-86,
+  on-quiet: pine-26,
   // The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
   // overlay are white, and shadows part them. In the dark, each is lighter than the one below, starting near black
   // so there's room above the controls for hover and what's chosen

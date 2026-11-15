@@ -8,8 +8,9 @@ file {}
 
 @variants(more.more-typography, coarse.coarse-typography)
 export typography = tokens {
-  text-body: 15,
-  text-body-line-height: 1.4,
+  text-body: 14,
+  // 20px in the CSS, and a multiple of text-body here, as Elyx takes line height
+  text-body-line-height: 1.43,
   // Text in buttons, fields, labels, options and tabs, on a 20px line at either size. A control's padding adds to
   // the line, so 6px above and below makes it 32px tall, and an icon in a control sits on the line as text does
   text-control: 13,
@@ -19,6 +20,8 @@ export typography = tokens {
   // A whole 16px, so what follows a label lands on whole pixels, and text in a button below it centres the same in every row
   // 16px in the CSS, and a multiple of text-label here, as Elyx takes line height
   text-label-line-height: 1.33,
+  // Bold, as the brand's own lettering is, and drawn in a touch, as bold at this size sits loose
   text-title: 20,
+  // 22px in the CSS, and a multiple of text-title here, as Elyx takes line height
   text-title-line-height: 1.1
 }

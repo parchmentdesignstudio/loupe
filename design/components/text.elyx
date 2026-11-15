@@ -41,12 +41,14 @@ export label = text {
 }
 
 export title = text {
-  caption: "Dialog headings, set in Medium",
+  caption: "Page and dialog headings",
   left: 624px,
   top: 0px,
   fill: base.colors.ink,
   contents: "Title",
   font-size: t.typography.text-title,
   font-family: f.fonts.sans,
-  line-height: t.typography.text-title-line-height
+  font-style: "Bold",
+  line-height: t.typography.text-title-line-height,
+  letter-spacing: -1%
 }

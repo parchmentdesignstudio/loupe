@@ -41,7 +41,7 @@ const styles = {
   body: 'Running text. A toast’s title sets it in Medium',
   control: 'Buttons, fields, labels, options and tabs. Buttons, selects, tabs, toggles, navigation links and a chosen option set it in Medium',
   label: 'Descriptions, errors, tags, tooltips and a toast’s message. Section headers set it in Auger Mono',
-  title: 'Dialog headings, set in Medium',
+  title: 'Page and dialog headings',
 }
 
 // Colours Elyx writes by name, as it does any hex with a CSS name. These are the greys, which a neutral in the palette
@@ -175,15 +175,19 @@ const shadows = declarations(block('@theme inline'))
   .map(({ name, value }) => {
     const level = levels[name.slice('shadow-'.length)]
     if (!level) throw new Error(`Add --${name} to the levels in scripts/elyx-tokens.mjs`)
-    const drops = split(unprefix(value)).map((layer) => {
-      const [, lengths, colourName] = /^(.*) var\(--([\w-]+)\)$/.exec(layer)
+    const drops = split(unprefix(value)).flatMap((layer) => {
+      const [, inset, lengths, colourName, fallback] = /^(inset\s+)?(.*) var\(--([\w-]+)(?:,\s*(.+))?\)$/.exec(layer) ?? []
+      if (!lengths) throw new Error(`--${name} has a layer the script can’t read: ${layer}`)
+      // A colour a component sets for itself, such as a button's --fine-edge, isn't in :root. Where it falls back to
+      // transparent, the layer draws nothing until the component sets it, so Elyx leaves it out
+      if (!known.has(colourName) && fallback?.trim() === 'transparent') return []
       if (!known.has(colourName)) throw new Error(`--${name} uses --${colourName}, which isn’t a colour in :root`)
       const [x, y, blur = 0, spread = 0] = lengths.split(/\s+/).map(parseFloat)
       const drop = { color: `base.colors.${colourName}` }
       if (x || y) drop.offset = `point(${x}px, ${y}px)`
       if (blur) drop['blur-radius'] = `${blur}px`
       if (spread) drop.spread = `${spread}px`
-      return { 'drop-shadow': drop }
+      return [{ [inset ? 'inner-shadow' : 'drop-shadow']: drop }]
     })
     // CSS paints its first shadow on top, and Elyx its last, so the order flips
     return { name: name.slice('shadow-'.length), ...level, shadow: drops.length === 1 ? drops[0] : drops.toReversed() }
@@ -199,7 +203,23 @@ const number = (value) => {
   if (!amount) throw new Error(`${value} isn’t a size or a multiple, which Elyx takes as a number`)
   return String(round(parseFloat(amount) * (unit === 'rem' ? 16 : 1)))
 }
-const typeDeclarations = themeTokens.filter(({ name }) => name.startsWith('text-')).map((declaration) => ({ ...declaration, name: typeName(declaration.name) }))
+// A style's weight and tracking aren't sizes, so they go on its text layer rather than into typography.elyx
+const isLook = (name) => /--(?:font-weight|letter-spacing)$/.test(name)
+const look = (style, property) => themeTokens.find(({ name }) => name === `text-${style}--${property}`)?.value.trim()
+// Elza Round's desktop styles by weight, and tracking as Elyx takes it, a percentage of the size
+const weights = { 400: 'Regular', 500: 'Medium', 600: 'Semibold', 700: 'Bold' }
+const fontStyle = (weight) => {
+  if (weight === undefined) return undefined
+  if (!weights[weight]) throw new Error(`Add font weight ${weight}’s desktop style to the weights in scripts/elyx-tokens.mjs`)
+  return `"${weights[weight]}"`
+}
+const tracking = (value) => {
+  if (value === undefined) return undefined
+  const [, amount] = /^(-?[\d.]+)em$/.exec(value) ?? []
+  if (!amount) throw new Error(`${value} isn’t tracking in em, which Elyx takes as a percentage of the size`)
+  return `${round(parseFloat(amount) * 100)}%`
+}
+const typeDeclarations = themeTokens.filter(({ name }) => name.startsWith('text-') && !isLook(name)).map((declaration) => ({ ...declaration, name: typeName(declaration.name) }))
 const typeNames = new Set(typeDeclarations.map(({ name }) => name))
 const textStyles = typeDeclarations
   .filter(({ name }) => !name.endsWith('-line-height'))
@@ -207,7 +227,7 @@ const textStyles = typeDeclarations
     const style = name.slice('text-'.length)
     if (!styles[style]) throw new Error(`Add --${name} to the styles in scripts/elyx-tokens.mjs`)
     const leading = `${name}-line-height`
-    return { name: style, caption: styles[style], size: name, leading: typeNames.has(leading) ? leading : undefined }
+    return { name: style, caption: styles[style], size: name, leading: typeNames.has(leading) ? leading : undefined, weight: fontStyle(look(style, 'font-weight')), tracking: tracking(look(style, 'letter-spacing')) }
   })
 // A line height is a multiple of the size, or a fixed line, such as control text’s 20px. Elyx takes line height only
 // as a multiple, so a fixed line becomes one: the line over its text style’s size, in each context
@@ -324,7 +344,9 @@ const textLayer = (style, index) =>
     contents: `"${style.name[0].toUpperCase()}${style.name.slice(1)}"`,
     'font-size': `t.typography.${style.size}`,
     'font-family': `f.fonts.${face}`,
+    'font-style': style.weight,
     'line-height': style.leading && `t.typography.${style.leading}`,
+    'letter-spacing': style.tracking,
   })
 
 const files = {

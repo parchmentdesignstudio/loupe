@@ -11,12 +11,18 @@ export dark-colors = tokens : base.colors {
   ink: base.colors.cream-95,
   muted: base.colors.cream-80,
   danger: base.colors.red-81,
-  // Marks on ink or the accent, such as a button's text or a checkbox's tick
+  // Marks on ink, such as a button's text or a checkbox's tick
   paper: base.colors.pine-20,
-  // What a page leads with, in apricot rather than a button’s marigold. It stays apricot in the dark, where paper turns dark
-  accent: base.colors.apricot-60,
+  // What a page leads with, and what marks the current page or today: marigold, as a primary button is, in both themes
+  accent: base.colors.marigold-83,
   // The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on
   highlight: opacity(base.colors.olive-91, 24%),
+  // A primary button's fill, marigold, and a quiet button's, slate, each with the ink on it. Both themes share them,
+  // as the fills stay light
+  primary: base.colors.marigold-83,
+  on-primary: base.colors.pine-26,
+  quiet: base.colors.slate-86,
+  on-quiet: base.colors.pine-26,
   // The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
   // overlay are white, and shadows part them. In the dark, each is lighter than the one below, starting near black
   // so there's room above the controls for hover and what's chosen
