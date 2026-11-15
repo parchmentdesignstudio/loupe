@@ -7,6 +7,7 @@ import {
 	Breadcrumb,
 	Breadcrumbs,
 	Button,
+	Code,
 	Link,
 	Navigation,
 	NavigationTree,
@@ -27,6 +28,8 @@ import { type Crumb, forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
 import { type Entry, areas, blocks, library } from './stories.js';
 import { Category, categoryId } from './blocks/card.js';
+import { useBuilt } from './playground.js';
+import { highlight, useHighlight } from '../src/shiki.js';
 
 
 const subscribe = (onChange: () => void) => {
@@ -249,15 +252,45 @@ function Stories({ entry, heading: Heading }: { entry: Entry; heading: 'h2' | 'h
 	));
 }
 
+// A part of the page's introduction, headed as a story is
+function Part({ name, children }: { name: string; children: ReactNode }) {
+	return (
+		<section className="flex flex-col gap-3 pt-6">
+			<h2 className="font-sans text-label text-muted">{name}</h2>
+			<div className="border-t border-bleed/8 pt-4">{children}</div>
+		</section>
+	);
+}
+
+// What the page's playground builds, highlighted, and following it as its controls change
+function Built() {
+	const code = useBuilt();
+	const html = useHighlight(code ?? '', { language: 'tsx' });
+	return code ? (
+		<Part name="Component">
+			<Code code={code} html={html} copyIcon={<Icon name="square-on-square" />} copiedIcon={<Icon name="checkmark" />} />
+		</Part>
+	) : null;
+}
+
+// The page's import line, or how to use what it shows, as a block like the Component one below it
+function Usage({ code }: { code: string }) {
+	const html = useHighlight(code, { language: 'tsx' });
+	return <Code code={code} html={html} copyIcon={<Icon name="square-on-square" />} copiedIcon={<Icon name="checkmark" />} />;
+}
+
 // The page's name and what it is, above the stories, so the columns beside them start level with the first
 function Title({ entry }: { entry?: Entry }) {
 	return entry ? (
 		<header className="flex flex-col gap-2">
 			<h1 className="text-title">{entry.name}</h1>
-			<p className="text-muted">{entry.description}</p>
+			<p className="text-pretty text-muted">{entry.description}</p>
 			{(entry.exports || entry.usage) && (
-				<code className="font-mono text-label text-muted">{entry.exports ? `import { ${entry.exports.join(', ')} } from '@parchment/ui'` : entry.usage}</code>
+				<Part name="Import">
+					<Usage code={entry.exports ? `import { ${entry.exports.join(', ')} } from '@parchment/ui'` : (entry.usage ?? '')} />
+				</Part>
 			)}
+			<Built />
 		</header>
 	) : (
 		<header className="flex flex-col gap-2">
@@ -392,3 +425,8 @@ createRoot(document.getElementById('root')!).render(
 		<Root />
 	</StrictMode>,
 );
+
+// Shiki and its TSX grammar, which highlight only imports when it's first called, loaded once the page is idle, so the
+// first Code block to need them doesn't wait. Safari has no requestIdleCallback, so it waits a moment instead
+const whenIdle = (task: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(task) : setTimeout(task, 1000));
+whenIdle(() => void highlight('', { language: 'tsx' }));

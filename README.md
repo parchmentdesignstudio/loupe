@@ -207,18 +207,22 @@ import { Code } from '@parchment/ui'
 import { useHighlight } from '@parchment/ui/shiki'
 
 const html = useHighlight(source, { language: 'tsx', lineNumbers: true })
-<Code code={source} html={html} title="Toolbar.tsx" />
+<Code code={source} html={html} title="src/Toolbar.tsx" copyIcon={<Icon name="square-on-square" />} copiedIcon={<Icon name="checkmark" />} />
 ```
 
-A site that highlights as it builds, such as with `@shikijs/rehype`, passes Loupe's theme and transformers to its own Shiki instead, alongside any of Shiki's, such as `@shikijs/transformers`:
+The title sits on a bar above the code, as an editor's tab does. A path shows its folders quieter than its file, and a diff shows how many lines it removes and adds beside it. Copy is the word unless it's given `copyIcon`, and then an icon with its name in a tooltip, swapped for `copiedIcon` once it's copied. Without a title, Copy floats in the corner.
+
+A site that highlights as it builds, such as with `@shikijs/rehype`, passes Loupe's theme and transformers to its own Shiki instead:
 
 ```js
 import { codeTheme, codeTransformers } from '@parchment/ui/shiki'
 
-[rehypeShiki, { theme: codeTheme, transformers: [...codeTransformers(), transformerNotationDiff()] }]
+[rehypeShiki, { theme: codeTheme, transformers: codeTransformers() }]
 ```
 
-The theme names roles, not colours: `--color-code-keyword`, `-string`, `-constant`, `-function`, `-type`, `-builtin`, `-tag`, `-comment`, `-text` and `-ground`, each a `light-dark()` in `tokens.css`, so one theme covers both modes. To restyle code, set those tokens, or use iamsteve's or mcknny's with `theme="iamsteve"` on a `Code` or `data-code-theme="mcknny"` on anything around it. Loupe's transformers highlight Tailwind's `@theme` and bare custom properties as CSS, and number lines with `showLineNumbers` in a code fence's meta, or `showLineNumbers=12` to start at 12.
+Lines can be marked out, and `Code` styles each mark. `{6-8}` in a fence's meta highlights lines 6 to 8, and `/gap/` a word. In the code, a comment ending a line marks it: `// [!code highlight]`, `[!code ++]` and `[!code --]` for a diff, `[!code focus]` to fade the rest until the block's hovered, and `[!code error]` or `[!code warning]`. Copy leaves the notes out. In the browser, pass the meta as `useHighlight(source, { meta: '{6-8}' })`. The marks come from `@shikijs/transformers`, which a site installs alongside Shiki.
+
+The theme names roles, not colours: `--color-code-keyword`, `-string`, `-constant`, `-function`, `-type`, `-builtin`, `-tag`, `-comment` and `-text`, each a `light-dark()` in `tokens.css`, so one theme covers both modes. The ground is a control's fill, white in the light and a step above the page in the dark, unless `--code-ground` sets another. Marked lines take `--color-code-mark`, `-add` and `-remove` for their ground, and the same with `-edge` for the line's bar, its number and the diff's counts. A removal is striped as well as tinted, so it reads apart from an addition by more than its colour, and a word marked on a changed line takes the line's tint again. To restyle code, set those tokens, or use iamsteve's or mcknny's with `theme="iamsteve"` on a `Code` or `data-code-theme="mcknny"` on anything around it. Loupe's transformers highlight Tailwind's `@theme` and bare custom properties as CSS, and number lines with `showLineNumbers` in a code fence's meta, or `showLineNumbers=12` to start at 12.
 
 ### Writing a component
 

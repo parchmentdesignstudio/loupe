@@ -29,11 +29,15 @@
     "elyx:css": "node elyx/build-css.ts"
   },
   "peerDependencies": {
+    "@shikijs/transformers": ">=4",
     "react": ">=19",
     "react-dom": ">=19",
     "shiki": ">=4"
   },
   "peerDependenciesMeta": {
+    "@shikijs/transformers": {
+      "optional": true
+    },
     "shiki": {
       "optional": true
     }
@@ -45,6 +49,7 @@
   },
   "devDependencies": {
     "@parchment/icons": "workspace:*",
+    "@shikijs/transformers": "^4.6.0",
     "@tailwindcss/node": "^4.3.3",
     "@tailwindcss/oxide": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",

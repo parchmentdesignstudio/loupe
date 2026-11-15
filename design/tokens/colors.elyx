@@ -146,6 +146,9 @@ export colors = tokens {
   code-builtin: teal-48,
   // JSX and HTML tags
   code-tag: pink-56,
+  code-mark-edge: yellow-40,
+  code-add-edge: green-46,
+  code-remove-edge: red-50,
   // Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
   // ink would grey the linen ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
   // as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on
