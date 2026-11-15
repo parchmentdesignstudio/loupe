@@ -407,7 +407,11 @@ function read(root, ui, packages) {
 			const key = nameOf(member.key);
 			if (shape.props.has(key)) continue;
 			const type = member.type === 'TSPropertySignature' ? member.typeAnnotation && typeOf(source, member.typeAnnotation.typeAnnotation) : textOf(source, member).slice(member.key.end - member.start).replace(/;$/, '');
-			shape.props.set(key, { name: key, type, required: !member.optional || undefined, doc: docOf(source, member.start) });
+			// A union of strings or numbers, such as 'dot' | 'badge' or 20 | 24, is a set of options, as a variant is
+			const literal = /^(?:'[^']*'|-?\d+(?:\.\d+)?)$/;
+			const parts = type?.split('|').map((part) => part.trim());
+			const options = parts?.every((part) => literal.test(part)) ? parts.map((part) => part.replace(/^'|'$/g, '')) : undefined;
+			shape.props.set(key, { name: key, ...(options ? { options } : { type }), required: !member.optional || undefined, doc: docOf(source, member.start) });
 		}
 	};
 

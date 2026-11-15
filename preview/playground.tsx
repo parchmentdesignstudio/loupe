@@ -1,5 +1,5 @@
 import { type ReactNode, type Ref, createContext, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { type IconName, type IconVariant, iconNames } from '@parchment/icons';
+import { type IconName, type IconVariant, iconNames, matchesIcon } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, ComboBox, ListBoxItem, NumberField, Select, Switch, TextField, ToggleButton, ToggleButtonGroup } from '../src/index.js';
 import { hex, surface } from './brand.js';
@@ -192,13 +192,13 @@ export function SwitchControl({ label, value, onChange }: { label: string; value
 	);
 }
 
-/** Every 16px icon in a set, to type into and filter */
+/** Every 16px icon in a set, to type into and filter, by its name or what it's for */
 export function IconPicker({ label, value, onChange, variant = 'solid' }: { label: string; value: IconName; onChange: (name: IconName) => void; variant?: IconVariant }) {
 	const items = iconNames({ variant, size: 16 }).map((name) => ({ id: name }));
 	useRemembered(label, value, onChange, (stored) => items.some((item) => item.id === stored));
 	return (
 		<ControlRow label={label}>
-			<ComboBox aria-label={label} defaultItems={items} selectedKey={value} onSelectionChange={(key) => key && onChange(key as IconName)} className="w-56">
+			<ComboBox aria-label={label} defaultItems={items} defaultFilter={matchesIcon} selectedKey={value} onSelectionChange={(key) => key && onChange(key as IconName)} className="w-56">
 				{(item) => (
 					<ListBoxItem id={item.id} textValue={item.id}>
 						<Icon name={item.id} variant={variant} />

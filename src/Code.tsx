@@ -14,6 +14,11 @@ export const code = tv({
 		// A path's folders, quieter than its file
 		folder: 'font-normal text-code-comment',
 		changes: 'flex gap-1.5 font-mono text-label tabular-nums',
+		// Copy's icon and the one that takes its place, stacked, so one blurs, fades and shrinks a little as it goes while
+		// the other comes in from as small. Only the fade with reduced motion. A line high, as Button gives an icon of its
+		// own, so the button stays square
+		swap: 'grid h-[1lh] place-items-center *:col-start-1 *:row-start-1 *:transition-[opacity,filter,scale] *:duration-250 *:ease-out motion-reduce:*:transition-opacity',
+		gone: 'scale-90 opacity-0 blur-[3px] motion-reduce:scale-100 motion-reduce:blur-none',
 		// Shiki's <pre>, or a plain one before it's highlighted, laid out the same, so nothing moves when it is. Its own
 		// background goes, for the block's. Line numbers, from Loupe's transformer, sit in a column that stays as the lines scroll
 		body: [
@@ -49,13 +54,14 @@ export const code = tv({
 			'[&_pre.has-focused:hover_:is(.line,[data-line-number]):not(.focused)]:opacity-100 [&_pre.has-focused:hover_:is(.line,[data-line-number]):not(.focused)]:blur-none',
 		].join(' '),
 		plain: 'px-4 whitespace-pre',
-		// Copy, without a title to sit beside, in a column of its own beside the code, so the code scrolls short of it
-		// rather than under it. Set as the code is, with Copy centred on a line's height, so it's level with the first line
-		aside: 'flex shrink-0 bg-code-ground py-3 ps-2 pe-1.5 font-mono text-label/5',
-		line: 'flex h-[1lh] items-center',
+		// Copy, without a title to sit beside, over the code's corner, so the code scrolls the block's full width. Set as
+		// the code is, with Copy centred on a line's height, so it's level with the first line. Outlined, on the code's
+		// ground, so a line that runs under it stops at its edge
+		aside: 'pointer-events-none absolute end-0 top-0 py-3 pe-2 font-mono text-label/5',
+		line: 'flex h-[1lh] items-center [&>*]:pointer-events-auto [&>*]:bg-code-ground',
 	},
 	variants: {
-		hasBar: { true: { body: 'relative shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--drop-raised)]' }, false: { base: 'flex-row', body: 'min-w-0 flex-1' } },
+		hasBar: { true: { body: 'relative shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--drop-raised)]' } },
 	},
 });
 
@@ -109,11 +115,11 @@ const changesIn = (html = '') => ({ removed: html.match(/class="line diff remove
 
 /** A block of code, highlighted, with a title, what a diff changes, and Copy. Long code scrolls inside it, both ways */
 export function Code({ code: text, html, title, theme, isCopyable = true, copyIcon, copiedIcon, className }: CodeProps) {
-	const { base, bar, title: name, folder, changes, body, plain, aside, line } = code({ hasBar: title != null });
+	const { base, bar, title: name, folder, changes, swap, gone, body, plain, aside, line } = code({ hasBar: title != null });
 	const [isCopied, setCopied] = useState(false);
 	useEffect(() => {
 		if (!isCopied) return;
-		const timer = setTimeout(() => setCopied(false), 1500);
+		const timer = setTimeout(() => setCopied(false), 1000);
 		return () => clearTimeout(timer);
 	}, [isCopied]);
 	const label = isCopied ? 'Copied' : 'Copy';
@@ -122,13 +128,16 @@ export function Code({ code: text, html, title, theme, isCopyable = true, copyIc
 		isCopyable &&
 		(copyIcon ? (
 			<TooltipTrigger>
-				<Button variant="ghost" size="small" aria-label={label} onPress={onCopy}>
-					{isCopied ? (copiedIcon ?? copyIcon) : copyIcon}
+				<Button variant={title == null ? 'outline' : 'ghost'} size="small" aria-label={label} onPress={onCopy}>
+					<span className={swap()}>
+						<span className={isCopied ? gone() : undefined}>{copyIcon}</span>
+						<span className={isCopied ? undefined : gone()}>{copiedIcon ?? copyIcon}</span>
+					</span>
 				</Button>
 				<Tooltip>{label}</Tooltip>
 			</TooltipTrigger>
 		) : (
-			<Button variant="ghost" size="small" onPress={onCopy}>
+			<Button variant={title == null ? 'outline' : 'ghost'} size="small" onPress={onCopy}>
 				{label}
 			</Button>
 		));
