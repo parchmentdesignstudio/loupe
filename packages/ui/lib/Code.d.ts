@@ -4,10 +4,6 @@ export declare const code: import("tailwind-variants").TVReturnType<{
         true: {
             body: string;
         };
-        false: {
-            base: string;
-            body: string;
-        };
     };
 }, {
     base: string;
@@ -15,6 +11,8 @@ export declare const code: import("tailwind-variants").TVReturnType<{
     title: string;
     folder: string;
     changes: string;
+    swap: string;
+    gone: string;
     body: string;
     plain: string;
     aside: string;

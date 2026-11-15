@@ -112,8 +112,6 @@ export interface Entry {
 	exports?: string[];
 	usage?: string;
 	stories: Story[];
-	/** The lead export drawn with some of its props, so the API reference can preview an option, as Button's variant set to ghost */
-	sample?: (props: Record<string, unknown>) => ReactNode;
 	/** For an area of loupe with nothing in it yet, shown in place of the stories */
 	empty?: () => ReactNode;
 }
@@ -422,7 +420,6 @@ const groups: Group[] = [
 				description: 'Any action, as primary in marigold, secondary in white, quiet in slate, outline or ghost, with an icon at either end or just an icon, and rounded corners or full ones for a pill or a circle',
 				summary: 'Any action, in marigold, white or slate, outline or ghost, with or without an icon',
 				exports: ['Button'],
-				sample: (props) => <Button {...props}>New project</Button>,
 				stories: [
 					{ name: 'Build one', render: ButtonPlayground },
 				],

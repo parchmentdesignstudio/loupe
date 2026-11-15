@@ -27,13 +27,13 @@ describe('SearchField', () => {
 		expect(field.value).toBe('');
 	});
 
-	it('hides its clear button while empty', async () => {
+	it('takes its clear button away while empty, so the placeholder has its room', async () => {
 		const user = userEvent.setup();
 		render(<SearchField label="Typeface" />);
 		const clear = screen.getByRole('button', { name: /clear/i, hidden: true });
-		expect(clear.className).toContain('invisible');
+		expect(clear.className).toContain('hidden');
 		await user.type(screen.getByRole('searchbox'), 'N');
-		expect(clear.className).not.toContain('invisible');
+		expect(clear.className).not.toContain('hidden');
 	});
 
 	it('sends what’s typed with Enter', async () => {

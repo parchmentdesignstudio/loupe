@@ -34,13 +34,15 @@ describe('Code', () => {
 		await expectAccessible(container);
 	});
 
-	it('copies with an icon, named in a tooltip, and swaps it once copied', async () => {
+	it('copies with an icon, named in a tooltip, and fades it for the copied one once copied', async () => {
 		const writeText = vi.fn().mockResolvedValue(undefined);
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
 		render(<Code code="a" title="a.ts" copyIcon={<svg data-testid="copy" />} copiedIcon={<svg data-testid="copied" />} />);
+		expect(screen.getByTestId('copied').parentElement?.className).toContain('opacity-0');
 		await userEvent.click(screen.getByRole('button', { name: 'Copy' }));
 		expect(await screen.findByRole('button', { name: 'Copied' })).toBeTruthy();
-		expect(screen.getByTestId('copied')).toBeTruthy();
+		expect(screen.getByTestId('copy').parentElement?.className).toContain('opacity-0');
+		expect(screen.getByTestId('copied').parentElement?.className).not.toContain('opacity-0');
 	});
 
 	it('takes another site’s colours by name', () => {

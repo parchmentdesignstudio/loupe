@@ -26,3 +26,8 @@ export declare function resolveIcon(name: IconName, options?: Omit<IconOptions, 
 export declare function iconAttributes(options?: Omit<IconOptions, 'variant'>): Record<string, string | number>
 export declare function toSvg(name: IconName, options?: IconOptions & { class?: string }): string
 export declare function iconNames(filter?: { variant?: IconVariant; size?: IconSize }): IconName[]
+
+/** What an icon's for as well as what it shows, so a search for copy finds square-on-square */
+export declare function iconTerms(name: IconName): string[]
+/** Whether a search, such as a picker's, finds an icon, by its name or what it's for. Each word has to match */
+export declare function matchesIcon(name: string, search: string): boolean

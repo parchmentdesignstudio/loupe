@@ -52,9 +52,10 @@ A part can be drawn whole and cut by a mask, such as a ferry’s hull drawn down
 | `sprite/<variant>-<size>.svg` | One sprite per set, for `<use href="sprite/line-16.svg#house">` |
 | `lib/astro/Icon.astro` | Astro component |
 | `lib/react/index.js` | React component |
-| `lib/index.js` | `toSvg()`, `resolveIcon()` and `iconNames()` for anything else |
+| `lib/index.js` | `toSvg()`, `resolveIcon()` and `iconNames()` for anything else, and `matchesIcon()` to search icons by name or what they're for |
 | `icons.json` | Every name, by variant and size |
 | `parts.json` | The moving parts each icon names, for animation |
+| `terms.js` | What each icon's for, by hand, such as copy for `square-on-square`. Add a new icon's here when its name says what it looks like |
 
 Icons draw in `currentColor`. Knock-out shapes use `--icon-fill`, the page background (`Canvas`) unless a site sets it, so set `color-scheme` for dark mode (`none` turns it off). A few line icons use `--icon-fill-bg`, a tint of the icon’s colour. The success icons fill with `--icon-success`, falling back to `--icon-fill`.
 

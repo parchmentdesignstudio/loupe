@@ -1,10 +1,13 @@
-import { useId } from 'react';
+import { type ReactNode, useId } from 'react';
 import { Focusable } from 'react-aria-components';
 import details from 'virtual:details';
 import { Popover, PreviewTrigger } from '../src/index.js';
 import type { Detail, Prop } from './details.mjs';
 import { Aria } from './inspector.js';
 import type { Entry } from './stories.js';
+import { samples } from './samples.js';
+
+type Sample = (props: Record<string, unknown>) => ReactNode;
 
 const documented = (detail?: Detail): detail is Detail => detail?.kind === 'component' && Boolean(detail.props?.length || detail.rest?.length);
 
@@ -16,9 +19,12 @@ const chip = 'rounded-md bg-bleed/8 px-1.5 py-0.5 font-mono text-label text-ink'
 // Text with a dotted underline rather than a chip, as a term with a definition behind it, so it reads as something to hover
 const previewable = 'cursor-default rounded-xs font-mono text-label text-ink underline decoration-bleed/40 decoration-dotted decoration-1 underline-offset-4 outline-offset-2 outline-ink transition-[text-decoration-color] duration-150 hover:decoration-ink focus-visible:outline-2 motion-reduce:transition-none';
 
+// A number as the prop takes it, as Avatar's size of 32, rather than the text it's listed as
+const valueOf = (option: string) => (/^-?\d+(?:\.\d+)?$/.test(option) ? Number(option) : option);
+
 // An option, and with a sample, the component drawn with it on hover, focus or a long press. A button, so it can be
 // tabbed to and a screen reader says it opens something. Focusable lends it the trigger's handlers
-function Option({ prop, value, sample }: { prop: string; value: string; sample?: Entry['sample'] }) {
+function Option({ prop, value, sample }: { prop: string; value: string; sample?: Sample }) {
 	if (!sample) return <code className={chip}>{value}</code>;
 	return (
 		<PreviewTrigger>
@@ -28,13 +34,13 @@ function Option({ prop, value, sample }: { prop: string; value: string; sample?:
 				</button>
 			</Focusable>
 			<Popover placement="top" showArrow className="p-4">
-				{sample({ [prop]: value })}
+				{sample({ [prop]: valueOf(value) })}
 			</Popover>
 		</PreviewTrigger>
 	);
 }
 
-function Type({ prop, sample }: { prop: Prop; sample?: Entry['sample'] }) {
+function Type({ prop, sample }: { prop: Prop; sample?: Sample }) {
 	if (prop.options)
 		return (
 			<span className={sample ? 'flex flex-wrap gap-x-3 gap-y-1' : 'flex flex-wrap gap-1'}>
@@ -48,7 +54,7 @@ function Type({ prop, sample }: { prop: Prop; sample?: Entry['sample'] }) {
 
 const cell = 'px-3 py-2.5 align-top first:pl-4 last:pr-4';
 
-function Table({ detail, sample }: { detail: Detail; sample?: Entry['sample'] }) {
+function Table({ detail, sample }: { detail: Detail; sample?: Sample }) {
 	const props = detail.props ?? [];
 	return (
 		// Wider than a phone, so it scrolls on its own rather than the page
@@ -123,7 +129,7 @@ export function Reference({ entry }: { entry: Entry }) {
 				<section key={detail.name} className="flex flex-col gap-3">
 					<h3 className="font-mono text-control font-medium">{detail.name}</h3>
 					{detail.doc && <p className="text-label text-muted">{detail.doc}</p>}
-					<Table detail={detail} sample={detail.name === entry.exports?.[0] ? entry.sample : undefined} />
+					<Table detail={detail} sample={samples[detail.name]} />
 				</section>
 			))}
 		</section>
