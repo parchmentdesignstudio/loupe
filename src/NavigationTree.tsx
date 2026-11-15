@@ -7,9 +7,9 @@ import {
 	type NavigationTreeHeaderProps,
 	NavigationTreeItem as AriaNavigationTreeItem,
 	NavigationTreeItemContent as AriaNavigationTreeItemContent,
-	type NavigationTreeItemContentProps,
+	type NavigationTreeItemContentProps as AriaNavigationTreeItemContentProps,
 	type NavigationTreeItemProps,
-	type NavigationTreeProps,
+	type NavigationTreeProps as AriaNavigationTreeProps,
 	NavigationTreeSection as AriaNavigationTreeSection,
 	type NavigationTreeSectionProps,
 	type Key,
@@ -21,15 +21,17 @@ import { composeClassName, focusRing, tv } from './tv.js';
 
 // The app only moves selectedRoute once the page has changed, so a pressed link would drop back to its hover fill in
 // between and flicker. Each link reports its press here, and shows as current until selectedRoute moves on
+export type { NavigationTreeHeaderProps, NavigationTreeItemProps, NavigationTreeSectionProps };
+
 const TreeContext = createContext<{ press: (event: PressEvent) => void; hasTitles: boolean } | null>(null);
 
-export interface LoupeNavigationTreeProps<T extends object> extends NavigationTreeProps<T> {
+export interface NavigationTreeProps<T extends object> extends AriaNavigationTreeProps<T> {
 	/** The top-level items are small titles that fold what's under them, and what's under them starts at the edge */
 	hasTitles?: boolean;
 }
 
 /** Links to the pages of a site or tool, in sections. The item whose href matches selectedRoute is the current page */
-export function NavigationTree<T extends object>({ hasTitles = false, ...props }: LoupeNavigationTreeProps<T>) {
+export function NavigationTree<T extends object>({ hasTitles = false, ...props }: NavigationTreeProps<T>) {
 	const [pressed, setPressed] = useState<{ href: string; from: string | null | undefined } | null>(null);
 	const selectedRoute = pressed && pressed.from === props.selectedRoute ? pressed.href : props.selectedRoute;
 
@@ -87,7 +89,7 @@ export const navigationTreeLink = tv({
 });
 
 // What React Aria hands an item's content, for its tree's state
-type Values = Parameters<Extract<NavigationTreeItemContentProps['children'], (...args: never[]) => unknown>>[0];
+type Values = Parameters<Extract<AriaNavigationTreeItemContentProps['children'], (...args: never[]) => unknown>>[0];
 type State = Values['state'];
 
 // Where each depth's text and fill start, in px. Each depth steps in 12px, and its line runs down under the first letter
@@ -160,12 +162,12 @@ function Rails({ state, id, depth, isCurrent }: { state: State; id: Key; depth: 
  * Each depth steps in 12px, under a line down its folder. In a tree with titles, the top level are titles, and a title that
  * isn't a link folds when it's pressed
  */
-export interface LoupeNavigationTreeItemContentProps extends NavigationTreeItemContentProps {
+export interface NavigationTreeItemContentProps extends AriaNavigationTreeItemContentProps {
 	/** An icon before the text, in its colour, such as one for each title */
 	icon?: ReactNode;
 }
 
-export function NavigationTreeItemContent({ children, icon }: LoupeNavigationTreeItemContentProps) {
+export function NavigationTreeItemContent({ children, icon }: NavigationTreeItemContentProps) {
 	const tree = useContext(TreeContext);
 	return (
 		<AriaNavigationTreeItemContent>
@@ -206,7 +208,7 @@ export function NavigationTreeItemContent({ children, icon }: LoupeNavigationTre
 								slot="chevron"
 								className={(state) =>
 									// The triangle sits right by the text, in its colour, with the space to press it reaching past it
-									focusRing({ ...state, className: ['relative flex size-4 shrink-0 cursor-default items-center justify-center rounded-xs outline-offset-1 after:absolute after:-inset-1', isTitle ? 'text-muted' : 'text-ink'].join(' ') })
+									focusRing({ ...state, className: ['relative flex size-4 shrink-0 cursor-default items-center justify-center rounded-sm outline-offset-1 after:absolute after:-inset-1', isTitle ? 'text-muted' : 'text-ink'].join(' ') })
 								}
 							>
 								<TriangleDown className={values.isExpanded ? triangle : `${triangle} -rotate-90 rtl:rotate-90`} />

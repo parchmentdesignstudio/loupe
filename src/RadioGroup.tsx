@@ -28,6 +28,8 @@ const dot = tv({
 });
 
 /** One option in a RadioGroup, with its label as children */
+export type { RadioProps };
+
 export function Radio(props: RadioProps) {
 	return (
 		<AriaRadio {...props} className={composeRenderProps(props.className, (className, state) => choice({ ...state, className }))}>

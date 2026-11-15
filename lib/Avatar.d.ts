@@ -91,7 +91,7 @@ export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, '
     /** Avatars, in the order they overlap */
     children: ReactNode;
     /** How many avatars to show. Past it, the last one shows how many more there are, as in +3 */
-    max?: number;
+    maxVisible?: number;
     /** Every avatar's size, in pixels */
     size?: AvatarSize;
     /** Every avatar's shape */
@@ -103,4 +103,4 @@ export declare const avatarGroup: import("tailwind-variants").TVReturnType<{}, u
  * --avatar-ring to that colour off the panel. It's named for screen readers by the people in it, as in “Sam Smith,
  * Alex Lee and 3 others”, or by an aria-label
  */
-export declare function AvatarGroup({ children, max, size, shape, className, ...props }: AvatarGroupProps): import("react").JSX.Element;
+export declare function AvatarGroup({ children, maxVisible, size, shape, className, ...props }: AvatarGroupProps): import("react").JSX.Element;

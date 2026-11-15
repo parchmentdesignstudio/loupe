@@ -25,7 +25,7 @@ const composer = tv({
 
 export interface ComposerProps {
 	/** Names the field for screen readers, as it has no visible label */
-	label: string;
+	'aria-label': string;
 	placeholder?: string;
 	/** Names the send button */
 	submitLabel?: string;
@@ -43,7 +43,7 @@ export interface ComposerProps {
 }
 
 /** A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line, and an empty message can't be sent */
-export function Composer({ label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, isDisabled = false, className }: ComposerProps) {
+export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, isDisabled = false, className }: ComposerProps) {
 	const [draft, setDraft] = useState(defaultValue);
 	const message = value ?? draft;
 	const empty = message.trim() === '';

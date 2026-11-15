@@ -341,7 +341,7 @@ export function Curls() {
 }
 
 /** The library’s roles re-set for a brand colour: ink and its tints become the mark's colour, and the fills a tonal
-    shade, so the components take on the colour without changing. Primary and accent keep their own fills */
+    shade, so the components take on the colour without changing. Primary and quiet keep their own fills */
 export function surface(background: string, page: string): CSSProperties {
 	const isDark = oklch(background).l < 0.6;
 	return {
@@ -386,7 +386,7 @@ export function OnColour() {
 					</div>
 					<div className="flex flex-wrap gap-2">
 						<Button variant="primary">Start a project</Button>
-						<Button variant="accent">Book a call</Button>
+						<Button variant="quiet">Book a call</Button>
 						<Button variant="secondary" start={<Icon name="envelope" />}>
 							Email
 						</Button>
@@ -553,7 +553,7 @@ export function System() {
 	);
 }
 
-// The brand's colours as the button's fill, each set through the --fill that primary and accent read. Accent's
+// The brand's colours as the button's fill, each set through the --fill that primary and quiet read. Quiet's
 // --rim keeps the fill's hue, so the border follows each colour without leaning orange
 const buttonFills: Name[] = ['Marigold', 'Slate', 'Apricot', 'Rose', 'Claret', 'Olive', 'Pine'];
 const buttonGrounds: [string, Name | 'Own', Name][] = [
@@ -580,7 +580,7 @@ export function BrandButtons() {
 					const background = ground === 'Own' ? fill : ground;
 					return (
 						<div key={`${fill}-${label}`} style={surface(hex(background), ground === 'Own' ? textOn(hex(fill)) : hex(ink))} className="flex items-center justify-center rounded-xl px-3 py-5">
-							<Button variant="accent" style={{ '--fill': hex(fill), color: textOn(hex(fill)) } as CSSProperties}>
+							<Button variant="quiet" style={{ '--fill': hex(fill), color: textOn(hex(fill)) } as CSSProperties}>
 								Start a project
 							</Button>
 						</div>

@@ -9,7 +9,7 @@ export interface MenuProps<T> extends AriaMenuProps<T> {
 export declare function Menu<T extends object>({ placement, ...props }: MenuProps<T>): import("react").JSX.Element;
 export interface MenuItemProps extends AriaMenuItemProps {
     /** danger for an action that destroys something */
-    variant?: 'default' | 'danger';
+    variant?: 'danger';
 }
 export declare function MenuItem({ variant, ...props }: MenuItemProps): import("react").JSX.Element;
 /** Menu items grouped under a Header, which goes first inside it */

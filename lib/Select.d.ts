@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { type SelectProps as AriaSelectProps } from 'react-aria-components';
-import { type FieldSize, type FieldTextProps, type FieldVariant } from './Field.js';
-export declare const trigger: import("tailwind-variants").TVReturnType<{
+import { type Size, type FieldTextProps, type FieldVariant } from './Field.js';
+export declare const selectTrigger: import("tailwind-variants").TVReturnType<{
     variant: {
         raised: string;
         filled: string;
@@ -34,7 +34,7 @@ export interface SelectProps<T extends object> extends Omit<AriaSelectProps<T>, 
     /** Raised, white with a lift, by default. Filled is flat and grey, for a dense panel of settings */
     variant?: FieldVariant;
     /** 32px tall, or 28px when small, as a button is */
-    size?: FieldSize;
+    size?: Size;
 }
 /** Picks one option from a list that opens below it */
 export declare function Select<T extends object>({ label, description, errorMessage, items, children, variant, size, ...props }: SelectProps<T>): import("react").JSX.Element;

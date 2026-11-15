@@ -12,7 +12,7 @@ export declare const readOnly = "in-data-readonly:bg-transparent in-data-readonl
  * a raised card without saying which */
 export type FieldVariant = 'raised' | 'filled';
 /** 32px tall, or 28px when small, as a button is */
-export type FieldSize = 'medium' | 'small';
+export type Size = 'medium' | 'small';
 /** The props a field takes for the text around its control */
 export interface FieldTextProps {
     label?: ReactNode;

@@ -46,7 +46,7 @@ export function ComposerPlayground() {
 			}
 		>
 			<Composer
-				label="Your message"
+				aria-label="Your message"
 				placeholder={placeholders[placeholder]}
 				submitLabel={submitLabel}
 				submitIcon={<Icon name={submitIcon} />}

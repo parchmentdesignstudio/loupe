@@ -9,7 +9,7 @@ import {
 	type DateValue,
 	Group,
 } from 'react-aria-components';
-import { Calendar, RangeCalendar } from './Calendar.js';
+import { Calendar, RangeCalendar, type VisibleDuration } from './Calendar.js';
 import { DateSegments, TimeField, dateInput } from './DateField.js';
 import { Dialog } from './Dialog.js';
 import { Description, FieldError, type FieldTextProps, Label } from './Field.js';
@@ -76,11 +76,11 @@ const useWide = () => useSyncExternalStore(subscribe, () => matchMedia(wide).mat
 
 export interface DateRangePickerProps<T extends DateValue> extends AriaDateRangePickerProps<T>, FieldTextProps {
 	/** How many months the calendar shows. Two where the window is at least 640px wide, otherwise one */
-	visibleMonths?: number;
+	visibleDuration?: VisibleDuration;
 }
 
 /** A start and end date, typed in one field or picked from a calendar that opens below it, two months at a time on wider screens */
-export function DateRangePicker<T extends DateValue>({ label, description, errorMessage, visibleMonths, ...props }: DateRangePickerProps<T>) {
+export function DateRangePicker<T extends DateValue>({ label, description, errorMessage, visibleDuration, ...props }: DateRangePickerProps<T>) {
 	const isWide = useWide();
 	return (
 		<AriaDateRangePicker {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
@@ -99,7 +99,7 @@ export function DateRangePicker<T extends DateValue>({ label, description, error
 			<FieldError>{errorMessage}</FieldError>
 			<Popover placement="bottom start">
 				<Dialog>
-					<RangeCalendar visibleDuration={{ months: visibleMonths ?? (isWide ? 2 : 1) }} pageBehavior="single" />
+					<RangeCalendar visibleDuration={visibleDuration ?? { months: isWide ? 2 : 1 }} pageBehavior="single" />
 				</Dialog>
 			</Popover>
 		</AriaDateRangePicker>

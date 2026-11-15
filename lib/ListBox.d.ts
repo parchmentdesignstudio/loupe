@@ -1,9 +1,9 @@
 import { type ListBoxItemProps, type ListBoxProps, type ListBoxSectionProps } from 'react-aria-components';
 import { type ReactNode } from 'react';
-export type { ListBoxSectionProps };
+export type { ListBoxItemProps, ListBoxProps, ListBoxSectionProps };
 /** A list of options, as in a select or combo box */
 export declare function ListBox<T extends object>(props: ListBoxProps<T>): import("react").JSX.Element;
-export declare const option: import("tailwind-variants").TVReturnType<{
+export declare const listBoxItem: import("tailwind-variants").TVReturnType<{
     isFocused: {
         true: string;
     };

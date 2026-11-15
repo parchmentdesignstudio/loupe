@@ -2,7 +2,7 @@ import { ListBox as AriaListBox, ListBoxItem as AriaListBoxItem, type ListBoxIte
 import { Children, type ReactNode } from 'react';
 import { Check } from './glyphs.js';
 
-export type { ListBoxSectionProps };
+export type { ListBoxItemProps, ListBoxProps, ListBoxSectionProps };
 import { composeClassName, tv } from './tv.js';
 
 /** A list of options, as in a select or combo box */
@@ -11,7 +11,7 @@ export function ListBox<T extends object>(props: ListBoxProps<T>) {
 }
 
 // One option in a list or menu. Keyboard and pointer both move the highlight, so focus shows as a fill
-export const option = tv({
+export const listBoxItem = tv({
 	base: 'group flex cursor-default items-center gap-3 rounded-sm px-3 py-1.5 text-control text-ink outline-0 select-none forced-color-adjust-none',
 	variants: {
 		isFocused: {
@@ -35,7 +35,7 @@ export function truncateText(children: ReactNode) {
 export function ListBoxItem(props: ListBoxItemProps) {
 	const textValue = props.textValue ?? (typeof props.children === 'string' ? props.children : undefined);
 	return (
-		<AriaListBoxItem {...props} textValue={textValue} className={composeRenderProps(props.className, (className, state) => option({ ...state, className }))}>
+		<AriaListBoxItem {...props} textValue={textValue} className={composeRenderProps(props.className, (className, state) => listBoxItem({ ...state, className }))}>
 			{composeRenderProps(props.children, (children, { isSelected }) => (
 				<>
 					<span className="flex min-w-0 flex-1 items-center gap-2 group-data-[selected]:font-medium">{truncateText(children)}</span>

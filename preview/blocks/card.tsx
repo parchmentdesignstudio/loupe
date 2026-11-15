@@ -60,7 +60,14 @@ export function Card({ fill = 'raised', media, title, description, actions, href
 				// Inert, as a component in it is there to be seen, and a second set of controls in the card would only confuse
 				<div
 					inert
-					className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[calc(var(--radius-2xl)---spacing(2))] bg-bleed/5 p-4 transition-colors duration-150 ease-out group-has-[a:hover]/card:bg-bleed/8 motion-reduce:transition-none"
+					className={[
+						'flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[calc(var(--radius-2xl)---spacing(2))] p-4 transition-colors duration-150 ease-out motion-reduce:transition-none',
+						// On a raised card in the dark, the area sinks to the ground's colour, so the raised components in it sit
+						// up off it rather than blending in
+						fill === 'raised'
+							? 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_5%,transparent),var(--color-ground))] group-has-[a:hover]/card:bg-[light-dark(color-mix(in_oklab,var(--bleed)_8%,transparent),color-mix(in_oklab,var(--color-ground),var(--bleed)_3%))]'
+							: 'bg-bleed/5 group-has-[a:hover]/card:bg-bleed/8',
+					].join(' ')}
 				>
 					{media}
 				</div>

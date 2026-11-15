@@ -5,7 +5,7 @@ export declare const button: import("tailwind-variants").TVReturnType<{
     variant: {
         primary: string[];
         secondary: string;
-        accent: string[];
+        quiet: string[];
         danger: string[];
         outline: string;
         ghost: string;
@@ -51,4 +51,6 @@ export interface ButtonProps extends AriaButtonProps, Pick<VariantProps<typeof b
  * A button for any action, with an icon at the start or end if it helps. With just an icon as its child it's square, or
  * a circle when its shape is full, and needs an aria-label. isPending spins while its action runs
  */
+/** How a button looks, from primary for the main action to ghost for the least */
+export type ButtonVariant = NonNullable<ButtonProps['variant']>;
 export declare function Button({ variant, shape, size, start, end, ...props }: ButtonProps): import("react").JSX.Element;

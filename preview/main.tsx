@@ -1,7 +1,8 @@
 import { Component, type ReactNode, StrictMode, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Icon } from '@parchment/icons/react';
-import manifest from '../package.json?raw';
+// Loupe's one version, which every package is released at (pnpm bump)
+import manifest from '../../../package.json?raw';
 import {
 	Breadcrumb,
 	Breadcrumbs,
@@ -120,9 +121,17 @@ function Sidebar({ current }: { current: string }) {
 	);
 }
 
-// The library's version, beside the logo in the sidebar and the phone bar
+// Loupe's version, beside the logo in the sidebar and the phone bar. Before 1.0 it's an alpha: usable, as React Aria
+// stands behind it, but not yet at the quality to rely on, which 1.0 will mark
+const isAlpha = version.startsWith('0.');
+
 function Version() {
-	return <span className="rounded-full bg-bleed/8 px-2 py-0.5 font-mono text-label text-muted">v{version}</span>;
+	return (
+		<span className="rounded-full bg-bleed/8 px-2 py-0.5 font-mono text-label text-muted">
+			v{version}
+			{isAlpha && ' alpha'}
+		</span>
+	);
 }
 
 // Three dots, as the icons have no ellipsis yet

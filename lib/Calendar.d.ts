@@ -67,7 +67,7 @@ export declare const calendarDay: import("tailwind-variants").TVReturnType<{
     mark: string;
 }, undefined, undefined, undefined, undefined>;
 /** Some of each month to show at once, as `{ months: 2 }` */
-type VisibleDuration = {
+export type VisibleDuration = {
     months?: number;
 };
 export interface CalendarProps<T extends DateValue> extends Omit<AriaCalendarProps<T>, 'visibleDuration'> {
@@ -92,4 +92,3 @@ export interface RangeCalendarProps<T extends DateValue> extends Omit<AriaRangeC
  * end. A range can't cross a date isDateUnavailable returns true for, unless allowsNonContiguousRanges is set
  */
 export declare function RangeCalendar<T extends DateValue>({ errorMessage, visibleDuration, ...props }: RangeCalendarProps<T>): import("react").JSX.Element;
-export {};

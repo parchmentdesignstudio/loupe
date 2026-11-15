@@ -7,7 +7,7 @@ import { ColorSwatch } from './ColorSwatch.js';
 import { Dialog } from './Dialog.js';
 import { field } from './Field.js';
 import { Popover } from './Popover.js';
-import { trigger } from './Select.js';
+import { selectTrigger } from './Select.js';
 import { tv } from './tv.js';
 
 const colorPicker = tv({ base: 'flex flex-col gap-1.5' });
@@ -40,7 +40,7 @@ export function ColorPicker({ label, 'aria-label': ariaLabel = 'Colour', childre
 							aria-label={label ? undefined : ariaLabel}
 							aria-describedby={label ? undefined : valueId}
 							// The swatch sits as far in from the edge as from the top, so it reads as part of the field
-							className={(state) => trigger({ ...state, className: 'pl-2' })}
+							className={(state) => selectTrigger({ ...state, className: 'pl-2' })}
 						>
 							<ColorSwatch className="size-4 rounded-sm" />
 							<span id={valueId} className="min-w-0 flex-1 truncate tabular-nums">

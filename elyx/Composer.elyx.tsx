@@ -7,5 +7,5 @@ const ArrowUp = () => (
 );
 
 export function Composer({ label = 'Your message', placeholder = 'Tell me what you’re working on' }: { label?: string; placeholder?: string }) {
-	return <UiComposer label={label} placeholder={placeholder} submitIcon={<ArrowUp />} onSubmit={() => {}} className="w-96" />;
+	return <UiComposer aria-label={label} placeholder={placeholder} submitIcon={<ArrowUp />} onSubmit={() => {}} className="w-96" />;
 }

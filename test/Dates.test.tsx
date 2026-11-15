@@ -80,7 +80,7 @@ describe('RangeCalendar', () => {
 	it('picks a range from the date range picker', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		british(<DateRangePicker label="Trip" visibleMonths={1} defaultValue={{ start: parseDate('2026-06-01'), end: parseDate('2026-06-02') }} onChange={onChange} />);
+		british(<DateRangePicker label="Trip" visibleDuration={{ months: 1 }} defaultValue={{ start: parseDate('2026-06-01'), end: parseDate('2026-06-02') }} onChange={onChange} />);
 		await user.click(screen.getByRole('button', { name: /Calendar/ }));
 		const grid = within(await screen.findByRole('dialog')).getByRole('grid');
 		await user.click(day(grid, 8));

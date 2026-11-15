@@ -183,7 +183,7 @@ export const examples: Record<string, () => ReactNode> = {
 			<ListBoxItem id="literata">Literata</ListBoxItem>
 		</ComboBox>
 	),
-	Composer: () => <Composer label="Your message" submitIcon={<Icon name="arrow-up" />} onSubmit={() => {}} className="w-56" />,
+	Composer: () => <Composer aria-label="Your message" submitIcon={<Icon name="arrow-up" />} onSubmit={() => {}} className="w-56" />,
 	'Date field': () => <DateField label="Deadline" defaultValue={day} />,
 	'Date picker': () => <DatePicker label="Launch date" defaultValue={day} />,
 	'Drop zone': () => (
@@ -325,7 +325,7 @@ export const examples: Record<string, () => ReactNode> = {
 	Tooltip: () => (
 		<div className="flex flex-col items-center gap-2">
 			<span className={tooltip}>
-				Send message <Keyboard className="ms-2 bg-paper/12 text-paper shadow-none">↵</Keyboard>
+				Send message <Keyboard variant="plain" className="ms-2">↵</Keyboard>
 			</span>
 			<Button variant="secondary" shape="full" aria-label="Send">
 				<Icon name="arrow-up" />

@@ -1,4 +1,4 @@
-import { type LinkProps as AriaLinkProps } from 'react-aria-components';
+import { type LinkProps } from 'react-aria-components';
 export declare const link: import("tailwind-variants").TVReturnType<{
     isHovered: {
         true: string;
@@ -20,7 +20,6 @@ export declare const link: import("tailwind-variants").TVReturnType<{
         true: string;
     };
 }, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
-export interface LinkProps extends AriaLinkProps {
-}
+export type { LinkProps };
 /** A link to another page, or a place on this one. aria-current="page" marks the page you’re on */
 export declare function Link(props: LinkProps): import("react").JSX.Element;

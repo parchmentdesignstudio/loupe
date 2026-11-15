@@ -1,4 +1,4 @@
-import { Link as AriaLink, type LinkProps as AriaLinkProps, composeRenderProps } from 'react-aria-components';
+import { Link as AriaLink, type LinkProps, composeRenderProps } from 'react-aria-components';
 import { focusRing, tv } from './tv.js';
 
 export const link = tv({
@@ -17,7 +17,7 @@ export const link = tv({
 	},
 });
 
-export interface LinkProps extends AriaLinkProps {}
+export type { LinkProps };
 
 /** A link to another page, or a place on this one. aria-current="page" marks the page you’re on */
 export function Link(props: LinkProps) {

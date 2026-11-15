@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import { type DisclosureGroupProps as AriaDisclosureGroupProps, type DisclosurePanelProps as AriaDisclosurePanelProps, type DisclosureProps as AriaDisclosureProps } from 'react-aria-components';
-type Size = 'medium' | 'small';
+import type { Size } from './Field.js';
 export interface DisclosureGroupProps extends AriaDisclosureGroupProps {
     /** Medium for questions and answers, divided by lines. Small for navigation, or a title over its description */
     size?: Size;
@@ -27,4 +27,3 @@ export interface DisclosurePanelProps extends Omit<AriaDisclosurePanelProps, 'ch
 }
 /** What a disclosure shows when it's open. A closed panel stays in the page, hidden until found */
 export declare function DisclosurePanel({ children, ...props }: DisclosurePanelProps): import("react").JSX.Element;
-export {};
