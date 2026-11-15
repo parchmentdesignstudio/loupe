@@ -31,6 +31,8 @@
 	   dark in its hue for their tints and lines */
 	--color-linen-99: oklch(0.986 0.002 67.8);
 	--color-linen-97: oklch(0.966 0.004 67.8);
+	/* Muted text in the dark: linen taken darker and a touch warmer, so it reads as quieter ink rather than beige */
+	--color-linen-90: oklch(0.903 0.013 56.2);
 	--color-linen-30: oklch(0.3 0.024 67.8);
 	--color-linen-18: oklch(0.18 0.024 67.8);
 	--color-pine-95: oklch(0.95 0.054 169.9);
@@ -44,6 +46,17 @@
 	--color-pine-16: oklch(0.16 0.022 169.9);
 	--color-red-81: oklch(0.81 0.108 28.7);
 	--color-red-50: oklch(0.501 0.178 28.7);
+	/* For code's roles in the light, on Nova's rules: one hue for keywords, tags and booleans, the rest a walk round
+	   the wheel from it at one lightness, and each string's quotes a darker shade of it. Jade, cyan and sky as vivid as
+	   sRGB holds, and more on a wide-gamut screen, at the end of this file */
+	--color-jade-49: oklch(0.49 0.092 175);
+	--color-mint-58: oklch(0.58 0.1 160);
+	--color-cyan-50: oklch(0.5 0.085 206);
+	--color-sky-52: oklch(0.52 0.115 238);
+	--color-violet-58: oklch(0.58 0.2 289);
+	--color-plum-55: oklch(0.55 0.19 316);
+	--color-plum-43: oklch(0.43 0.15 316);
+	--color-moss-45: oklch(0.45 0.06 130);
 	/* Parchment's own, as the parchment-brand board in Sketch has them, with linen-99, linen-97 and pine-26 above */
 	--color-marigold-83: oklch(0.834 0.1525 85.6);
 	--color-apricot-73: oklch(0.731 0.159 48.5);
@@ -110,7 +123,7 @@
 	/* The roles components use, each light-dark(light, dark). The dark mode inverts the light one: the ground
 	   takes ink's pine, and ink takes the ground's cream */
 	--color-ink: light-dark(var(--color-pine-26), var(--color-cream-95));
-	--color-muted: light-dark(var(--color-pine-50), var(--color-cream-80));
+	--color-muted: light-dark(var(--color-pine-50), var(--color-linen-90));
 	--color-danger: light-dark(var(--color-red-50), var(--color-red-81));
 	/* Marks on ink, such as a button's text or a checkbox's tick */
 	--color-paper: light-dark(var(--color-white), var(--color-pine-20));
@@ -149,29 +162,38 @@
 	   and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one */
 	--color-code-text: var(--color-ink);
 	--color-code-comment: var(--color-muted);
-	--color-code-keyword: light-dark(var(--color-violet-54), var(--color-violet-82));
-	--color-code-string: light-dark(var(--color-green-46), var(--color-green-89));
-	/* Numbers, units, booleans and hex colours */
-	--color-code-constant: light-dark(var(--color-orange-41), var(--color-orange-89));
-	/* Functions, and the names given values: properties, attributes and custom properties */
-	--color-code-function: light-dark(var(--color-blue-56), var(--color-blue-82));
+	/* Keywords, and storage such as const and function */
+	--color-code-keyword: light-dark(var(--color-jade-49), var(--color-violet-82));
+	--color-code-string: light-dark(var(--color-plum-55), var(--color-green-89));
+	/* A string's quotes */
+	--color-code-quote: light-dark(var(--color-plum-43), var(--color-green-89));
+	/* Booleans, hex colours and the other constants */
+	--color-code-constant: light-dark(var(--color-jade-49), var(--color-orange-89));
+	/* Numbers and their units */
+	--color-code-number: light-dark(var(--color-violet-58), var(--color-orange-89));
+	/* Functions, and the names given values: properties and custom properties */
+	--color-code-function: light-dark(var(--color-sky-52), var(--color-blue-82));
 	/* Types, classes and at-rules */
-	--color-code-type: light-dark(var(--color-yellow-40), var(--color-yellow-91));
+	--color-code-type: light-dark(var(--color-moss-45), var(--color-yellow-91));
 	/* CSS's own functions, such as calc() and light-dark() */
-	--color-code-builtin: light-dark(var(--color-teal-48), var(--color-teal-88));
-	/* JSX and HTML tags */
-	--color-code-tag: light-dark(var(--color-pink-56), var(--color-pink-87));
+	--color-code-builtin: light-dark(var(--color-cyan-50), var(--color-teal-88));
+	/* JSX and HTML tags, and their attributes */
+	--color-code-tag: light-dark(var(--color-jade-49), var(--color-pink-87));
+	--color-code-attribute: light-dark(var(--color-mint-58), var(--color-blue-82));
 	/* Lines marked out: highlighted, added and removed. Each ground tints the line, and a word marked in it again, and
 	   its edge colours the bar, a removal's stripes and the line's number. Errors take remove's, and warnings mark's */
 	--color-code-mark: color-mix(in oklch, var(--color-yellow-76) 20%, transparent);
 	--color-code-mark-edge: light-dark(var(--color-yellow-40), var(--color-yellow-91));
 	--color-code-add: color-mix(in oklch, var(--color-green-68) 16%, transparent);
 	--color-code-add-edge: light-dark(var(--color-green-46), var(--color-green-89));
-	--color-code-remove: color-mix(in oklch, var(--color-red-67) 16%, transparent);
+	/* A removal is tinted at 40% of an addition's strength, as its stripes already set it apart */
+	--color-code-remove: color-mix(in oklch, var(--color-red-67) 6.4%, transparent);
 	--color-code-remove-edge: light-dark(var(--color-red-50), var(--color-red-81));
 
 	--font-sans: elza-round-variable, 'Helvetica Neue', Arial, sans-serif;
 	--font-mono: auger-mono, 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
+	/* Quotes, in italic. Loupe only uses Livory's italic, so a kit needs no more of it */
+	--font-serif: livory, Georgia, serif;
 	--text-body: 0.875rem;
 	--text-body--line-height: 1.25rem;
 	/* Text in buttons, fields, labels, options and tabs, on a 20px line at either size. A control's padding adds to
@@ -185,7 +207,7 @@
 	--text-title: 1.25rem;
 	--text-title--line-height: 1.375rem;
 	--text-title--font-weight: 700;
-	--text-title--letter-spacing: -0.01em;
+	--text-title--letter-spacing: -0.0125em;
 }
 
 /* What reads a variable a layer or component sets for itself, such as --bleed and a button's --edge. Inline, so
@@ -418,5 +440,256 @@
 	}
 	[data-placement='right'] {
 		--enter-x: -4px;
+	}
+}
+
+/* Writing at length as plain HTML styles it, such as a post from Markdown or a CMS, with the prose class or Prose. Only
+   the tokens, so a gap in the scale shows as one. In the components layer, and :where() keeps each element's rule as
+   weak as a class, so a utility on an element inside still wins */
+@layer components {
+	.prose {
+		font-size: var(--text-body);
+		line-height: var(--text-body--line-height);
+		color: var(--color-ink);
+		text-wrap: pretty;
+
+		:where(* + *) {
+			margin-top: 1em;
+		}
+		:where(h1, h2, h3, h4, h5, h6) {
+			font-weight: 700;
+			letter-spacing: -0.0125em;
+			text-wrap: balance;
+		}
+		:where(* + h2, * + h3) {
+			margin-top: 2em;
+		}
+		:where(* + h4, * + h5, * + h6) {
+			margin-top: 1.5em;
+		}
+		:where(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *) {
+			margin-top: 0.5em;
+		}
+		:where(h1) {
+			font-size: var(--text-title);
+			line-height: var(--text-title--line-height);
+		}
+		:where(h3) {
+			font-size: var(--text-control);
+			line-height: var(--text-control--line-height);
+		}
+		:where(h4, h5, h6) {
+			font-size: var(--text-label);
+			line-height: var(--text-label--line-height);
+		}
+		:where(h6) {
+			color: var(--color-muted);
+		}
+		:where(a) {
+			text-decoration: underline;
+			text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
+			text-underline-offset: 2px;
+		}
+		:where(a:hover) {
+			text-decoration-color: currentColor;
+		}
+		:where(strong, b) {
+			font-weight: 500;
+		}
+		:where(small, figcaption, caption, footer) {
+			font-size: var(--text-label);
+			line-height: var(--text-label--line-height);
+			color: var(--color-muted);
+		}
+		:where(mark) {
+			border-radius: .125rem;
+			/* A tint rather than a blend: multiply took the text with it, and darkened it out of sight on the dark ground */
+			background: color-mix(in oklab, var(--color-marigold-83), transparent 80%);
+			color: inherit;
+		}
+		:where(del, s) {
+			color: var(--color-muted);
+		}
+		:where(ins) {
+			background-color: color-mix(in oklch, var(--color-green-68), transparent 80%);
+			text-decoration: none;
+			border-radius: .125rem;
+		}
+		:where(abbr[title]) {
+			text-decoration: underline dotted;
+			text-underline-offset: 1px;
+			cursor: help;
+		}
+		:where(sub, sup) {
+			font-size: 0.75em;
+			line-height: 0;
+		}
+		:where(code, kbd, samp, pre) {
+			font-family: var(--font-mono);
+			font-size: 0.875em;
+		}
+		:where(code, samp) {
+			border-radius: 4px;
+			background: color-mix(in oklab, var(--bleed) 8%, transparent);
+			padding: 0.125em 0.25em;
+		}
+		:where(kbd) {
+			border-radius: 4px;
+			box-shadow: var(--shadow-raised);
+			background: var(--color-raised);
+			padding: 0.0625em 0.375em;
+		}
+		:where(pre) {
+			overflow-x: auto;
+			border-radius: var(--radius-lg);
+			background: color-mix(in oklab, var(--bleed) 6%, transparent);
+			padding: 0.75rem 1rem;
+			font-size: var(--text-label);
+			line-height: 1.6;
+		}
+		:where(pre code) {
+			background: none;
+			padding: 0;
+			font-size: inherit;
+		}
+		/* A pull quote, centred under an opening mark in Livory's italic. Spaced by its own size, more than a paragraph,
+		   and the same above and below, so it stands apart from the writing around it */
+		:where(blockquote) {
+			margin-block: 1.5em;
+			font-family: var(--font-serif);
+			font-size: 1.5rem;
+			font-style: italic;
+			line-height: 1.2;
+			text-align: center;
+			text-wrap: balance;
+		}
+		:where(blockquote:first-child) {
+			margin-top: 0;
+		}
+		:where(blockquote:last-child) {
+			margin-bottom: 0;
+		}
+		/* Upright, as a mark rather than a letter, and left out of what a screen reader says, as the words say it's a
+		   quote. Half its line tall, so the quote sits close under it */
+		:where(blockquote)::before {
+			content: '“' / '';
+			display: block;
+			height: 0.5lh;
+			font-size: 3em;
+			font-style: normal;
+			line-height: 1;
+		}
+		:where(blockquote > :first-child) {
+			margin-top: 0.25em;
+		}
+		/* Who said it, in the writing's own type: a cite for the name, and the rest under it */
+		:where(blockquote footer) {
+			margin-top: 1em;
+			font-family: var(--font-sans);
+			font-size: var(--text-body);
+			font-style: normal;
+			line-height: var(--text-body--line-height);
+			color: var(--color-muted);
+			text-wrap: pretty;
+		}
+		:where(blockquote footer *) {
+			margin-top: 0;
+		}
+		:where(blockquote cite) {
+			display: block;
+			font-style: normal;
+			color: var(--color-ink);
+		}
+		:where(ul, ol) {
+			padding-inline-start: 1.25rem;
+		}
+		:where(ul) {
+			list-style: disc;
+		}
+		:where(ol) {
+			list-style: decimal;
+		}
+		:where(li + li, li > ul, li > ol) {
+			margin-top: 0.375em;
+		}
+		:where(li::marker) {
+			color: var(--color-muted);
+		}
+		:where(dt) {
+			font-weight: 500;
+		}
+		:where(dd) {
+			margin-top: 0.125em;
+			color: var(--color-muted);
+		}
+		:where(dd + dt) {
+			margin-top: 0.75em;
+		}
+		:where(hr) {
+			margin-block: 2em;
+			border-top: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
+		}
+		:where(table) {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: var(--text-control);
+			line-height: var(--text-control--line-height);
+			font-variant-numeric: tabular-nums;
+		}
+		:where(caption) {
+			caption-side: bottom;
+			padding-top: 0.5rem;
+			text-align: start;
+		}
+		:where(th, td) {
+			border-bottom: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
+			padding: 0.5rem 0.75rem 0.5rem 0;
+			text-align: start;
+		}
+		:where(thead th) {
+			font-size: var(--text-label);
+			font-weight: 500;
+			color: var(--color-muted);
+		}
+		:where(tfoot td, tfoot th) {
+			border-bottom: 0;
+			font-weight: 500;
+		}
+		:where(figure > div) {
+			border-radius: var(--radius-lg);
+		}
+		:where(figcaption) {
+			margin-top: 0.5rem;
+		}
+		:where(details) {
+			border-radius: var(--radius-lg);
+			box-shadow: var(--shadow-panel);
+			background: var(--color-raised);
+			padding: 0.5rem 0.75rem;
+		}
+		:where(summary) {
+			cursor: default;
+			font-size: var(--text-control);
+			font-weight: 500;
+		}
+		:where(address) {
+			font-style: normal;
+			color: var(--color-muted);
+		}
+		:where(dfn, cite, var) {
+			font-style: italic;
+		}
+	}
+}
+
+/* Code's jade, cyan and sky at their full strength where the screen shows P3. Apart from @theme, so the palette and
+   Elyx keep the sRGB colour, and in the base layer, so it wins over Tailwind's theme layer */
+@layer base {
+	@media (color-gamut: p3) {
+		:root {
+			--color-jade-49: oklch(0.49 0.12 175);
+			--color-cyan-50: oklch(0.5 0.15 206);
+			--color-sky-52: oklch(0.52 0.15 238);
+		}
 	}
 }

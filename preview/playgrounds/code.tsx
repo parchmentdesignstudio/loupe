@@ -6,16 +6,14 @@ import highlighted from 'virtual:highlighted-code';
 import { type Marking, type Sample, highlightKey, languages, mark, markings, samples } from './code-samples.js';
 import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick } from '../playground.js';
 
-// Draft is a theme still being worked out, in the preview's own CSS, so it's set around Code rather than through it
-const themes = ['loupe', 'iamsteve', 'mcknny', 'draft'] as const satisfies readonly (CodeTheme | 'draft')[];
-type Theme = (typeof themes)[number];
+const themes = ['loupe', 'iamsteve', 'mcknny'] as const satisfies readonly CodeTheme[];
 
 // Languages as they're written, and the sites as they write their own names
-const names = { tsx: 'TSX', css: 'CSS', json: 'JSON', iamsteve: 'iamsteve', mcknny: 'mcknny', draft: 'Draft' };
+const names = { tsx: 'TSX', css: 'CSS', json: 'JSON', iamsteve: 'iamsteve', mcknny: 'mcknny' };
 
 export function CodePlayground() {
 	const [language, setLanguage] = useState<Sample>('tsx');
-	const [theme, setTheme] = useState<Theme>('loupe');
+	const [theme, setTheme] = useState<CodeTheme>('loupe');
 	const [title, setTitle] = useState(samples.tsx.title);
 	const [hasLineNumbers, setLineNumbers] = useState(false);
 	const [isCopyable, setCopyable] = useState(true);
@@ -37,7 +35,7 @@ export function CodePlayground() {
 				'\tcode={source}',
 				'\thtml={useHighlight(source, { language: ' + JSON.stringify(language) + (hasLineNumbers ? ', lineNumbers: true' : '') + ' })}',
 				title && `\ttitle=${JSON.stringify(title)}`,
-				theme !== 'loupe' && theme !== 'draft' && `\ttheme=${JSON.stringify(theme)}`,
+				theme !== 'loupe' && `\ttheme=${JSON.stringify(theme)}`,
 				isCopyable ? '\tcopyIcon={<Icon name="square-on-square" />}\n\tcopiedIcon={<Icon name="checkmark" />}' : '\tisCopyable={false}',
 				'/>',
 			]
@@ -60,8 +58,8 @@ export function CodePlayground() {
 			}
 			preview={<Choice label="Theme" options={themes} labels={names} value={theme} onChange={setTheme} />}
 		>
-			<div data-code-theme={theme === 'draft' ? 'draft' : undefined} className="flex w-full justify-center">
-				<Code code={code} html={html} title={title || undefined} theme={theme === 'draft' ? undefined : theme} isCopyable={isCopyable} copyIcon={<Icon name="square-on-square" />} copiedIcon={<Icon name="checkmark" />} className="w-full max-w-160" />
+			<div className="flex w-full justify-center">
+				<Code code={code} html={html} title={title || undefined} theme={theme} isCopyable={isCopyable} copyIcon={<Icon name="square-on-square" />} copiedIcon={<Icon name="checkmark" />} className="w-full max-w-160" />
 			</div>
 		</Playground>
 	);
