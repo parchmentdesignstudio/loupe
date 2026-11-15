@@ -50,5 +50,5 @@ export title = text {
   font-family: f.fonts.sans,
   font-style: "Bold",
   line-height: t.typography.text-title-line-height,
-  letter-spacing: -1%
+  letter-spacing: -1.25%
 }
