@@ -67,6 +67,7 @@ import { EmptyStatePlayground } from './playgrounds/empty-state.js';
 import { FileTriggerPlayground } from './playgrounds/file-trigger.js';
 import { GridListPlayground } from './playgrounds/grid-list.js';
 import { KeyboardPlayground } from './playgrounds/keyboard.js';
+import { CodePlayground } from './playgrounds/code.js';
 import { LinkPlayground } from './playgrounds/link.js';
 import { MenuPlayground } from './playgrounds/menu.js';
 import { NavigationTreePlayground } from './playgrounds/navigation-tree.js';
@@ -452,6 +453,15 @@ const groups: Group[] = [
 				exports: ['Keyboard'],
 				stories: [
 					{ name: 'Build one', render: KeyboardPlayground },
+				],
+			},
+			{
+				id: 'code',
+				name: 'Code',
+				description: 'A block of code, highlighted by Shiki in Loupe’s theme, with a title and Copy. Its colours are tokens, so a site can restyle it, and iamsteve’s and mcknny’s come with it',
+				exports: ['Code'],
+				stories: [
+					{ name: 'Build one', render: CodePlayground },
 				],
 			},
 		],
@@ -963,7 +973,7 @@ const regrouped: Record<string, string[]> = {
 	Foundations: ['Colour', 'Typography'],
 	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
 	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Composer', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
-	Data: ['Avatar', 'Grid list', 'Table', 'Tag group'],
+	Data: ['Avatar', 'Code', 'Grid list', 'Table', 'Tag group'],
 	Feedback: ['Empty state', 'Progress bar', 'Status', 'Toast'],
 	Overlays: ['Dialog', 'Menu', 'Popover', 'Preview trigger', 'Sheet', 'Tooltip'],
 	Navigation: ['Breadcrumbs', 'Disclosure', 'Link', 'Navigation', 'Navigation tree', 'Pagination', 'Tabs'],

@@ -42,6 +42,23 @@ export dark-colors = tokens : base.colors {
   knob: base.colors.white,
   // Behind a sheet
   scrim: opacity(base.colors.black, 48%),
+  // Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
+  // and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one
+  code-ground: panel,
+  code-text: ink,
+  code-comment: muted,
+  code-keyword: base.colors.violet-82,
+  code-string: base.colors.green-89,
+  // Numbers, units, booleans and hex colours
+  code-constant: base.colors.orange-89,
+  // Functions, and the names given values: properties, attributes and custom properties
+  code-function: base.colors.blue-82,
+  // Types, classes and at-rules
+  code-type: base.colors.yellow-91,
+  // CSS's own functions, such as calc() and light-dark()
+  code-builtin: base.colors.teal-88,
+  // JSX and HTML tags
+  code-tag: base.colors.pink-87,
   // Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
   // ink would grey the linen ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
   // as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on

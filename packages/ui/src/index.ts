@@ -24,6 +24,7 @@ export { Description, FieldError, Label, field, type FieldTextProps, type FieldV
 export { FileList, FileListItem, fileListItem, type FileListItemProps, type FileListProps } from './FileList.js';
 export { GridList, GridListHeader, GridListItem, GridListSection, gridList, gridListItem, type GridListHeaderProps, type GridListItemProps, type GridListProps, type GridListSectionProps } from './GridList.js';
 export { Header, header } from './Header.js';
+export { Code, type CodeProps, type CodeTheme } from './Code.js';
 export { Keyboard, type KeyboardProps } from './Keyboard.js';
 export { Link, link, type LinkProps } from './Link.js';
 export { ListBox, ListBoxItem, ListBoxSection, listBoxItem, type ListBoxItemProps, type ListBoxProps, type ListBoxSectionProps } from './ListBox.js';

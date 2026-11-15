@@ -49,7 +49,23 @@ export function ControlGroup({ label, children }: { label: string; children: Rea
  * A few options side by side, for a variant, a size or anything else with a handful of values. Where they won't fit on
  * the row, even on a line of their own, as on a phone or with larger text, they fold into a select
  */
-export function Choice<T extends string>({ label, options, value, onChange, isDisabled }: { label: string; options: readonly T[]; value: T; onChange: (value: T) => void; isDisabled?: boolean }) {
+export function Choice<T extends string>({
+	label,
+	options,
+	labels,
+	value,
+	onChange,
+	isDisabled,
+}: {
+	label: string;
+	options: readonly T[];
+	/** What to call options that capitalising gets wrong, such as JSON or iamsteve */
+	labels?: Partial<Record<T, string>>;
+	value: T;
+	onChange: (value: T) => void;
+	isDisabled?: boolean;
+}) {
+	const name = (option: T) => labels?.[option] ?? capitalise(option);
 	const row = useRef<HTMLDivElement>(null);
 	const group = useRef<HTMLDivElement>(null);
 	// The group's own width, kept from when it last showed, to know when there's room for it again
@@ -78,7 +94,7 @@ export function Choice<T extends string>({ label, options, value, onChange, isDi
 				<Select aria-label={label} size="small" selectedKey={value} onSelectionChange={(key) => onChange(key as T)} isDisabled={isDisabled} className="w-40">
 					{options.map((option) => (
 						<ListBoxItem key={option} id={option}>
-							{capitalise(option)}
+							{name(option)}
 						</ListBoxItem>
 					))}
 				</Select>
@@ -88,7 +104,7 @@ export function Choice<T extends string>({ label, options, value, onChange, isDi
 					<ToggleButtonGroup aria-label={label} size="small" selectedKeys={[value]} onSelectionChange={(keys) => onChange([...keys][0] as T)} isDisabled={isDisabled}>
 						{options.map((option) => (
 							<ToggleButton key={option} id={option}>
-								{capitalise(option)}
+								{name(option)}
 							</ToggleButton>
 						))}
 					</ToggleButtonGroup>

@@ -145,6 +145,24 @@
 	/* Behind a sheet */
 	--color-scrim: light-dark(color-mix(in oklab, var(--color-pine-26) 32%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 
+	/* Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
+	   and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one */
+	--color-code-ground: var(--color-panel);
+	--color-code-text: var(--color-ink);
+	--color-code-comment: var(--color-muted);
+	--color-code-keyword: light-dark(var(--color-violet-54), var(--color-violet-82));
+	--color-code-string: light-dark(var(--color-green-46), var(--color-green-89));
+	/* Numbers, units, booleans and hex colours */
+	--color-code-constant: light-dark(var(--color-orange-41), var(--color-orange-89));
+	/* Functions, and the names given values: properties, attributes and custom properties */
+	--color-code-function: light-dark(var(--color-blue-56), var(--color-blue-82));
+	/* Types, classes and at-rules */
+	--color-code-type: light-dark(var(--color-yellow-40), var(--color-yellow-91));
+	/* CSS's own functions, such as calc() and light-dark() */
+	--color-code-builtin: light-dark(var(--color-teal-48), var(--color-teal-88));
+	/* JSX and HTML tags */
+	--color-code-tag: light-dark(var(--color-pink-56), var(--color-pink-87));
+
 	--font-sans: elza-round-variable, 'Helvetica Neue', Arial, sans-serif;
 	--font-mono: auger-mono, 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
 	--text-body: 0.875rem;
@@ -317,6 +335,51 @@
 		:root {
 			--text-control: 1rem;
 		}
+	}
+
+	/* Code coloured as another of Parchment's sites colours it, for a block or a whole page, as in
+	   <Code theme="iamsteve"> or data-code-theme="mcknny" on the body. Their palettes aren't Loupe's, so each colour
+	   is written out here, copied from the site's own tokens */
+	[data-code-theme='iamsteve'] {
+		/* neutral-01-50 and fern-1200 */
+		--color-code-ground: light-dark(oklch(0.984 0.003 39.5), oklch(0.229 0.039 171.7));
+		/* fern-900 and fern-200 */
+		--color-code-text: light-dark(oklch(0.396 0.082 174), oklch(0.839 0.048 174.3));
+		/* neutral-02-400 and neutral-03-400 */
+		--color-code-comment: light-dark(oklch(0.665 0.023 261.7), oklch(0.693 0.026 177.3));
+		/* lavender-700 and lavender-300 */
+		--color-code-keyword: light-dark(oklch(0.527 0.168 284.7), oklch(0.756 0.118 296.4));
+		/* rio-600 and rio-200, for strings and constants alike */
+		--color-code-string: light-dark(oklch(0.536 0.222 31.1), oklch(0.769 0.152 42.4));
+		--color-code-constant: var(--color-code-string);
+		/* moss-700 and moss-300 */
+		--color-code-function: light-dark(oklch(0.423 0.089 149.1), oklch(0.706 0.139 142.9));
+		/* dandelion-700 and dandelion-300 */
+		--color-code-type: light-dark(oklch(0.57 0.164 53.2), oklch(0.824 0.193 88.5));
+		/* cornflour-700 and cornflour-300 */
+		--color-code-builtin: light-dark(oklch(0.55 0.15 262.7), oklch(0.771 0.096 258.8));
+		--color-code-tag: var(--color-code-text);
+	}
+	[data-code-theme='mcknny'] {
+		/* olive-25 and olive-950 */
+		--color-code-ground: light-dark(oklch(0.983 0.004 130.6), oklch(0.247 0.039 132.5));
+		/* olive-975 and pearl */
+		--color-code-text: light-dark(oklch(0.215 0.041 133.3), oklch(0.949 0.009 26));
+		--color-code-comment: light-dark(oklch(0.56 0.02 131), oklch(0.68 0.02 131));
+		/* sunset, and lifted for the dark */
+		--color-code-keyword: light-dark(oklch(0.488 0.137 296.7), oklch(0.78 0.1 296.7));
+		/* fern, darkened for the light */
+		--color-code-string: light-dark(oklch(0.5 0.15 134.2), oklch(0.711 0.221 134.2));
+		/* contessa and feldspar, lifted for the dark */
+		--color-code-constant: light-dark(oklch(0.55 0.12 29.7), oklch(0.78 0.09 29.7));
+		/* patina, deepened for the light, and seagull */
+		--color-code-function: light-dark(oklch(0.48 0.07 218.9), oklch(0.749 0.066 218.9));
+		/* sunrise and jasmine */
+		--color-code-type: light-dark(oklch(0.55 0.14 60), oklch(0.905 0.119 89.3));
+		/* patina and harp */
+		--color-code-builtin: light-dark(oklch(0.5 0.045 186.4), oklch(0.856 0.03 127.9));
+		/* thulian, deepened for the light, and amaranth */
+		--color-code-tag: light-dark(oklch(0.52 0.15 350.8), oklch(0.795 0.107 357.8));
 	}
 
 	/* An overlay slides in from the side it opens on */

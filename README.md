@@ -92,6 +92,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `Chip`, `ChipGroup` | Suggestions to tap |
 | `Toolbar` | Controls in a row, such as an editor’s tools: one Tab stop, with the arrow keys between them |
 | `Separator` | A line between groups of controls, or sections of a panel. In a toolbar it stands upright |
+| `Code` | A block of code, highlighted by Shiki, with a title, Copy and line numbers, in Loupe's, iamsteve's or mcknny's colours |
 | `Keyboard` | A keyboard shortcut, such as ⌘Z, in a sentence, a tooltip, or at the end of a menu item |
 | `Composer` | A message field with its send button |
 | `TextField` | Text, or several lines with `isMultiline` |
@@ -196,6 +197,28 @@ import { Button, Chip, ChipGroup } from '@parchment/ui'
 ```
 
 Each token is one of Tailwind’s own variables, set once in `tokens.css`, so `--color-ink` is `bg-ink` and `text-ink`, and `--text-label` is `text-label`. To change one, set its variable on `:root`, such as `--text-body`. A colour takes both modes, as in `--color-ink: light-dark(var(--color-pine-20), var(--color-cream-99))`, or one value for both. The type is Elza Round Variable, with Auger Mono for small labels, both from Adobe Fonts: load a kit with both, or set `--font-sans` and `--font-mono` to your own.
+
+### Code
+
+`Code` shows code Shiki has highlighted with Loupe's theme. Everything for Shiki is in `@parchment/ui/shiki`, so a site that doesn't highlight never loads it, and Shiki itself is installed by the site (`pnpm add shiki`). In the browser, `useHighlight` loads Shiki, with its JavaScript engine rather than WebAssembly, and each language's grammar the first time it's needed:
+
+```jsx
+import { Code } from '@parchment/ui'
+import { useHighlight } from '@parchment/ui/shiki'
+
+const html = useHighlight(source, { language: 'tsx', lineNumbers: true })
+<Code code={source} html={html} title="Toolbar.tsx" />
+```
+
+A site that highlights as it builds, such as with `@shikijs/rehype`, passes Loupe's theme and transformers to its own Shiki instead, alongside any of Shiki's, such as `@shikijs/transformers`:
+
+```js
+import { codeTheme, codeTransformers } from '@parchment/ui/shiki'
+
+[rehypeShiki, { theme: codeTheme, transformers: [...codeTransformers(), transformerNotationDiff()] }]
+```
+
+The theme names roles, not colours: `--color-code-keyword`, `-string`, `-constant`, `-function`, `-type`, `-builtin`, `-tag`, `-comment`, `-text` and `-ground`, each a `light-dark()` in `tokens.css`, so one theme covers both modes. To restyle code, set those tokens, or use iamsteve's or mcknny's with `theme="iamsteve"` on a `Code` or `data-code-theme="mcknny"` on anything around it. Loupe's transformers highlight Tailwind's `@theme` and bare custom properties as CSS, and number lines with `showLineNumbers` in a code fence's meta, or `showLineNumbers=12` to start at 12.
 
 ### Writing a component
 

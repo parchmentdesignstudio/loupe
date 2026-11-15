@@ -24,6 +24,7 @@ export { Description, FieldError, Label, field } from './Field.js';
 export { FileList, FileListItem, fileListItem } from './FileList.js';
 export { GridList, GridListHeader, GridListItem, GridListSection, gridList, gridListItem } from './GridList.js';
 export { Header, header } from './Header.js';
+export { Code } from './Code.js';
 export { Keyboard } from './Keyboard.js';
 export { Link, link } from './Link.js';
 export { ListBox, ListBoxItem, ListBoxSection, listBoxItem } from './ListBox.js';
