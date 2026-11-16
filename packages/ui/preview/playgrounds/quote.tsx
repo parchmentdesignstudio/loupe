@@ -74,7 +74,7 @@ export function QuoteInProse() {
 export function Testimonials() {
 	return (
 		<div className="grid w-full grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-x-10 gap-y-12">
-			<Quote variant="testimonial" cite="Doris Hart" detail="Head of product, Fernway" avatar={photo}>
+			<Quote variant="testimonial" cite="Doris Hart" detail="Head of product, Rothbury" avatar={photo}>
 				Parchment turned a vague idea into a brand we’re proud to put our name to.
 			</Quote>
 			<Quote variant="testimonial" cite="Ada Lin" detail="Operations director, Northgate Lettings">

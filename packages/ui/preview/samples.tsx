@@ -130,7 +130,7 @@ export const samples: Partial<Record<string, Sample>> = {
 	NumberField: (props) => <NumberField label="Guests" defaultValue={2} className="w-40" {...props} />,
 	ProgressCircle: (props) => <ProgressCircle aria-label="Uploading" value={64} {...props} />,
 	Quote: (props) => (
-		<Quote cite={people[0].name} detail="Founder, Halden Studio" avatar={people[0].src} className="w-72" {...props}>
+		<Quote cite={people[0].name} detail="Founder, Rothbury" avatar={people[0].src} className="w-72" {...props}>
 			It turned out we needed a better way to answer the phone
 		</Quote>
 	),

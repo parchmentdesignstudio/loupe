@@ -905,7 +905,7 @@ const groups: Group[] = [
 											<Avatar name="Doris" src={photo} size={48} />
 											<div className="flex flex-col">
 												<span className="font-medium">Doris</span>
-												<span className="text-label text-muted">Head of naps</span>
+												<span className="text-label text-muted">Head of naps, Rothbury</span>
 											</div>
 										</div>
 										<Button variant="secondary" size="small">
