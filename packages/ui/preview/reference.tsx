@@ -2,18 +2,18 @@ import { type ReactNode, useId } from 'react';
 import { Focusable } from 'react-aria-components';
 import details from 'virtual:details';
 import { Popover, PreviewTrigger } from '../src/index.js';
-import type { Detail, Prop } from './details.mjs';
-import { Aria } from './inspector.js';
+import type { Detail, Prop, Use } from './details.mjs';
+import { Aria, Header, Part, Source, groupBy } from './inspector.js';
 import type { Entry } from './stories.js';
 import { samples } from './samples.js';
-import { Tokens } from './tokens.js';
+import { CopyChip, Tokens } from './tokens.js';
 
 type Sample = (props: Record<string, unknown>) => ReactNode;
 
 const documented = (detail?: Detail): detail is Detail => detail?.kind === 'component' && Boolean(detail.props?.length || detail.rest?.length);
 
-/** Whether a page has props to list, for the contents beside it */
-export const hasReference = (entry?: Entry) => entry?.exports?.some((name) => documented(details.components[name])) ?? false;
+/** Whether a page has exports to list, for the contents beside it */
+export const hasReference = (entry?: Entry) => entry?.exports?.some((name) => details.components[name]) ?? false;
 
 const chip = 'rounded-md bg-bleed/8 px-1.5 py-0.5 font-mono text-label text-ink';
 
@@ -120,35 +120,209 @@ function Table({ detail, sample }: { detail: Detail; sample?: Sample }) {
 	);
 }
 
-/** Each export's props as a table, under the stories. Hovering an option shows it, where the page gives a sample */
+// What it's made from, on one line under its name: React Aria's parts, its own, and style functions from other files
+function Makeup({ detail }: { detail: Detail }) {
+	const facts = [
+		detail.kind === 'class' && detail.rest?.[0]?.aria && (
+			<span key="extends">
+				Extends React Aria’s <Aria name={detail.rest[0].aria} />
+			</span>
+		),
+		detail.kind !== 'aria' && detail.aria?.length ? (
+			<span key="aria">
+				Built on {detail.aria.map((name, index) => (
+					<span key={name}>
+						{index > 0 && ', '}
+						<Aria name={name} />
+					</span>
+				))}
+			</span>
+		) : null,
+		detail.parts?.length ? (
+			<span key="parts">
+				Contains {detail.parts.map((name, index) => (
+					<span key={name}>
+						{index > 0 && ', '}
+						<Part name={name} />
+					</span>
+				))}
+			</span>
+		) : null,
+		detail.styles?.length ? (
+			<span key="styles">
+				Styled by {detail.styles.map((name, index) => {
+					const styles = details.components[name];
+					return (
+						<span key={name}>
+							{index > 0 && ', '}
+							{styles ? <Source place={styles.place}>{name}()</Source> : <code className="font-mono">{name}()</code>}
+						</span>
+					);
+				})}
+			</span>
+		) : null,
+	].filter(Boolean);
+	if (!facts.length) return null;
+	return <p className="flex flex-wrap gap-x-4 gap-y-1 text-label text-muted">{facts}</p>;
+}
+
+// The theme's own tokens it reaches for, beside the ones it sets for itself, a row for each kind
+const kinds = [
+	{ kind: 'colours', name: 'Colours', variable: '--color-', prefix: '' },
+	{ kind: 'text', name: 'Text', variable: '--text-', prefix: 'text-' },
+	{ kind: 'fonts', name: 'Fonts', variable: '--font-', prefix: 'font-' },
+	{ kind: 'shadows', name: 'Shadows', variable: '--shadow-', prefix: 'shadow-' },
+	{ kind: 'corners', name: 'Corners', variable: '--radius-', prefix: 'rounded-' },
+	{ kind: 'animations', name: 'Animations', variable: '--animate-', prefix: 'animate-' },
+] as const;
+
+function Theme({ tokens }: { tokens: NonNullable<Detail['tokens']> }) {
+	return (
+		<div className="flex flex-col gap-2 text-label">
+			<p className="text-muted">From the theme</p>
+			<dl className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 gap-y-2">
+				{kinds.map(({ kind, name, variable, prefix }) =>
+					tokens[kind]?.length ? (
+						<div key={kind} className="col-span-2 grid grid-cols-subgrid items-baseline">
+							<dt className="text-muted">{name}</dt>
+							<dd className="flex flex-wrap gap-1.5">
+								{tokens[kind].map((token) => (
+									<CopyChip key={token} name={prefix + token} property={variable + token} colour={kind === 'colours' ? details.colours[token]?.value : undefined} />
+								))}
+							</dd>
+						</div>
+					) : null,
+				)}
+			</dl>
+		</div>
+	);
+}
+
+type Placed = Use & { via?: string };
+
+// Where it’s used, and where its style function is outside its file, as ColorField uses TextField’s input()
+function usesOf(detail: Detail): Placed[] {
+	const own = details.project;
+	return [
+		...detail.uses,
+		...(detail.styles ?? []).flatMap((style) => (details.components[style]?.uses ?? []).filter((use) => use.file !== detail.place.file).map((use) => ({ ...use, via: style }))),
+	].toSorted((a, b) => Number(a.project === own) - Number(b.project === own) || a.project.localeCompare(b.project) || a.path.localeCompare(b.path) || a.line - b.line);
+}
+
+// Each file it's used in, grouped by project, with the lines, each of which opens the file there
+function Uses({ uses }: { uses: Placed[] }) {
+	if (!uses.length) return <p className="text-label text-muted">Nowhere yet</p>;
+	return (
+		<div className="overflow-x-auto overflow-y-hidden rounded-lg border border-bleed/8">
+			<table className="w-full border-collapse text-left text-label">
+				<thead className="bg-bleed/4 text-muted">
+					<tr>
+						<th scope="col" className={`${cell} font-medium`}>
+							File
+						</th>
+						<th scope="col" className={`${cell} w-full font-medium`}>
+							Lines
+						</th>
+					</tr>
+				</thead>
+				{groupBy(uses, (use) => use.project).map(([project, inProject]) => (
+					<tbody key={project} className="divide-y divide-bleed/6 border-t border-bleed/6">
+						<tr className="border-b-0">
+							<th scope="rowgroup" colSpan={2} className={`${cell} pt-4 pb-1 font-medium text-muted`}>
+								{project}
+							</th>
+						</tr>
+						{groupBy(inProject, (use) => use.path).map(([path, inFile]) => (
+							<tr key={path}>
+								<td className={`${cell} whitespace-nowrap`}>
+									<Source place={inFile[0]} label={`Open ${path}`} isStrong>
+										{path}
+									</Source>
+								</td>
+								<td className={cell}>
+									<span className="flex flex-wrap gap-x-3 gap-y-1">
+										{inFile.map((use) => (
+											<Source key={`${use.line}:${use.column}`} place={use} label={`${path}, line ${use.line}`}>
+												{use.line}
+												{use.via && ` via ${use.via}()`}
+											</Source>
+										))}
+									</span>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				))}
+			</table>
+		</div>
+	);
+}
+
+const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
+
+function Export({ detail }: { detail: Detail }) {
+	const tokens = details.componentTokens[detail.name];
+	const theme = detail.tokens && Object.keys(detail.tokens).length > 0 ? detail.tokens : undefined;
+	const uses = usesOf(detail);
+	const noun = detail.name.replace(/(?<!^)([A-Z])/g, ' $1').toLowerCase();
+	return (
+		<section className="flex flex-col gap-3">
+			<Header name={detail.name} place={detail.place}>
+				{detail.kind === 'aria' ? (
+					<>
+						React Aria’s <Aria name={detail.name} />, passed on as it is
+					</>
+				) : (
+					detail.doc
+				)}
+			</Header>
+			<Makeup detail={detail} />
+			{documented(detail) && <Table detail={detail} sample={samples[detail.name]} />}
+			{detail.states?.length ? (
+				<p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-label">
+					<span className="text-muted">States to style</span>
+					{detail.states.map((state) => (
+						<code key={state} className={chip}>
+							{state}
+						</code>
+					))}
+				</p>
+			) : null}
+			{(tokens || theme) && (
+				<>
+					<header className="mt-3 flex flex-col gap-1">
+						<h4 className="font-medium">Tokens</h4>
+						{tokens && (
+							<p className="text-label text-muted">
+								Set one on <code className={chip}>:root</code> in a site’s own CSS to restyle every {noun}, or on an element to restyle the ones inside it.
+							</p>
+						)}
+					</header>
+					{tokens && <Tokens tokens={tokens} detail={detail} sample={samples[detail.name]} />}
+					{theme && <Theme tokens={theme} />}
+				</>
+			)}
+			<header className="mt-3 flex items-baseline gap-2">
+				<h4 className="font-medium">Used in</h4>
+				{uses.length > 0 && <span className="text-label text-muted">{plural(uses.length, 'place', 'places')}</span>}
+			</header>
+			<Uses uses={uses} />
+		</section>
+	);
+}
+
+/** Each export as the code has it, under the stories: what it's made from, its props, its tokens, and where it's used */
 export function Reference({ entry }: { entry: Entry }) {
 	const heading = useId();
-	const shown = (entry.exports ?? []).map((name) => details.components[name]).filter(documented);
+	const shown = (entry.exports ?? []).map((name) => details.components[name]).filter((detail): detail is Detail => Boolean(detail));
 	if (!shown.length) return null;
 	return (
-		<section id="api" aria-labelledby={heading} className="flex scroll-mt-25 flex-col gap-6 md:scroll-mt-18">
+		<section id="api" aria-labelledby={heading} className="flex scroll-mt-25 flex-col gap-10 md:scroll-mt-18">
 			<h2 id={heading} className="font-medium">
 				API reference
 			</h2>
 			{shown.map((detail) => (
-				<section key={detail.name} className="flex flex-col gap-3">
-					<header className="flex flex-col gap-1">
-						<h3 className="font-mono text-control font-medium">{detail.name}</h3>
-						{detail.doc && <p className="text-label text-muted">{detail.doc}</p>}
-					</header>
-					<Table detail={detail} sample={samples[detail.name]} />
-					{details.componentTokens[detail.name] && (
-						<>
-							<header className="mt-3 flex flex-col gap-1">
-								<h4 className="font-medium">Tokens</h4>
-								<p className="text-label text-muted">
-									Set one on <code className={chip}>:root</code> in a site’s own CSS to restyle every {detail.name.replace(/(?<!^)([A-Z])/g, ' $1').toLowerCase()}, or on an element to restyle the ones inside it.
-								</p>
-							</header>
-							<Tokens tokens={details.componentTokens[detail.name]} detail={detail} sample={samples[detail.name]} />
-						</>
-					)}
-				</section>
+				<Export key={detail.name} detail={detail} />
 			))}
 		</section>
 	);

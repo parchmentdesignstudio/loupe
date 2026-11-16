@@ -112,11 +112,23 @@ export function SettingsPanels() {
 	);
 }
 
-/** The preview's own settings, in the column on the right */
-export function Settings() {
+/**
+ * The preview's own settings, at the card's right side under its bar. From 1440px there's room beside the stories at
+ * their full width, so the settings make room and the stories move over without re-wrapping. Narrower, they float over
+ * the page, so nothing under them reflows. Either way they slide in from past the card's edge, which clips them, and
+ * out a little faster. Closed, they're out of the tab order and let clicks through
+ */
+export function Settings({ isOpen }: { isOpen: boolean }) {
 	return (
-		<aside aria-label="Preview settings" className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col overflow-y-auto px-6 py-6 md:flex">
-			<SettingsPanels />
-		</aside>
+		// Room for the panel and its gaps when open on a wide screen, and otherwise none, so the card hangs inside the page's right edge
+		<div className={`sticky top-12 z-10 hidden h-[calc(100dvh-4rem)] w-0 shrink-0 self-start md:block ${isOpen ? 'min-[90rem]:w-64' : ''}`}>
+			<aside
+				aria-label="Preview settings"
+				inert={!isOpen}
+				className={`absolute top-2 right-2 max-h-[calc(100%-1rem)] w-60 overflow-y-auto rounded-lg bg-overlay p-4 shadow-floating [--bleed:var(--overlay-bleed)] transition-[translate] ease-[cubic-bezier(.32,.72,0,1)] motion-reduce:transition-none ${isOpen ? 'duration-300' : 'pointer-events-none translate-x-[calc(100%+1rem)] duration-200'}`}
+			>
+				<SettingsPanels />
+			</aside>
+		</div>
 	);
 }

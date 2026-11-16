@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from 'react';
-import { RouterProvider, parseColor } from 'react-aria-components';
+import { Button as AriaButton, RouterProvider, parseColor } from 'react-aria-components';
 import { type IconName, type IconSize, type IconVariant, iconNames } from '@parchment/icons';
 import { byCategory } from './icon-categories.js';
 // PROTOTYPE: icon motion
@@ -103,6 +103,8 @@ export interface Story {
 	render: () => ReactNode;
 	/** Classes for the box it sits in, such as the layer a colour is for */
 	box?: string;
+	/** A ground of its own, such as the layer a colour is for. It's drawn as a padded, rounded area in place of the line above */
+	ground?: string;
 }
 
 export interface Entry {
@@ -322,52 +324,106 @@ const derived = [
 	['red-81', 'red-50'],
 ];
 
-function PaletteSwatch({ name, label = name, role }: { name: string; label?: string; role?: string }) {
+// A palette colour that copies its custom property when pressed, with its name and value in the tooltip. Square, at the
+// width of its column, as in Tailwind's palette
+function CopySwatch({ name }: { name: string }) {
 	const hex = hexOf(name);
+	const [isCopied, setCopied] = useState(false);
 	return (
-		<div className="flex flex-col gap-1.5 font-mono text-label">
-			<ColorSwatch color={hex} className="size-13" />
-			<p className="flex flex-col">
-				<span>{label}</span>
-				<span className="text-muted">{hex}</span>
+		<TooltipTrigger delay={300} shouldCloseOnPress={false} onOpenChange={(isOpen) => !isOpen && setCopied(false)}>
+			<AriaButton
+				aria-label={`${name}, ${hex}, copy --color-${name}`}
+				onPress={() => void navigator.clipboard.writeText(`--color-${name}`).then(() => setCopied(true))}
+				className="block w-full cursor-default rounded-md outline-offset-2 outline-ink focus-visible:outline-2"
+			>
+				<ColorSwatch color={hex} className="aspect-square size-auto w-full rounded-md" />
+			</AriaButton>
+			<Tooltip className="font-mono">{isCopied ? 'Copied' : `${name} ${hex}`}</Tooltip>
+		</TooltipTrigger>
+	);
+}
+
+// A row of swatches under a name, in a grid shared with the rows above and below, so the columns line up
+function PaletteRow({ label, names }: { label: string; names: string[] }) {
+	return (
+		<div className="col-span-full grid grid-cols-subgrid items-center">
+			<p className="pr-1.5 text-label font-medium">{label}</p>
+			{names.map((name) => (
+				<CopySwatch key={name} name={name} />
+			))}
+		</div>
+	);
+}
+
+// The hues across and light, mid and dark down, as each hue's steps are its own
+function Hues() {
+	const entries = Object.entries(hues);
+	return (
+		<div className="grid w-full grid-cols-[auto_repeat(9,minmax(0,1fr))] gap-x-1.5 gap-y-1.5">
+			<div className="col-span-full grid grid-cols-subgrid text-center text-label font-medium text-muted">
+				<span />
+				{entries.map(([hue]) => (
+					<span key={hue} className="truncate">
+						{hue}
+					</span>
+				))}
+			</div>
+			{(['Light', 'Mid', 'Dark'] as const).map((label, index) => (
+				<PaletteRow key={label} label={label} names={entries.map(([hue, steps]) => `${hue}-${steps[index]}`)} />
+			))}
+		</div>
+	);
+}
+
+// The steps across, over one row of swatches
+function Greys({ name }: { name: string }) {
+	return (
+		<div className="grid w-full grid-cols-[auto_repeat(10,minmax(0,1fr))] gap-x-1.5 gap-y-1.5">
+			<div className="col-span-full grid grid-cols-subgrid text-center text-label font-medium text-muted">
+				<span />
+				{greySteps.map((step) => (
+					<span key={step}>{step}</span>
+				))}
+			</div>
+			<PaletteRow label={name} names={greySteps.map((step) => `${name}-${step}`)} />
+		</div>
+	);
+}
+
+// A swatch with its name under it, split at the step so a long hue such as marigold still fits its column
+function NamedSwatch({ name, role }: { name: string; role?: string }) {
+	const [hue, step] = name.split('-');
+	return (
+		<div className="flex min-w-0 flex-col gap-1.5 text-center text-label">
+			<CopySwatch name={name} />
+			<p className="flex min-w-0 flex-col">
+				<span className="truncate">{hue}</span>
+				{step && <span className="text-muted">{step}</span>}
 				{role && <span className="text-muted">{role}</span>}
 			</p>
 		</div>
 	);
 }
 
-function Hues() {
+// Parchment's own in a row, with the role each makes
+function Brand() {
 	return (
-		<div className="flex flex-wrap gap-x-1.5 gap-y-6">
-			{Object.entries(hues).map(([hue, steps]) => (
-				<div key={hue} className="flex flex-col gap-3">
-					<p className="font-mono text-label">{hue}</p>
-					{steps.map((step) => (
-						<PaletteSwatch key={step} name={`${hue}-${step}`} label={String(step)} />
-					))}
-				</div>
+		<div className="grid w-full grid-cols-[repeat(9,minmax(0,1fr))] gap-x-1.5">
+			{brand.map(({ name, role }) => (
+				<NamedSwatch key={name} name={name} role={role} />
 			))}
 		</div>
 	);
 }
 
-function Greys({ name }: { name: string }) {
-	return (
-		<div className="flex flex-wrap gap-x-1.5 gap-y-4">
-			{greySteps.map((step) => (
-				<PaletteSwatch key={step} name={`${name}-${step}`} label={String(step)} />
-			))}
-		</div>
-	);
-}
-
+// A row for each set the roles take, in columns shared across the rows
 function Derived() {
 	return (
-		<div className="flex flex-wrap gap-x-6 gap-y-4">
+		<div className="grid w-full grid-cols-[repeat(10,minmax(0,1fr))] gap-x-1.5 gap-y-4">
 			{derived.map((names) => (
-				<div key={names[0]} className="flex flex-wrap gap-x-1.5 gap-y-4">
+				<div key={names[0]} className="col-span-full grid grid-cols-subgrid">
 					{names.map((name) => (
-						<PaletteSwatch key={name} name={name} />
+						<NamedSwatch key={name} name={name} />
 					))}
 				</div>
 			))}
@@ -388,13 +444,11 @@ const groups: Group[] = [
 				stories: [
 					{
 						name: 'Parchment’s own',
-						// From the top, as only some have a role under them
-						render: () => brand.map(({ name, role }) => <PaletteSwatch key={name} name={name} role={role} />),
-						box: 'items-start',
+						render: Brand,
 					},
 					{ name: 'Nine hues, each light, mid and dark', render: Hues },
-					{ name: 'Sand, for the cream ground', render: () => <Greys name="sand" />, box: 'scheme-light bg-ground text-ink' },
-					{ name: 'Grey, for white', render: () => <Greys name="grey" />, box: 'scheme-light bg-panel text-ink [--bleed:var(--panel-bleed)]' },
+					{ name: 'Sand, for the cream ground', render: () => <Greys name="sand" />, ground: 'scheme-light bg-ground text-ink' },
+					{ name: 'Grey, for white', render: () => <Greys name="grey" />, ground: 'scheme-light bg-white text-ink outline-1 -outline-offset-1 outline-bleed/8 [--bleed:var(--panel-bleed)]' },
 					{ name: 'Worked out for the roles', render: Derived },
 				],
 			},

@@ -1,5 +1,5 @@
 import { type CSSProperties, Fragment, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Button, Chip, Popover, PreviewTrigger, Swatch } from '../src/index.js';
+import { Button, Chip, Popover, PreviewTrigger, Swatch, Tooltip, TooltipTrigger } from '../src/index.js';
 import { Icon } from '@parchment/icons/react';
 import { useHighlight } from '../src/shiki.js';
 import type { ComponentToken, Detail } from './details.mjs';
@@ -122,6 +122,31 @@ const gone = 'scale-90 opacity-0 blur-[3px] motion-reduce:scale-100 motion-reduc
 // A token's value in place, as Paper shows it: 8px, or a colour's swatch and palette name, as a chip. Hovering or
 // focusing it shows the value and how it's reached, then each step from the component's token down to the raw value
 // as numbered CSS. One size throughout, with weight carrying the hierarchy
+/** A theme token as a chip, with its colour where it has one. Pressing it copies the custom property, which the tooltip names */
+export function CopyChip({ name, property, colour }: { name: string; property: string; colour?: string }) {
+	const [isCopied, setCopied] = useState(false);
+	useEffect(() => {
+		if (!isCopied) return;
+		const timer = setTimeout(() => setCopied(false), 1500);
+		return () => clearTimeout(timer);
+	}, [isCopied]);
+	return (
+		<TooltipTrigger delay={300}>
+			<Chip size="small" aria-label={`${name}, copy ${property}`} className="grid font-mono" onPress={() => void navigator.clipboard.writeText(property).then(() => setCopied(true))}>
+				<span className={`col-start-1 row-start-1 flex items-center gap-1 ${swap} ${isCopied ? gone : ''}`}>
+					{colour && <Swatch color={colour} size="small" />}
+					{name}
+				</span>
+				<span className={`col-start-1 row-start-1 flex items-center justify-center ${swap} ${isCopied ? '' : gone}`}>
+					<Icon name="checkmark" />
+				</span>
+				<output className="sr-only">{isCopied ? `Copied ${property}` : ''}</output>
+			</Chip>
+			<Tooltip>{isCopied ? 'Copied' : `Copy ${property}`}</Tooltip>
+		</TooltipTrigger>
+	);
+}
+
 function TokenValue({ token }: { token: ComponentToken }) {
 	const { shown, colour } = shownOf(token);
 	const steps = [{ kind: 'component', name: token.name, value: token.value }, ...(token.steps ?? [])] as Step[];
