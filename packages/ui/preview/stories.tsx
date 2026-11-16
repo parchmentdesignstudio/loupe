@@ -47,7 +47,7 @@ import { Article, Families, Figures, Scale, Together, Weights, Writing } from '.
 import { AppIcons, BrandButtons, Cards, Crops, Curls, Lockups, OnColour, Pairings, Palette, ProjectCards, System } from './brand.js';
 import { AlertPlayground, EveryTone, NoticeInForm } from './playgrounds/alert.js';
 import { AsidePlayground, AsidesInProse } from './playgrounds/aside.js';
-import { AvatarPlayground, AvatarsInText, photos } from './playgrounds/avatar.js';
+import { AvatarPlayground, AvatarsInText, photo } from './playgrounds/avatar.js';
 import { ButtonPlayground } from './playgrounds/button.js';
 import { CardPlayground, Category } from './blocks/card.js';
 import { CalendarPlayground } from './playgrounds/calendar.js';
@@ -902,7 +902,7 @@ const groups: Group[] = [
 									<Link href="#/ui/avatar">Doris</Link>
 									<Popover placement="bottom start" className="flex w-64 flex-col gap-3 p-4">
 										<div className="flex items-center gap-3">
-											<Avatar name="Doris" src={photos[0]} size={48} />
+											<Avatar name="Doris" src={photo} size={48} />
 											<div className="flex flex-col">
 												<span className="font-medium">Doris</span>
 												<span className="text-label text-muted">Head of naps</span>

@@ -33,14 +33,14 @@ import {
 	ToggleButton,
 	ToggleButtonGroup,
 } from '../src/index.js';
-import { photos } from './playgrounds/avatar.js';
+import { photo } from './playgrounds/avatar.js';
 
 type Sample = (props: Record<string, unknown>) => ReactNode;
 
 const people = [
-	{ name: 'Doris Hart', src: photos[0] },
-	{ name: 'Sam Okafor', src: photos[1] },
-	{ name: 'Ada Lin', src: photos[2] },
+	{ name: 'Doris Hart', src: photo },
+	{ name: 'Sam Okafor' },
+	{ name: 'Ada Lin' },
 ];
 
 // A small table, for the props that change how a table or its columns sit

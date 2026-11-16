@@ -3,14 +3,9 @@ import { Avatar, AvatarGroup, type AvatarShape, type AvatarSize, type AvatarStat
 import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, pick } from '../playground.js';
 import doris from '../assets/doris.jpg';
 
-// Stand-in photos, bundled rather than fetched so the preview works offline: Doris, a real photo cropped to her head,
-// then drawn heads and shoulders on a backdrop, one of them nearly white to show the image's edge, and a logo for an
-// organisation
-const portrait = (backdrop: string, skin: string, top: string) =>
-	`data:image/svg+xml,${encodeURIComponent(
-		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${backdrop}"/><ellipse cx="32" cy="66" rx="24" ry="18" fill="${top}"/><circle cx="32" cy="28" r="12" fill="${skin}"/></svg>`,
-	)}`;
-export const photos = [doris, portrait('#c9d8d2', '#c58f6b', '#2f4a40'), portrait('#f4d9b8', '#8a5a3c', '#7a2e2a'), portrait('#fbfbfa', '#e7c3a5', '#d9dde3'), portrait('#3c4a68', '#f0c9a8', '#e0a34a')];
+// Bundled rather than fetched so the preview works offline: Doris, a real photo cropped to her head, and a logo for an
+// organisation. Everyone else shows their initials
+export const photo = doris;
 export const logo = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#0c2920"/><path d="M20 44V20h14a8 8 0 0 1 0 16H26" fill="none" stroke="#f5c03c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>')}`;
 // A path that's never there, to see the initials stay put when an image fails
 const broken = '/no-such-photo.jpg';
@@ -35,8 +30,7 @@ export function AvatarPlayground() {
 	const [kind, setKind] = useState<NameKind>('person');
 	const [name, setName] = useState<string>(names.person);
 	const [image, setImage] = useState<(typeof images)[number]>('off');
-	const [photo, setPhoto] = useState(photos[0]);
-	const [size, setSize] = useState<(typeof sizes)[number]>('48');
+		const [size, setSize] = useState<(typeof sizes)[number]>('48');
 	const [shape, setShape] = useState<AvatarShape>('circle');
 	const [status, setStatus] = useState<(typeof statuses)[number]>('none');
 	const [isGroup, setGroup] = useState(false);
@@ -50,7 +44,6 @@ export function AvatarPlayground() {
 	const shuffle = () => {
 		chooseKind(pick(Object.keys(names) as NameKind[]));
 		setImage(pick(images));
-		setPhoto(pick(photos));
 		setSize(pick(sizes));
 		setShape(Math.random() < 0.3 ? 'square' : 'circle');
 		setStatus(pick(statuses));
@@ -92,7 +85,7 @@ export function AvatarPlayground() {
 			{isGroup ? (
 				<AvatarGroup size={Number(size) as AvatarSize} shape={shape} maxVisible={max || undefined}>
 					{[name, ...people.filter((person) => person !== name)].slice(0, count).map((person, index) => (
-						<Avatar key={person} name={person} src={index === 0 ? src : index % 3 === 1 ? photos[index % photos.length] : undefined} status={index === 0 && status !== 'none' ? (status as AvatarStatus) : undefined} />
+						<Avatar key={person} name={person} src={index === 0 ? src : undefined} status={index === 0 && status !== 'none' ? (status as AvatarStatus) : undefined} />
 					))}
 				</AvatarGroup>
 			) : (
@@ -118,7 +111,7 @@ export function AvatarsInText() {
 				</p>
 			))}
 			<p className="leading-5">
-				Assigned to <Avatar name="Jo Bloggs" size={20} src={photos[1]} aria-hidden="true" /> Jo Bloggs and <Avatar name="Parchment" size={20} shape="square" src={logo} aria-hidden="true" /> Parchment, due Friday
+				Assigned to <Avatar name="Doris Hart" size={20} src={photo} aria-hidden="true" /> Doris Hart and <Avatar name="Parchment" size={20} shape="square" src={logo} aria-hidden="true" /> Parchment, due Friday
 			</p>
 		</div>
 	);
