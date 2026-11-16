@@ -31,3 +31,15 @@ export declare const ChevronLeft: ({ className }: {
 export declare const CalendarGlyph: ({ className }: {
     className?: string;
 }) => import("react").JSX.Element;
+export declare const InfoGlyph: ({ className }: {
+    className?: string;
+}) => import("react").JSX.Element;
+export declare const SuccessGlyph: ({ className }: {
+    className?: string;
+}) => import("react").JSX.Element;
+export declare const WarningGlyph: ({ className }: {
+    className?: string;
+}) => import("react").JSX.Element;
+export declare const DangerGlyph: ({ className }: {
+    className?: string;
+}) => import("react").JSX.Element;

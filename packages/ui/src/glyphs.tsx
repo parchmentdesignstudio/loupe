@@ -73,3 +73,35 @@ export const CalendarGlyph = ({ className = glyph }: { className?: string }) => 
 		<path d="M2.75 7h10.5M5.5 2.25v2.5m5-2.5v2.5" strokeLinecap="round" />
 	</svg>
 );
+
+// An alert's tones. The dots are filled, as in Ellipsis, so they hold up beside a 1.5px stroke
+export const InfoGlyph = ({ className = glyph }: { className?: string }) => (
+	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
+		<circle cx="8" cy="8" r="6.25" />
+		<path d="M8 7.5v3.25" strokeLinecap="round" />
+		<circle cx="8" cy="5.25" r=".875" className="fill-current stroke-0" />
+	</svg>
+);
+
+export const SuccessGlyph = ({ className = glyph }: { className?: string }) => (
+	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
+		<circle cx="8" cy="8" r="6.25" />
+		<path d="m5.5 8.25 1.75 1.75 3.25-3.75" strokeLinecap="round" strokeLinejoin="round" />
+	</svg>
+);
+
+export const WarningGlyph = ({ className = glyph }: { className?: string }) => (
+	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
+		<path d="M6.7 2.98a1.5 1.5 0 0 1 2.6 0l4.94 8.77A1.5 1.5 0 0 1 12.94 14H3.06a1.5 1.5 0 0 1-1.3-2.25z" strokeLinejoin="round" />
+		<path d="M8 6.5v3" strokeLinecap="round" />
+		<circle cx="8" cy="11.5" r=".875" className="fill-current stroke-0" />
+	</svg>
+);
+
+export const DangerGlyph = ({ className = glyph }: { className?: string }) => (
+	<svg aria-hidden="true" viewBox="0 0 16 16" className={className}>
+		<circle cx="8" cy="8" r="6.25" />
+		<path d="M8 4.75v3.75" strokeLinecap="round" />
+		<circle cx="8" cy="10.75" r=".875" className="fill-current stroke-0" />
+	</svg>
+);

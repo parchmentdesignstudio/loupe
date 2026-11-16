@@ -45,6 +45,8 @@ import {
 import { ParchmentLogo } from './logo.js';
 import { Article, Families, Figures, Scale, Together, Weights, Writing } from './typography.js';
 import { AppIcons, BrandButtons, Cards, Crops, Curls, Lockups, OnColour, Pairings, Palette, ProjectCards, System } from './brand.js';
+import { AlertPlayground, EveryTone, NoticeInForm } from './playgrounds/alert.js';
+import { AsidePlayground, AsidesInProse } from './playgrounds/aside.js';
 import { AvatarPlayground, AvatarsInText, photos } from './playgrounds/avatar.js';
 import { ButtonPlayground } from './playgrounds/button.js';
 import { CardPlayground, Category } from './blocks/card.js';
@@ -76,6 +78,7 @@ import { BreadcrumbsPlayground } from './playgrounds/breadcrumbs.js';
 import { NumberFieldPlayground } from './playgrounds/number-field.js';
 import { PopoverPlayground } from './playgrounds/popover.js';
 import { ProgressBarPlayground, Saving } from './playgrounds/progress-bar.js';
+import { QuoteInProse, QuotePlayground, Testimonials } from './playgrounds/quote.js';
 import { screens } from './screens/index.js';
 import { PaginationPlayground, PaginationUnderTable, StatusPlayground } from './playgrounds/status.js';
 import { RadioGroupPlayground } from './playgrounds/radio-group.js';
@@ -469,6 +472,29 @@ const groups: Group[] = [
 					{ name: 'Every element of prose', render: Writing, box: 'justify-center' },
 				],
 			},
+			{
+				id: 'quote',
+				name: 'Quote',
+				description: 'Someone else’s words, set apart in Livory’s italic with who said it under them, as a figure. Its rules are prose’s blockquote’s, so a quote looks the same written either way. A testimonial sets them from the start edge, with the person’s photo beside their name',
+				summary: 'Someone else’s words, as a pull quote or a testimonial',
+				exports: ['Quote'],
+				stories: [
+					{ name: 'Build one', render: QuotePlayground },
+					{ name: 'A pull quote in prose', render: QuoteInProse, box: 'justify-center' },
+					{ name: 'Testimonials side by side', render: Testimonials, box: 'items-start' },
+				],
+			},
+			{
+				id: 'aside',
+				name: 'Aside',
+				description: 'The writer’s own voice beside the main text. A signpost says what’s coming or what the reader needs first, behind the accent’s rule, and an afterthought is a tangent in muted italic, to read or skip. In prose the rule hangs in the margin, so the text lines up with the paragraphs',
+				summary: 'The writer’s signpost or afterthought beside the main text',
+				exports: ['Aside'],
+				stories: [
+					{ name: 'Build one', render: AsidePlayground },
+					{ name: 'A signpost and an afterthought in a post', render: AsidesInProse, box: 'justify-center' },
+				],
+			},
 		],
 	},
 	{
@@ -787,6 +813,18 @@ const groups: Group[] = [
 		name: 'Status',
 		components: [
 			{
+				id: 'alert',
+				name: 'Alert',
+				description: 'Something to know about a page or part of it: an alert, tinted in its tone to draw the eye, or a notice, a quieter line in the flow. The colour and icon back up the words, so the words have to say it all. It’s there when the page loads, so it isn’t announced: give one that appears later role="alert" or role="status"',
+				summary: 'Something to know, as a tinted alert or a quieter notice',
+				exports: ['Alert'],
+				stories: [
+					{ name: 'Build one', render: AlertPlayground },
+					{ name: 'Every tone', render: EveryTone },
+					{ name: 'Long text, actions and a dismiss button', render: NoticeInForm },
+				],
+			},
+			{
 				id: 'progress-bar',
 				name: 'Progress bar',
 				description: 'How far along something is, as a bar or a ring, or a spinner when there’s no telling. A meter shows a quantity within limits the same way',
@@ -979,7 +1017,8 @@ const regrouped: Record<string, string[]> = {
 	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
 	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Composer', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
 	Data: ['Avatar', 'Code', 'Grid list', 'Table', 'Tag group'],
-	Feedback: ['Empty state', 'Progress bar', 'Status', 'Toast'],
+	Feedback: ['Alert', 'Empty state', 'Progress bar', 'Status', 'Toast'],
+	Writing: ['Aside', 'Quote'],
 	Overlays: ['Dialog', 'Menu', 'Popover', 'Preview trigger', 'Sheet', 'Tooltip'],
 	Navigation: ['Breadcrumbs', 'Disclosure', 'Link', 'Navigation', 'Navigation tree', 'Pagination', 'Tabs'],
 };

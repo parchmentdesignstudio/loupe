@@ -96,6 +96,8 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `Code` | A block of code, highlighted by Shiki, with a title, Copy and line numbers, in Loupe's, iamsteve's or mcknny's colours |
 | `Keyboard` | A keyboard shortcut, such as ⌘Z, in a sentence, a tooltip, or at the end of a menu item |
 | `Prose` | Writing at length as plain HTML, such as a post from Markdown or a CMS, set in Loupe’s type with no classes inside. Without React, put the `prose` class from `tokens.css` on what holds it |
+| `Quote` | Someone else’s words in Livory’s italic, centred under an opening mark, with who said it under them, as a figure. It shares prose’s blockquote rules, through the `quote` class in `tokens.css`. `variant="testimonial"` sets them from the start edge, with the person’s photo beside their name |
+| `Aside` | The writer’s own voice beside the main text: a signpost to what’s coming or what the reader needs first, behind the accent’s rule, or an afterthought in muted italic. In prose the rule hangs in the margin |
 | `Composer` | A message field with its send button |
 | `TextField` | Text, or several lines with `isMultiline` |
 | `NumberField` | A number, typed or stepped with the arrow keys and its buttons, within its limits |
@@ -122,6 +124,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `Popover` | A dialog beside what opened it |
 | `Menu`, `MenuTrigger` | Actions in a list that opens, with `MenuItem`, `MenuSection` and `MenuSeparator` |
 | `Tooltip`, `TooltipTrigger` | A short label for a control, on hover and keyboard focus |
+| `Alert` | Something to know about a page or part of it, in Status’s tones: an alert tinted to draw the eye, or a quieter notice in the flow, with a title, actions and a dismiss button if it needs them. It isn’t announced: give one that appears later `role="alert"` or `role="status"` |
 | `ToastQueue`, `ToastRegion`, `Toast` | Short messages at the bottom of the screen, such as an export finishing, that close themselves after 5 seconds. An app adds them to one queue, which one region shows. React Aria’s toasts are still unstable, so these may change |
 | `Navigation` | A page’s navigation: a column beside the page on wider screens, and a sheet behind a button on phones |
 | `Link` | A link to another page, or a place on this one |

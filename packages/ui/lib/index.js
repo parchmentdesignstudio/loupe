@@ -1,4 +1,6 @@
+export { Alert, alert } from './Alert.js';
 export { setAppearance, useAppearance } from './Appearance.js';
+export { Aside, aside } from './Aside.js';
 export { Avatar, AvatarGroup, avatar, avatarGroup, avatarTint, initials } from './Avatar.js';
 export { Breadcrumb, Breadcrumbs, breadcrumb, breadcrumbs } from './Breadcrumbs.js';
 export { Button, button } from './Button.js';
@@ -27,6 +29,7 @@ export { Header, header } from './Header.js';
 export { Code } from './Code.js';
 export { Keyboard } from './Keyboard.js';
 export { Prose } from './Prose.js';
+export { Quote, quote } from './Quote.js';
 export { Link, link } from './Link.js';
 export { ListBox, ListBoxItem, ListBoxSection, listBoxItem } from './ListBox.js';
 export { Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger } from './Menu.js';

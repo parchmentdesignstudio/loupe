@@ -552,54 +552,6 @@
 			padding: 0;
 			font-size: inherit;
 		}
-		/* A pull quote, centred under an opening mark in Livory's italic. Spaced by its own size, more than a paragraph,
-		   and the same above and below, so it stands apart from the writing around it */
-		:where(blockquote) {
-			margin-block: 1.5em;
-			font-family: var(--font-serif);
-			font-size: 1.5rem;
-			font-style: italic;
-			line-height: 1.2;
-			text-align: center;
-			text-wrap: balance;
-		}
-		:where(blockquote:first-child) {
-			margin-top: 0;
-		}
-		:where(blockquote:last-child) {
-			margin-bottom: 0;
-		}
-		/* Upright, as a mark rather than a letter, and left out of what a screen reader says, as the words say it's a
-		   quote. Half its line tall, so the quote sits close under it */
-		:where(blockquote)::before {
-			content: '“' / '';
-			display: block;
-			height: 0.5lh;
-			font-size: 3em;
-			font-style: normal;
-			line-height: 1;
-		}
-		:where(blockquote > :first-child) {
-			margin-top: 0.25em;
-		}
-		/* Who said it, in the writing's own type: a cite for the name, and the rest under it */
-		:where(blockquote footer) {
-			margin-top: 1em;
-			font-family: var(--font-sans);
-			font-size: var(--text-body);
-			font-style: normal;
-			line-height: var(--text-body--line-height);
-			color: var(--color-muted);
-			text-wrap: pretty;
-		}
-		:where(blockquote footer *) {
-			margin-top: 0;
-		}
-		:where(blockquote cite) {
-			display: block;
-			font-style: normal;
-			color: var(--color-ink);
-		}
 		:where(ul, ol) {
 			padding-inline-start: 1.25rem;
 		}
@@ -679,6 +631,70 @@
 		:where(dfn, cite, var) {
 			font-style: italic;
 		}
+	}
+
+	/* A pull quote, centred under an opening mark in Livory's italic: a blockquote in prose, or the quote class, which
+	   Quote puts on a figure around its blockquote and figcaption. One set of rules for both, so they can't drift apart.
+	   A Quote in prose is left out of prose's blockquote rules, so its own blockquote doesn't take a second mark */
+	.prose :where(blockquote:not(.quote > *)),
+	.quote {
+		font-family: var(--font-serif);
+		font-size: 1.5rem;
+		font-style: italic;
+		line-height: 1.2;
+		text-align: center;
+		text-wrap: balance;
+	}
+	/* Spaced by its own size, more than a paragraph, and the same above and below, so it stands apart from the writing
+	   around it. Only in prose, so a Quote on its own brings no margin with it */
+	.prose :where(blockquote:not(.quote > *), .quote) {
+		margin-block: 1.5em;
+	}
+	.prose :where(blockquote:not(.quote > *), .quote):where(:first-child) {
+		margin-top: 0;
+	}
+	.prose :where(blockquote:not(.quote > *), .quote):where(:last-child) {
+		margin-bottom: 0;
+	}
+	/* Upright, as a mark rather than a letter, and left out of what a screen reader says, as the words say it's a
+	   quote. Half its line tall, so the quote sits close under it */
+	.prose :where(blockquote:not(.quote > *))::before,
+	.quote::before {
+		content: '“' / '';
+		display: block;
+		height: 0.5lh;
+		font-size: 3em;
+		font-style: normal;
+		line-height: 1;
+	}
+	.prose :where(blockquote:not(.quote > *) > :first-child),
+	.quote > blockquote {
+		margin-top: 0.25em;
+	}
+	/* Prose spaces a blockquote's paragraphs already, and a Quote on its own spaces them the same */
+	.quote > blockquote > * + * {
+		margin-top: 1em;
+	}
+	/* Who said it, in the writing's own type: a cite for the name, and the rest under it */
+	.prose :where(blockquote:not(.quote > *) footer),
+	.quote > figcaption {
+		margin-top: 1em;
+		font-family: var(--font-sans);
+		font-size: var(--text-body);
+		font-style: normal;
+		line-height: var(--text-body--line-height);
+		color: var(--color-muted);
+		text-wrap: pretty;
+	}
+	.prose :where(blockquote:not(.quote > *) footer *),
+	.quote > figcaption * {
+		margin-top: 0;
+	}
+	.prose :where(blockquote:not(.quote > *) cite),
+	.quote cite {
+		display: block;
+		font-style: normal;
+		color: var(--color-ink);
 	}
 }
 
