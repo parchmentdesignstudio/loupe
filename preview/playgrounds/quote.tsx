@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Prose, Quote } from '../../src/index.js';
 import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick } from '../playground.js';
-import { photos } from './avatar.js';
+import { photo } from './avatar.js';
 
 const words = {
 	short: 'We thought we needed a website. It turned out we needed a better way to answer the phone.',
@@ -50,7 +50,7 @@ export function QuotePlayground() {
 				</>
 			}
 		>
-			<Quote variant={variant} cite={cite || undefined} detail={detail || undefined} avatar={variant === 'testimonial' && hasAvatar ? photos[0] : undefined} className={width === 'narrow' ? 'w-full max-w-xs' : 'w-full max-w-[36rem]'}>
+			<Quote variant={variant} cite={cite || undefined} detail={detail || undefined} avatar={variant === 'testimonial' && hasAvatar ? photo : undefined} className={width === 'narrow' ? 'w-full max-w-xs' : 'w-full max-w-[36rem]'}>
 				{words[length]}
 			</Quote>
 		</Playground>
@@ -70,14 +70,14 @@ export function QuoteInProse() {
 	);
 }
 
-/** Three testimonials side by side, as on a services page, with one person who has no photo */
+/** Three testimonials side by side, as on a services page, with only one person who has a photo */
 export function Testimonials() {
 	return (
 		<div className="grid w-full grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-x-10 gap-y-12">
-			<Quote variant="testimonial" cite="Sam Okafor" detail="Head of product, Fernway" avatar={photos[1]}>
+			<Quote variant="testimonial" cite="Doris Hart" detail="Head of product, Fernway" avatar={photo}>
 				Parchment turned a vague idea into a brand we’re proud to put our name to.
 			</Quote>
-			<Quote variant="testimonial" cite="Ada Lin" detail="Operations director, Northgate Lettings" avatar={photos[2]}>
+			<Quote variant="testimonial" cite="Ada Lin" detail="Operations director, Northgate Lettings">
 				The new booking flow halved the calls we get asking where a viewing is. Our team noticed in the first week.
 			</Quote>
 			<Quote variant="testimonial" cite="Tom Hughes" detail="Owner, Hughes & Daughter Joinery">
