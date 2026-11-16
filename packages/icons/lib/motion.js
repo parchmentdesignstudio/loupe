@@ -1,7 +1,8 @@
 import { resolveIcon, iconAttributes } from './index.js'
 
 // Icons that move, drawn from the solid 16px icons' parts (data-part). Each move happens inside the icon's own 16 grid,
-// in its units, and the svg clips at that box, so a plane or car leaves and comes back at the icon's edges at any size
+// in its units. The svg draws past its box, and fades over the 2 units either side of it, so a plane or car leaves and
+// comes back at the icon's edges softly, at any size, while the box it takes up stays 16
 
 const bodyOf = (name) => {
   const icon = resolveIcon(name)
@@ -173,13 +174,16 @@ let count = 0
 export function resolveMotionIcon(name, { id = `motion-${++count}` } = {}) {
   const move = moves[name]
   if (!move) throw new Error(`No moving icon called ${name}`)
-  return { name, viewBox: '0 0 16 16', body: move.draw(id) }
+  // Gone by 18 either way, where across() takes a move off and brings it back
+  const fade = `<linearGradient id="${id}-fade" gradientUnits="userSpaceOnUse" x1="-2" x2="18"><stop offset="0" stop-color="#000"/><stop offset=".1" stop-color="#fff"/><stop offset=".9" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>`
+  const mask = `<mask id="${id}-edge" maskUnits="userSpaceOnUse" x="-2" y="-8" width="20" height="32"><rect x="-2" y="-8" width="20" height="32" fill="url(#${id}-fade)"/></mask>`
+  return { name, viewBox: '0 0 16 16', body: `<defs>${fade}${mask}</defs><g mask="url(#${id}-edge)">${move.draw(id)}</g>` }
 }
 
 /** A complete <svg> string of a moving icon, at rest */
 export function toMotionSvg(name, { label, class: className, id } = {}) {
   const icon = resolveMotionIcon(name, { id })
-  const attrs = { ...iconAttributes({ label }), viewBox: icon.viewBox, 'data-motion': name, ...(className ? { class: className } : {}) }
+  const attrs = { ...iconAttributes({ label }), viewBox: icon.viewBox, overflow: 'visible', 'data-motion': name, ...(className ? { class: className } : {}) }
   const open = Object.entries(attrs).map(([k, v]) => `${k}="${String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"`).join(' ')
   return `<svg ${open}>${icon.body}</svg>`
 }

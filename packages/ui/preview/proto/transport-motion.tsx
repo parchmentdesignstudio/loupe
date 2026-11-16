@@ -11,7 +11,7 @@ export function TransportButton({ kind }: { kind: MotionIconName }) {
 	const icon = useRef<SVGSVGElement>(null);
 	return (
 		<Button variant="ghost" shape="full" aria-label={kind} onHoverStart={() => playMotion(icon.current)} onPress={() => playMotion(icon.current)}>
-			<MotionIcon ref={icon} name={kind} className="block size-4 overflow-hidden" />
+			<MotionIcon ref={icon} name={kind} className="block size-4" />
 		</Button>
 	);
 }
