@@ -1,4 +1,6 @@
+export { Alert, alert, type AlertProps, type AlertTone } from './Alert.js';
 export { setAppearance, useAppearance, type Appearance } from './Appearance.js';
+export { Aside, aside, type AsideProps } from './Aside.js';
 export { Avatar, AvatarGroup, avatar, avatarGroup, avatarTint, initials, type AvatarGroupProps, type AvatarProps, type AvatarShape, type AvatarSize, type AvatarStatus } from './Avatar.js';
 export { Breadcrumb, Breadcrumbs, breadcrumb, breadcrumbs, type BreadcrumbProps, type BreadcrumbsProps } from './Breadcrumbs.js';
 export { Button, button, type ButtonProps, type ButtonVariant } from './Button.js';
@@ -27,6 +29,7 @@ export { Header, header } from './Header.js';
 export { Code, type CodeProps, type CodeTheme } from './Code.js';
 export { Keyboard, type KeyboardProps } from './Keyboard.js';
 export { Prose, type ProseProps } from './Prose.js';
+export { Quote, quote, type QuoteProps } from './Quote.js';
 export { Link, link, type LinkProps } from './Link.js';
 export { ListBox, ListBoxItem, ListBoxSection, listBoxItem, type ListBoxItemProps, type ListBoxProps, type ListBoxSectionProps } from './ListBox.js';
 export { Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger, type MenuItemProps, type MenuProps, type MenuSectionProps } from './Menu.js';

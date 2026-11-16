@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import {
+	Alert,
+	Aside,
 	Avatar,
 	AvatarGroup,
 	Button,
@@ -19,6 +21,7 @@ import {
 	ListBoxItem,
 	NumberField,
 	ProgressCircle,
+	Quote,
 	Row,
 	Select,
 	Status,
@@ -70,6 +73,16 @@ const table = ({ table: own, column, cell }: { table?: Record<string, unknown>; 
  * only shows in place, such as a modal or a menu's item, has none
  */
 export const samples: Partial<Record<string, Sample>> = {
+	Alert: (props) => (
+		<Alert title="Your card expires soon" className="w-64" {...props}>
+			Update it by 31 December
+		</Alert>
+	),
+	Aside: (props) => (
+		<Aside className="w-64" {...props}>
+			I assume you’re comfortable setting up Tailwind
+		</Aside>
+	),
 	Avatar: (props) => <Avatar name={people[0].name} src={people[0].src} {...props} />,
 	AvatarGroup: (props) => (
 		<AvatarGroup {...props}>
@@ -116,6 +129,11 @@ export const samples: Partial<Record<string, Sample>> = {
 	Keyboard: (props) => <Keyboard {...props}>⌘K</Keyboard>,
 	NumberField: (props) => <NumberField label="Guests" defaultValue={2} className="w-40" {...props} />,
 	ProgressCircle: (props) => <ProgressCircle aria-label="Uploading" value={64} {...props} />,
+	Quote: (props) => (
+		<Quote cite={people[0].name} detail="Founder, Halden Studio" avatar={people[0].src} className="w-72" {...props}>
+			It turned out we needed a better way to answer the phone
+		</Quote>
+	),
 	Select: (props) => (
 		<Select label="Plan" defaultSelectedKey="studio" className="w-48" {...props}>
 			<ListBoxItem id="solo">Solo</ListBoxItem>
