@@ -14,6 +14,17 @@ describe('Chip', () => {
 		expect(onPress).toHaveBeenCalledTimes(2);
 	});
 
+	it('comes in three sizes, large unless set', () => {
+		render(
+			<>
+				<Chip>Large</Chip>
+				<Chip size="small">Small</Chip>
+			</>,
+		);
+		expect(screen.getByRole('button', { name: 'Large' }).className.split(' ')).toContain('py-(--chip-padding-y)');
+		expect(screen.getByRole('button', { name: 'Small' }).className.split(' ')).toContain('py-(--chip-small-padding-y)');
+	});
+
 	it('groups under a name', () => {
 		render(
 			<ChipGroup aria-label="Or start with">

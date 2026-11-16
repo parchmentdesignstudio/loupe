@@ -208,10 +208,101 @@ function declarationsOf(path, root) {
 	const css = readFileSync(path, 'utf8').replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '));
 	const source = { file: relative(root, path).split(sep).join('/'), lines: [0] };
 	for (let at = css.indexOf('\n'); at !== -1; at = css.indexOf('\n', at + 1)) source.lines.push(at + 1);
+	// Where each @theme block runs, as only a token there is a Tailwind utility: one in :root is just a variable
+	const themes = [];
+	for (const theme of css.matchAll(/@theme\b[^{]*\{/g)) {
+		let depth = 0;
+		let at = theme.index + theme[0].length - 1;
+		for (; at < css.length; at++) if (css[at] === '{') depth++;
+		else if (css[at] === '}' && !--depth) break;
+		themes.push([theme.index, at]);
+	}
 	for (const match of css.matchAll(/(?<=[{;\s])--([\w-]+)\s*:\s*([^;{}]+);/g)) {
-		if (!declarations.has(match[1])) declarations.set(match[1], { value: match[2].replace(/\s+/g, ' ').trim(), place: placeOf(source, match.index) });
+		const theme = themes.some(([start, end]) => match.index > start && match.index < end);
+		if (!declarations.has(match[1])) declarations.set(match[1], { value: match[2].replace(/\s+/g, ' ').trim(), place: placeOf(source, match.index), theme });
 	}
 	return declarations;
+}
+
+// The tokens a value leads through, as var(--color-primary) is --color-primary, then --color-marigold-83, and the
+// Tailwind name of the first, as --radius-lg is rounded-lg and --color-primary is primary
+const utilities = [
+	[/^radius-(.+)$/, 'rounded-$1'],
+	[/^color-(.+)$/, '$1'],
+	[/^shadow-(.+)$/, 'shadow-$1'],
+	[/^text-(.+)$/, 'text-$1'],
+	[/^font-(.+)$/, 'font-$1'],
+];
+function chainOf(value, declarations) {
+	const themeUtility = (token) => {
+		if (!declarations.get(token)?.theme) return;
+		const [pattern, name] = utilities.find(([test]) => test.test(token)) ?? [];
+		return pattern ? token.replace(pattern, name) : undefined;
+	};
+	// Tailwind's spacing function, as --spacing(2) is two of its 4px steps: the function, then the step it multiplies
+	const spacing = /^--spacing\(([\d.]+)\)$/.exec(value)?.[1];
+	if (spacing) {
+		return {
+			utility: `spacing ${spacing}`,
+			steps: [
+				{ kind: 'function', name: value, value: `calc(var(--spacing) * ${spacing})` },
+				{ kind: 'theme', name: '--spacing', value: declarations.get('spacing')?.value ?? '', utility: 'spacing' },
+			],
+		};
+	}
+	const chain = [];
+	for (let next = value, match; (match = /^var\(--([\w-]+)\)$/.exec(next)) && !chain.includes(match[1]); ) {
+		chain.push(match[1]);
+		next = declarations.get(match[1])?.value ?? '';
+	}
+	if (!chain.length) return {};
+	// Each token with what it's set to, so a light-dark() at the end can show both sides. The last is the palette or
+	// the theme's own value, and any between are roles, as --color-primary is
+	const steps = chain.map((token, index) => {
+		const set = declarations.get(token)?.value ?? '';
+		const [light, dark] = sidesOf(set);
+		const kind = index < chain.length - 1 ? 'role' : token.startsWith('color-') ? 'palette' : 'theme';
+		return { kind, name: `--${token}`, value: set, utility: themeUtility(token), ...(dark ? { light, dark } : {}) };
+	});
+	return { chain: chain.map((token) => `--${token}`), utility: themeUtility(chain[0]), steps };
+}
+
+// Each component's own tokens, from the base layer's block at the end of tokens.css: a heading on its own line, as
+// Shape, groups the tokens under it, and the comment right above a token says what it changes. Keyed by component,
+// as --button-radius is Button's, and --toggle-button-group-radius ToggleButtonGroup's rather than ToggleButton's
+const kebab = (name) => name.replace(/(?<!^)([A-Z])/g, '-$1').toLowerCase();
+function componentTokensOf(path, root, names) {
+	const owners = names.map((name) => [kebab(name), name]).toSorted(([a], [b]) => b.length - a.length);
+	const tokens = {};
+	const declarations = declarationsOf(path, root);
+	if (!existsSync(path)) return tokens;
+	const css = readFileSync(path, 'utf8');
+	const block = css.lastIndexOf('/* Component tokens');
+	if (block === -1) return tokens;
+	const source = { file: relative(root, path).split(sep).join('/'), lines: [0] };
+	for (let at = css.indexOf('\n'); at !== -1; at = css.indexOf('\n', at + 1)) source.lines.push(at + 1);
+	let group = '';
+	let doc = '';
+	// Skip the block's own comment, then read comments and declarations in turn
+	const body = css.indexOf('*/', block) + 2;
+	for (const match of css.slice(body).matchAll(/\/\*([\s\S]*?)\*\/(\s*)|--([\w-]+)\s*:\s*([^;]+);/g)) {
+		if (match[1] !== undefined) {
+			const text = match[1].replace(/\s+/g, ' ').trim();
+			// Followed by a blank line, a comment heads what's below it rather than saying what one token does
+			if (/\n\s*\n/.test(match[2])) {
+				group = text;
+				doc = '';
+			} else doc = text;
+			continue;
+		}
+		const name = match[3];
+		const component = owners.find(([prefix]) => name.startsWith(`${prefix}-`))?.[1];
+		if (!component) continue;
+		const value = match[4].replace(/\s+/g, ' ').trim();
+		(tokens[component] ??= []).push({ name: `--${name}`, value, ...chainOf(value, declarations), group, doc: doc || undefined, place: placeOf(source, body + match.index) });
+		doc = '';
+	}
+	return tokens;
 }
 
 // light-dark()’s two sides, split at the comma between them rather than one inside either
@@ -312,7 +403,7 @@ function read(root, ui, packages) {
 		if (source) library.set(path, source);
 	}
 	const index = library.get(join(ui, 'src', 'index.ts'));
-	if (!index) return { project: basename(ui), components: {}, colours: {}, type: { sizes: [], families: [] } };
+	if (!index) return { project: basename(ui), components: {}, colours: {}, type: { sizes: [], families: [] }, componentTokens: {} };
 
 	const fileOf = (from, specifier) => {
 		const base = join(dirname(from.path), specifier).replace(/\.js$/, '');
@@ -536,5 +627,5 @@ function read(root, ui, packages) {
 		detail.uses.sort((a, b) => (a.project === own) - (b.project === own) || a.project.localeCompare(b.project) || a.path.localeCompare(b.path) || a.line - b.line);
 	}
 
-	return { project: own, components, colours: coloursOf(theme, join(ui, 'tokens.css'), root), type: typographyOf(theme, join(ui, 'tokens.css'), root) };
+	return { project: own, components, colours: coloursOf(theme, join(ui, 'tokens.css'), root), type: typographyOf(theme, join(ui, 'tokens.css'), root), componentTokens: componentTokensOf(join(ui, 'tokens.css'), root, Object.keys(components)) };
 }

@@ -72,6 +72,24 @@ export interface TypeToken {
 	place?: Place;
 }
 
+/** One of a component's own tokens, as tokens.css sets it, such as --button-radius */
+export interface ComponentToken {
+	name: string;
+	/** What it starts as, such as var(--radius-lg) */
+	value: string;
+	/** The tokens it leads through, such as --color-primary then --color-marigold-83 */
+	chain?: string[];
+	/** The first of them by its Tailwind name, such as rounded-lg or primary */
+	utility?: string;
+	/** Each of them with what it's set to, and its two sides where that's a light-dark() */
+	steps?: { kind: 'role' | 'palette' | 'theme' | 'function'; name: string; value: string; utility?: string; light?: string; dark?: string }[];
+	/** The heading it sits under, such as Shape */
+	group: string;
+	/** What it changes */
+	doc?: string;
+	place: Place;
+}
+
 export interface Details {
 	/** The library’s own package, as a Use’s project, such as ui */
 	project: string;
@@ -79,4 +97,6 @@ export interface Details {
 	colours: Record<string, Colour>;
 	/** The sizes and families, for the typography page */
 	type: { sizes: TypeToken[]; families: TypeToken[] };
+	/** Each component's own tokens, by its name, such as Button */
+	componentTokens: Record<string, ComponentToken[]>;
 }

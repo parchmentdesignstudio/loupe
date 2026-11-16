@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, setOnOffLabels } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
 
+const trackOf = (name: string) => screen.getByRole('switch', { name }).closest('label')?.querySelector('.w-9');
+
 describe('Checkbox', () => {
 	it('ticks with a click on its label, and with Space', async () => {
 		const user = userEvent.setup();
@@ -71,9 +73,8 @@ describe('Switch', () => {
 				<Switch shape="full">Full</Switch>
 			</>,
 		);
-		const track = (name: string) => screen.getByRole('switch', { name }).closest('label')?.querySelector('.w-9');
-		expect(track('Rounded')?.className).toContain('rounded-lg');
-		expect(track('Full')?.className).toContain('rounded-full');
+		expect(trackOf('Rounded')?.className).toContain('rounded-lg');
+		expect(trackOf('Full')?.className).toContain('rounded-full');
 	});
 
 	it('marks on/off labels on the root, and keeps them out of its name', () => {

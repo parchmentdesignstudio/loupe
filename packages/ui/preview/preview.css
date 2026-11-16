@@ -3,3 +3,11 @@
 @source '../src';
 @source './';
 
+
+/* Thin bars in the layer's own bleed, so each scroll area's bar takes the colour of the ground it sits on */
+@layer base {
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: color-mix(in oklab, var(--bleed) 24%, transparent) transparent;
+	}
+}

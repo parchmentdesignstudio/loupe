@@ -56,7 +56,7 @@ const Page = ({ entry }: { entry: Entry }) => (
 const foundations = library.find((group) => group.name === 'Foundations');
 const componentGroups = library.filter((group) => group !== foundations);
 // Loupe's own pages, A–Z, with the foundations among them as a folder of their own
-const loupePages = [...areas.filter((area) => area.id !== 'blocks'), ...(foundations ? [{ id: groupKey(foundations.name), name: foundations.name }] : [])].sort((a, b) =>
+const loupePages = [...areas.filter((area) => area.id !== 'blocks'), ...(foundations ? [{ id: groupKey(foundations.name), name: foundations.name }] : [])].toSorted((a, b) =>
 	a.name.localeCompare(b.name),
 );
 
@@ -243,7 +243,7 @@ function Stories({ entry, heading: Heading }: { entry: Entry; heading: 'h2' | 'h
 	return entry.stories.map((story, index) => (
 		<section key={story.name} id={`${entry.id}-${index}`} className="flex scroll-mt-25 md:scroll-mt-18 flex-col gap-3">
 			<Heading className="font-sans text-label text-muted">{story.name}</Heading>
-			<div className={['flex flex-wrap items-center gap-2 border-y border-bleed/8 py-6', story.box].filter(Boolean).join(' ')}>
+			<div className={['flex flex-wrap items-center gap-2 border-t border-bleed/8 py-6', story.box].filter(Boolean).join(' ')}>
 				<StoryBoundary>
 					<story.render />
 				</StoryBoundary>

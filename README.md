@@ -114,6 +114,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `ColorPicker` | A colour, shown as a swatch and its hex in a button like a field’s, that opens a colour area, a hue slider and a hex field |
 | `ColorSwatchPicker`, `ColorSwatchPickerItem` | A colour picked from a few set ones, as a row of swatches |
 | `ColorSwatch` | A colour on its own, over a checkerboard that shows through where it’s see-through |
+| `Swatch` | Any CSS colour or token as a square, small in a line of text, medium in a list or large on its own |
 | `ColorArea`, `ColorSlider`, `ColorField` | A colour picker’s parts, to make your own: two channels at once on an area, one along a track, and the hex typed in |
 | `GridList`, `GridListItem` | Items to choose or act on, as rows or as tiles, which can hold buttons of their own. `GridListSection` and `GridListHeader` group them under headings, and choosing several shows a checkbox in each |
 | `TagGroup`, `Tag` | Short labels to choose from or remove, such as sizes or filters, under a label like a field’s |

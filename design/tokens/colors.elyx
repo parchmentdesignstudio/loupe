@@ -140,6 +140,12 @@ export colors = tokens {
   inverse: ink,
   // A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track
   knob: white,
+  // What marks the one chosen in a segmented control, white in the light, and in the dark a step lighter than raised,
+  // so it stands off the well it sits in
+  chosen: white,
+  // A pink tint that marks each chosen where several can be, and the text on it, a darker pink in the light so it reads on white
+  chosen-tint: opacity(pink-56, 12%),
+  on-chosen-tint: pink-56,
   // Behind a sheet
   scrim: opacity(pine-26, 32%),
   // Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
@@ -177,7 +183,7 @@ export colors = tokens {
   inverse-bleed: white,
   bleed: ground-bleed,
   // Shadows have their own colours, so they stay dark in the dark. In the light, the edge is the ground's line
-  // colour, and the drops take the ground's hue, as the tints do. In the dark, the edge is a shade darker than
+  // colour, and the shadows take the ground's hue, as the tints do. In the dark, the edge is a shade darker than
   // what's behind it, so it's crisp without being bright. A component that sets its own edge takes --dark-edge for
   // the dark
   dark-edge: opacity(black, 32%),
@@ -186,13 +192,13 @@ export colors = tokens {
   // from above. They're shadows, so they go when something is disabled or pressed flat
   sheen: opacity(black, 0%),
   toplight: opacity(black, 0%),
-  drop-raised: opacity(bleed, 12%),
-  drop-floating: opacity(bleed, 12%),
+  shadow-raised-color: opacity(bleed, 12%),
+  shadow-floating-color: opacity(bleed, 12%),
   // Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it
-  drop-deep: opacity(black, 0%),
-  drop-overlay: opacity(bleed, 12%),
-  drop-handle: opacity(bleed, 12%),
-  drop-well: opacity(bleed, 16%)
+  shadow-deep-color: opacity(black, 0%),
+  shadow-overlay-color: opacity(bleed, 12%),
+  shadow-handle-color: opacity(bleed, 12%),
+  shadow-well-color: opacity(bleed, 16%)
 }
 
 // A tint is a layer’s bleed at 4, 8, 12, 16, 24 or 32%, named for the layer it sits on, such as overlay-8 for a

@@ -14,6 +14,7 @@ import {
 	ColorSwatch,
 	ColorSwatchPicker,
 	ColorSwatchPickerItem,
+	Swatch,
 	Composer,
 	EmptyState,
 	FileTrigger,
@@ -321,7 +322,7 @@ const derived = [
 	['red-81', 'red-50'],
 ];
 
-function Swatch({ name, label = name, role }: { name: string; label?: string; role?: string }) {
+function PaletteSwatch({ name, label = name, role }: { name: string; label?: string; role?: string }) {
 	const hex = hexOf(name);
 	return (
 		<div className="flex flex-col gap-1.5 font-mono text-label">
@@ -342,7 +343,7 @@ function Hues() {
 				<div key={hue} className="flex flex-col gap-3">
 					<p className="font-mono text-label">{hue}</p>
 					{steps.map((step) => (
-						<Swatch key={step} name={`${hue}-${step}`} label={String(step)} />
+						<PaletteSwatch key={step} name={`${hue}-${step}`} label={String(step)} />
 					))}
 				</div>
 			))}
@@ -354,7 +355,7 @@ function Greys({ name }: { name: string }) {
 	return (
 		<div className="flex flex-wrap gap-x-1.5 gap-y-4">
 			{greySteps.map((step) => (
-				<Swatch key={step} name={`${name}-${step}`} label={String(step)} />
+				<PaletteSwatch key={step} name={`${name}-${step}`} label={String(step)} />
 			))}
 		</div>
 	);
@@ -366,7 +367,7 @@ function Derived() {
 			{derived.map((names) => (
 				<div key={names[0]} className="flex flex-wrap gap-x-1.5 gap-y-4">
 					{names.map((name) => (
-						<Swatch key={name} name={name} />
+						<PaletteSwatch key={name} name={name} />
 					))}
 				</div>
 			))}
@@ -388,7 +389,7 @@ const groups: Group[] = [
 					{
 						name: 'Parchment’s own',
 						// From the top, as only some have a role under them
-						render: () => brand.map(({ name, role }) => <Swatch key={name} name={name} role={role} />),
+						render: () => brand.map(({ name, role }) => <PaletteSwatch key={name} name={name} role={role} />),
 						box: 'items-start',
 					},
 					{ name: 'Nine hues, each light, mid and dark', render: Hues },
@@ -756,6 +757,47 @@ const groups: Group[] = [
 				],
 			},
 			{
+				id: 'swatch',
+				name: 'Swatch',
+				description: 'A colour as a square, from any CSS colour or token, such as var(--color-primary), in a line of text, a list or on its own. ColorSwatch is the one for a colour React Aria picks',
+				summary: 'A colour as a square, from any CSS colour or token',
+				exports: ['Swatch'],
+				stories: [
+					{
+						name: 'Three sizes',
+						render: () => (
+							<div className="flex items-end gap-4">
+								{(['small', 'medium', 'large'] as const).map((size) => (
+									<Swatch key={size} color="var(--color-primary)" size={size} label={`Marigold, ${size}`} />
+								))}
+							</div>
+						),
+					},
+					{
+						name: 'From tokens, following the theme',
+						render: () => (
+							<ul className="flex flex-col gap-2 text-control">
+								{['primary', 'quiet', 'ink', 'muted', 'paper', 'danger'].map((name) => (
+									<li key={name} className="flex items-center gap-2">
+										<Swatch color={`var(--color-${name})`} size="medium" />
+										<code className="font-mono text-label">--color-{name}</code>
+									</li>
+								))}
+							</ul>
+						),
+					},
+					{
+						name: 'In a line of text, and see-through',
+						render: () => (
+							<p className="max-w-[36ch] text-pretty">
+								Buttons lead with marigold <Swatch color="var(--color-primary)" size="small" /> and a selection tints with olive at 24%{' '}
+								<Swatch color="color-mix(in oklab, var(--color-olive-91) 24%, transparent)" size="small" />, over the checkerboard.
+							</p>
+						),
+					},
+				],
+			},
+			{
 				id: 'tag-group',
 				name: 'Tag group',
 				description: 'Short labels to choose from or remove, such as sizes or filters',
@@ -1016,7 +1058,7 @@ const regrouped: Record<string, string[]> = {
 	Foundations: ['Colour', 'Prose', 'Typography'],
 	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
 	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Composer', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
-	Data: ['Avatar', 'Code', 'Grid list', 'Table', 'Tag group'],
+	Data: ['Avatar', 'Code', 'Grid list', 'Swatch', 'Table', 'Tag group'],
 	Feedback: ['Alert', 'Empty state', 'Progress bar', 'Status', 'Toast'],
 	Writing: ['Aside', 'Quote'],
 	Overlays: ['Dialog', 'Menu', 'Popover', 'Preview trigger', 'Sheet', 'Tooltip'],
@@ -1052,7 +1094,7 @@ function Icons({ variant, size }: { variant: IconVariant; size: IconSize }) {
 	const [hasGuides, setGuides] = useState(true);
 	const [isGrouped, setGrouped] = useState(true);
 	const [shown, setShown] = useState<PreviewSize>(size);
-	const groups = byCategory(iconNames({ variant, size }));
+	const categories = byCategory(iconNames({ variant, size }));
 	// The squares grow with the icons, so a 48px one keeps room around it
 	const grid = (names: IconName[]) => (
 		<ul className="grid border-t border-l border-bleed/8" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${Math.max(48, shown * 2.5)}px, 1fr))` }}>
@@ -1083,7 +1125,7 @@ function Icons({ variant, size }: { variant: IconVariant; size: IconSize }) {
 				</Switch>
 			</div>
 			{isGrouped
-				? groups.map(([category, names]) => (
+				? categories.map(([category, names]) => (
 						<section key={category} aria-labelledby={`icons-${category.toLowerCase().replaceAll(' ', '-')}`} className="flex flex-col gap-3">
 							<h3 id={`icons-${category.toLowerCase().replaceAll(' ', '-')}`} className="text-control font-medium">
 								{category} <span className="font-normal text-muted tabular-nums">{names.length}</span>
@@ -1091,7 +1133,7 @@ function Icons({ variant, size }: { variant: IconVariant; size: IconSize }) {
 							{grid(names)}
 						</section>
 					))
-				: grid(groups.flatMap(([, names]) => names))}
+				: grid(categories.flatMap(([, names]) => names))}
 		</div>
 	);
 }

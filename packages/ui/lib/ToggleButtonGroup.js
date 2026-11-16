@@ -9,7 +9,7 @@ import { focusRing, tv } from './tv.js';
 // two chosen side by side don't share an edge, and a hairline divides each from the next, as macOS's segmented controls
 // do, unless it's turned off
 export const toggleButtonGroup = tv({
-    base: 'group/toggle isolate inline-flex w-fit gap-(--gap) rounded-lg p-(--inset) [--divider:light-dark(color-mix(in_oklab,var(--bleed)_14%,transparent),color-mix(in_oklab,white_10%,transparent))] [--chosen-tint:light-dark(color-mix(in_oklab,var(--color-pink-56)_12%,transparent),color-mix(in_oklab,var(--color-pink-70)_18%,transparent))] [--chosen-edge:light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--dark-edge))] [--chosen:light-dark(var(--color-raised),var(--color-surface))] [--inset:--spacing(0.75)]',
+    base: 'group/toggle isolate inline-flex w-fit gap-(--gap) rounded-(--toggle-button-group-radius) p-(--inset) [--divider:light-dark(color-mix(in_oklab,var(--bleed)_14%,transparent),color-mix(in_oklab,white_10%,transparent))] [--chosen-tint:var(--toggle-button-group-raised-chosen-fill)] [--chosen-edge:light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--dark-edge))] [--chosen:var(--toggle-button-group-chosen-fill)] [--inset:var(--toggle-button-group-inset)]',
     variants: {
         orientation: {
             horizontal: '',
@@ -46,7 +46,7 @@ const divider = [
 ];
 export const toggleButton = tv({
     extend: focusRing,
-    base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--radius-lg)-var(--inset,0px))] px-2.5 py-1 text-control font-medium text-muted [&>svg]:my-[calc((1lh-1rem)/2)] outline-offset-0 transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
+    base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control [font-weight:var(--toggle-button-group-font-weight)] text-muted [&>svg]:my-[calc((1lh-1rem)/2)] outline-offset-0 transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
     variants: {
         isSelected: {
             true: 'text-ink',
@@ -77,7 +77,7 @@ export const toggleButton = tv({
     compoundVariants: [
         { variant: 'well', hasIndicator: false, isSelected: true, class: 'bg-(--chosen) shadow-raised [--edge:var(--chosen-edge)]' },
         { variant: 'well', hasIndicator: false, isSelected: true, isDisabled: true, class: 'bg-bleed/12 shadow-none' },
-        { variant: 'raised', isSelected: true, class: 'bg-(--chosen-tint) text-[light-dark(var(--color-pink-56),var(--color-pink-70))]' },
+        { variant: 'raised', isSelected: true, class: 'bg-(--chosen-tint) text-(color:--toggle-button-group-raised-chosen-text)' },
         { variant: 'raised', isSelected: true, isDisabled: true, class: 'bg-bleed/12 text-muted' },
         { variant: 'well', hasIndicator: false, isSelected: false, isHovered: true, class: 'bg-bleed/4' },
         // In a raised group, the hovered one sinks in the dark, to the panel's fill below the group's, rather than lift

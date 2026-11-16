@@ -70,11 +70,11 @@ describe('Button', () => {
 		const [start, end] = screen.getAllByRole('button');
 		expect(start.firstElementChild?.firstElementChild).toBe(screen.getByTestId('plus'));
 		expect(start.textContent).toBe('New project');
-		// The label carries 4px each side, so the icon's side pads only the button's 8px (6px small)
-		expect(start.className.split(' ')).toContain('px-2');
-		expect(start.querySelector('span span')?.className.split(' ')).toContain('px-1');
+		// The label carries 4px each side, so the icon's side pads only the button's own padding
+		expect(start.className.split(' ')).toContain('px-(--button-padding-x)');
+		expect(start.querySelector('span span')?.className.split(' ')).toContain('px-[round(1em*4/13,1px)]');
 		expect(end.firstElementChild?.lastElementChild).toBe(screen.getByTestId('arrow'));
-		expect(end.className.split(' ')).toContain('px-1.5');
+		expect(end.className.split(' ')).toContain('px-(--button-small-padding-x)');
 	});
 
 	it('keeps a circle round at either size', () => {
@@ -91,10 +91,8 @@ describe('Button', () => {
 		const [medium, small] = screen.getAllByRole('button').map((button) => button.className.split(' '));
 		expect(medium).toContain('rounded-full');
 		expect(small).toContain('rounded-full');
-		expect(medium).toEqual(expect.arrayContaining(['px-2', 'py-1.5']));
-		expect(medium).not.toContain('px-3');
-		expect(small).toEqual(expect.arrayContaining(['px-1.5', 'py-1']));
-		expect(small).not.toContain('px-2.5');
+		expect(medium).toEqual(expect.arrayContaining(['px-(--button-padding-x)', 'py-(--button-padding-y)']));
+		expect(small).toEqual(expect.arrayContaining(['px-(--button-small-padding-x)', 'py-(--button-small-padding-y)']));
 	});
 
 	it('fills primary with marigold and quiet with slate', () => {
@@ -105,15 +103,15 @@ describe('Button', () => {
 			</>,
 		);
 		const [primary, quiet] = screen.getAllByRole('button').map((button) => button.className.split(' '));
-		expect(primary).toEqual(expect.arrayContaining(['[--fill:var(--color-primary)]', 'text-on-primary']));
-		expect(quiet).toEqual(expect.arrayContaining(['[--fill:var(--color-quiet)]', 'text-on-quiet']));
-		expect(quiet).not.toContain('[--fill:var(--color-primary)]');
+		expect(primary).toEqual(expect.arrayContaining(['[--fill:var(--button-primary-fill)]', 'text-(color:--button-primary-text)']));
+		expect(quiet).toEqual(expect.arrayContaining(['[--fill:var(--button-quiet-fill)]', 'text-(color:--button-quiet-text)']));
+		expect(quiet).not.toContain('[--fill:var(--button-primary-fill)]');
 	});
 
 	it('keeps text-body and text-ink apart when merging', () => {
 		render(<Button className="text-body">Schedule call</Button>);
 		expect(screen.getByRole('button').className).toContain('text-body');
-		expect(screen.getByRole('button').className).toContain('text-on-primary');
+		expect(screen.getByRole('button').className).toContain('text-(color:--button-primary-text)');
 	});
 
 	it('has nothing for axe to flag', async () => {

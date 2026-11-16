@@ -4,7 +4,7 @@ import { tv } from './tv.js';
 export type { ToolbarProps };
 
 const toolbar = tv({
-	base: 'flex items-center gap-1',
+	base: 'flex items-center gap-(--toolbar-gap)',
 	variants: {
 		orientation: {
 			horizontal: 'flex-wrap',

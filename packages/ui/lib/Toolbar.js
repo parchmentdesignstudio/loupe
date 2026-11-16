@@ -2,7 +2,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { SeparatorContext, Toolbar as AriaToolbar, composeRenderProps } from 'react-aria-components';
 import { tv } from './tv.js';
 const toolbar = tv({
-    base: 'flex items-center gap-1',
+    base: 'flex items-center gap-(--toolbar-gap)',
     variants: {
         orientation: {
             horizontal: 'flex-wrap',

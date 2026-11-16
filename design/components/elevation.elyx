@@ -16,7 +16,7 @@ export raised = frame {
   shadow: [
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 2px),
         blur-radius: 4px,
         spread: -2px
@@ -24,7 +24,7 @@ export raised = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 1px),
         blur-radius: 3px,
         spread: -1.5px
@@ -32,7 +32,7 @@ export raised = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 1px),
         blur-radius: 1px,
         spread: -1px
@@ -56,7 +56,7 @@ export panel = frame {
   shadow: [
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 2px),
         blur-radius: 4px,
         spread: -2px
@@ -64,7 +64,7 @@ export panel = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 1px),
         blur-radius: 3px,
         spread: -1.5px
@@ -72,7 +72,7 @@ export panel = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 1px),
         blur-radius: 1px,
         spread: -1px
@@ -95,7 +95,7 @@ export button = frame {
   shadow: [
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 2px),
         blur-radius: 4px,
         spread: -2px
@@ -103,7 +103,7 @@ export button = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 1px),
         blur-radius: 3px,
         spread: -1.5px
@@ -111,7 +111,7 @@ export button = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 1px),
         blur-radius: 1px,
         spread: -1px
@@ -135,7 +135,7 @@ export button-lifted = frame {
   shadow: [
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 4px),
         blur-radius: 8px,
         spread: -4px
@@ -143,7 +143,7 @@ export button-lifted = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 3px),
         blur-radius: 6px,
         spread: -3px
@@ -151,7 +151,7 @@ export button-lifted = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 2px),
         blur-radius: 4px,
         spread: -2px
@@ -159,7 +159,7 @@ export button-lifted = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 1px),
         blur-radius: 3px,
         spread: -1.5px
@@ -167,7 +167,7 @@ export button-lifted = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-raised,
+        color: base.colors.shadow-raised-color,
         offset: point(0px, 1px),
         blur-radius: 1px,
         spread: -1px
@@ -191,7 +191,7 @@ export floating = frame {
   shadow: [
     {
       drop-shadow: {
-        color: base.colors.drop-floating,
+        color: base.colors.shadow-floating-color,
         offset: point(0px, 12px),
         blur-radius: 24px,
         spread: -12px
@@ -199,7 +199,7 @@ export floating = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-floating,
+        color: base.colors.shadow-floating-color,
         offset: point(0px, 6px),
         blur-radius: 12px,
         spread: -6px
@@ -207,7 +207,7 @@ export floating = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-floating,
+        color: base.colors.shadow-floating-color,
         offset: point(0px, 3px),
         blur-radius: 6px,
         spread: -3px
@@ -215,7 +215,7 @@ export floating = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-floating,
+        color: base.colors.shadow-floating-color,
         offset: point(0px, 2px),
         blur-radius: 4px,
         spread: -2px
@@ -223,7 +223,7 @@ export floating = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-floating,
+        color: base.colors.shadow-floating-color,
         offset: point(0px, 1px),
         blur-radius: 3px,
         spread: -1.5px
@@ -231,7 +231,7 @@ export floating = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-floating,
+        color: base.colors.shadow-floating-color,
         offset: point(0px, 1px),
         blur-radius: 1px,
         spread: -0.5px
@@ -254,7 +254,7 @@ export overlay = frame {
   shadow: [
     {
       drop-shadow: {
-        color: base.colors.drop-deep,
+        color: base.colors.shadow-deep-color,
         offset: point(0px, 24px),
         blur-radius: 48px,
         spread: -12px
@@ -262,7 +262,7 @@ export overlay = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-deep,
+        color: base.colors.shadow-deep-color,
         offset: point(0px, 12px),
         blur-radius: 24px,
         spread: -6px
@@ -270,7 +270,7 @@ export overlay = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-overlay,
+        color: base.colors.shadow-overlay-color,
         offset: point(0px, 12px),
         blur-radius: 32px,
         spread: -24px
@@ -278,7 +278,7 @@ export overlay = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-overlay,
+        color: base.colors.shadow-overlay-color,
         offset: point(0px, 8px),
         blur-radius: 16px,
         spread: -12px
@@ -286,7 +286,7 @@ export overlay = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-overlay,
+        color: base.colors.shadow-overlay-color,
         offset: point(0px, 3px),
         blur-radius: 6px,
         spread: -3px
@@ -294,7 +294,7 @@ export overlay = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-overlay,
+        color: base.colors.shadow-overlay-color,
         offset: point(0px, 2px),
         blur-radius: 4px,
         spread: -2px
@@ -302,7 +302,7 @@ export overlay = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-overlay,
+        color: base.colors.shadow-overlay-color,
         offset: point(0px, 1px),
         blur-radius: 3px,
         spread: -1.5px
@@ -310,7 +310,7 @@ export overlay = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-overlay,
+        color: base.colors.shadow-overlay-color,
         offset: point(0px, 1px),
         blur-radius: 1px,
         spread: -0.5px
@@ -334,7 +334,7 @@ export handle = frame {
   shadow: [
     {
       drop-shadow: {
-        color: base.colors.drop-handle,
+        color: base.colors.shadow-handle-color,
         offset: point(0px, 12px),
         blur-radius: 24px,
         spread: -12px
@@ -342,7 +342,7 @@ export handle = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-handle,
+        color: base.colors.shadow-handle-color,
         offset: point(0px, 6px),
         blur-radius: 12px,
         spread: -6px
@@ -350,7 +350,7 @@ export handle = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-handle,
+        color: base.colors.shadow-handle-color,
         offset: point(0px, 3px),
         blur-radius: 6px,
         spread: -3px
@@ -358,7 +358,7 @@ export handle = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-handle,
+        color: base.colors.shadow-handle-color,
         offset: point(0px, 2px),
         blur-radius: 4px,
         spread: -2px
@@ -366,7 +366,7 @@ export handle = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-handle,
+        color: base.colors.shadow-handle-color,
         offset: point(0px, 1px),
         blur-radius: 3px,
         spread: -1.5px
@@ -374,7 +374,7 @@ export handle = frame {
     },
     {
       drop-shadow: {
-        color: base.colors.drop-handle,
+        color: base.colors.shadow-handle-color,
         offset: point(0px, 1px),
         blur-radius: 1px,
         spread: -0.5px
