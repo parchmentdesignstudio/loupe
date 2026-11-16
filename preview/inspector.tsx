@@ -1,6 +1,6 @@
 import { type ReactNode, useId } from 'react';
 import details from 'virtual:details';
-import { Link } from '../src/index.js';
+import { Link, Swatch as LoupeSwatch } from '../src/index.js';
 import type { Colour, Detail, Place, TokenKind, TypeToken, Use } from './details.mjs';
 import { href } from './routes.js';
 import { type Entry, library } from './stories.js';
@@ -127,7 +127,7 @@ function List({ children }: { children: ReactNode }) {
 }
 
 function Swatch({ colour }: { colour?: string }) {
-	return <span className="size-2.5 shrink-0 rounded-full ring-1 ring-bleed/16" style={{ background: colour }} />;
+	return <LoupeSwatch color={colour ?? 'transparent'} size="small" />;
 }
 
 // A section’s name, where it’s written, and a line on what it is

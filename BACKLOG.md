@@ -89,6 +89,15 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 
 ## Done
 
+- **16 November:** the token breakdown, decided between six versions behind a picker.
+  - **Chosen:** the value on the popover's own surface, with how it's reached beside it (0.25rem × 2, or a palette colour's oklch). A theme value shows a sun and a moon, each with its side's swatch, in place of "Changes with the theme". Below, on a full-width `bleed/4` ground, each step's label sits over its CSS, highlighted, with line numbers running on from one step to the next. Tailwind's `--spacing(2)` is a comment line. One size, 12px, throughout, with weight carrying the hierarchy, and no arrow.
+  - **Rejected:**
+    - **Quiet**, monochrome code under labels: clear, but the code was harder to scan without colour.
+    - **Inspector**, an Xcode-style grid with values said in words: the right-aligned labels pushed the names off to one side.
+    - **Chain**, a timeline of dots: decoration that added nothing the order didn't already say.
+    - **Grouped**, an iOS inset list: the names had to be cut short to fit.
+    - **Path**, a breadcrumb over the highlighted code: the breadcrumb repeated the code above it.
+
 - **10 November:**
   - **Components added:** `Toolbar`, `Separator`, `Keyboard`, `Tabs`, `Slider`, the colour family (`ColorPicker`, `ColorSwatchPicker`, `ColorSwatch`, `ColorArea`, `ColorSlider`, `ColorField`, `ColorThumb`), `DropZone`, `FileTrigger`, `GridList`, `TagGroup`, `SearchField` and toasts.
   - **Favicon** moved off its stand-ins onto them, with its status messages as toasts.

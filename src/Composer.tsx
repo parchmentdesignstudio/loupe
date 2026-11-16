@@ -42,6 +42,13 @@ export interface ComposerProps {
 	className?: string;
 }
 
+// While an input method is composing, Enter picks the characters rather than sending
+function sendOnEnter(event: KeyboardEvent<HTMLTextAreaElement>) {
+	if (event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) return;
+	event.preventDefault();
+	event.currentTarget.form?.requestSubmit();
+}
+
 /** A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line, and an empty message can't be sent */
 export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, isDisabled = false, className }: ComposerProps) {
 	const [draft, setDraft] = useState(defaultValue);
@@ -59,13 +66,6 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
 		if (empty || isDisabled) return;
 		onSubmit(message.trim());
 		if (value === undefined) setDraft('');
-	};
-
-	// While an input method is composing, Enter picks the characters rather than sending
-	const sendOnEnter = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-		if (event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) return;
-		event.preventDefault();
-		event.currentTarget.form?.requestSubmit();
 	};
 
 	return (

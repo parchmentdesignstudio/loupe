@@ -61,7 +61,7 @@ export const code = tv({
 		line: 'flex h-[1lh] items-center [&>*]:pointer-events-auto [&>*]:bg-code-ground',
 	},
 	variants: {
-		hasBar: { true: { body: 'relative shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--drop-raised)]' } },
+		hasBar: { true: { body: 'relative shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--shadow-raised-color)]' } },
 	},
 });
 

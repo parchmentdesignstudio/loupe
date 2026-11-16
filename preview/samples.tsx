@@ -6,6 +6,7 @@ import {
 	AvatarGroup,
 	Button,
 	Cell,
+	Chip,
 	Code,
 	Column,
 	Disclosure,
@@ -25,6 +26,7 @@ import {
 	Row,
 	Select,
 	Status,
+	Swatch,
 	Switch,
 	Table,
 	TableBody,
@@ -32,6 +34,7 @@ import {
 	TextField,
 	ToggleButton,
 	ToggleButtonGroup,
+	Toolbar,
 } from '../src/index.js';
 import { photo } from './playgrounds/avatar.js';
 
@@ -93,6 +96,7 @@ export const samples: Partial<Record<string, Sample>> = {
 	),
 	Button: (props) => <Button {...props}>New project</Button>,
 	Cell: (props) => table({ column: props, cell: props }),
+	Chip: (props) => <Chip {...props}>Sounds good</Chip>,
 	Code: (props) => <Code code="pnpm add shiki" isCopyable={false} className="w-56" {...props} />,
 	Column: (props) => table({ column: props, cell: props }),
 	Disclosure: (props) => (
@@ -141,6 +145,7 @@ export const samples: Partial<Record<string, Sample>> = {
 		</Select>
 	),
 	Status: (props) => <Status {...props}>In review</Status>,
+	Swatch: (props) => <Swatch color="var(--color-primary)" {...props} />,
 	Switch: (props) => (
 		<Switch defaultSelected {...props}>
 			Notifications
@@ -153,5 +158,12 @@ export const samples: Partial<Record<string, Sample>> = {
 			<ToggleButton id="grid">Grid</ToggleButton>
 			<ToggleButton id="list">List</ToggleButton>
 		</ToggleButtonGroup>
+	),
+	Toolbar: (props) => (
+		<Toolbar aria-label="Edit" {...props}>
+			<Button variant="ghost">Cut</Button>
+			<Button variant="ghost">Copy</Button>
+			<Button variant="ghost">Paste</Button>
+		</Toolbar>
 	),
 };

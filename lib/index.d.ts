@@ -12,6 +12,7 @@ export { ColorField, type ColorFieldProps } from './ColorField.js';
 export { ColorPicker, type ColorPickerProps } from './ColorPicker.js';
 export { ColorSlider, type ColorSliderProps } from './ColorSlider.js';
 export { ColorSwatch, colorSwatch, type ColorSwatchProps } from './ColorSwatch.js';
+export { Swatch, swatch, type SwatchProps } from './Swatch.js';
 export { ColorSwatchPicker, ColorSwatchPickerItem, type ColorSwatchPickerItemProps, type ColorSwatchPickerProps } from './ColorSwatchPicker.js';
 export { ColorThumb, colorThumb, type ColorThumbProps } from './ColorThumb.js';
 export { ComboBox, type ComboBoxProps } from './ComboBox.js';

@@ -156,7 +156,7 @@ export function transformerLineNumbers(): ShikiTransformer {
 		name: 'loupe:line-numbers',
 		code(node) {
 			pairs = [];
-			const meta = /showLineNumbers(?:=(\d+))?/.exec(this.options.meta?.__raw ?? '');
+			const meta = /showLineNumbers(?:=(\d+))?/.exec(this.options.meta?.['__raw'] ?? '');
 			if (!meta) return;
 			const lines = node.children.filter((child) => child.type === 'element');
 			// Shiki ends on an empty line for the code's last newline

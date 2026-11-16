@@ -52,7 +52,7 @@ export function Card({ fill = 'raised', media, title, description, actions, href
 				href &&
 					!actions &&
 					fill === 'raised' &&
-					'transition-shadow duration-150 ease-out has-[a:hover:not(:active)]:shadow-[inset_0_0_0_.5px_var(--sheen),0_0_0_.5px_var(--edge),0_1px_1px_-1px_var(--drop-raised),0_1px_3px_-1.5px_var(--drop-raised),0_2px_4px_-2px_var(--drop-raised),0_3px_6px_-3px_var(--drop-raised),0_4px_8px_-4px_var(--drop-raised)] has-[a:active]:shadow-[inset_0_0_0_.5px_var(--sheen),0_0_0_.5px_var(--edge)] motion-reduce:transition-none',
+					'transition-shadow duration-150 ease-out has-[a:hover:not(:active)]:shadow-[inset_0_0_0_.5px_var(--sheen),0_0_0_.5px_var(--edge),0_1px_1px_-1px_var(--shadow-raised-color),0_1px_3px_-1.5px_var(--shadow-raised-color),0_2px_4px_-2px_var(--shadow-raised-color),0_3px_6px_-3px_var(--shadow-raised-color),0_4px_8px_-4px_var(--shadow-raised-color)] has-[a:active]:shadow-[inset_0_0_0_.5px_var(--sheen),0_0_0_.5px_var(--edge)] motion-reduce:transition-none',
 				fillClass[fill],
 				className,
 			].filter(Boolean).join(' ')}>

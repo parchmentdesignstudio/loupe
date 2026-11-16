@@ -7,6 +7,7 @@ import { Choice, ControlGroup, ControlRow, IconPicker, NumberControl, Playground
 const replies = ['A new website', 'Rework my site', 'Not sure yet', 'Book a call', 'Show me examples', 'How much?', 'Later', 'Tell me more', 'Yes', 'No thanks'];
 const lengths = ['short', 'mixed', 'long'] as const;
 const places = ['none', 'start', 'end'] as const;
+const sizes = ['small', 'medium', 'large'] as const;
 const widths = { narrow: 'max-w-56', medium: 'max-w-md', wide: 'max-w-none' } as const;
 type Width = keyof typeof widths;
 
@@ -23,6 +24,7 @@ export function ChipPlayground() {
 	const [place, setPlace] = useState<(typeof places)[number]>('none');
 	const [icon, setIcon] = useState<IconName>('paperplane');
 	const [width, setWidth] = useState<Width>('medium');
+	const [size, setSize] = useState<(typeof sizes)[number]>('large');
 	const [disabled, setDisabled] = useState<'none' | 'one' | 'all'>('none');
 	const [pressed, setPressed] = useState<string>();
 	const names = solidIcons();
@@ -33,12 +35,13 @@ export function ChipPlayground() {
 		setPlace(pick(places));
 		setIcon(pick(names));
 		setWidth(pick(Object.keys(widths) as Width[]));
+		setSize(pick(sizes));
 		setDisabled(Math.random() < 0.2 ? pick(['one', 'all'] as const) : 'none');
 	};
 	const chips = Array.from({ length: count }, (_, index) => {
 		const label = labelFor(index, length, first);
 		return (
-			<Chip key={index} onPress={() => setPressed(label)} isDisabled={disabled === 'all' || (disabled === 'one' && index === 1)}>
+			<Chip key={index} size={size} onPress={() => setPressed(label)} isDisabled={disabled === 'all' || (disabled === 'one' && index === 1)}>
 				{place === 'start' && <Icon name={icon} />}
 				{label}
 				{place === 'end' && <Icon name={icon} />}
@@ -64,6 +67,9 @@ export function ChipPlayground() {
 						<Choice label="Labels" options={lengths} value={length} onChange={setLength} />
 						<Choice label="Icon" options={places} value={place} onChange={setPlace} />
 						{place !== 'none' && <IconPicker label="Icon name" value={icon} onChange={setIcon} />}
+					</ControlGroup>
+					<ControlGroup label="Appearance">
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						<Choice label="Disabled" options={['none', 'one', 'all'] as const} value={disabled} onChange={setDisabled} />

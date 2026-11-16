@@ -61,7 +61,7 @@ function luminance(value: string) {
 
 /** WCAG's contrast ratio. A mark is a graphic, so 3:1 is enough */
 function contrast(a: string, b: string) {
-	const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+	const [light, dark] = [luminance(a), luminance(b)].toSorted((x, y) => y - x);
 	return (light + 0.05) / (dark + 0.05);
 }
 
@@ -205,8 +205,9 @@ const within: [number, number, string][] = [
 ];
 
 /** Each hue's own pairings, with a gap where the pair is under 3:1 */
+const shadeOf = (hue: Hue, i: number) => (i === 3 ? hex('Pine') : ramp[hue][i]);
+
 export function Pairings() {
-	const step = (hue: Hue, i: number) => (i === 3 ? hex('Pine') : ramp[hue][i]);
 	return (
 		<div className="grid w-full grid-cols-[auto_repeat(6,minmax(0,1fr))] items-center gap-1">
 			<span />
@@ -220,7 +221,7 @@ export function Pairings() {
 					{hue}
 				</span>,
 				...within.map(([background, page, label]) => {
-					const [ground, mark] = [step(hue, background), step(hue, page)];
+					const [ground, mark] = [shadeOf(hue, background), shadeOf(hue, page)];
 					if (!ground || !mark) return <div key={`${hue}-${label}`} className="aspect-[4/3]" />;
 					const ratio = contrast(ground, mark);
 					return ratio >= 3 ? (

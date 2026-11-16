@@ -6,6 +6,7 @@ import type { Detail, Prop } from './details.mjs';
 import { Aria } from './inspector.js';
 import type { Entry } from './stories.js';
 import { samples } from './samples.js';
+import { Tokens } from './tokens.js';
 
 type Sample = (props: Record<string, unknown>) => ReactNode;
 
@@ -52,13 +53,13 @@ function Type({ prop, sample }: { prop: Prop; sample?: Sample }) {
 	return prop.type ? <code className="font-mono text-label text-muted">{prop.type}</code> : <span className="text-muted">–</span>;
 }
 
-const cell = 'px-3 py-2.5 align-top first:pl-4 last:pr-4';
+const cell = 'px-3 py-2.5 align-baseline first:pl-4 last:pr-4';
 
 function Table({ detail, sample }: { detail: Detail; sample?: Sample }) {
 	const props = detail.props ?? [];
 	return (
 		// Wider than a phone, so it scrolls on its own rather than the page
-		<div className="overflow-x-auto rounded-lg border border-bleed/8">
+		<div className="overflow-x-auto overflow-y-hidden rounded-lg border border-bleed/8">
 			<table className="w-full min-w-[36rem] border-collapse text-left text-label">
 				<thead className="bg-bleed/4 text-muted">
 					<tr>
@@ -76,7 +77,7 @@ function Table({ detail, sample }: { detail: Detail; sample?: Sample }) {
 						</th>
 					</tr>
 				</thead>
-				<tbody className="divide-y divide-bleed/8 border-t border-bleed/8">
+				<tbody className="divide-y divide-bleed/6 border-t border-bleed/6">
 					{props.map((prop) => (
 						<tr key={prop.name}>
 							<th scope="row" className={`${cell} font-normal`}>
@@ -93,23 +94,27 @@ function Table({ detail, sample }: { detail: Detail; sample?: Sample }) {
 							</td>
 						</tr>
 					))}
-					{detail.rest?.map((rest) => (
-						<tr key={rest.aria ?? rest.react}>
-							<td colSpan={4} className={`${cell} text-muted`}>
-								{props.length > 0 && 'And '}
-								{rest.aria ? (
-									<>
-										React Aria’s <Aria name={rest.aria} /> props
-									</>
-								) : rest.react === 'HTMLAttributes' ? (
-									'HTML attributes'
-								) : (
-									`React’s ${rest.react}`
-								)}
-							</td>
-						</tr>
-					))}
 				</tbody>
+				{detail.rest && detail.rest.length > 0 && (
+					<tfoot className="border-t border-bleed/6 bg-bleed/4 text-muted">
+						{detail.rest.map((rest) => (
+							<tr key={rest.aria ?? rest.react}>
+								<td colSpan={4} className={`${cell} text-muted`}>
+									{props.length > 0 && 'And '}
+									{rest.aria ? (
+										<>
+											React Aria’s <Aria name={rest.aria} /> props
+										</>
+									) : rest.react === 'HTMLAttributes' ? (
+										'HTML attributes'
+									) : (
+										`React’s ${rest.react}`
+									)}
+								</td>
+							</tr>
+						))}
+					</tfoot>
+				)}
 			</table>
 		</div>
 	);
@@ -127,9 +132,22 @@ export function Reference({ entry }: { entry: Entry }) {
 			</h2>
 			{shown.map((detail) => (
 				<section key={detail.name} className="flex flex-col gap-3">
-					<h3 className="font-mono text-control font-medium">{detail.name}</h3>
-					{detail.doc && <p className="text-label text-muted">{detail.doc}</p>}
+					<header className="flex flex-col gap-1">
+						<h3 className="font-mono text-control font-medium">{detail.name}</h3>
+						{detail.doc && <p className="text-label text-muted">{detail.doc}</p>}
+					</header>
 					<Table detail={detail} sample={samples[detail.name]} />
+					{details.componentTokens[detail.name] && (
+						<>
+							<header className="mt-3 flex flex-col gap-1">
+								<h4 className="font-medium">Tokens</h4>
+								<p className="text-label text-muted">
+									Set one on <code className={chip}>:root</code> in a site’s own CSS to restyle every {detail.name.replace(/(?<!^)([A-Z])/g, ' $1').toLowerCase()}, or on an element to restyle the ones inside it.
+								</p>
+							</header>
+							<Tokens tokens={details.componentTokens[detail.name]} detail={detail} sample={samples[detail.name]} />
+						</>
+					)}
 				</section>
 			))}
 		</section>

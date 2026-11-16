@@ -14,7 +14,7 @@ const keyboard = tv({
 	base: 'font-sans',
 	variants: {
 		variant: {
-			raised: 'mx-[0.25ch] rounded-sm bg-raised px-1.5 py-px text-ink shadow-raised',
+			raised: 'mx-[0.25ch] rounded-(--keyboard-radius) bg-(--keyboard-fill) px-(--keyboard-padding-x) py-(--keyboard-padding-y) text-(color:--keyboard-text) shadow-raised [--shadow-raised-color:var(--keyboard-shadow)]',
 			plain: 'text-current/64',
 		},
 	},

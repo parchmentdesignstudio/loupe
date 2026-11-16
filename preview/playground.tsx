@@ -137,6 +137,7 @@ export function Choice<T extends string>({
 		if (group.current?.firstElementChild) observer.observe(group.current.firstElementChild);
 		return () => observer.disconnect();
 		// isFolded isn't read, but each switch swaps the group in or out, so the observer starts again on what's there
+		// oxlint-disable-next-line react/exhaustive-deps
 	}, [isFolded]);
 
 	return (

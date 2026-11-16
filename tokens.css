@@ -155,6 +155,12 @@
 	--color-inverse: var(--color-ink);
 	/* A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track */
 	--color-knob: var(--color-white);
+	/* What marks the one chosen in a segmented control, white in the light, and in the dark a step lighter than raised,
+	   so it stands off the well it sits in */
+	--color-chosen: light-dark(var(--color-white), var(--color-pine-29));
+	/* A pink tint that marks each chosen where several can be, and the text on it, a darker pink in the light so it reads on white */
+	--color-chosen-tint: light-dark(color-mix(in oklab, var(--color-pink-56) 12%, transparent), color-mix(in oklab, var(--color-pink-70) 18%, transparent));
+	--color-on-chosen-tint: light-dark(var(--color-pink-56), var(--color-pink-70));
 	/* Behind a sheet */
 	--color-scrim: light-dark(color-mix(in oklab, var(--color-pine-26) 32%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 
@@ -217,28 +223,28 @@
 	/* Code's ground, a control's fill unless a theme sets --code-ground, read where it's used so it takes the raised of
 	   the ground it's on, a step lighter than it in the dark, as a button is */
 	--color-code-ground: var(--code-ground, var(--color-raised));
-	/* A level for controls, one for floating toolbars and one for overlays, each a soft drop and an edge. Raised's edge
+	/* A level for controls, one for floating toolbars and one for overlays, each a soft shadow and an edge. Raised's edge
 	   is half a pixel, a hint of depth for fields, chips and checkboxes. A button is raised with a 1px edge, as it's
 	   pressed, and lifted a little on hover by two wider layers, short of floating. A button can set --fine-edge to
 	   draw a half-pixel edge as well, and clear --edge to have only that one. In the dark, the fills sit close
 	   together and the edges carry the depth: a dark ring outside, a faint light one just inside it, and on controls a
 	   fainter light along the top. A panel or card has the rings without the top light. The geometry is the same in both
 	   modes, and the colours come from :root, below */
-	--shadow-raised: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-	--shadow-panel: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-	--shadow-button: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised);
-	--shadow-button-lifted: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--drop-raised), 0 1px 3px -1.5px var(--drop-raised), 0 2px 4px -2px var(--drop-raised), 0 3px 6px -3px var(--drop-raised), 0 4px 8px -4px var(--drop-raised);
-	--shadow-floating: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-floating), 0 1px 3px -1.5px var(--drop-floating), 0 2px 4px -2px var(--drop-floating), 0 3px 6px -3px var(--drop-floating), 0 6px 12px -6px var(--drop-floating), 0 12px 24px -12px var(--drop-floating);
-	--shadow-overlay: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-overlay), 0 1px 3px -1.5px var(--drop-overlay), 0 2px 4px -2px var(--drop-overlay), 0 3px 6px -3px var(--drop-overlay), 0 8px 16px -12px var(--drop-overlay), 0 12px 32px -24px var(--drop-overlay), 0 12px 24px -6px var(--drop-deep), 0 24px 48px -12px var(--drop-deep);
-	/* Floating, for the handle of a switch or slider that lifts off its well. In the dark the drop is darker than a
+	--shadow-raised: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+	--shadow-panel: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+	--shadow-button: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+	--shadow-button-lifted: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color);
+	--shadow-floating: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--shadow-floating-color), 0 1px 3px -1.5px var(--shadow-floating-color), 0 2px 4px -2px var(--shadow-floating-color), 0 3px 6px -3px var(--shadow-floating-color), 0 6px 12px -6px var(--shadow-floating-color), 0 12px 24px -12px var(--shadow-floating-color);
+	--shadow-overlay: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--shadow-overlay-color), 0 1px 3px -1.5px var(--shadow-overlay-color), 0 2px 4px -2px var(--shadow-overlay-color), 0 3px 6px -3px var(--shadow-overlay-color), 0 8px 16px -12px var(--shadow-overlay-color), 0 12px 32px -24px var(--shadow-overlay-color), 0 12px 24px -6px var(--shadow-deep-color), 0 24px 48px -12px var(--shadow-deep-color);
+	/* Floating, for the handle of a switch or slider that lifts off its well. In the dark its shadow is darker than a
 	   raised one's, so the handle stands off the track rather than sitting in it */
-	--shadow-handle: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--drop-handle), 0 1px 3px -1.5px var(--drop-handle), 0 2px 4px -2px var(--drop-handle), 0 3px 6px -3px var(--drop-handle), 0 6px 12px -6px var(--drop-handle), 0 12px 24px -12px var(--drop-handle);
+	--shadow-handle: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--shadow-handle-color), 0 1px 3px -1.5px var(--shadow-handle-color), 0 2px 4px -2px var(--shadow-handle-color), 0 3px 6px -3px var(--shadow-handle-color), 0 6px 12px -6px var(--shadow-handle-color), 0 12px 24px -12px var(--shadow-handle-color);
 	/* In place of a field's shadow when what's in it is wrong */
 	--shadow-invalid: 0 0 0 1px var(--color-danger);
 	/* The opposite of raised, for a well that controls sit in, such as a switch's track or a toggle group's tray: a soft
 	   shade under its top edge, and the same half-pixel edge. In the dark it's only the edge, as a handle's is, since a
 	   shade there muddies the well. As inset-shadow-well, it sits alongside any shadow */
-	--inset-shadow-well: inset 0 1px 1px -.5px var(--drop-well), inset 0 1px 3px -1px var(--drop-well), inset 0 0 0 .5px var(--edge);
+	--inset-shadow-well: inset 0 1px 1px -.5px var(--shadow-well-color), inset 0 1px 3px -1px var(--shadow-well-color), inset 0 0 0 .5px var(--edge);
 }
 
 /* Corners and spacing, under Tailwind's own names, so rounded-lg and p-3 are Parchment's */
@@ -344,7 +350,7 @@
 		--bleed: var(--ground-bleed);
 
 		/* Shadows have their own colours, so they stay dark in the dark. In the light, the edge is the ground's line
-		   colour, and the drops take the ground's hue, as the tints do. In the dark, the edge is a shade darker than
+		   colour, and the shadows take the ground's hue, as the tints do. In the dark, the edge is a shade darker than
 		   what's behind it, so it's crisp without being bright. A component that sets its own edge takes --dark-edge for
 		   the dark */
 		--dark-edge: color-mix(in oklab, var(--color-black) 32%, transparent);
@@ -353,13 +359,13 @@
 		   from above. They're shadows, so they go when something is disabled or pressed flat */
 		--sheen: light-dark(transparent, color-mix(in oklab, var(--bleed) 5%, transparent));
 		--toplight: light-dark(transparent, color-mix(in oklab, var(--bleed) 6%, transparent));
-		--drop-raised: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
-		--drop-floating: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
+		--shadow-raised-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
+		--shadow-floating-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
 		/* Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it */
-		--drop-deep: light-dark(transparent, color-mix(in oklab, var(--color-black) 32%, transparent));
-		--drop-overlay: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
-		--drop-handle: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 40%, transparent));
-		--drop-well: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), transparent);
+		--shadow-deep-color: light-dark(transparent, color-mix(in oklab, var(--color-black) 32%, transparent));
+		--shadow-overlay-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
+		--shadow-handle-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 40%, transparent));
+		--shadow-well-color: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), transparent);
 	}
 
 	/* 16px on touch screens, as iOS zooms into a field with smaller text. The line stays 20px, so controls keep their height */
@@ -707,5 +713,165 @@
 			--color-cyan-50: oklch(0.5 0.15 206);
 			--color-sky-52: oklch(0.52 0.15 238);
 		}
+	}
+}
+
+/* Component tokens: the few choices on each component that a site may want to restyle, named --component-what. Each
+   starts at a system token above, so they agree until one is changed. Set one on :root to restyle every button, or
+   on an element to restyle the buttons inside it. In the base layer, so a site's own :root wins without !important.
+   A heading on its own line groups the tokens under it, and the line above each says what it changes */
+@layer base {
+	:root {
+		/* Button */
+
+		/* Shape */
+
+		/* The corners. Inside a rounded box, the box's radius less the gap round the button, so the two sit concentric */
+		--button-radius: var(--radius-lg);
+
+		/* Type */
+
+		/* The label's weight. Its size is text-control, which every control shares */
+		--button-font-weight: 500;
+
+		/* Space */
+
+		/* The padding beside an icon. A label brings 4px of its own, more as the text grows, so beside text it's that much more */
+		--button-padding-x: --spacing(2);
+		/* The padding above and below the 20px line, so a medium button is 32px tall */
+		--button-padding-y: --spacing(1.5);
+		/* A small button's padding beside an icon */
+		--button-small-padding-x: --spacing(1.5);
+		/* A small button's padding above and below, so it's 28px tall */
+		--button-small-padding-y: --spacing(1);
+
+		/* Colour */
+
+		/* Primary's fill, marigold */
+		--button-primary-fill: var(--color-primary);
+		/* The text on primary, ink */
+		--button-primary-text: var(--color-on-primary);
+		/* Quiet's fill, slate */
+		--button-quiet-fill: var(--color-quiet);
+		/* The text on quiet, ink */
+		--button-quiet-text: var(--color-on-quiet);
+		/* Danger's fill, red in both themes */
+		--button-danger-fill: var(--color-red-50);
+		/* The text on danger, white in both themes */
+		--button-danger-text: var(--color-white);
+
+		/* Shadow */
+
+		/* The shadow's colour under a raised button, which grows on hover. Transparent makes it flat and keeps its edge */
+		--button-shadow: var(--shadow-raised-color);
+
+		/* Motion */
+
+		/* How small the contents press to */
+		--button-press-scale: 0.95;
+
+		/* Chip */
+
+		/* Shape */
+
+		/* A large chip's corners, the default, as a button's */
+		--chip-radius: var(--radius-lg);
+		/* A medium chip's corners */
+		--chip-medium-radius: var(--radius-md);
+		/* A small chip's corners */
+		--chip-small-radius: var(--radius-md);
+
+		/* Space */
+
+		/* A large chip's padding beside its label */
+		--chip-padding-x: --spacing(3);
+		/* A large chip's padding above and below the 20px line, so it's 32px tall */
+		--chip-padding-y: --spacing(1.5);
+		/* A medium chip's padding beside its label */
+		--chip-medium-padding-x: --spacing(2);
+		/* A medium chip's padding above and below the 16px line, so it's 24px tall */
+		--chip-medium-padding-y: --spacing(1);
+		/* A small chip's padding beside its label */
+		--chip-small-padding-x: --spacing(1.5);
+		/* A small chip's padding above and below, so it's 20px tall */
+		--chip-small-padding-y: --spacing(0.5);
+
+		/* Colour */
+
+		/* The fill, raised off the page */
+		--chip-fill: var(--color-raised);
+		/* The fill on hover */
+		--chip-hover-fill: var(--color-surface);
+		/* The label's colour */
+		--chip-text: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under a chip. Transparent makes it flat and keeps its edge */
+		--chip-shadow: var(--shadow-raised-color);
+
+		/* Motion */
+
+		/* How small a chip presses to */
+		--chip-press-scale: 0.97;
+
+		/* Keyboard */
+
+		/* Shape */
+
+		/* A raised key's corners */
+		--keyboard-radius: var(--radius-sm);
+
+		/* Space */
+
+		/* The padding beside a raised key's characters */
+		--keyboard-padding-x: --spacing(1.5);
+		/* The padding above and below a raised key's characters, which keeps it close to the line it sits in */
+		--keyboard-padding-y: --spacing(0.25);
+
+		/* Colour */
+
+		/* A raised key's fill */
+		--keyboard-fill: var(--color-raised);
+		/* A raised key's characters */
+		--keyboard-text: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under a raised key. Transparent makes it flat and keeps its edge */
+		--keyboard-shadow: var(--shadow-raised-color);
+
+		/* ToggleButtonGroup */
+
+		/* Shape */
+
+		/* The track's corners. Each button's are these less the inset, so the two sit concentric */
+		--toggle-button-group-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The track's padding round its buttons */
+		--toggle-button-group-inset: --spacing(0.75);
+
+		/* Type */
+
+		/* The buttons' weight */
+		--toggle-button-group-font-weight: 500;
+
+		/* Colour */
+
+		/* The fill that marks the chosen button in a well */
+		--toggle-button-group-chosen-fill: var(--color-chosen);
+		/* The tint on each chosen button in a raised group, pink */
+		--toggle-button-group-raised-chosen-fill: var(--color-chosen-tint);
+		/* A chosen button's text in a raised group */
+		--toggle-button-group-raised-chosen-text: var(--color-on-chosen-tint);
+
+		/* Toolbar */
+
+		/* Space */
+
+		/* The space between its controls */
+		--toolbar-gap: --spacing(1);
 	}
 }
