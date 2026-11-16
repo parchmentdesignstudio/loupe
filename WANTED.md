@@ -11,6 +11,10 @@ These are SVGs inside the components, standing in for icons. Once each is in the
 | `ellipsis` | `glyphs.tsx` `Ellipsis`, for a table row's menu and folded breadcrumbs, and again in the preview's phone bar | No |
 | `calendar` | `glyphs.tsx` `CalendarGlyph`, on the date pickers | Yes |
 | `doc` | `FileList.tsx` `Document`, for a file with no thumbnail | No (`note` is close) |
+| `info-circle` | `glyphs.tsx` `InfoGlyph`, for an alert’s info and neutral tones | No |
+| `checkmark-circle` | `glyphs.tsx` `SuccessGlyph`, for an alert’s success tone | No |
+| `exclamationmark-triangle` | `glyphs.tsx` `WarningGlyph`, for an alert’s warning tone | No |
+| `exclamationmark-circle` | `glyphs.tsx` `DangerGlyph`, for an alert’s danger tone | No |
 
 `glyphs.tsx` also draws a checkmark, minus, plus, xmark, chevrons and a magnifying glass, which the solid set does have. The glyphs are 1.5px strokes, so they sit closer to the line set. Worth deciding which set the components draw from before swapping any of them over.
 
