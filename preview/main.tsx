@@ -19,7 +19,7 @@ import {
 	TooltipTrigger,
 } from '../src/index.js';
 import { Contents, ContentsMenu, type Heading } from './contents.js';
-import { Inspector } from './inspector.js';
+import { Inspector, hasInspector } from './inspector.js';
 import { Reference, hasReference } from './reference.js';
 import { Lockup, ParchmentLogo } from './logo.js';
 import { Search, SearchButton } from './search.js';
@@ -42,7 +42,6 @@ const useAddress = () => useSyncExternalStore(subscribe, () => window.location.h
 const { version } = JSON.parse(manifest) as { version: string };
 
 // A component page has its code beside it, and so do colour and typography, with their tokens. The other areas of loupe don't
-const hasCode = (entry?: Entry) => entry != null && (entry.exports != null || entry.id === 'colour' || entry.id === 'typography');
 
 // A group isn't a page of its own, so its key can't be an entry's id, as Navigation is both
 const groupKey = (name: string) => `group-${name}`;
@@ -219,14 +218,13 @@ function SidebarIcon({ isOpen, isPressed }: { isOpen: boolean; isPressed: boolea
 }
 
 // Where the page sits in the library, with its sections where there's no room for their column, and the search and settings
-function Bar({ entry, trail, headings, isOpen, onToggle, onSearch }: { entry?: Entry; trail: Crumb[]; headings: Heading[]; isOpen: boolean; onToggle: () => void; onSearch: () => void }) {
+function Bar({ trail, headings, isOpen, onToggle, onSearch }: { trail: Crumb[]; headings: Heading[]; isOpen: boolean; onToggle: () => void; onSearch: () => void }) {
 	const label = isOpen ? 'Hide settings' : 'Show settings';
 	return (
 		// Sticks below the phone's header, which is as tall as its 28px buttons and its padding
 		<div className="sticky top-11 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-bleed/8 bg-panel px-4 md:top-0 md:px-5">
 			<div className="flex min-w-0 flex-1 items-center gap-2">
-				{/* Below the stories here, so the code is one of the places to jump to */}
-				{headings.length > 0 && <ContentsMenu headings={hasCode(entry) ? [...headings, { id: 'code', name: 'Code' }] : headings} />}
+				{headings.length > 0 && <ContentsMenu headings={headings} />}
 				<Breadcrumbs>
 					{/* On phones the bar above has loupe's name. A group, such as Actions, has no page, so it isn't a link */}
 					{[{ name: 'loupe', href: '#/' }, ...trail].map((crumb, index) => (
@@ -276,7 +274,8 @@ function Stories({ entry, heading: Heading }: { entry: Entry; heading: 'h2' | 'h
 	return entry.stories.map((story, index) => (
 		<section key={story.name} id={`${entry.id}-${index}`} className="flex scroll-mt-25 md:scroll-mt-18 flex-col gap-3">
 			<Heading className="font-sans text-label text-muted">{story.name}</Heading>
-			<div className={['flex flex-wrap items-center gap-2 border-t border-bleed/8 py-6', story.box].filter(Boolean).join(' ')}>
+			{/* A ground reaches past the column by its padding, so what's on it lines up with the text */}
+			<div className={['flex flex-wrap items-center gap-2', story.ground ? `-mx-4 rounded-lg px-4 py-6 md:-mx-6 md:px-6 ${story.ground}` : 'border-t border-bleed/8 py-6', story.box].filter(Boolean).join(' ')}>
 				<StoryBoundary>
 					<story.render />
 				</StoryBoundary>
@@ -376,7 +375,7 @@ function Preview() {
 				: listed
 				? listed.map(({ id, name }) => ({ id, name }))
 				: entry
-					? [...entry.stories.map((story, index) => ({ id: `${entry.id}-${index}`, name: story.name })), ...(hasReference(entry) ? [{ id: 'api', name: 'API reference' }] : [])]
+					? [...entry.stories.map((story, index) => ({ id: `${entry.id}-${index}`, name: story.name })), ...(hasReference(entry) ? [{ id: 'api', name: 'API reference' }] : []), ...(hasInspector(entry) ? [{ id: 'code', name: 'Code' }] : [])]
 					: [],
 		[entry, listed, isComponents],
 	);
@@ -411,43 +410,45 @@ function Preview() {
 				ref={scroller}
 				className={[
 					// Raised over the sticky columns either side, which would otherwise paint over its shadow
-					'min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-panel',
-					isOpen ? '' : 'md:mr-2',
+					'min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:mr-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-panel',
 				].join(' ')}
 			>
 				{/* The card's own bleed, so lines inside suit white rather than cream, while its shadow keeps the ground's */}
 				<div className="flex min-h-full flex-col [--bleed:var(--panel-bleed)]">
-					<Bar entry={entry} trail={page?.trail ?? []} headings={headings} isOpen={isOpen} onToggle={toggle} onSearch={search} />
-					{/* On wide screens a grid: the title over the stories, with the contents and the code beside them from the top.
-					    A page without code keeps the code's column empty, so the stories sit in the same place on every page */}
-					<main className="flex-1 xl:grid xl:grid-cols-[13rem_minmax(0,1fr)_20rem] xl:items-start">
-						<div className="px-4 pt-10 pb-10 md:px-10 xl:col-start-2">
-							<div className="mx-auto max-w-[40rem]">
-								<Title entry={entry} />
+					<Bar trail={page?.trail ?? []} headings={headings} isOpen={isOpen} onToggle={toggle} onSearch={search} />
+					{/* The settings beside the page under the bar, which runs over both, as an inspector does. Clipped, not
+					    hidden, so the settings past the card's edge can't scroll it sideways */}
+					<div className="flex flex-1 overflow-x-clip">
+						{/* On wide screens a grid: the title over the stories, with the contents beside them from the top */}
+						<main className="min-w-0 flex-1 xl:grid xl:grid-cols-[13rem_minmax(0,1fr)] xl:items-start">
+							<div className="px-4 pt-10 pb-10 md:px-10 xl:col-start-2">
+								<div className="mx-auto max-w-[40rem]">
+									<Title entry={entry} />
+								</div>
 							</div>
-						</div>
-						{headings.length > 0 && <Contents key={`contents-${address}`} headings={headings} scroller={scroller} />}
-						<div className="min-w-0 px-4 pb-10 md:px-10 xl:col-start-2 xl:row-start-2">
-							<div className="mx-auto flex max-w-[40rem] flex-col gap-10">
-								{isComponents ? (
-									componentGroups.map((group) => <Category key={group.name} name={group.name} id={categoryId(group.name)} />)
-								) : listed ? (
-									<Overview entries={listed} />
-								) : entry ? (
-									<>
-										<Stories entry={entry} heading="h2" />
-										<Reference entry={entry} />
-									</>
-								) : (
-									<p className="text-muted">Nothing at this address</p>
-								)}
+							{headings.length > 0 && <Contents key={`contents-${address}`} headings={headings} scroller={scroller} />}
+							<div className="min-w-0 px-4 pb-10 md:px-10 xl:col-start-2 xl:row-start-2">
+								<div className="mx-auto flex max-w-[40rem] flex-col gap-10">
+									{isComponents ? (
+										componentGroups.map((group) => <Category key={group.name} name={group.name} id={categoryId(group.name)} />)
+									) : listed ? (
+										<Overview entries={listed} />
+									) : entry ? (
+										<>
+											<Stories entry={entry} heading="h2" />
+											<Reference entry={entry} />
+											<Inspector entry={entry} />
+										</>
+									) : (
+										<p className="text-muted">Nothing at this address</p>
+									)}
+								</div>
 							</div>
-						</div>
-						{entry && <Inspector key={`code-${entry.id}`} entry={entry} />}
-					</main>
+						</main>
+						<Settings isOpen={isOpen} />
+					</div>
 				</div>
 			</div>
-			{isOpen && <Settings />}
 			<Search isOpen={isSearching} onOpenChange={setSearching} />
 		</div>
 	);
