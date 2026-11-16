@@ -89,6 +89,9 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 
 ## Done
 
+- **16 November:** the settings toggle's icon moves. Its main pane, split from sidebar-right by hand in `main.tsx`, stays still on hover, leans 1.5px towards where a press takes it in 150ms, and springs there over 500ms with a bounce of 0.3 on release.
+  - **Rejected:** a 0.75px lean on hover too. It moved the icon before anything had been asked of it.
+  - **Still to do:** draw the sidebar icons' frame and pane as parts in Sketch, so the move can come from the icon itself.
 - **16 November:** the token breakdown, decided between six versions behind a picker.
   - **Chosen:** the value on the popover's own surface, with how it's reached beside it (0.25rem × 2, or a palette colour's oklch). A theme value shows a sun and a moon, each with its side's swatch, in place of "Changes with the theme". Below, on a full-width `bleed/4` ground, each step's label sits over its CSS, highlighted, with line numbers running on from one step to the next. Tailwind's `--spacing(2)` is a comment line. One size, 12px, throughout, with weight carrying the hierarchy, and no arrow.
   - **Rejected:**

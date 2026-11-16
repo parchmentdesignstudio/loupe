@@ -185,6 +185,39 @@ function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void
 	);
 }
 
+/** A damped spring from 0 to 1 as a CSS linear() easing. Bounce 0 settles without passing its end, and more passes it further */
+function spring(bounce: number, samples = 60) {
+	const damping = 1 - bounce;
+	const stiffness = 10;
+	const ringing = stiffness * Math.sqrt(1 - damping * damping);
+	const points = Array.from({ length: samples + 1 }, (_, i) => {
+		const t = i / samples;
+		return i === samples ? 1 : 1 - Math.exp(-damping * stiffness * t) * (Math.cos(ringing * t) + ((damping * stiffness) / ringing) * Math.sin(ringing * t));
+	});
+	return `linear(${points.map((point) => Number(point.toFixed(4))).join(', ')})`;
+}
+
+// sidebar-right split into the window's frame and its main pane, as the icons have no parts yet. The pane runs under the
+// frame's left edge so no seam shows, and scales from there, so its right edge is what moves: 8.5 open, 11 closed
+const frame = 'M3,2 L13,2 C13.552,2 14,2.448 14,3 L14,13 C14,13.552 13.552,14 13,14 L3,14 C2.448,14 2,13.552 2,13 L2,3 C2,2.448 2.448,2 3,2 Z M3.5,3.5 L3.5,12.5 L12.5,12.5 L12.5,3.5 Z';
+const anchor = 3;
+const edges = { open: 8.5, closed: 11 };
+// Decided in the icon motion prototype: still on hover, a 1.5px lean towards where a press takes it, then a 500ms spring
+const lean = 1.5;
+const settle = `scale 500ms ${spring(0.3)}`;
+const answer = 'scale 150ms cubic-bezier(0.23, 1, 0.32, 1)';
+
+/** The settings toggle's icon. Pressing leans the pane towards where the press takes it, and letting go springs it there */
+function SidebarIcon({ isOpen, isPressed }: { isOpen: boolean; isPressed: boolean }) {
+	const edge = (isOpen ? edges.open : edges.closed) + (isPressed ? (isOpen ? lean : -lean) : 0);
+	return (
+		<svg aria-hidden="true" viewBox="0 0 16 16" className="block size-4 fill-current">
+			<path d={frame} fillRule="evenodd" />
+			<rect x={anchor} y={3.5} width={edges.open - anchor} height={9} className="origin-[3px_8px] [transform-box:view-box] motion-reduce:transition-none" style={{ scale: `${(edge - anchor) / (edges.open - anchor)} 1`, transition: isPressed ? answer : settle }} />
+		</svg>
+	);
+}
+
 // Where the page sits in the library, with its sections where there's no room for their column, and the search and settings
 function Bar({ entry, trail, headings, isOpen, onToggle, onSearch }: { entry?: Entry; trail: Crumb[]; headings: Heading[]; isOpen: boolean; onToggle: () => void; onSearch: () => void }) {
 	const label = isOpen ? 'Hide settings' : 'Show settings';
@@ -210,7 +243,7 @@ function Bar({ entry, trail, headings, isOpen, onToggle, onSearch }: { entry?: E
 				</TooltipTrigger>
 				<TooltipTrigger>
 					<Button variant="ghost" shape="full" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
-						<Icon name={isOpen ? 'sidebar-right' : 'sidebar-right-closed'} />
+						{({ isPressed }) => <SidebarIcon isOpen={isOpen} isPressed={isPressed} />}
 					</Button>
 					<Tooltip>{label}</Tooltip>
 				</TooltipTrigger>
