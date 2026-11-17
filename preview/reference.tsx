@@ -265,6 +265,9 @@ function Export({ detail }: { detail: Detail }) {
 	const theme = detail.tokens && Object.keys(detail.tokens).length > 0 ? detail.tokens : undefined;
 	const uses = usesOf(detail);
 	const noun = detail.name.replace(/(?<!^)([A-Z])/g, ' $1').toLowerCase();
+	// Tokens another name starts, such as --field-radius on a text field, are shared with the components that read them
+	const own = `--${noun.replaceAll(' ', '-')}-`;
+	const sharedBy = [...new Set(tokens?.filter((token) => !token.name.startsWith(own)).map((token) => /^--([a-z]+)-/.exec(token.name)?.[1]) ?? [])].filter(Boolean);
 	return (
 		<section className="flex flex-col gap-3">
 			<Header name={detail.name} place={detail.place}>
@@ -295,6 +298,12 @@ function Export({ detail }: { detail: Detail }) {
 						{tokens && (
 							<p className="text-label text-muted">
 								Set one on <code className={chip}>:root</code> in a site’s own CSS to restyle every {noun}, or on an element to restyle the ones inside it.
+								{sharedBy.map((family) => (
+									<span key={family}>
+										{' '}
+										The <code className={chip}>--{family}-</code> ones are shared, so they restyle every {family} too.
+									</span>
+								))}
 							</p>
 						)}
 					</header>
