@@ -9,7 +9,7 @@ export declare const link: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "rounded-sm text-ink underline decoration-ink/32 underline-offset-2 transition-[text-decoration-color] duration-150 ease-out motion-reduce:transition-none", {
+}, undefined, "rounded-sm text-ink underline decoration-(color:--underline) underline-offset-(--link-underline-offset) [--underline:var(--link-underline)] transition-[text-decoration-color] duration-150 ease-out motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

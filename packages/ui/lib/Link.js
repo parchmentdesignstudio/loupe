@@ -3,10 +3,10 @@ import { Link as AriaLink, composeRenderProps } from 'react-aria-components';
 import { focusRing, tv } from './tv.js';
 export const link = tv({
     extend: focusRing,
-    base: 'rounded-sm text-ink underline decoration-ink/32 underline-offset-2 transition-[text-decoration-color] duration-150 ease-out motion-reduce:transition-none',
+    base: 'rounded-sm text-ink underline decoration-(color:--underline) underline-offset-(--link-underline-offset) [--underline:var(--link-underline)] transition-[text-decoration-color] duration-150 ease-out motion-reduce:transition-none',
     variants: {
         isHovered: {
-            true: 'decoration-ink',
+            true: '[--underline:var(--link-hover-underline)]',
         },
         isCurrent: {
             true: 'font-medium no-underline',

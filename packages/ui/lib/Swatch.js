@@ -6,9 +6,9 @@ export const swatch = tv({
     base: 'inline-block shrink-0 bg-center align-middle inset-ring inset-ring-bleed/12 forced-colors:inset-ring-[CanvasText]',
     variants: {
         size: {
-            small: 'size-3 rounded-[3px] bg-size-[100%_100%,4px_4px]',
-            medium: 'size-5 rounded-md bg-size-[100%_100%,6px_6px]',
-            large: 'size-8 rounded-lg bg-size-[100%_100%,8px_8px]',
+            small: 'size-3 rounded-(--swatch-small-radius) bg-size-[100%_100%,4px_4px]',
+            medium: 'size-5 rounded-(--swatch-medium-radius) bg-size-[100%_100%,6px_6px]',
+            large: 'size-8 rounded-(--swatch-radius) bg-size-[100%_100%,8px_8px]',
         },
     },
     defaultVariants: { size: 'large' },
