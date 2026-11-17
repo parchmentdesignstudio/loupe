@@ -714,48 +714,48 @@
     text-wrap: pretty;
   }
 
-  .prose :where(* + *) {
+  .prose :where(:not(.not-prose *)):where(* + *) {
     margin-top: 1em;
   }
 
-  .prose :where(h1, h2, h3, h4, h5, h6) {
+  .prose :where(:not(.not-prose *)):where(h1, h2, h3, h4, h5, h6) {
     letter-spacing: -.0125em;
     text-wrap: balance;
     font-weight: 700;
   }
 
-  .prose :where(* + h2, * + h3) {
+  .prose :where(:not(.not-prose *)):where(* + h2, * + h3) {
     margin-top: 2em;
   }
 
-  .prose :where(* + h4, * + h5, * + h6) {
+  .prose :where(:not(.not-prose *)):where(* + h4, * + h5, * + h6) {
     margin-top: 1.5em;
   }
 
-  .prose :where(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *) {
+  .prose :where(:not(.not-prose *)):where(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *) {
     margin-top: .5em;
   }
 
-  .prose :where(h1) {
+  .prose :where(:not(.not-prose *)):where(h1) {
     font-size: var(--text-title);
     line-height: var(--text-title--line-height);
   }
 
-  .prose :where(h3) {
+  .prose :where(:not(.not-prose *)):where(h3) {
     font-size: var(--text-control);
     line-height: var(--text-control--line-height);
   }
 
-  .prose :where(h4, h5, h6) {
+  .prose :where(:not(.not-prose *)):where(h4, h5, h6) {
     font-size: var(--text-label);
     line-height: var(--text-label--line-height);
   }
 
-  .prose :where(h6) {
+  .prose :where(:not(.not-prose *)):where(h6) {
     color: var(--color-muted);
   }
 
-  .prose :where(a) {
+  .prose :where(:not(.not-prose *)):where(a) {
     text-decoration: underline;
     -webkit-text-decoration-color: var(--link-underline, color-mix(in oklab, var(--color-ink) 32%, transparent));
     -webkit-text-decoration-color: var(--link-underline, color-mix(in oklab, var(--color-ink) 32%, transparent));
@@ -763,69 +763,69 @@
     text-underline-offset: var(--link-underline-offset);
   }
 
-  .prose :where(a:hover) {
+  .prose :where(:not(.not-prose *)):where(a:hover) {
     -webkit-text-decoration-color: var(--link-hover-underline, var(--color-ink));
     -webkit-text-decoration-color: var(--link-hover-underline, var(--color-ink));
     text-decoration-color: var(--link-hover-underline, var(--color-ink));
   }
 
-  .prose :where(strong, b) {
+  .prose :where(:not(.not-prose *)):where(strong, b) {
     font-weight: 500;
   }
 
-  .prose :where(small, figcaption, caption, footer) {
+  .prose :where(:not(.not-prose *)):where(small, figcaption, caption, footer) {
     font-size: var(--text-label);
     line-height: var(--text-label--line-height);
     color: var(--color-muted);
   }
 
-  .prose :where(mark) {
+  .prose :where(:not(.not-prose *)):where(mark) {
     background: color-mix(in oklab, var(--color-marigold-83), transparent 80%);
     color: inherit;
     border-radius: .125rem;
   }
 
-  .prose :where(del, s) {
+  .prose :where(:not(.not-prose *)):where(del, s) {
     color: var(--color-muted);
   }
 
-  .prose :where(ins) {
+  .prose :where(:not(.not-prose *)):where(ins) {
     background-color: color-mix(in oklch, var(--color-green-68), transparent 80%);
     border-radius: .125rem;
     text-decoration: none;
   }
 
-  .prose :where(abbr[title]) {
+  .prose :where(:not(.not-prose *)):where(abbr[title]) {
     text-underline-offset: 1px;
     cursor: help;
     -webkit-text-decoration: underline dotted;
     text-decoration: underline dotted;
   }
 
-  .prose :where(sub, sup) {
+  .prose :where(:not(.not-prose *)):where(sub, sup) {
     font-size: .75em;
     line-height: 0;
   }
 
-  .prose :where(code, kbd, samp, pre) {
+  .prose :where(:not(.not-prose *)):where(code, kbd, samp, pre) {
     font-family: var(--font-mono);
     font-size: .875em;
   }
 
-  .prose :where(code, samp) {
+  .prose :where(:not(.not-prose *)):where(code, samp) {
     background: color-mix(in oklab, var(--bleed) 8%, transparent);
     border-radius: 4px;
     padding: .125em .25em;
   }
 
-  .prose :where(kbd) {
+  .prose :where(:not(.not-prose *)):where(kbd) {
     box-shadow: var(--shadow-raised);
     background: var(--color-raised);
     border-radius: 4px;
     padding: .0625em .375em;
   }
 
-  .prose :where(pre) {
+  .prose :where(:not(.not-prose *)):where(pre) {
     border-radius: var(--radius-lg);
     background: color-mix(in oklab, var(--bleed) 6%, transparent);
     font-size: var(--text-label);
@@ -834,51 +834,51 @@
     overflow-x: auto;
   }
 
-  .prose :where(pre code) {
+  .prose :where(:not(.not-prose *)):where(pre code) {
     font-size: inherit;
     background: none;
     padding: 0;
   }
 
-  .prose :where(ul, ol) {
+  .prose :where(:not(.not-prose *)):where(ul, ol) {
     padding-inline-start: 1.25rem;
   }
 
-  .prose :where(ul) {
+  .prose :where(:not(.not-prose *)):where(ul) {
     list-style: outside;
   }
 
-  .prose :where(ol) {
+  .prose :where(:not(.not-prose *)):where(ol) {
     list-style: decimal;
   }
 
-  .prose :where(li + li, li > ul, li > ol) {
+  .prose :where(:not(.not-prose *)):where(li + li, li > ul, li > ol) {
     margin-top: .375em;
   }
 
-  .prose :where() {
+  .prose :where(:not(.not-prose *)):where(li)::marker {
     color: var(--color-muted);
   }
 
-  .prose :where(dt) {
+  .prose :where(:not(.not-prose *)):where(dt) {
     font-weight: 500;
   }
 
-  .prose :where(dd) {
+  .prose :where(:not(.not-prose *)):where(dd) {
     color: var(--color-muted);
     margin-top: .125em;
   }
 
-  .prose :where(dd + dt) {
+  .prose :where(:not(.not-prose *)):where(dd + dt) {
     margin-top: .75em;
   }
 
-  .prose :where(hr) {
+  .prose :where(:not(.not-prose *)):where(hr) {
     border-top: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
     margin-block: 2em;
   }
 
-  .prose :where(table) {
+  .prose :where(:not(.not-prose *)):where(table) {
     border-collapse: collapse;
     width: 100%;
     font-size: var(--text-control);
@@ -886,56 +886,56 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .prose :where(caption) {
+  .prose :where(:not(.not-prose *)):where(caption) {
     caption-side: bottom;
     text-align: start;
     padding-top: .5rem;
   }
 
-  .prose :where(th, td) {
+  .prose :where(:not(.not-prose *)):where(th, td) {
     border-bottom: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
     text-align: start;
     padding: .5rem .75rem .5rem 0;
   }
 
-  .prose :where(thead th) {
+  .prose :where(:not(.not-prose *)):where(thead th) {
     font-size: var(--text-label);
     color: var(--color-muted);
     font-weight: 500;
   }
 
-  .prose :where(tfoot td, tfoot th) {
+  .prose :where(:not(.not-prose *)):where(tfoot td, tfoot th) {
     border-bottom: 0;
     font-weight: 500;
   }
 
-  .prose :where(figure > div) {
+  .prose :where(:not(.not-prose *)):where(figure > div) {
     border-radius: var(--radius-lg);
   }
 
-  .prose :where(figcaption) {
+  .prose :where(:not(.not-prose *)):where(figcaption) {
     margin-top: .5rem;
   }
 
-  .prose :where(details) {
+  .prose :where(:not(.not-prose *)):where(details) {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-panel);
     background: var(--color-raised);
     padding: .5rem .75rem;
   }
 
-  .prose :where(summary) {
+  .prose :where(:not(.not-prose *)):where(summary) {
     cursor: default;
     font-size: var(--text-control);
     font-weight: 500;
   }
 
-  .prose :where(address) {
+  .prose :where(:not(.not-prose *)):where(address) {
     color: var(--color-muted);
     font-style: normal;
   }
 
-  .prose :where(dfn, cite, var) {
+  .prose :where(:not(.not-prose *)):where(dfn, cite, var) {
     font-style: italic;
   }
 
@@ -998,6 +998,10 @@
   }
 
 
+
+  .pointer-events-auto {
+    pointer-events: auto;
+  }
 
   .pointer-events-none {
     pointer-events: none;
@@ -4925,12 +4929,12 @@
     background-color: var(--color-code-remove);
   }
 
-  .\[\&_\:is\(\.line\,\[data-line-number\]\)\:is\(\.diff\.remove\,\.error\)\]\:bg-\[repeating-linear-gradient\(-45deg\,color-mix\(in_oklch\,var\(--color-code-remove-edge\)_8\%\,transparent\)_0_1px\,transparent_1px_3px\)\] :is(.line, [data-line-number]):is(.diff.remove, .error) {
-    background-image: repeating-linear-gradient(-45deg,color-mix(in oklch,var(--color-code-remove-edge) 8%,transparent) 0 1px,transparent 1px 3px);
+  .\[\&_\:is\(\.line\,\[data-line-number\]\)\:is\(\.diff\.remove\,\.error\)\]\:bg-\[repeating-linear-gradient\(-45deg\,color-mix\(in_oklch\,var\(--color-code-remove-edge\)_8\%\,transparent\)_0_1px\,transparent_1px_10\%\)\] :is(.line, [data-line-number]):is(.diff.remove, .error) {
+    background-image: repeating-linear-gradient(-45deg,color-mix(in oklch,var(--color-code-remove-edge) 8%,transparent) 0 1px,transparent 1px 10%);
   }
 
-  .\[\&_\:is\(\.line\,\[data-line-number\]\)\:is\(\.diff\.remove\,\.error\)\]\:bg-fixed :is(.line, [data-line-number]):is(.diff.remove, .error) {
-    background-attachment: fixed;
+  .\[\&_\:is\(\.line\,\[data-line-number\]\)\:is\(\.diff\.remove\,\.error\)\]\:bg-size-\[1lh_1lh\] :is(.line, [data-line-number]):is(.diff.remove, .error) {
+    background-size: 1lh 1lh;
   }
 
   .\[\&_\:is\(code\:not\(\[data-line-numbers\]\)_\.line\,\[data-line-number\]\)\.add\]\:before\:bg-code-add-edge :is(code:not([data-line-numbers]) .line, [data-line-number]).add:before {
@@ -4963,14 +4967,14 @@
     content: var(--tw-content);
   }
 
-  .\[\&_\:is\(code\:not\(\[data-line-numbers\]\)_\.line\,\[data-line-number\]\)\:is\(\.remove\,\.error\)\]\:before\:bg-\[repeating-linear-gradient\(-45deg\,var\(--color-code-remove-edge\)_0_1px\,color-mix\(in_oklch\,var\(--color-code-remove-edge\)_35\%\,light-dark\(white\,--theme\(--color-code-ground\)\)\)_1px_3px\)\] :is(code:not([data-line-numbers]) .line, [data-line-number]):is(.remove, .error):before {
+  .\[\&_\:is\(code\:not\(\[data-line-numbers\]\)_\.line\,\[data-line-number\]\)\:is\(\.remove\,\.error\)\]\:before\:bg-\[repeating-linear-gradient\(-45deg\,var\(--color-code-remove-edge\)_0_1px\,color-mix\(in_oklch\,var\(--color-code-remove-edge\)_35\%\,light-dark\(white\,--theme\(--color-code-ground\)\)\)_1px_10\%\)\] :is(code:not([data-line-numbers]) .line, [data-line-number]):is(.remove, .error):before {
     content: var(--tw-content);
-    background-image: repeating-linear-gradient(-45deg,var(--color-code-remove-edge) 0 1px,color-mix(in oklch,var(--color-code-remove-edge) 35%,white) 1px 3px);
+    background-image: repeating-linear-gradient(-45deg,var(--color-code-remove-edge) 0 1px,color-mix(in oklch,var(--color-code-remove-edge) 35%,white) 1px 10%);
   }
 
-  .\[\&_\:is\(code\:not\(\[data-line-numbers\]\)_\.line\,\[data-line-number\]\)\:is\(\.remove\,\.error\)\]\:before\:bg-fixed :is(code:not([data-line-numbers]) .line, [data-line-number]):is(.remove, .error):before {
+  .\[\&_\:is\(code\:not\(\[data-line-numbers\]\)_\.line\,\[data-line-number\]\)\:is\(\.remove\,\.error\)\]\:before\:bg-size-\[1lh_1lh\] :is(code:not([data-line-numbers]) .line, [data-line-number]):is(.remove, .error):before {
     content: var(--tw-content);
-    background-attachment: fixed;
+    background-size: 1lh 1lh;
   }
 
   .\[\&_\[data-line-number\]\]\:relative [data-line-number] {
@@ -5040,6 +5044,10 @@
 
   .\[\&_\[data-line-numbers-content\]\]\:flex-col [data-line-numbers-content] {
     flex-direction: column;
+  }
+
+  .\[\&_\[data-line-numbers-content\]_\.line\]\:bg-position-\[calc\(var\(--line-number-digits\)\*-1ch-\(--spacing\(8\)\)\)_0\] [data-line-numbers-content] .line {
+    background-position: calc(var(--line-number-digits) * -1ch - (calc(var(--spacing) * 8))) 0;
   }
 
   .\[\&_\[data-line-numbers-content\]_\.line\]\:ps-0 [data-line-numbers-content] .line {
@@ -5147,14 +5155,6 @@
 
   .\[\&\:\:-webkit-search-cancel-button\]\:hidden::-webkit-search-cancel-button {
     display: none;
-  }
-
-  .\[\&\>\*\]\:pointer-events-auto > * {
-    pointer-events: auto;
-  }
-
-  .\[\&\>\*\]\:bg-code-ground > * {
-    background-color: var(--code-ground, var(--color-raised));
   }
 
   .\[\&\>kbd\]\:ms-auto > kbd {
