@@ -219,8 +219,6 @@ const sizeKey = (width: number, height: number) => `${width}x${height}`
 
 type Color = Parameters<NonNullable<ColorAreaProps['onChange']>>[0]
 
-const isHex = (value: string) => /^#(?:[\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i.test(value)
-
 /** A hex as React Aria keys its swatches, eight upper-case digits, so #fff and #FFFFFFFF match */
 function hexa(hex: string) {
   const digits = hex.slice(1)
@@ -228,8 +226,17 @@ function hexa(hex: string) {
   return `#${full.length === 6 ? `${full}ff` : full}`.toUpperCase()
 }
 
-/** The preset a fill is, by its value, or by a hex the same as its swatch */
-const presetOf = (fill: string | null) => fills.find((each) => each.value === fill || (fill !== null && isHex(fill) && hexa(fill) === hexa(each.swatch)))
+/** A fill as oklch writes it, so two colours compare exactly rather than by their nearest hex */
+function oklchOf(fill: string) {
+  const parsed = parseAnyColor(fill)
+  return parsed ? formatOklch(parsed.oklch, parsed.alpha) : null
+}
+
+/** The preset a fill is, by its value, or by its colour exactly, as a typed #fff or oklch(100% 0 0) is White */
+function presetOf(fill: string | null) {
+  const colour = fill === null ? null : oklchOf(fill)
+  return fills.find((each) => each.value === fill || (colour !== null && each.value !== null && oklchOf(each.value) === colour))
+}
 
 function Fill() {
   const fill = useStore((state) => state.doc.artboard.fill)
@@ -244,7 +251,7 @@ function Fill() {
       <ColorSwatchPicker
         aria-label="Fill"
         // A colour none of the presets has, so none of them shows as chosen while another colour is
-        value={preset?.swatch ?? customSwatch ?? '#fffffe'}
+        value={preset?.swatch ?? '#fffffe'}
         onChange={(color) => {
           const chosen = fills.find((each) => hexa(each.swatch) === color.toString('hexa'))
           if (chosen) actions.setArtboard({ fill: chosen.value })

@@ -153,3 +153,4 @@ Asked for, in `packages/ui`: oklch preferred over hex, for its wider gamut, so a
 - Another colour’s field is labelled Colour rather than Hex. It takes any CSS colour and shows it as oklch
 - A custom fill is stored as oklch, exactly as typed, even outside sRGB. Picked in the area or the hue, it’s stored as that colour’s oklch
 - Its swatch, and the area and hue, still show the nearest sRGB, as React Aria’s colours can’t hold more
+- A typed colour that’s a preset’s exactly, such as #fff for White, chooses that preset. One only near a preset, such as its swatch’s hex, chooses Another colour alone, rather than both at once
