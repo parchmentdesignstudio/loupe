@@ -632,19 +632,29 @@ function read(root, ui, packages) {
 		detail.uses.sort((a, b) => (a.project === own) - (b.project === own) || a.project.localeCompare(b.project) || a.path.localeCompare(b.path) || a.line - b.line);
 	}
 
-	// A shared token belongs to each export that reads it, in its own file or one that file imports from the library,
-	// as ColorField takes the fields' tokens through TextField's styles
+	// A shared token belongs to each export that reads it: in its declaration, what that uses from its own file, and
+	// what it imports from the library, followed as far in that file, as ColorField takes the fields' tokens through
+	// TextField's styles. No further, as beyond are other components' own, such as the checkbox in a table's row
+	const drawnBy = (source, name, outward, seen = new Set()) => {
+		if (seen.has(name)) return '';
+		seen.add(name);
+		const declaration = source.declarations.get(name);
+		const binding = !declaration && outward && source.imports.get(name);
+		if (binding) {
+			const file = binding.from.startsWith('.') && fileOf(source, binding.from);
+			return file ? drawnBy(file, binding.name, false) : '';
+		}
+		// Types and comments name things without drawing them
+		if (!declaration || declaration.node.type.startsWith('TS')) return '';
+		const text = source.code.slice(declaration.statement.start, declaration.statement.end).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
+		return text + [...new Set(text.match(/\b[A-Za-z_$][\w$]*\b/g))].map((word) => drawnBy(source, word, outward, seen)).join('');
+	};
 	const componentTokens = componentTokensOf(join(ui, 'styles', 'components.css'), sheet, root, Object.keys(components));
 	const sharedTokens = componentTokens[shared] ?? [];
 	delete componentTokens[shared];
-	const readIn = (source, seen = new Set()) => {
-		if (seen.has(source)) return '';
-		seen.add(source);
-		return source.code + [...source.imports.values()].map((binding) => (binding.from.startsWith('.') ? fileOf(source, binding.from) : undefined)).filter(Boolean).map((file) => readIn(file, seen)).join('');
-	};
 	for (const [name, found] of publics) {
 		if (!components[name] || !/^[A-Z]/.test(name)) continue;
-		const code = readIn(found.source);
+		const code = drawnBy(found.source, found.node.id?.name ?? name, true);
 		const reads = sharedTokens.filter((token) => code.includes(`${token.name})`) || code.includes(`${token.name},`));
 		if (reads.length) componentTokens[name] = [...reads, ...(componentTokens[name] ?? [])];
 	}
