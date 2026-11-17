@@ -34,6 +34,9 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
   - A swatch-shaped trigger, for the end of a row of swatches, as device needs.
   - React Aria’s `parseColor` throws on `oklch()` and `transparent`, so device gives its fills a hex for their swatches.
   - React Aria’s colour area reads “Color picker”, and names colours such as “grayish”, in American spelling, whatever its label.
+- **ColorField:** next after the component tokens (Steve, 17 November).
+  - It should take any colour pasted in, in any format, such as `oklch()`, `oklab()`, `rgb()` or hex. React Aria's `parseColor` throws on `oklch()`, so it needs its own parsing.
+  - Opacity is tweaked on its own. Probably two fields in a React Aria `Group`: the colour, and its opacity.
 - **ColorSwatchPicker:**
   - Showing nothing chosen takes a colour that matches no swatch: device passes its custom colour, or `#fffffe`.
   - An item takes no `title` or tooltip, so device’s preset names no longer show on hover. React Aria passes `aria-label` on, but the type doesn’t allow it.
