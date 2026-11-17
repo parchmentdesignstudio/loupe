@@ -1,10 +1,9 @@
-import { useState } from 'react';
 import { Icon } from '@parchment/icons/react';
 import { Code, type CodeTheme } from '../../src/index.js';
 import { useHighlight } from '../../src/shiki.js';
 import highlighted from 'virtual:highlighted-code';
-import { type Marking, type Sample, highlightKey, languages, mark, markings, samples } from './code-samples.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick } from '../playground.js';
+import { type Sample, highlightKey, languages, mark, markings, samples } from './code-samples.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick, useRemembered } from '../playground.js';
 
 const themes = ['loupe', 'iamsteve', 'mcknny'] as const satisfies readonly CodeTheme[];
 
@@ -12,12 +11,12 @@ const themes = ['loupe', 'iamsteve', 'mcknny'] as const satisfies readonly CodeT
 const names = { tsx: 'TSX', css: 'CSS', json: 'JSON', iamsteve: 'iamsteve', mcknny: 'mcknny' };
 
 export function CodePlayground() {
-	const [language, setLanguage] = useState<Sample>('tsx');
-	const [theme, setTheme] = useState<CodeTheme>('loupe');
-	const [title, setTitle] = useState(samples.tsx.title);
-	const [hasLineNumbers, setLineNumbers] = useState(false);
-	const [isCopyable, setCopyable] = useState(true);
-	const [marking, setMarking] = useState<Marking>('none');
+	const [language, setLanguage] = useRemembered('language', 'tsx', languages);
+	const [theme, setTheme] = useRemembered<CodeTheme>('theme', 'loupe', themes);
+	const [title, setTitle] = useRemembered('title', samples.tsx.title);
+	const [hasLineNumbers, setLineNumbers] = useRemembered('hasLineNumbers', false);
+	const [isCopyable, setCopyable] = useRemembered('isCopyable', true);
+	const [marking, setMarking] = useRemembered('marking', 'none', markings);
 	const { code, meta } = mark(language, marking);
 	const live = useHighlight(code, { language, lineNumbers: hasLineNumbers, meta });
 	// Highlighted when the preview was built, so it shows at once, or in the browser for anything the build didn't

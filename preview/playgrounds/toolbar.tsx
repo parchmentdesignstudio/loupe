@@ -2,24 +2,28 @@ import { Fragment, useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, Separator, ToggleButton, ToggleButtonGroup, Toolbar } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, sampleWords, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, sampleWords, solidIcons, useRemembered } from '../playground.js';
 
 const counts = { few: 3, some: 6, many: 14 } as const;
 const contents = ['icons', 'labels', 'both'] as const;
 const surfaces = ['plain', 'floating'] as const;
+const orientations = ['horizontal', 'vertical'] as const;
+const texts = ['short', 'long'] as const;
+const variants = ['ghost', 'secondary', 'outline'] as const;
+const sizes = ['medium', 'small'] as const;
 const starters: IconName[] = ['arrow-uturn-left', 'arrow-uturn-right', 'text-alignleft', 'text-aligncenter', 'text-alignright', 'link', 'paperclip', 'magnifyingglass', 'square-and-arrow-up', 'pencil-tip', 'ruler', 'frame', 'component', 'magnet'];
 
 export function ToolbarPlayground() {
-	const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
-	const [surface, setSurface] = useState<(typeof surfaces)[number]>('plain');
-	const [count, setCount] = useState<keyof typeof counts>('some');
-	const [content, setContent] = useState<(typeof contents)[number]>('icons');
-	const [text, setText] = useState<'short' | 'long'>('short');
-	const [variant, setVariant] = useState<'ghost' | 'secondary' | 'outline'>('ghost');
-	const [size, setSize] = useState<'medium' | 'small'>('medium');
-	const [hasTools, setTools] = useState(true);
-	const [hasSeparators, setSeparators] = useState(true);
-	const [hasDisabled, setDisabled] = useState(false);
+	const [orientation, setOrientation] = useRemembered('orientation', 'horizontal', orientations);
+	const [surface, setSurface] = useRemembered('surface', 'plain', surfaces);
+	const [count, setCount] = useRemembered('count', 'some', Object.keys(counts) as (keyof typeof counts)[]);
+	const [content, setContent] = useRemembered('content', 'icons', contents);
+	const [text, setText] = useRemembered('text', 'short', texts);
+	const [variant, setVariant] = useRemembered('variant', 'ghost', variants);
+	const [size, setSize] = useRemembered('size', 'medium', sizes);
+	const [hasTools, setTools] = useRemembered('hasTools', true);
+	const [hasSeparators, setSeparators] = useRemembered('hasSeparators', true);
+	const [hasDisabled, setDisabled] = useRemembered('hasDisabled', false);
 	const [icons, setIcons] = useState<IconName[]>(starters);
 	const isIcons = content === 'icons';
 	const label = (index: number) => (text === 'long' && index === 1 ? longWords : sampleWords[index % sampleWords.length]);
@@ -30,8 +34,8 @@ export function ToolbarPlayground() {
 		setCount(pick(Object.keys(counts) as (keyof typeof counts)[]));
 		setContent(pick(contents));
 		setText(Math.random() < 0.3 ? 'long' : 'short');
-		setVariant(pick(['ghost', 'secondary', 'outline'] as const));
-		setSize(pick(['medium', 'small'] as const));
+		setVariant(pick(variants));
+		setSize(pick(sizes));
 		setTools(Math.random() < 0.6);
 		setSeparators(Math.random() < 0.7);
 		setDisabled(Math.random() < 0.3);
@@ -45,15 +49,15 @@ export function ToolbarPlayground() {
 					<ControlGroup label="Content">
 						<Choice label="Buttons" options={Object.keys(counts) as (keyof typeof counts)[]} value={count} onChange={setCount} />
 						<Choice label="Content" options={contents} value={content} onChange={setContent} />
-						<Choice label={isIcons ? 'Label, read out' : 'Label'} options={['short', 'long'] as const} value={text} onChange={setText} />
+						<Choice label={isIcons ? 'Label, read out' : 'Label'} options={texts} value={text} onChange={setText} />
 						<SwitchControl label="Tool group" value={hasTools} onChange={setTools} />
 						<SwitchControl label="Separators" value={hasSeparators} onChange={setSeparators} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
+						<Choice label="Orientation" options={orientations} value={orientation} onChange={setOrientation} />
 						<Choice label="Surface" options={surfaces} value={surface} onChange={setSurface} />
-						<Choice label="Variant" options={['ghost', 'secondary', 'outline'] as const} value={variant} onChange={setVariant} />
-						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						<SwitchControl label="A disabled button" value={hasDisabled} onChange={setDisabled} />

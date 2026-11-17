@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import type { Key } from 'react-aria-components';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { ComboBox, Header, ListBoxItem, ListBoxSection } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const pool = ['Field Gothic', 'Fraunces', 'IBM Plex Sans', 'Instrument Serif', 'Literata', 'Newsreader', 'Nimbus Sans', 'Public Sans', 'Source Serif 4', 'Work Sans'];
 const headings = ['Sans', 'Serif', 'Display', 'Mono', 'Script', 'Everything else'];
@@ -30,24 +29,25 @@ const chunk = <T,>(list: T[]) => {
 
 // Keyed on the list's shape, so the typed text resets when the options it matched change underneath it
 export function ComboBoxPlayground() {
-	const [label, setLabel] = useState(labels[0]);
-	const [placeholder, setPlaceholder] = useState(placeholders[0]);
-	const [description, setDescription] = useState('Type to filter the list');
-	const [errorMessage, setErrorMessage] = useState('Choose a typeface');
-	const [width, setWidth] = useState<keyof typeof widths>('medium');
-	const [count, setCount] = useState<(typeof counts)[number]>('5');
-	const [length, setLength] = useState<Length>('short');
-	const [menuTrigger, setMenuTrigger] = useState<(typeof triggers)[number]>('input');
-	const [hasSections, setSections] = useState(false);
-	const [hasIcons, setIcons] = useState(false);
+	const [label, setLabel] = useRemembered('label', labels[0]);
+	const [placeholder, setPlaceholder] = useRemembered('placeholder', placeholders[0]);
+	const [description, setDescription] = useRemembered('description', 'Type to filter the list');
+	const [errorMessage, setErrorMessage] = useRemembered('errorMessage', 'Choose a typeface');
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as (keyof typeof widths)[]);
+	const [count, setCount] = useRemembered('count', '5', counts);
+	const [length, setLength] = useRemembered('length', 'short', lengths);
+	const [menuTrigger, setMenuTrigger] = useRemembered('menuTrigger', 'input', triggers);
+	const [hasSections, setSections] = useRemembered('hasSections', false);
+	const [hasIcons, setIcons] = useRemembered('hasIcons', false);
 	const [iconSet, setIconSet] = useState<IconName[]>(icons);
-	const [selectedKey, setSelectedKey] = useState<Key | null>(null);
-	const [allowsCustomValue, setCustomValue] = useState(false);
-	const [hasDisabledOption, setDisabledOption] = useState(false);
-	const [isInvalid, setInvalid] = useState(false);
-	const [isRequired, setRequired] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
-	const [isReadOnly, setReadOnly] = useState(false);
+	// The option's id, or '' for nothing chosen, as null would read as nothing stored
+	const [selectedKey, setSelectedKey] = useRemembered('selectedKey', '');
+	const [allowsCustomValue, setCustomValue] = useRemembered('allowsCustomValue', false);
+	const [hasDisabledOption, setDisabledOption] = useRemembered('hasDisabledOption', false);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [isRequired, setRequired] = useRemembered('isRequired', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
 	const total = count === 'none' ? 0 : Number(count);
 	const items = Array.from({ length: total }, (_, i) => ({ id: `option-${i}`, name: optionName(i, length), icon: iconSet[i % iconSet.length] }));
 	const renderItem = (item: (typeof items)[number]) => (
@@ -67,7 +67,7 @@ export function ComboBoxPlayground() {
 		setSections(Math.random() < 0.4);
 		setIcons(Math.random() < 0.4);
 		setIconSet(icons.map(() => pick(solidIcons())));
-		setSelectedKey(Math.random() < 0.5 ? null : `option-${Math.floor(Math.random() * Number(nextCount))}`);
+		setSelectedKey(Math.random() < 0.5 ? '' : `option-${Math.floor(Math.random() * Number(nextCount))}`);
 		setCustomValue(Math.random() < 0.2);
 		setDisabledOption(Math.random() < 0.3);
 		setInvalid(Math.random() < 0.25);
@@ -95,7 +95,7 @@ export function ComboBoxPlayground() {
 						<SwitchControl label="Any text allowed" value={allowsCustomValue} onChange={setCustomValue} />
 					</ControlGroup>
 					<ControlGroup label="State">
-						<SwitchControl label="Nothing chosen" value={selectedKey == null} onChange={(none) => setSelectedKey(none ? null : 'option-0')} />
+						<SwitchControl label="Nothing chosen" value={!selectedKey} onChange={(none) => setSelectedKey(none ? '' : 'option-0')} />
 						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
@@ -113,8 +113,8 @@ export function ComboBoxPlayground() {
 				description={description || undefined}
 				errorMessage={errorMessage}
 				menuTrigger={menuTrigger}
-				selectedKey={selectedKey}
-				onSelectionChange={setSelectedKey}
+				selectedKey={selectedKey || null}
+				onSelectionChange={(key) => setSelectedKey(key == null ? '' : String(key))}
 				allowsCustomValue={allowsCustomValue}
 				disabledKeys={hasDisabledOption && total ? [`option-${Math.min(2, total - 1)}`] : undefined}
 				isInvalid={isInvalid}

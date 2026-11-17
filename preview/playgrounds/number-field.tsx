@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { type Size, type FieldVariant, NumberField } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const values = ['empty', 'typical', 'huge'] as const;
 const widths = { narrow: 'w-32', medium: 'w-56', wide: 'w-full max-w-sm' } as const;
-type Length = (typeof lengths)[number];
 type Value = (typeof values)[number];
 type Width = keyof typeof widths;
 
@@ -20,29 +19,34 @@ type Format = keyof typeof formats;
 
 const placeholders = { none: undefined, short: 'Auto', long: longWords };
 const errors = { short: 'Out of range', long: `${longWords}, as an error message` };
+const errorLengths = ['short', 'long'] as const;
+const variants = ['raised', 'filled'] as const satisfies readonly FieldVariant[];
+const sizes = ['medium', 'small'] as const satisfies readonly Size[];
+
+// NaN is how a controlled number field shows empty
+const valueFor = (content: Value, format: Format) => (content === 'empty' ? Number.NaN : content === 'huge' ? 9876543210.5 : formats[format].typical);
 
 export function NumberFieldPlayground() {
-	const [format, setFormat] = useState<Format>('number');
-	const [content, setContent] = useState<Value>('typical');
-	const [value, setValue] = useState(formats.number.typical);
-	const [label, setLabel] = useState<Length>('short');
-	const [description, setDescription] = useState<Length>('short');
-	const [placeholder, setPlaceholder] = useState<Length>('short');
-	const [width, setWidth] = useState<Width>('medium');
-	const [hasLimits, setLimits] = useState(true);
-	const [isWheelDisabled, setWheelDisabled] = useState(false);
-	const [isInvalid, setInvalid] = useState(false);
-	const [error, setError] = useState<'short' | 'long'>('short');
-	const [isRequired, setRequired] = useState(false);
-	const [isReadOnly, setReadOnly] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
-	const [variant, setVariant] = useState<FieldVariant>('raised');
-	const [size, setSize] = useState<Size>('medium');
+	const [format, setFormat] = useRemembered('format', 'number', Object.keys(formats) as Format[]);
+	const [content, setContent] = useRemembered('content', 'typical', values);
+	const [value, setValue] = useState(() => valueFor(content, format));
+	const [label, setLabel] = useRemembered('label', 'short', lengths);
+	const [description, setDescription] = useRemembered('description', 'short', lengths);
+	const [placeholder, setPlaceholder] = useRemembered('placeholder', 'short', lengths);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [hasLimits, setLimits] = useRemembered('hasLimits', true);
+	const [isWheelDisabled, setWheelDisabled] = useRemembered('isWheelDisabled', false);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [error, setError] = useRemembered('error', 'short', errorLengths);
+	const [isRequired, setRequired] = useRemembered('isRequired', false);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [variant, setVariant] = useRemembered<FieldVariant>('variant', 'raised', variants);
+	const [size, setSize] = useRemembered<Size>('size', 'medium', sizes);
 	const preset = formats[format];
-	// NaN is how a controlled number field shows empty
 	const fill = (next: Value, from: Format = format) => {
 		setContent(next);
-		setValue(next === 'empty' ? Number.NaN : next === 'huge' ? 9876543210.5 : formats[from].typical);
+		setValue(valueFor(next, from));
 	};
 	const changeFormat = (next: Format) => {
 		setFormat(next);
@@ -58,7 +62,7 @@ export function NumberFieldPlayground() {
 		setWidth(pick(Object.keys(widths) as Width[]));
 		setLimits(Math.random() < 0.7);
 		setInvalid(Math.random() < 0.3);
-		setError(pick(['short', 'long'] as const));
+		setError(pick(errorLengths));
 	};
 	return (
 		<Playground
@@ -77,13 +81,13 @@ export function NumberFieldPlayground() {
 						<SwitchControl label="Wheel disabled" value={isWheelDisabled} onChange={setWheelDisabled} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Variant" options={['raised', 'filled'] as const} value={variant} onChange={setVariant} />
-						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						<Choice label="Value" options={values} value={content} onChange={(next) => fill(next)} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-						{isInvalid && <Choice label="Error" options={['short', 'long'] as const} value={error} onChange={setError} />}
+						{isInvalid && <Choice label="Error" options={errorLengths} value={error} onChange={setError} />}
 						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
 						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />

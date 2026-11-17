@@ -1,11 +1,11 @@
-import { useState } from 'react';
 import { Radio, RadioGroup } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 
 const pool = ['Under £5k', '£5–15k', 'Over £15k', 'Not sure yet', 'Monthly retainer', 'Day rate', 'Fixed price', 'Equity', 'Pro bono', 'Let’s talk'];
 const counts = ['none', '2', '5', '30'] as const;
 const lengths = ['short', 'long', 'mixed'] as const;
 const labels = ['Budget', 'How should we bill you?', 'Pick one', 'Preferred contact'];
+const orientations = ['vertical', 'horizontal'] as const;
 
 type Length = (typeof lengths)[number];
 
@@ -15,18 +15,19 @@ const optionName = (index: number, length: Length) => {
 };
 
 export function RadioGroupPlayground() {
-	const [label, setLabel] = useState(labels[0]);
-	const [description, setDescription] = useState('You can change this later');
-	const [errorMessage, setErrorMessage] = useState('Choose a budget');
-	const [orientation, setOrientation] = useState<'vertical' | 'horizontal'>('vertical');
-	const [count, setCount] = useState<(typeof counts)[number]>('5');
-	const [length, setLength] = useState<Length>('short');
-	const [value, setValue] = useState<string | null>('option-1');
-	const [hasDisabledOption, setDisabledOption] = useState(false);
-	const [isInvalid, setInvalid] = useState(false);
-	const [isRequired, setRequired] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
-	const [isReadOnly, setReadOnly] = useState(false);
+	const [label, setLabel] = useRemembered('label', labels[0]);
+	const [description, setDescription] = useRemembered('description', 'You can change this later');
+	const [errorMessage, setErrorMessage] = useRemembered('errorMessage', 'Choose a budget');
+	const [orientation, setOrientation] = useRemembered('orientation', 'vertical', orientations);
+	const [count, setCount] = useRemembered('count', '5', counts);
+	const [length, setLength] = useRemembered('length', 'short', lengths);
+	// The option's value, or '' for nothing chosen, as null would read as nothing stored
+	const [value, setValue] = useRemembered('value', 'option-1');
+	const [hasDisabledOption, setDisabledOption] = useRemembered('hasDisabledOption', false);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [isRequired, setRequired] = useRemembered('isRequired', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
 	const total = count === 'none' ? 0 : Number(count);
 	const shuffle = () => {
 		const nextCount = pick(counts.filter((c) => c !== 'none'));
@@ -34,7 +35,7 @@ export function RadioGroupPlayground() {
 		setOrientation(Math.random() < 0.3 ? 'horizontal' : 'vertical');
 		setCount(nextCount);
 		setLength(pick(lengths));
-		setValue(Math.random() < 0.2 ? null : `option-${Math.floor(Math.random() * Number(nextCount))}`);
+		setValue(Math.random() < 0.2 ? '' : `option-${Math.floor(Math.random() * Number(nextCount))}`);
 		setDisabledOption(Math.random() < 0.3);
 		setInvalid(Math.random() < 0.25);
 		setDisabled(Math.random() < 0.1);
@@ -53,11 +54,11 @@ export function RadioGroupPlayground() {
 						<Choice label="Option text" options={lengths} value={length} onChange={setLength} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Orientation" options={['vertical', 'horizontal'] as const} value={orientation} onChange={setOrientation} />
+						<Choice label="Orientation" options={orientations} value={orientation} onChange={setOrientation} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
-						<SwitchControl label="Nothing chosen" value={value == null} onChange={(none) => setValue(none ? null : 'option-0')} />
+						<SwitchControl label="Nothing chosen" value={!value} onChange={(none) => setValue(none ? '' : 'option-0')} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
@@ -72,7 +73,7 @@ export function RadioGroupPlayground() {
 				description={description || undefined}
 				errorMessage={errorMessage}
 				orientation={orientation}
-				value={value}
+				value={value || null}
 				onChange={setValue}
 				isInvalid={isInvalid}
 				isRequired={isRequired}

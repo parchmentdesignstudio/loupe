@@ -2,33 +2,34 @@ import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, FileTrigger } from '../../src/index.js';
-import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, pick, sampleWords, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, pick, sampleWords, solidIcons, useRemembered } from '../playground.js';
 import { type Accepts, type Seed, accepts, seeds } from './files.js';
 
 const variants = ['primary', 'secondary', 'quiet', 'outline', 'ghost'] as const;
 const cameras = ['none', 'user', 'environment'] as const;
+const sizes = ['medium', 'small'] as const;
 
 // The camera only shows on a phone, where it opens the camera straight away rather than the picker
 export function FileTriggerPlayground() {
-	const [variant, setVariant] = useState<(typeof variants)[number]>('secondary');
-	const [size, setSize] = useState<'medium' | 'small'>('medium');
-	const [label, setLabel] = useState('Choose artwork');
-	const [hasIcon, setHasIcon] = useState(true);
-	const [icon, setIcon] = useState<IconName>('paperclip');
-	const [accepted, setAccepted] = useState<Accepts>('images');
-	const [isMultiple, setMultiple] = useState(true);
-	const [isDirectory, setDirectory] = useState(false);
-	const [camera, setCamera] = useState<(typeof cameras)[number]>('none');
-	const [isDisabled, setDisabled] = useState(false);
-	const [seed, setSeed] = useState<Seed>('none');
-	const [names, setNames] = useState<string[]>([]);
+	const [variant, setVariant] = useRemembered('variant', 'secondary', variants);
+	const [size, setSize] = useRemembered('size', 'medium', sizes);
+	const [label, setLabel] = useRemembered('label', 'Choose artwork');
+	const [hasIcon, setHasIcon] = useRemembered('hasIcon', true);
+	const [icon, setIcon] = useRemembered<IconName>('icon', 'paperclip', (name) => solidIcons().includes(name));
+	const [accepted, setAccepted] = useRemembered('accepted', 'images', Object.keys(accepts) as Accepts[]);
+	const [isMultiple, setMultiple] = useRemembered('isMultiple', true);
+	const [isDirectory, setDirectory] = useRemembered('isDirectory', false);
+	const [camera, setCamera] = useRemembered('camera', 'none', cameras);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [seed, setSeed] = useRemembered('seed', 'none', Object.keys(seeds) as Seed[]);
+	const [names, setNames] = useState<string[]>(() => [...seeds[seed]]);
 	const choose = (next: Seed) => {
 		setSeed(next);
 		setNames([...seeds[next]]);
 	};
 	const shuffle = () => {
 		setVariant(pick(variants));
-		setSize(pick(['medium', 'small'] as const));
+		setSize(pick(sizes));
 		setLabel(pick(['Choose artwork', 'Upload', 'Add files', ...sampleWords]));
 		setHasIcon(Math.random() < 0.6);
 		setIcon(pick(solidIcons()));
@@ -50,7 +51,7 @@ export function FileTriggerPlayground() {
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
-						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						{!isDirectory && <Choice label="Accepts" options={Object.keys(accepts) as Accepts[]} value={accepted} onChange={setAccepted} />}

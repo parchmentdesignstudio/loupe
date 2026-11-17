@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Chip, ChipGroup } from '../../src/index.js';
-import { Choice, ControlGroup, ControlRow, IconPicker, NumberControl, Playground, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, ControlRow, IconPicker, NumberControl, Playground, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const replies = ['A new website', 'Rework my site', 'Not sure yet', 'Book a call', 'Show me examples', 'How much?', 'Later', 'Tell me more', 'Yes', 'No thanks'];
 const lengths = ['short', 'mixed', 'long'] as const;
@@ -10,6 +10,7 @@ const places = ['none', 'start', 'end'] as const;
 const sizes = ['small', 'medium', 'large'] as const;
 const widths = { narrow: 'max-w-56', medium: 'max-w-md', wide: 'max-w-none' } as const;
 type Width = keyof typeof widths;
+const disabling = ['none', 'one', 'all'] as const;
 
 function labelFor(index: number, length: (typeof lengths)[number], first: string) {
 	if (index === 0) return length === 'long' ? longWords : first;
@@ -18,14 +19,14 @@ function labelFor(index: number, length: (typeof lengths)[number], first: string
 }
 
 export function ChipPlayground() {
-	const [count, setCount] = useState(3);
-	const [first, setFirst] = useState('A new website');
-	const [length, setLength] = useState<(typeof lengths)[number]>('short');
-	const [place, setPlace] = useState<(typeof places)[number]>('none');
-	const [icon, setIcon] = useState<IconName>('paperplane');
-	const [width, setWidth] = useState<Width>('medium');
-	const [size, setSize] = useState<(typeof sizes)[number]>('large');
-	const [disabled, setDisabled] = useState<'none' | 'one' | 'all'>('none');
+	const [count, setCount] = useRemembered('count', 3, (stored) => stored >= 0 && stored <= 40);
+	const [first, setFirst] = useRemembered('first', 'A new website');
+	const [length, setLength] = useRemembered('length', 'short', lengths);
+	const [place, setPlace] = useRemembered('place', 'none', places);
+	const [icon, setIcon] = useRemembered<IconName>('icon', 'paperplane', (name) => solidIcons().includes(name));
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [size, setSize] = useRemembered('size', 'large', sizes);
+	const [disabled, setDisabled] = useRemembered('disabled', 'none', disabling);
 	const [pressed, setPressed] = useState<string>();
 	const names = solidIcons();
 	const shuffle = () => {
@@ -72,7 +73,7 @@ export function ChipPlayground() {
 						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="State">
-						<Choice label="Disabled" options={['none', 'one', 'all'] as const} value={disabled} onChange={setDisabled} />
+						<Choice label="Disabled" options={disabling} value={disabled} onChange={setDisabled} />
 					</ControlGroup>
 				</>
 			}

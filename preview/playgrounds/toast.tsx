@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Button, ToastQueue, ToastRegion } from '../../src/index.js';
-import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 
 const descriptions = ['none', 'short', 'long'] as const;
 const timeouts = ['5s', '10s', 'stays'] as const;
@@ -10,12 +10,12 @@ const shortDescription = 'favicon.zip is in your downloads, with all 16 files.';
 
 // Its own queue and region, made again when the number shown at once changes
 export function ToastPlayground() {
-	const [title, setTitle] = useState('Export ready');
-	const [description, setDescription] = useState<(typeof descriptions)[number]>('short');
-	const [closeAfter, setCloseAfter] = useState<(typeof timeouts)[number]>('5s');
-	const [hasAction, setHasAction] = useState(false);
-	const [burst, setBurst] = useState(1);
-	const [maxVisible, setMaxVisible] = useState(3);
+	const [title, setTitle] = useRemembered('title', 'Export ready');
+	const [description, setDescription] = useRemembered('description', 'short', descriptions);
+	const [closeAfter, setCloseAfter] = useRemembered('closeAfter', '5s', timeouts);
+	const [hasAction, setHasAction] = useRemembered('hasAction', false);
+	const [burst, setBurst] = useRemembered('burst', 1, (stored) => stored >= 1 && stored <= 10);
+	const [maxVisible, setMaxVisible] = useRemembered('maxVisible', 3, (stored) => stored >= 1 && stored <= 6);
 	const queue = useMemo(() => new ToastQueue({ maxVisibleToasts: maxVisible }), [maxVisible]);
 	const shuffle = () => {
 		setTitle(Math.random() < 0.2 ? longWords : pick(titles));

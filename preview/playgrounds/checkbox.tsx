@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Checkbox, CheckboxGroup } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 
 const pool = ['Brand identity', 'Website', 'Design system', 'Illustration', 'Typography', 'Signage', 'Packaging', 'Motion', 'Photography', 'Copywriting'];
 const counts = ['none', '2', '5', '30'] as const;
 const lengths = ['short', 'long', 'mixed'] as const;
 const states = ['off', 'on', 'indeterminate'] as const;
+const modes = ['single', 'group'] as const;
 const labels = ['What do you need?', 'Services', 'Send me updates about', 'Which of these apply?'];
 const singles = ['I’ve read the terms', 'Send me the newsletter', 'All services', 'Remember me'];
 
@@ -17,20 +18,20 @@ const optionName = (index: number, length: Length) => {
 };
 
 export function CheckboxPlayground() {
-	const [mode, setMode] = useState<'single' | 'group'>('group');
-	const [state, setState] = useState<(typeof states)[number]>('off');
-	const [single, setSingle] = useState(singles[0]);
-	const [label, setLabel] = useState(labels[0]);
-	const [description, setDescription] = useState('Pick as many as you like');
-	const [errorMessage, setErrorMessage] = useState('Pick at least one');
-	const [count, setCount] = useState<(typeof counts)[number]>('5');
-	const [length, setLength] = useState<Length>('short');
+	const [mode, setMode] = useRemembered('mode', 'group', modes);
+	const [state, setState] = useRemembered('state', 'off', states);
+	const [single, setSingle] = useRemembered('single', singles[0]);
+	const [label, setLabel] = useRemembered('label', labels[0]);
+	const [description, setDescription] = useRemembered('description', 'Pick as many as you like');
+	const [errorMessage, setErrorMessage] = useRemembered('errorMessage', 'Pick at least one');
+	const [count, setCount] = useRemembered('count', '5', counts);
+	const [length, setLength] = useRemembered('length', 'short', lengths);
 	const [value, setValue] = useState<string[]>(['option-1']);
-	const [hasDisabledOption, setDisabledOption] = useState(false);
-	const [isInvalid, setInvalid] = useState(false);
-	const [isRequired, setRequired] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
-	const [isReadOnly, setReadOnly] = useState(false);
+	const [hasDisabledOption, setDisabledOption] = useRemembered('hasDisabledOption', false);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [isRequired, setRequired] = useRemembered('isRequired', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
 	const isGroup = mode === 'group';
 	const total = count === 'none' ? 0 : Number(count);
 	const shuffle = () => {
@@ -66,7 +67,7 @@ export function CheckboxPlayground() {
 						)}
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
-						<Choice label="Mode" options={['single', 'group'] as const} value={mode} onChange={setMode} />
+						<Choice label="Mode" options={modes} value={mode} onChange={setMode} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						{isGroup ? (

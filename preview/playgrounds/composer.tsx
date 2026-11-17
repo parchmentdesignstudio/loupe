@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Composer } from '../../src/index.js';
-import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const widths = { narrow: 'w-56', medium: 'w-80', wide: 'w-full max-w-lg' } as const;
@@ -13,13 +13,13 @@ const placeholders = { none: undefined, short: 'Tell me what you’re working on
 
 const drafts = { none: '', short: 'Could we move the call to Thursday?', long: `${longWords}. ${longWords}. ${longWords}.` };
 export function ComposerPlayground() {
-	const [placeholder, setPlaceholder] = useState<Length>('short');
-	const [submitLabel, setSubmitLabel] = useState('Send');
-	const [submitIcon, setSubmitIcon] = useState<IconName>('arrow-up');
-	const [width, setWidth] = useState<Width>('medium');
-	const [isDisabled, setDisabled] = useState(false);
+	const [placeholder, setPlaceholder] = useRemembered('placeholder', 'short', lengths);
+	const [submitLabel, setSubmitLabel] = useRemembered('submitLabel', 'Send');
+	const [submitIcon, setSubmitIcon] = useRemembered<IconName>('submitIcon', 'arrow-up', (name) => solidIcons().includes(name));
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const [sent, setSent] = useState<string[]>([]);
-	const [message, setMessage] = useState('');
+	const [message, setMessage] = useRemembered('message', '');
 	const shuffle = () => {
 		setPlaceholder(pick(lengths));
 		setSubmitIcon(pick(solidIcons()));

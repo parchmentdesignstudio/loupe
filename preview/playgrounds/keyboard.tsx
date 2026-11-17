@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Icon } from '@parchment/icons/react';
 import { Button, Keyboard, Tooltip, TooltipTrigger } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, TextControl, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, TextControl, pick, useRemembered } from '../playground.js';
 
 const contexts = ['alone', 'sentence', 'tooltip'] as const;
 const variants = ['raised', 'plain'] as const;
@@ -16,10 +15,10 @@ const variantIn = (context: Context): Variant => (context === 'tooltip' ? 'plain
 
 // The tooltip is held open and drawn in a layer of its own, so it sits on the page whatever the ground
 export function KeyboardPlayground() {
-	const [shortcut, setShortcut] = useState('⌘Z');
-	const [context, setContext] = useState<Context>('sentence');
-	const [size, setSize] = useState<Size>('body');
-	const [variant, setVariant] = useState<Variant>('raised');
+	const [shortcut, setShortcut] = useRemembered('shortcut', '⌘Z');
+	const [context, setContext] = useRemembered('context', 'sentence', contexts);
+	const [size, setSize] = useRemembered('size', 'body', Object.keys(sizes) as Size[]);
+	const [variant, setVariant] = useRemembered('variant', 'raised', variants);
 	const moveTo = (next: Context) => {
 		setContext(next);
 		setVariant(variantIn(next));

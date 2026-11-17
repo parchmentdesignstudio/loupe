@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Aside, Prose } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, longWords, pick, useRemembered } from '../playground.js';
 
 const samples = {
 	signpost: {
@@ -13,30 +12,32 @@ const samples = {
 	},
 } as const;
 type Variant = keyof typeof samples;
-type Length = 'short' | 'long';
+const variants = Object.keys(samples) as Variant[];
+const lengths = ['short', 'long', 'very long'] as const;
+const settings = ['prose', 'alone'] as const;
 
 export function AsidePlayground() {
-	const [variant, setVariant] = useState<Variant>('signpost');
-	const [length, setLength] = useState<Length | 'very long'>('short');
-	const [inProse, setInProse] = useState<'prose' | 'alone'>('prose');
+	const [variant, setVariant] = useRemembered('variant', 'signpost', variants);
+	const [length, setLength] = useRemembered('length', 'short', lengths);
+	const [inProse, setInProse] = useRemembered('inProse', 'prose', settings);
 	const shuffle = () => {
-		setVariant(pick(['signpost', 'afterthought'] as const));
+		setVariant(pick(variants));
 		setLength(Math.random() < 0.1 ? 'very long' : pick(['short', 'long'] as const));
-		setInProse(pick(['prose', 'alone'] as const));
+		setInProse(pick(settings));
 	};
 	const text = length === 'very long' ? longWords : samples[variant][length];
 	const aside = <Aside variant={variant}>{text}</Aside>;
 	return (
 		<Playground
 			onRandom={shuffle}
-			preview={<Choice label="Set in" options={['prose', 'alone'] as const} value={inProse} onChange={setInProse} />}
+			preview={<Choice label="Set in" options={settings} value={inProse} onChange={setInProse} />}
 			controls={
 				<>
 					<ControlGroup label="Content">
-						<Choice label="Text" options={['short', 'long', 'very long'] as const} value={length} onChange={setLength} />
+						<Choice label="Text" options={lengths} value={length} onChange={setLength} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Variant" options={['signpost', 'afterthought'] as const} value={variant} onChange={setVariant} />
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
 					</ControlGroup>
 				</>
 			}

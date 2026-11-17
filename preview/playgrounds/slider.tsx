@@ -1,13 +1,11 @@
-import { useState } from 'react';
 import { Slider } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const thumbs = ['one', 'range'] as const;
 const widths = { narrow: 'w-32', medium: 'w-64', wide: 'w-full max-w-md' } as const;
-type Length = (typeof lengths)[number];
-type Thumbs = (typeof thumbs)[number];
 type Width = keyof typeof widths;
+const orientations = ['horizontal', 'vertical'] as const;
 
 // Each format comes with limits, a step and a starting value or range that suit it. A unit must be one Intl knows, or
 // it throws
@@ -21,13 +19,13 @@ type Format = keyof typeof formats;
 
 // The slider remounts when its thumbs or format change, so it starts from values that fit the new limits
 export function SliderPlayground() {
-	const [format, setFormat] = useState<Format>('percent');
-	const [count, setCount] = useState<Thumbs>('one');
-	const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
-	const [label, setLabel] = useState<Length>('short');
-	const [description, setDescription] = useState<Length>('none');
-	const [width, setWidth] = useState<Width>('medium');
-	const [isDisabled, setDisabled] = useState(false);
+	const [format, setFormat] = useRemembered('format', 'percent', Object.keys(formats) as Format[]);
+	const [count, setCount] = useRemembered('count', 'one', thumbs);
+	const [orientation, setOrientation] = useRemembered('orientation', 'horizontal', orientations);
+	const [label, setLabel] = useRemembered('label', 'short', lengths);
+	const [description, setDescription] = useRemembered('description', 'none', lengths);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const preset = formats[format];
 	const isVertical = orientation === 'vertical';
 	const shuffle = () => {
@@ -50,7 +48,7 @@ export function SliderPlayground() {
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Thumbs" options={thumbs} value={count} onChange={setCount} />
-						<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
+						<Choice label="Orientation" options={orientations} value={orientation} onChange={setOrientation} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						<Choice label="Format" options={Object.keys(formats) as Format[]} value={format} onChange={setFormat} />

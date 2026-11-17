@@ -1,11 +1,11 @@
-import { useState } from 'react';
 import { Breadcrumb, Breadcrumbs } from '../../src/index.js';
-import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const counts = { two: 2, four: 4, eight: 8 } as const;
 type Count = keyof typeof counts;
 const widths = { narrow: 'max-w-60', medium: 'max-w-md', wide: 'max-w-none' } as const;
 type Width = keyof typeof widths;
+const texts = ['short', 'long'] as const;
 const names = ['Parchment', 'Clients', 'Hartley & Webb', 'Projects', 'Brand identity', 'Logo', 'Lockups', 'Horizontal'];
 
 // The second crumb is a group with no page, as Actions is in loupe's own trail, when Group is on
@@ -16,13 +16,13 @@ const trailFor = (count: Count, text: 'short' | 'long', hasGroup: boolean) =>
 	}));
 
 export function BreadcrumbsPlayground() {
-	const [count, setCount] = useState<Count>('eight');
-	const [text, setText] = useState<'short' | 'long'>('short');
-	const [width, setWidth] = useState<Width>('medium');
-	const [hasGroup, setGroup] = useState(true);
-	const [hasLimit, setLimit] = useState(false);
-	const [maxVisible, setMaxVisible] = useState(3);
-	const [isDisabled, setDisabled] = useState(false);
+	const [count, setCount] = useRemembered('count', 'eight', Object.keys(counts) as Count[]);
+	const [text, setText] = useRemembered('text', 'short', texts);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [hasGroup, setGroup] = useRemembered('hasGroup', true);
+	const [hasLimit, setLimit] = useRemembered('hasLimit', false);
+	const [maxVisible, setMaxVisible] = useRemembered('maxVisible', 3, (stored) => stored >= 2 && stored <= 8);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const shuffle = () => {
 		setCount(pick(['two', 'four', 'eight'] as const));
 		setText(Math.random() < 0.3 ? 'long' : 'short');
@@ -41,7 +41,7 @@ export function BreadcrumbsPlayground() {
 				<>
 					<ControlGroup label="Content">
 						<Choice label="Crumbs" options={Object.keys(counts) as Count[]} value={count} onChange={setCount} />
-						<Choice label="Text" options={['short', 'long'] as const} value={text} onChange={setText} />
+						<Choice label="Text" options={texts} value={text} onChange={setText} />
 						<SwitchControl label="A group with no page" value={hasGroup} onChange={setGroup} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">

@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import { Alert, type AlertTone, Button } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 
 const tones = ['neutral', 'info', 'success', 'warning', 'danger'] as const satisfies readonly AlertTone[];
+const variants = ['alert', 'notice'] as const;
+const widths = ['narrow', 'wide'] as const;
 const samples: Record<AlertTone, { title: string; text: string }> = {
 	neutral: { title: 'This project is archived', text: 'It’s read only. Restore it to make changes or invite people.' },
 	info: { title: 'A new version of the brand kit is ready', text: 'The logo files and colour tokens were updated on 12 November.' },
@@ -13,13 +14,13 @@ const samples: Record<AlertTone, { title: string; text: string }> = {
 const long = 'Two leads from the October campaign haven’t been contacted, and one of them asked for a call back before the end of the week. Assign them to someone in the studio, or archive them if they’re no longer a good fit, so they stop showing in the weekly summary.';
 
 export function AlertPlayground() {
-	const [tone, setTone] = useState<AlertTone>('warning');
-	const [variant, setVariant] = useState<'alert' | 'notice'>('alert');
-	const [title, setTitle] = useState(samples.warning.title);
-	const [text, setText] = useState(samples.warning.text);
-	const [hasActions, setHasActions] = useState(false);
-	const [isDismissable, setDismissable] = useState(false);
-	const [width, setWidth] = useState<'narrow' | 'wide'>('wide');
+	const [tone, setTone] = useRemembered<AlertTone>('tone', 'warning', tones);
+	const [variant, setVariant] = useRemembered('variant', 'alert', variants);
+	const [title, setTitle] = useRemembered('title', samples.warning.title);
+	const [text, setText] = useRemembered('text', samples.warning.text);
+	const [hasActions, setHasActions] = useRemembered('hasActions', false);
+	const [isDismissable, setDismissable] = useRemembered('isDismissable', false);
+	const [width, setWidth] = useRemembered('width', 'wide', widths);
 	const shuffle = () => {
 		const next = pick(tones);
 		setTone(next);
@@ -28,12 +29,12 @@ export function AlertPlayground() {
 		setText(Math.random() < 0.2 ? long : samples[next].text);
 		setHasActions(Math.random() < 0.3);
 		setDismissable(Math.random() < 0.4);
-		setWidth(pick(['narrow', 'wide'] as const));
+		setWidth(pick(widths));
 	};
 	return (
 		<Playground
 			onRandom={shuffle}
-			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
+			preview={<Choice label="Width" options={widths} value={width} onChange={setWidth} />}
 			controls={
 				<>
 					<ControlGroup label="Content">
@@ -43,7 +44,7 @@ export function AlertPlayground() {
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Tone" options={tones} value={tone} onChange={setTone} />
-						<Choice label="Variant" options={['alert', 'notice'] as const} value={variant} onChange={setVariant} />
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						<SwitchControl label="Dismissable" value={isDismissable} onChange={setDismissable} />

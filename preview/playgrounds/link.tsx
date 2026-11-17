@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Link } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 
 const settings = ['alone', 'sentence', 'list'] as const;
 const destinations = ['page', 'elsewhere', 'nowhere'] as const;
@@ -11,11 +11,11 @@ const services = ['Brand identity', 'Website', 'Design system', 'Illustration'];
 // The router keeps a page link inside the playground. Elsewhere opens a new tab, and nowhere has no href, so it's
 // a span React Aria gives the link role
 export function LinkPlayground() {
-	const [label, setLabel] = useState('link');
-	const [setting, setSetting] = useState<(typeof settings)[number]>('sentence');
-	const [destination, setDestination] = useState<(typeof destinations)[number]>('page');
-	const [isCurrent, setCurrent] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
+	const [label, setLabel] = useRemembered('label', 'link');
+	const [setting, setSetting] = useRemembered('setting', 'sentence', settings);
+	const [destination, setDestination] = useRemembered('destination', 'page', destinations);
+	const [isCurrent, setCurrent] = useRemembered('isCurrent', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const [followed, setFollowed] = useState<string | null>(null);
 
 	const linkProps = {

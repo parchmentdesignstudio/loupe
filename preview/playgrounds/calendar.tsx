@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { type DateValue, parseDate } from '@internationalized/date';
 import { Calendar, RangeCalendar } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, pick, useRemembered } from '../playground.js';
 import { InLocale, type LocaleName, limits, locales, now, weekends } from './dates.js';
 
 const kinds = ['single', 'range'] as const;
 const values = ['empty', 'today', 'across months', 'far off'] as const;
 const months = ['1', '2'] as const;
 const firstDays = ['locale', 'sun', 'mon', 'sat'] as const;
-type Kind = (typeof kinds)[number];
 type Value = (typeof values)[number];
 
 const rangeFor = (value: Value): { start: DateValue; end: DateValue } | null => {
@@ -18,17 +17,17 @@ const rangeFor = (value: Value): { start: DateValue; end: DateValue } | null => 
 };
 
 export function CalendarPlayground() {
-	const [kind, setKind] = useState<Kind>('range');
-	const [content, setContent] = useState<Value>('across months');
-	const [range, setRange] = useState(() => rangeFor('across months'));
-	const [locale, setLocale] = useState<LocaleName>('page');
-	const [visible, setVisible] = useState<(typeof months)[number]>('1');
-	const [firstDay, setFirstDay] = useState<(typeof firstDays)[number]>('locale');
-	const [hasLimits, setLimits] = useState(false);
-	const [hasWeekends, setWeekends] = useState(false);
-	const [isInvalid, setInvalid] = useState(false);
-	const [isReadOnly, setReadOnly] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
+	const [kind, setKind] = useRemembered('kind', 'range', kinds);
+	const [content, setContent] = useRemembered('content', 'across months', values);
+	const [range, setRange] = useState(() => rangeFor(content));
+	const [locale, setLocale] = useRemembered('locale', 'page', Object.keys(locales) as LocaleName[]);
+	const [visible, setVisible] = useRemembered('visible', '1', months);
+	const [firstDay, setFirstDay] = useRemembered('firstDay', 'locale', firstDays);
+	const [hasLimits, setLimits] = useRemembered('hasLimits', false);
+	const [hasWeekends, setWeekends] = useRemembered('hasWeekends', false);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const fill = (next: Value) => {
 		setContent(next);
 		setRange(rangeFor(next));

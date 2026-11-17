@@ -1,7 +1,7 @@
-import { type CSSProperties, type ReactNode, useState } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Button } from '../../src/index.js';
 import { type Name, hex, surface } from '../brand.js';
-import { Choice, ControlGroup, Playground, TextControl, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, TextControl, pick, useRemembered } from '../playground.js';
 import { library } from '../stories.js';
 import { examples } from './examples.js';
 
@@ -92,6 +92,7 @@ export function Card({ fill = 'raised', media, title, description, actions, href
 
 const exampleNames = Object.keys(examples);
 const buttonCounts = ['none', 'one', 'two'] as const;
+const imageAreas = ['example', 'none'] as const;
 
 const actionsFor = (count: (typeof buttonCounts)[number], label: string) =>
 	count === 'none' ? undefined : count === 'one' ? (
@@ -104,13 +105,13 @@ const actionsFor = (count: (typeof buttonCounts)[number], label: string) =>
 	);
 
 export function CardPlayground() {
-	const [fill, setFill] = useState<Fill>('raised');
-	const [example, setExample] = useState('Button');
-	const [hasMedia, setMedia] = useState<'example' | 'none'>('example');
-	const [title, setTitle] = useState('Button');
-	const [description, setDescription] = useState('Any action, with an icon at either end or just an icon');
-	const [buttons, setButtons] = useState<(typeof buttonCounts)[number]>('one');
-	const [label, setLabel] = useState('Open');
+	const [fill, setFill] = useRemembered('fill', 'raised', fills);
+	const [example, setExample] = useRemembered('example', 'Button', exampleNames);
+	const [hasMedia, setMedia] = useRemembered('hasMedia', 'example', imageAreas);
+	const [title, setTitle] = useRemembered('title', 'Button');
+	const [description, setDescription] = useRemembered('description', 'Any action, with an icon at either end or just an icon');
+	const [buttons, setButtons] = useRemembered('buttons', 'one', buttonCounts);
+	const [label, setLabel] = useRemembered('label', 'Open');
 	const Example = examples[example];
 	return (
 		<Playground
@@ -124,7 +125,7 @@ export function CardPlayground() {
 			controls={
 				<>
 					<ControlGroup label="Content">
-						<Choice label="Image area" options={['example', 'none'] as const} value={hasMedia} onChange={setMedia} />
+						<Choice label="Image area" options={imageAreas} value={hasMedia} onChange={setMedia} />
 						{hasMedia === 'example' && <Choice label="Example" options={exampleNames} value={example} onChange={setExample} />}
 						<TextControl label="Title" value={title} onChange={setTitle} />
 						<TextControl label="Description" value={description} onChange={setDescription} />

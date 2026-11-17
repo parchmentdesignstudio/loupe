@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Button, DialogActions, DialogClose, DialogHeading, Sheet, SheetTrigger, TextField } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { type Length, bodyOf, lengths } from './overlay.js';
 
 const positions = ['bottom', 'top', 'start', 'end', 'center'] as const;
@@ -13,16 +12,16 @@ const snapPointsOf = { none: undefined, two: ['50%', '100%'], three: ['25%', '60
 
 // A sheet covers the controls, so there's no keep-open switch. Stopping dismissal with no buttons left keeps a Done button
 export function SheetPlayground() {
-	const [position, setPosition] = useState<(typeof positions)[number]>('bottom');
-	const [heading, setHeading] = useState<(typeof headings)[number]>('short');
-	const [title, setTitle] = useState('Rename project');
-	const [body, setBody] = useState<Length>('short');
-	const [hasField, setHasField] = useState(false);
-	const [hasActions, setHasActions] = useState(true);
-	const [hasClose, setHasClose] = useState(true);
-	const [snap, setSnap] = useState<(typeof snaps)[number]>('none');
-	const [preventDismissal, setPreventDismissal] = useState(false);
-	const [trigger, setTrigger] = useState('Open sheet');
+	const [position, setPosition] = useRemembered('position', 'bottom', positions);
+	const [heading, setHeading] = useRemembered('heading', 'short', headings);
+	const [title, setTitle] = useRemembered('title', 'Rename project');
+	const [body, setBody] = useRemembered<Length>('body', 'short', lengths);
+	const [hasField, setHasField] = useRemembered('hasField', false);
+	const [hasActions, setHasActions] = useRemembered('hasActions', true);
+	const [hasClose, setHasClose] = useRemembered('hasClose', true);
+	const [snap, setSnap] = useRemembered('snap', 'none', snaps);
+	const [preventDismissal, setPreventDismissal] = useRemembered('preventDismissal', false);
+	const [trigger, setTrigger] = useRemembered('trigger', 'Open sheet');
 	const isTrapped = preventDismissal && !hasClose && !hasActions;
 	const shuffle = () => {
 		setPosition(pick(positions));

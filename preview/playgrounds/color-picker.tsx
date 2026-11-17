@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { parseColor } from 'react-aria-components';
 import { ColorArea, ColorField, ColorPicker, ColorSlider, ColorSwatchPicker, ColorSwatchPickerItem } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { ColourControl, extremes, randomColour } from './colour.js';
 
 const insides = ['standard', 'opacity', 'channels', 'swatches'] as const;
@@ -47,11 +47,11 @@ function Inside({ contents }: { contents: Contents }) {
 
 export function ColorPickerPlayground() {
 	const [color, setColor] = useState(() => parseColor('#0c2920'));
-	const [label, setLabel] = useState('Theme');
-	const [hasLabel, setHasLabel] = useState(true);
-	const [contents, setContents] = useState<Contents>('standard');
-	const [width, setWidth] = useState<Width>('medium');
-	const [isPaired, setPaired] = useState(false);
+	const [label, setLabel] = useRemembered('label', 'Theme');
+	const [hasLabel, setHasLabel] = useRemembered('hasLabel', true);
+	const [contents, setContents] = useRemembered('contents', 'standard', insides);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [isPaired, setPaired] = useRemembered('isPaired', false);
 	const shuffle = () => {
 		setColor(randomColour());
 		setLabel(pick(['Theme', 'Background', 'Accent', longWords]));

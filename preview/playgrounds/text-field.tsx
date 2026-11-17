@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import { type Size, type FieldVariant, TextField } from '../../src/index.js';
-import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const values = ['empty', 'short', 'long'] as const;
 const widths = { narrow: 'w-40', medium: 'w-64', wide: 'w-full max-w-sm' } as const;
-type Length = (typeof lengths)[number];
-type Value = (typeof values)[number];
 type Width = keyof typeof widths;
+const errorLengths = ['short', 'long'] as const;
+const variants = ['raised', 'filled'] as const satisfies readonly FieldVariant[];
+const sizes = ['medium', 'small'] as const satisfies readonly Size[];
 
 const labels = { none: undefined, short: 'Your name', long: longWords };
 const descriptions = { none: undefined, short: 'As you’d like Steve to say it', long: `${longWords}, and then a second sentence to push it onto another line` };
@@ -21,20 +21,20 @@ const contents = {
 
 // The field remounts when Value changes, so it starts from the chosen text but still takes typing
 export function TextFieldPlayground() {
-	const [label, setLabel] = useState<Length>('short');
-	const [description, setDescription] = useState<Length>('none');
-	const [placeholder, setPlaceholder] = useState<Length>('short');
-	const [value, setValue] = useState<Value>('empty');
-	const [width, setWidth] = useState<Width>('medium');
-	const [multiline, setMultiline] = useState(false);
-	const [rows, setRows] = useState(4);
-	const [isInvalid, setInvalid] = useState(false);
-	const [error, setError] = useState<'short' | 'long'>('short');
-	const [isRequired, setRequired] = useState(false);
-	const [isReadOnly, setReadOnly] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
-	const [variant, setVariant] = useState<FieldVariant>('raised');
-	const [size, setSize] = useState<Size>('medium');
+	const [label, setLabel] = useRemembered('label', 'short', lengths);
+	const [description, setDescription] = useRemembered('description', 'none', lengths);
+	const [placeholder, setPlaceholder] = useRemembered('placeholder', 'short', lengths);
+	const [value, setValue] = useRemembered('value', 'empty', values);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [multiline, setMultiline] = useRemembered('multiline', false);
+	const [rows, setRows] = useRemembered('rows', 4, (stored) => stored >= 1 && stored <= 12);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [error, setError] = useRemembered('error', 'short', errorLengths);
+	const [isRequired, setRequired] = useRemembered('isRequired', false);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [variant, setVariant] = useRemembered<FieldVariant>('variant', 'raised', variants);
+	const [size, setSize] = useRemembered<Size>('size', 'medium', sizes);
 	const shuffle = () => {
 		setLabel(pick(lengths));
 		setDescription(pick(lengths));
@@ -44,7 +44,7 @@ export function TextFieldPlayground() {
 		setMultiline(Math.random() < 0.3);
 		setRows(pick([2, 4, 6]));
 		setInvalid(Math.random() < 0.3);
-		setError(pick(['short', 'long'] as const));
+		setError(pick(errorLengths));
 	};
 	return (
 		<Playground
@@ -58,15 +58,15 @@ export function TextFieldPlayground() {
 						<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Variant" options={['raised', 'filled'] as const} value={variant} onChange={setVariant} />
-						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 						<SwitchControl label="Multiline" value={multiline} onChange={setMultiline} />
 						{multiline && <NumberControl label="Rows" value={rows} onChange={setRows} minValue={1} maxValue={12} />}
 					</ControlGroup>
 					<ControlGroup label="State">
 						<Choice label="Value" options={values} value={value} onChange={setValue} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-						{isInvalid && <Choice label="Error" options={['short', 'long'] as const} value={error} onChange={setError} />}
+						{isInvalid && <Choice label="Error" options={errorLengths} value={error} onChange={setError} />}
 						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
 						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />

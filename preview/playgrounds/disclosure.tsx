@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Disclosure, DisclosureGroup, DisclosureHeader, DisclosurePanel } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const questions = [
 	{ title: 'What’s a disclosure?', answer: 'A heading that shows or hides what’s under it, such as an answer under its question.' },
@@ -28,17 +27,18 @@ const counts = ['2', '5', '12'] as const;
 const openings = ['none', 'first', 'all'] as const;
 const disablings = ['none', 'one', 'all'] as const;
 const widths = ['narrow', 'wide'] as const;
+const sizes = ['medium', 'small'] as const;
 
 export function DisclosurePlayground() {
-	const [size, setSize] = useState<'medium' | 'small'>('medium');
-	const [layout, setLayout] = useState<(typeof layouts)[number]>('group');
-	const [count, setCount] = useState<(typeof counts)[number]>('5');
-	const [allowsMultiple, setAllowsMultiple] = useState(false);
-	const [opened, setOpened] = useState<(typeof openings)[number]>('first');
-	const [isLongTitle, setLongTitle] = useState(false);
-	const [isLongPanel, setLongPanel] = useState(false);
-	const [disabled, setDisabled] = useState<(typeof disablings)[number]>('none');
-	const [width, setWidth] = useState<(typeof widths)[number]>('wide');
+	const [size, setSize] = useRemembered('size', 'medium', sizes);
+	const [layout, setLayout] = useRemembered('layout', 'group', layouts);
+	const [count, setCount] = useRemembered('count', '5', counts);
+	const [allowsMultiple, setAllowsMultiple] = useRemembered('allowsMultiple', false);
+	const [opened, setOpened] = useRemembered('opened', 'first', openings);
+	const [isLongTitle, setLongTitle] = useRemembered('isLongTitle', false);
+	const [isLongPanel, setLongPanel] = useRemembered('isLongPanel', false);
+	const [disabled, setDisabled] = useRemembered('disabled', 'none', disablings);
+	const [width, setWidth] = useRemembered('width', 'wide', widths);
 	const isGroup = layout === 'group';
 
 	const items = questions.slice(0, isGroup ? Number(count) : 1).map((question, i) => ({
@@ -50,7 +50,7 @@ export function DisclosurePlayground() {
 	const expandedKeys = opened === 'all' ? ids : opened === 'first' ? ids.slice(0, 1) : [];
 
 	const shuffle = () => {
-		setSize(pick(['medium', 'small'] as const));
+		setSize(pick(sizes));
 		setLayout(pick(layouts));
 		setCount(pick(counts));
 		setAllowsMultiple(Math.random() < 0.5);
@@ -91,7 +91,7 @@ export function DisclosurePlayground() {
 						<SwitchControl label="Long panel" value={isLongPanel} onChange={setLongPanel} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 						<Choice label="Layout" options={layouts} value={layout} onChange={setLayout} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">

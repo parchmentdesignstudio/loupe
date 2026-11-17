@@ -1,25 +1,28 @@
-import { useState } from 'react';
 import { type IconName, type IconVariant, iconNames, resolveIcon } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button } from '../../src/index.js';
-import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, pick, sampleWords } from '../playground.js';
+import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, pick, sampleWords, useRemembered } from '../playground.js';
 
 const variants = ['primary', 'secondary', 'quiet', 'danger', 'outline', 'ghost'] as const;
 const places = ['none', 'start', 'end', 'both'] as const;
+const sizes = ['medium', 'small'] as const;
+const contents = ['label', 'icon'] as const;
+const shapes = ['rounded', 'full'] as const;
+const iconVariants = ['solid', 'line'] as const satisfies readonly IconVariant[];
 
 // A style without the chosen icon leaves that end empty rather than failing
 export function ButtonPlayground() {
-	const [variant, setVariant] = useState<(typeof variants)[number]>('primary');
-	const [size, setSize] = useState<'medium' | 'small'>('medium');
-	const [content, setContent] = useState<'label' | 'icon'>('label');
-	const [shape, setShape] = useState<'rounded' | 'full'>('rounded');
-	const [place, setPlace] = useState<(typeof places)[number]>('start');
-	const [iconVariant, setIconVariant] = useState<IconVariant>('solid');
-	const [startIcon, setStartIcon] = useState<IconName>('plus');
-	const [endIcon, setEndIcon] = useState<IconName>('arrow-right');
-	const [label, setLabel] = useState('New project');
-	const [isDisabled, setDisabled] = useState(false);
-	const [isPending, setPending] = useState(false);
+	const [variant, setVariant] = useRemembered('variant', 'primary', variants);
+	const [size, setSize] = useRemembered('size', 'medium', sizes);
+	const [content, setContent] = useRemembered('content', 'label', contents);
+	const [shape, setShape] = useRemembered('shape', 'rounded', shapes);
+	const [place, setPlace] = useRemembered('place', 'start', places);
+	const [iconVariant, setIconVariant] = useRemembered<IconVariant>('iconVariant', 'solid', iconVariants);
+	const [startIcon, setStartIcon] = useRemembered<IconName>('startIcon', 'plus', (name) => iconNames({ size: 16 }).includes(name));
+	const [endIcon, setEndIcon] = useRemembered<IconName>('endIcon', 'arrow-right', (name) => iconNames({ size: 16 }).includes(name));
+	const [label, setLabel] = useRemembered('label', 'New project');
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isPending, setPending] = useRemembered('isPending', false);
 	const isIconOnly = content === 'icon';
 	const hasStart = !isIconOnly && (place === 'start' || place === 'both');
 	const hasEnd = !isIconOnly && (place === 'end' || place === 'both');
@@ -27,7 +30,7 @@ export function ButtonPlayground() {
 	const shuffle = () => {
 		const names = iconNames({ variant: iconVariant, size: 16 });
 		setVariant(pick(variants));
-		setSize(pick(['medium', 'small'] as const));
+		setSize(pick(sizes));
 		setContent(Math.random() < 0.2 ? 'icon' : 'label');
 		setShape(Math.random() < 0.2 ? 'full' : 'rounded');
 		setPlace(pick(places));
@@ -41,17 +44,17 @@ export function ButtonPlayground() {
 			controls={
 				<>
 					<ControlGroup label="Content">
-						<Choice label="Content" options={['label', 'icon'] as const} value={content} onChange={setContent} />
+						<Choice label="Content" options={contents} value={content} onChange={setContent} />
 						<TextControl label={isIconOnly ? 'Label, read out' : 'Label'} value={label} onChange={setLabel} />
 						{!isIconOnly && <Choice label="Icon" options={places} value={place} onChange={setPlace} />}
-						<Choice label="Icon style" options={['solid', 'line'] as const} value={iconVariant} onChange={setIconVariant} />
+						<Choice label="Icon style" options={iconVariants} value={iconVariant} onChange={setIconVariant} />
 						{(isIconOnly || hasStart) && <IconPicker label={isIconOnly ? 'Icon' : 'Start icon'} variant={iconVariant} value={startIcon} onChange={setStartIcon} />}
 						{hasEnd && <IconPicker label="End icon" variant={iconVariant} value={endIcon} onChange={setEndIcon} />}
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
-						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
-						<Choice label="Shape" options={['rounded', 'full'] as const} value={shape} onChange={setShape} />
+						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
+						<Choice label="Shape" options={shapes} value={shape} onChange={setShape} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />

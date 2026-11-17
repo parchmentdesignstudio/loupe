@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Navigation, NavigationTree } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick } from '../playground.js';
-import { type TreeShape, TreeSections, buildTree, depths, itemCounts, parentIds, sectionCounts } from './navigation-tree.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick, useRemembered } from '../playground.js';
+import { TreeSections, buildTree, depths, itemCounts, parentIds, sectionCounts } from './navigation-tree.js';
 
 const heights = ['short', 'tall'] as const;
 const heightClass = { short: 'h-72', tall: 'h-[36rem]' };
@@ -10,13 +10,13 @@ const heightClass = { short: 'h-72', tall: 'h-[36rem]' };
 // Navigation is a column from md up and a button that opens a sheet below it, by the window's width rather than the
 // box's, so narrow the window to see the sheet. Its height is the screen's, so here it fills a frame instead
 export function NavigationPlayground() {
-	const [label, setLabel] = useState('Pages');
-	const [hasTitle, setTitle] = useState(true);
-	const [sections, setSections] = useState<TreeShape['sections']>('2');
-	const [items, setItems] = useState<TreeShape['items']>('5');
-	const [depth, setDepth] = useState<TreeShape['depth']>('1');
-	const [isLong, setLong] = useState(false);
-	const [height, setHeight] = useState<(typeof heights)[number]>('tall');
+	const [label, setLabel] = useRemembered('label', 'Pages');
+	const [hasTitle, setTitle] = useRemembered('hasTitle', true);
+	const [sections, setSections] = useRemembered('sections', '2', sectionCounts);
+	const [items, setItems] = useRemembered('items', '5', itemCounts);
+	const [depth, setDepth] = useRemembered('depth', '1', depths);
+	const [isLong, setLong] = useRemembered('isLong', false);
+	const [height, setHeight] = useRemembered('height', 'tall', heights);
 	const [route, setRoute] = useState('#s0-1');
 
 	const tree = buildTree({ sections, items, depth, isLong, parentsLink: true });
