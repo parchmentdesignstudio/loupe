@@ -23,7 +23,7 @@ export declare const navigationTreeLink: import("tailwind-variants").TVReturnTyp
     isDisabled: {
         true: string;
     };
-}, undefined, "flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 text-control font-medium text-ink", {
+}, undefined, "flex cursor-default items-center gap-2 rounded-(--navigation-tree-item-radius) px-(--navigation-tree-item-padding-x) py-(--navigation-tree-item-padding-y) text-control [font-weight:var(--navigation-tree-item-font-weight)] text-(color:--navigation-tree-item-text)", {
     isFocusVisible: {
         false: string;
         true: string;

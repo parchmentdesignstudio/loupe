@@ -641,6 +641,19 @@
     --switch-on-fill: var(--color-green-68);
     --switch-handle: var(--color-knob);
     --switch-on-handle: var(--color-white);
+    --calendar-day-radius: var(--radius-md);
+    --calendar-heading-font-weight: 500;
+    --calendar-selected-fill: var(--color-ink);
+    --calendar-selected-text: var(--color-paper);
+    --calendar-today: var(--color-accent);
+    --color-area-radius: var(--radius-lg);
+    --color-slider-radius: var(--radius-lg);
+    --color-swatch-picker-item-radius: var(--radius-lg);
+    --color-thumb-edge: var(--color-white);
+    --drop-zone-radius: var(--radius-lg);
+    --drop-zone-padding: calc(var(--spacing) * 6);
+    --drop-zone-text: var(--color-muted);
+    --drop-zone-target: var(--color-ink);
     --avatar-font-weight: 500;
     --code-radius: var(--radius-xl);
     --grid-list-item-radius: var(--radius-lg);
@@ -719,6 +732,22 @@
     --tooltip-padding-y: calc(var(--spacing) * 1.5);
     --tooltip-fill: var(--color-inverse);
     --tooltip-text: var(--color-paper);
+    --breadcrumbs-font-weight: 500;
+    --breadcrumbs-text: var(--color-muted);
+    --breadcrumbs-current-text: var(--color-ink);
+    --disclosure-header-font-weight: 500;
+    --disclosure-header-padding-y: calc(var(--spacing) * 4);
+    --disclosure-header-small-padding-y: calc(var(--spacing) * 1.5);
+    --disclosure-panel-padding-bottom: calc(var(--spacing) * 4);
+    --navigation-width: calc(var(--spacing) * 60);
+    --navigation-padding-x: calc(var(--spacing) * 3);
+    --navigation-padding-y: calc(var(--spacing) * 6);
+    --navigation-tree-item-radius: var(--radius-lg);
+    --navigation-tree-item-font-weight: 500;
+    --navigation-tree-item-padding-x: calc(var(--spacing) * 3);
+    --navigation-tree-item-padding-y: calc(var(--spacing) * 1.5);
+    --navigation-tree-item-text: var(--color-ink);
+    --navigation-tree-item-current-text: var(--color-accent);
     --link-underline-offset: 2px;
     --link-underline: color-mix(in oklab, var(--color-ink) 32%, transparent);
     --link-hover-underline: var(--color-ink);
@@ -1996,6 +2025,10 @@
     border-radius: var(--button-radius);
   }
 
+  .rounded-\(--calendar-day-radius\) {
+    border-radius: var(--calendar-day-radius);
+  }
+
   .rounded-\(--checkbox-radius\) {
     border-radius: var(--checkbox-radius);
   }
@@ -2016,6 +2049,22 @@
     border-radius: var(--code-radius);
   }
 
+  .rounded-\(--color-area-radius\) {
+    border-radius: var(--color-area-radius);
+  }
+
+  .rounded-\(--color-slider-radius\) {
+    border-radius: var(--color-slider-radius);
+  }
+
+  .rounded-\(--color-swatch-picker-item-radius\) {
+    border-radius: var(--color-swatch-picker-item-radius);
+  }
+
+  .rounded-\(--drop-zone-radius\) {
+    border-radius: var(--drop-zone-radius);
+  }
+
   .rounded-\(--empty-state-icon-radius\) {
     border-radius: var(--empty-state-icon-radius);
   }
@@ -2034,6 +2083,10 @@
 
   .rounded-\(--modal-radius\) {
     border-radius: var(--modal-radius);
+  }
+
+  .rounded-\(--navigation-tree-item-radius\) {
+    border-radius: var(--navigation-tree-item-radius);
   }
 
   .rounded-\(--option-radius\) {
@@ -2120,9 +2173,19 @@
     border-radius: var(--radius-xl);
   }
 
+  .rounded-s-\(--calendar-day-radius\) {
+    border-start-start-radius: var(--calendar-day-radius);
+    border-end-start-radius: var(--calendar-day-radius);
+  }
+
   .rounded-s-md {
     border-start-start-radius: var(--radius-md);
     border-end-start-radius: var(--radius-md);
+  }
+
+  .rounded-e-\(--calendar-day-radius\) {
+    border-start-end-radius: var(--calendar-day-radius);
+    border-end-end-radius: var(--calendar-day-radius);
   }
 
   .rounded-e-md {
@@ -2183,8 +2246,12 @@
     border-color: var(--aside-signpost-rule);
   }
 
-  .border-accent {
-    border-color: var(--color-accent);
+  .border-\(color\:--color-thumb-edge\) {
+    border-color: var(--color-thumb-edge);
+  }
+
+  .border-\(color\:--drop-zone-target\) {
+    border-color: var(--drop-zone-target);
   }
 
   .border-bleed\/8 {
@@ -2209,6 +2276,14 @@
 
   .border-white {
     border-color: var(--color-white);
+  }
+
+  .bg-\(--calendar-selected-fill\) {
+    background-color: var(--calendar-selected-fill);
+  }
+
+  .bg-\(--calendar-selected-fill\)\/88 {
+    background-color: color-mix(in oklab, var(--calendar-selected-fill) 88%, transparent);
   }
 
   .bg-\(--checkbox-fill\) {
@@ -2411,10 +2486,6 @@
     background-color: color-mix(in oklab, var(--color-danger) 12%, transparent);
   }
 
-  .bg-green-68 {
-    background-color: var(--color-green-68);
-  }
-
   .bg-highlight {
     background-color: var(--color-highlight);
   }
@@ -2425,10 +2496,6 @@
 
   .bg-ink\/88 {
     background-color: color-mix(in oklab, var(--color-ink) 88%, transparent);
-  }
-
-  .bg-inverse {
-    background-color: var(--color-inverse);
   }
 
   .bg-muted {
@@ -2443,16 +2510,8 @@
     background-color: var(--color-raised);
   }
 
-  .bg-red-67 {
-    background-color: var(--color-red-67);
-  }
-
   .bg-transparent {
     background-color: #0000;
-  }
-
-  .bg-yellow-76 {
-    background-color: var(--color-yellow-76);
   }
 
   .bg-linear-to-r {
@@ -2555,6 +2614,10 @@
     padding: var(--dialog-padding);
   }
 
+  .p-\(--drop-zone-padding\) {
+    padding: var(--drop-zone-padding);
+  }
+
   .p-\(--inset\) {
     padding: var(--inset);
   }
@@ -2631,6 +2694,10 @@
     padding-inline: var(--keyboard-padding-x);
   }
 
+  .px-\(--navigation-tree-item-padding-x\) {
+    padding-inline: var(--navigation-tree-item-padding-x);
+  }
+
   .px-\(--option-padding-x\) {
     padding-inline: var(--option-padding-x);
   }
@@ -2683,10 +2750,6 @@
     padding-inline: calc(var(--spacing) * 4);
   }
 
-  .px-6 {
-    padding-inline: calc(var(--spacing) * 6);
-  }
-
   .px-\[calc\(var\(--field-padding-x\)-2px\)\] {
     padding-inline: calc(var(--field-padding-x) - 2px);
   }
@@ -2719,6 +2782,14 @@
     padding-block: var(--chip-small-padding-y);
   }
 
+  .py-\(--disclosure-header-padding-y\) {
+    padding-block: var(--disclosure-header-padding-y);
+  }
+
+  .py-\(--disclosure-header-small-padding-y\) {
+    padding-block: var(--disclosure-header-small-padding-y);
+  }
+
   .py-\(--empty-state-padding-y\) {
     padding-block: var(--empty-state-padding-y);
   }
@@ -2737,6 +2808,10 @@
 
   .py-\(--keyboard-padding-y\) {
     padding-block: var(--keyboard-padding-y);
+  }
+
+  .py-\(--navigation-tree-item-padding-y\) {
+    padding-block: var(--navigation-tree-item-padding-y);
   }
 
   .py-\(--option-padding-y\) {
@@ -2763,10 +2838,6 @@
     padding-block: 0;
   }
 
-  .py-0\.5 {
-    padding-block: calc(var(--spacing) * .5);
-  }
-
   .py-1 {
     padding-block: var(--spacing);
   }
@@ -2787,16 +2858,8 @@
     padding-block: calc(var(--spacing) * 4);
   }
 
-  .py-12 {
-    padding-block: calc(var(--spacing) * 12);
-  }
-
   .ps-\(--alert-padding\) {
     padding-inline-start: var(--alert-padding);
-  }
-
-  .ps-3 {
-    padding-inline-start: calc(var(--spacing) * 3);
   }
 
   .ps-4 {
@@ -2817,10 +2880,6 @@
 
   .pe-2 {
     padding-inline-end: calc(var(--spacing) * 2);
-  }
-
-  .pe-3 {
-    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .pt-0 {
@@ -2865,6 +2924,10 @@
 
   .pr-10 {
     padding-right: calc(var(--spacing) * 10);
+  }
+
+  .pb-\(--disclosure-panel-padding-bottom\) {
+    padding-bottom: var(--disclosure-panel-padding-bottom);
   }
 
   .pb-0\.5 {
@@ -3030,8 +3093,20 @@
     font-weight: var(--avatar-font-weight);
   }
 
+  .\[font-weight\:var\(--breadcrumbs-font-weight\)\] {
+    font-weight: var(--breadcrumbs-font-weight);
+  }
+
   .\[font-weight\:var\(--button-font-weight\)\] {
     font-weight: var(--button-font-weight);
+  }
+
+  .\[font-weight\:var\(--calendar-heading-font-weight\)\] {
+    font-weight: var(--calendar-heading-font-weight);
+  }
+
+  .\[font-weight\:var\(--disclosure-header-font-weight\)\] {
+    font-weight: var(--disclosure-header-font-weight);
   }
 
   .\[font-weight\:var\(--empty-state-title-font-weight\)\] {
@@ -3040,6 +3115,10 @@
 
   .\[font-weight\:var\(--field-label-font-weight\)\] {
     font-weight: var(--field-label-font-weight);
+  }
+
+  .\[font-weight\:var\(--navigation-tree-item-font-weight\)\] {
+    font-weight: var(--navigation-tree-item-font-weight);
   }
 
   .\[font-weight\:var\(--status-badge-font-weight\)\] {
@@ -3098,6 +3177,14 @@
     color: var(--avatar-text);
   }
 
+  .text-\(color\:--breadcrumbs-current-text\) {
+    color: var(--breadcrumbs-current-text);
+  }
+
+  .text-\(color\:--breadcrumbs-text\) {
+    color: var(--breadcrumbs-text);
+  }
+
   .text-\(color\:--button-danger-text\) {
     color: var(--button-danger-text);
   }
@@ -3110,12 +3197,24 @@
     color: var(--button-quiet-text);
   }
 
+  .text-\(color\:--calendar-selected-text\) {
+    color: var(--calendar-selected-text);
+  }
+
   .text-\(color\:--checkbox-mark\) {
     color: var(--checkbox-mark);
   }
 
   .text-\(color\:--chip-text\) {
     color: var(--chip-text);
+  }
+
+  .text-\(color\:--drop-zone-target\) {
+    color: var(--drop-zone-target);
+  }
+
+  .text-\(color\:--drop-zone-text\) {
+    color: var(--drop-zone-text);
   }
 
   .text-\(color\:--empty-state-icon\) {
@@ -3132,6 +3231,14 @@
 
   .text-\(color\:--keyboard-text\) {
     color: var(--keyboard-text);
+  }
+
+  .text-\(color\:--navigation-tree-item-current-text\) {
+    color: var(--navigation-tree-item-current-text);
+  }
+
+  .text-\(color\:--navigation-tree-item-text\) {
+    color: var(--navigation-tree-item-text);
   }
 
   .text-\(color\:--option-text\) {
@@ -3658,26 +3765,6 @@
     --alert-icon: var(--color-yellow-40);
   }
 
-  .\[--alert\:var\(--color-blue-56\)\] {
-    --alert: var(--color-blue-56);
-  }
-
-  .\[--alert\:var\(--color-green-68\)\] {
-    --alert: var(--color-green-68);
-  }
-
-  .\[--alert\:var\(--color-red-67\)\] {
-    --alert: var(--color-red-67);
-  }
-
-  .\[--alert\:var\(--color-sand-66\)\] {
-    --alert: var(--color-sand-66);
-  }
-
-  .\[--alert\:var\(--color-yellow-76\)\] {
-    --alert: var(--color-yellow-76);
-  }
-
   .\[--alert\:var\(--tone-danger\)\] {
     --alert: var(--tone-danger);
   }
@@ -3890,14 +3977,6 @@
     --rim: oklch(from var(--fill) calc(l * .84) calc(c * .84) h);
   }
 
-  .\[--rule\:1px\] {
-    --rule: 1px;
-  }
-
-  .\[--rule\:2px\] {
-    --rule: 2px;
-  }
-
   .\[--rule\:var\(--aside-afterthought-rule-width\)\] {
     --rule: var(--aside-afterthought-rule-width);
   }
@@ -3948,26 +4027,6 @@
 
   .\[--shadow-raised-color\:var\(--radio-shadow\)\] {
     --shadow-raised-color: var(--radio-shadow);
-  }
-
-  .\[--status\:var\(--color-blue-56\)\] {
-    --status: var(--color-blue-56);
-  }
-
-  .\[--status\:var\(--color-green-68\)\] {
-    --status: var(--color-green-68);
-  }
-
-  .\[--status\:var\(--color-red-67\)\] {
-    --status: var(--color-red-67);
-  }
-
-  .\[--status\:var\(--color-sand-66\)\] {
-    --status: var(--color-sand-66);
-  }
-
-  .\[--status\:var\(--color-yellow-76\)\] {
-    --status: var(--color-yellow-76);
   }
 
   .\[--status\:var\(--tone-danger\)\] {
@@ -4492,6 +4551,16 @@
     border-color: var(--color-paper);
   }
 
+  .after\:bg-\(--calendar-selected-text\):after {
+    content: var(--tw-content);
+    background-color: var(--calendar-selected-text);
+  }
+
+  .after\:bg-\(--calendar-today\):after {
+    content: var(--tw-content);
+    background-color: var(--calendar-today);
+  }
+
   .after\:bg-accent:after {
     content: var(--tw-content);
     background-color: var(--color-accent);
@@ -4768,6 +4837,10 @@
       height: 100dvh;
     }
 
+    .md\:w-\(--navigation-width\) {
+      width: var(--navigation-width);
+    }
+
     .md\:w-60 {
       width: calc(var(--spacing) * 60);
     }
@@ -4789,8 +4862,16 @@
       border-color: color-mix(in oklab, var(--bleed) 8%, transparent);
     }
 
+    .md\:px-\(--navigation-padding-x\) {
+      padding-inline: var(--navigation-padding-x);
+    }
+
     .md\:px-3 {
       padding-inline: calc(var(--spacing) * 3);
+    }
+
+    .md\:py-\(--navigation-padding-y\) {
+      padding-block: var(--navigation-padding-y);
     }
 
     .md\:py-6 {
@@ -5203,9 +5284,19 @@
     opacity: 0 !important;
   }
 
+  td:first-child .\[td\:first-child_\&\]\:rounded-s-\(--calendar-day-radius\) {
+    border-start-start-radius: var(--calendar-day-radius);
+    border-end-start-radius: var(--calendar-day-radius);
+  }
+
   td:first-child .\[td\:first-child_\&\]\:rounded-s-md {
     border-start-start-radius: var(--radius-md);
     border-end-start-radius: var(--radius-md);
+  }
+
+  td:last-child .\[td\:last-child_\&\]\:rounded-e-\(--calendar-day-radius\) {
+    border-start-end-radius: var(--calendar-day-radius);
+    border-end-end-radius: var(--calendar-day-radius);
   }
 
   td:last-child .\[td\:last-child_\&\]\:rounded-e-md {
