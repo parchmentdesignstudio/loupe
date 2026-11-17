@@ -23,7 +23,7 @@ export declare const tableColumn: import("tailwind-variants").TVReturnType<{
     isSorted: {
         true: string;
     };
-}, undefined, "sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label font-medium text-muted transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none", {
+}, undefined, "sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label [font-weight:var(--table-column-font-weight)] text-(color:--table-column-text) transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

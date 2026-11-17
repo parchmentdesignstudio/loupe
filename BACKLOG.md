@@ -92,6 +92,10 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 
 ## Done
 
+- **17 November:** component tokens for the overlays and lists, the third of four waves: Popover, Dialog, Modal, Sheet, Tooltip, Grid list and Table, each starting at the value it had. Menus, selects and combo boxes share `--option-*` for their options, as fields share `--field-*`. Dialog's and Sheet's padding is now `--dialog-padding` on `:root`, with `--dialog-popover-padding` in a popover. The menu, list, popover and dialog pages have samples, drawn in place.
+  - **Left out:** hover, selected and pressed fills, and the grid list's and table's lines, which mix from `--bleed`.
+  - **No sample:** Modal, Sheet and Tooltip, which only open in a portal.
+  - **Still to do:** content.
 - **17 November:** component tokens for the fields, the second of four waves. Text field, Search field, Number field, Select, Combo box, Date field, Date picker, Colour field and Composer share one set, `--field-*`, so they change together: corners, the label's weight, padding at both sizes, fill, text, placeholder, focus ring and shadow, each starting at the value it had. A page lists the shared tokens its component reads.
   - **Left out:** Select's focus ring, which is a button's, as it shows on keyboard focus only, and the disabled and filled fills, which mix from `--bleed`.
   - **Still to do:** overlays and lists, then content.

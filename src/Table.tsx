@@ -46,8 +46,8 @@ export const table = tv({
 		// Raised is a box of its own, on a page with other things around it. Flush has no box, for a table that is the page,
 		// filling its content edge to edge with the rows' lines running the full width
 		variant: {
-			raised: { container: 'rounded-lg bg-raised shadow-panel [--bleed:var(--raised-bleed)] [--table-fill:var(--color-raised)]' },
-			flush: { container: '[--table-fill:var(--color-panel)]' },
+			raised: { container: 'rounded-(--table-radius) bg-(--table-raised-fill) shadow-panel [--bleed:var(--raised-bleed)] [--table-fill:var(--table-raised-fill)]' },
+			flush: { container: '[--table-fill:var(--table-flush-fill)]' },
 		},
 	},
 	defaultVariants: { variant: 'raised' },
@@ -59,7 +59,7 @@ const inset = tv({ extend: focusRing, base: '-outline-offset-2' });
 export const tableColumn = tv({
 	extend: inset,
 	// Opaque and sticky, so rows scroll under the header when the box has a height
-	base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label font-medium text-muted transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
+	base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label [font-weight:var(--table-column-font-weight)] text-(color:--table-column-text) transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'text-ink',
@@ -99,7 +99,7 @@ export const tableRow = tv({
 export const tableCell = tv({
 	extend: inset,
 	base: [
-		'overflow-hidden border-t border-bleed/8 px-3 py-2.5 align-middle first:pl-4 last:pr-4 in-[tr:first-child]:border-t-0 in-data-[density=compact]:py-1.5',
+		'overflow-hidden border-t border-bleed/8 px-(--table-cell-padding-x) py-(--table-cell-padding-y) align-middle first:pl-4 last:pr-4 in-[tr:first-child]:border-t-0 in-data-[density=compact]:py-(--table-compact-cell-padding-y)',
 		// The focused row's ring, 2px of ink inside its edges, as the inset ring on a GridList row
 		'group-data-[focus-visible]/row:shadow-[inset_0_2px_var(--color-ink),inset_0_-2px_var(--color-ink)]',
 		'group-data-[focus-visible]/row:first:rounded-s-sm group-data-[focus-visible]/row:first:shadow-[inset_0_2px_var(--color-ink),inset_0_-2px_var(--color-ink),inset_2px_0_var(--color-ink)]',

@@ -7,8 +7,8 @@ import { tv } from './tv.js';
 export { DialogTrigger } from 'react-aria-components';
 export type { DialogProps };
 
-// In a popover the padding is 16px, not 24px. DialogActions reads it to sit flush to the edges either way
-const dialog = tv({ base: 'relative max-h-[inherit] overflow-auto rounded-[inherit] p-(--dialog-padding) outline-0 [--dialog-padding:--spacing(6)] [[data-placement]>&]:[--dialog-padding:--spacing(4)]' });
+// In a popover the padding is --dialog-popover-padding, 16px, not 24px. DialogActions reads it to sit flush to the edges either way
+const dialog = tv({ base: 'relative max-h-[inherit] overflow-auto rounded-[inherit] p-(--dialog-padding) outline-0 [[data-placement]>&]:[--dialog-padding:var(--dialog-popover-padding)]' });
 const heading = tv({ base: 'pr-10 text-title text-balance text-ink' });
 
 /** What a Modal or Popover holds. Give it a DialogHeading, or an aria-label */
@@ -27,7 +27,7 @@ export interface DialogActionsProps {
 
 export function DialogActions({ children }: DialogActionsProps) {
 	// The negative margins undo the padding of the dialog or sheet it's in
-	return <div className="-mx-(--dialog-padding) mt-(--dialog-padding) -mb-(--dialog-padding) flex flex-wrap justify-end gap-2 bg-panel shadow-[inset_0_.5px_var(--color-scrim)] px-(--dialog-padding) py-4">{children}</div>;
+	return <div className="-mx-(--dialog-padding) mt-(--dialog-padding) -mb-(--dialog-padding) flex flex-wrap justify-end gap-2 bg-(--dialog-actions-fill) shadow-[inset_0_.5px_var(--color-scrim)] px-(--dialog-padding) py-4">{children}</div>;
 }
 
 export interface DialogCloseProps {
@@ -46,8 +46,8 @@ export function DialogClose({ 'aria-label': label = 'Close' }: DialogCloseProps)
 
 const modal = tv({
 	slots: {
-		overlay: 'fixed inset-0 z-50 flex min-h-full items-center justify-center bg-ground/88 p-4',
-		panel: 'max-h-full w-full overflow-hidden rounded-xl bg-overlay [--bleed:var(--overlay-bleed)] text-ink shadow-overlay',
+		overlay: 'fixed inset-0 z-50 flex min-h-full items-center justify-center bg-(--modal-backdrop) p-4',
+		panel: 'max-h-full w-full overflow-hidden rounded-(--modal-radius) bg-(--modal-fill) [--bleed:var(--overlay-bleed)] text-ink shadow-overlay [--shadow-overlay-color:var(--modal-shadow)]',
 	},
 	variants: {
 		size: {

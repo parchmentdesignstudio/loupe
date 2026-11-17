@@ -1,5 +1,6 @@
 import { Icon } from '@parchment/icons/react';
 import type { ReactNode } from 'react';
+import { Menu as AriaMenu } from 'react-aria-components';
 import {
 	Alert,
 	Aside,
@@ -16,6 +17,9 @@ import {
 	DateField,
 	DatePicker,
 	Column,
+	Dialog,
+	DialogActions,
+	DialogHeading,
 	Disclosure,
 	DisclosureGroup,
 	DisclosureHeader,
@@ -27,9 +31,12 @@ import {
 	GridListItem,
 	Keyboard,
 	Link,
+	ListBox,
 	ListBoxItem,
+	MenuItem,
 	NumberField,
 	Pagination,
+	popover,
 	ProgressCircle,
 	Quote,
 	Radio,
@@ -57,6 +64,29 @@ import {
 import { photo } from './playgrounds/avatar.js';
 
 type Sample = (props: Record<string, unknown>) => ReactNode;
+
+// Open as they'd be over a page, but in place, as the real ones float in a portal the sample can't show. The part a
+// page is about is marked, so its tokens are drawn on it rather than on the popover round it
+const options = (props: Record<string, unknown>, part: 'list' | 'item') => (
+	<div className={`w-44 ${popover()}`}>
+		<ListBox aria-label="Plan" selectionMode="single" defaultSelectedKeys={['studio']} data-token-root={part === 'list' || undefined}>
+			<ListBoxItem id="solo">Solo</ListBoxItem>
+			<ListBoxItem id="studio" data-token-root={part === 'item' || undefined} {...props}>
+				Studio
+			</ListBoxItem>
+		</ListBox>
+	</div>
+);
+const menu = (props: Record<string, unknown>, part: 'list' | 'item') => (
+	<div className={`w-44 ${popover()}`}>
+		<AriaMenu aria-label="Project" className="p-(--option-list-padding) outline-0" data-token-root={part === 'list' || undefined}>
+			<MenuItem>Rename</MenuItem>
+			<MenuItem data-token-root={part === 'item' || undefined} {...props}>
+				Duplicate
+			</MenuItem>
+		</AriaMenu>
+	</div>
+);
 
 const people = [
 	{ name: 'Doris Hart', src: photo },
@@ -142,6 +172,16 @@ export const samples: Partial<Record<string, Sample>> = {
 	Composer: (props) => <Composer aria-label="Message" placeholder="Write a reply" submitLabel="Send" submitIcon={<Icon name="arrow-up" />} onSubmit={() => {}} className="w-72" {...props} />,
 	DateField: (props) => <DateField label="Due" className="w-40" {...props} />,
 	DatePicker: (props) => <DatePicker label="Due" className="w-48" {...props} />,
+	Dialog: (props) => (
+		<div className="w-72 rounded-(--modal-radius) bg-(--modal-fill) shadow-overlay [--bleed:var(--overlay-bleed)]">
+			<Dialog aria-label="Delete project" {...props}>
+				<DialogHeading>Delete project?</DialogHeading>
+				<DialogActions>
+					<Button size="small">Delete</Button>
+				</DialogActions>
+			</Dialog>
+		</div>
+	),
 	Disclosure: (props) => (
 		<Disclosure className="w-56" defaultExpanded {...props}>
 			<DisclosureHeader>Delivery</DisclosureHeader>
@@ -179,8 +219,17 @@ export const samples: Partial<Record<string, Sample>> = {
 			Read the guide
 		</Link>
 	),
+	ListBox: (props) => options(props, 'list'),
+	ListBoxItem: (props) => options(props, 'item'),
+	Menu: (props) => menu(props, 'list'),
+	MenuItem: (props) => menu(props, 'item'),
 	NumberField: (props) => <NumberField label="Guests" defaultValue={2} className="w-40" {...props} />,
 	Pagination: (props) => <Pagination page={2} count={5} onChange={() => {}} {...props} />,
+	Popover: (props) => (
+		<div className={`w-56 p-3 text-control ${popover()}`} {...props}>
+			Shared with three people
+		</div>
+	),
 	ProgressCircle: (props) => <ProgressCircle aria-label="Uploading" value={64} {...props} />,
 	Quote: (props) => (
 		<Quote cite={people[0].name} detail="Founder, Rothbury" avatar={people[0].src} className="w-72" {...props}>

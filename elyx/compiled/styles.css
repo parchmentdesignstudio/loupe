@@ -641,14 +641,52 @@
     --switch-on-fill: var(--color-green-68);
     --switch-handle: var(--color-knob);
     --switch-on-handle: var(--color-white);
+    --grid-list-item-radius: var(--radius-lg);
+    --grid-list-item-padding-x: calc(var(--spacing) * 3);
+    --grid-list-item-padding-y: calc(var(--spacing) * 1.5);
+    --grid-list-item-selected-edge: var(--color-ink);
     --swatch-radius: var(--radius-lg);
     --swatch-medium-radius: var(--radius-md);
     --swatch-small-radius: 3px;
+    --table-radius: var(--radius-lg);
+    --table-column-font-weight: 500;
+    --table-cell-padding-x: calc(var(--spacing) * 3);
+    --table-cell-padding-y: calc(var(--spacing) * 2.5);
+    --table-compact-cell-padding-y: calc(var(--spacing) * 1.5);
+    --table-raised-fill: var(--color-raised);
+    --table-flush-fill: var(--color-panel);
+    --table-column-text: var(--color-muted);
     --tag-radius: var(--radius-lg);
     --tag-padding-x: calc(var(--spacing) * 2);
     --tag-padding-y: var(--spacing);
     --tag-selected-fill: var(--color-ink);
     --tag-selected-text: var(--color-paper);
+    --option-radius: var(--radius-sm);
+    --option-selected-font-weight: 500;
+    --option-list-padding: var(--spacing);
+    --option-padding-x: calc(var(--spacing) * 3);
+    --option-padding-y: calc(var(--spacing) * 1.5);
+    --option-text: var(--color-ink);
+    --dialog-padding: calc(var(--spacing) * 6);
+    --dialog-popover-padding: calc(var(--spacing) * 4);
+    --dialog-actions-fill: var(--color-panel);
+    --modal-radius: var(--radius-xl);
+    --modal-fill: var(--color-overlay);
+    --modal-backdrop: color-mix(in oklab, var(--color-ground) 88%, transparent);
+    --modal-shadow: var(--shadow-overlay-color);
+    --popover-radius: var(--radius-lg);
+    --popover-fill: var(--color-overlay);
+    --popover-text: var(--color-ink);
+    --popover-shadow: var(--shadow-overlay-color);
+    --sheet-radius: var(--radius-3xl);
+    --sheet-fill: var(--color-overlay);
+    --sheet-backdrop: var(--color-scrim);
+    --sheet-shadow: var(--shadow-overlay-color);
+    --tooltip-radius: var(--radius-lg);
+    --tooltip-padding-x: calc(var(--spacing) * 2.5);
+    --tooltip-padding-y: calc(var(--spacing) * 1.5);
+    --tooltip-fill: var(--color-inverse);
+    --tooltip-text: var(--color-paper);
     --link-underline-offset: 2px;
     --link-underline: color-mix(in oklab, var(--color-ink) 32%, transparent);
     --link-hover-underline: var(--color-ink);
@@ -1936,12 +1974,32 @@
     border-radius: var(--field-radius);
   }
 
+  .rounded-\(--grid-list-item-radius\) {
+    border-radius: var(--grid-list-item-radius);
+  }
+
   .rounded-\(--keyboard-radius\) {
     border-radius: var(--keyboard-radius);
   }
 
+  .rounded-\(--modal-radius\) {
+    border-radius: var(--modal-radius);
+  }
+
+  .rounded-\(--option-radius\) {
+    border-radius: var(--option-radius);
+  }
+
   .rounded-\(--pagination-current-radius\) {
     border-radius: var(--pagination-current-radius);
+  }
+
+  .rounded-\(--popover-radius\) {
+    border-radius: var(--popover-radius);
+  }
+
+  .rounded-\(--sheet-radius\) {
+    border-radius: var(--sheet-radius);
   }
 
   .rounded-\(--swatch-medium-radius\) {
@@ -1960,6 +2018,10 @@
     border-radius: var(--switch-radius);
   }
 
+  .rounded-\(--table-radius\) {
+    border-radius: var(--table-radius);
+  }
+
   .rounded-\(--tag-radius\) {
     border-radius: var(--tag-radius);
   }
@@ -1968,8 +2030,8 @@
     border-radius: var(--toggle-button-group-radius);
   }
 
-  .rounded-3xl {
-    border-radius: var(--radius-3xl);
+  .rounded-\(--tooltip-radius\) {
+    border-radius: var(--tooltip-radius);
   }
 
   .rounded-\[calc\(var\(--switch-radius\)-2px\)\] {
@@ -2059,6 +2121,10 @@
     border-style: solid;
   }
 
+  .border-\(--grid-list-item-selected-edge\) {
+    border-color: var(--grid-list-item-selected-edge);
+  }
+
   .border-accent {
     border-color: var(--color-accent);
   }
@@ -2107,6 +2173,10 @@
     background-color: var(--chosen-tint);
   }
 
+  .bg-\(--dialog-actions-fill\) {
+    background-color: var(--dialog-actions-fill);
+  }
+
   .bg-\(--field-fill\) {
     background-color: var(--field-fill);
   }
@@ -2115,12 +2185,28 @@
     background-color: var(--keyboard-fill);
   }
 
+  .bg-\(--modal-backdrop\) {
+    background-color: var(--modal-backdrop);
+  }
+
+  .bg-\(--modal-fill\) {
+    background-color: var(--modal-fill);
+  }
+
+  .bg-\(--popover-fill\) {
+    background-color: var(--popover-fill);
+  }
+
   .bg-\(--radio-dot\) {
     background-color: var(--radio-dot);
   }
 
   .bg-\(--radio-fill\) {
     background-color: var(--radio-fill);
+  }
+
+  .bg-\(--sheet-fill\) {
+    background-color: var(--sheet-fill);
   }
 
   .bg-\(--slider-fill\) {
@@ -2155,8 +2241,16 @@
     background-color: var(--table-fill);
   }
 
+  .bg-\(--table-raised-fill\) {
+    background-color: var(--table-raised-fill);
+  }
+
   .bg-\(--tag-selected-fill\) {
     background-color: var(--tag-selected-fill);
+  }
+
+  .bg-\(--tooltip-fill\) {
+    background-color: var(--tooltip-fill);
   }
 
   .bg-\(color\:--avatar-fill\) {
@@ -2239,10 +2333,6 @@
     background-color: var(--color-green-68);
   }
 
-  .bg-ground\/88 {
-    background-color: color-mix(in oklab, var(--color-ground) 88%, transparent);
-  }
-
   .bg-highlight {
     background-color: var(--color-highlight);
   }
@@ -2261,14 +2351,6 @@
 
   .bg-muted {
     background-color: var(--color-muted);
-  }
-
-  .bg-overlay {
-    background-color: var(--color-overlay);
-  }
-
-  .bg-panel {
-    background-color: var(--color-panel);
   }
 
   .bg-paper {
@@ -2347,6 +2429,10 @@
     background-repeat: no-repeat;
   }
 
+  .fill-\(--popover-fill\) {
+    fill: var(--popover-fill);
+  }
+
   .fill-current {
     fill: currentColor;
   }
@@ -2357,10 +2443,6 @@
 
   .fill-none {
     fill: none;
-  }
-
-  .fill-overlay {
-    fill: var(--color-overlay);
   }
 
   .stroke-current {
@@ -2393,6 +2475,10 @@
 
   .p-\(--inset\) {
     padding: var(--inset);
+  }
+
+  .p-\(--option-list-padding\) {
+    padding: var(--option-list-padding);
   }
 
   .p-0\.5 {
@@ -2451,12 +2537,28 @@
     padding-inline: var(--field-small-padding-x);
   }
 
+  .px-\(--grid-list-item-padding-x\) {
+    padding-inline: var(--grid-list-item-padding-x);
+  }
+
   .px-\(--keyboard-padding-x\) {
     padding-inline: var(--keyboard-padding-x);
   }
 
+  .px-\(--option-padding-x\) {
+    padding-inline: var(--option-padding-x);
+  }
+
+  .px-\(--table-cell-padding-x\) {
+    padding-inline: var(--table-cell-padding-x);
+  }
+
   .px-\(--tag-padding-x\) {
     padding-inline: var(--tag-padding-x);
+  }
+
+  .px-\(--tooltip-padding-x\) {
+    padding-inline: var(--tooltip-padding-x);
   }
 
   .px-0 {
@@ -2531,12 +2633,28 @@
     padding-block: var(--field-small-padding-y);
   }
 
+  .py-\(--grid-list-item-padding-y\) {
+    padding-block: var(--grid-list-item-padding-y);
+  }
+
   .py-\(--keyboard-padding-y\) {
     padding-block: var(--keyboard-padding-y);
   }
 
+  .py-\(--option-padding-y\) {
+    padding-block: var(--option-padding-y);
+  }
+
+  .py-\(--table-cell-padding-y\) {
+    padding-block: var(--table-cell-padding-y);
+  }
+
   .py-\(--tag-padding-y\) {
     padding-block: var(--tag-padding-y);
+  }
+
+  .py-\(--tooltip-padding-y\) {
+    padding-block: var(--tooltip-padding-y);
   }
 
   .py-0 {
@@ -2557,10 +2675,6 @@
 
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
-  }
-
-  .py-2\.5 {
-    padding-block: calc(var(--spacing) * 2.5);
   }
 
   .py-3 {
@@ -2810,6 +2924,10 @@
     font-weight: var(--tab-font-weight);
   }
 
+  .\[font-weight\:var\(--table-column-font-weight\)\] {
+    font-weight: var(--table-column-font-weight);
+  }
+
   .\[font-weight\:var\(--toggle-button-group-font-weight\)\] {
     font-weight: var(--toggle-button-group-font-weight);
   }
@@ -2878,6 +2996,14 @@
     color: var(--keyboard-text);
   }
 
+  .text-\(color\:--option-text\) {
+    color: var(--option-text);
+  }
+
+  .text-\(color\:--popover-text\) {
+    color: var(--popover-text);
+  }
+
   .text-\(color\:--tab-selected-text\) {
     color: var(--tab-selected-text);
   }
@@ -2886,12 +3012,20 @@
     color: var(--tab-text);
   }
 
+  .text-\(color\:--table-column-text\) {
+    color: var(--table-column-text);
+  }
+
   .text-\(color\:--tag-selected-text\) {
     color: var(--tag-selected-text);
   }
 
   .text-\(color\:--toggle-button-group-raised-chosen-text\) {
     color: var(--toggle-button-group-raised-chosen-text);
+  }
+
+  .text-\(color\:--tooltip-text\) {
+    color: var(--tooltip-text);
   }
 
   .text-accent {
@@ -3017,13 +3151,13 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
-  .shadow-\[0_0_0_1px_var\(--color-ink\)\] {
-    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--color-ink));
+  .shadow-\[0_0_0_1px_var\(--edge\)\] {
+    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--edge));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
-  .shadow-\[0_0_0_1px_var\(--edge\)\] {
-    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--edge));
+  .shadow-\[0_0_0_1px_var\(--grid-list-item-selected-edge\)\] {
+    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--grid-list-item-selected-edge));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
@@ -3514,10 +3648,6 @@
     --chosen: var(--toggle-button-group-chosen-fill);
   }
 
-  .\[--dialog-padding\:--spacing\(6\)\] {
-    --dialog-padding: calc(var(--spacing) * 6);
-  }
-
   .\[--divider\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_14\%\,transparent\)\,color-mix\(in_oklab\,white_10\%\,transparent\)\)\] {
     --divider: color-mix(in oklab,var(--bleed) 14%,transparent);
   }
@@ -3606,6 +3736,18 @@
     --rule: 2px;
   }
 
+  .\[--shadow-overlay-color\:var\(--modal-shadow\)\] {
+    --shadow-overlay-color: var(--modal-shadow);
+  }
+
+  .\[--shadow-overlay-color\:var\(--popover-shadow\)\] {
+    --shadow-overlay-color: var(--popover-shadow);
+  }
+
+  .\[--shadow-overlay-color\:var\(--sheet-shadow\)\] {
+    --shadow-overlay-color: var(--sheet-shadow);
+  }
+
   .\[--shadow-raised-color\:transparent\] {
     --shadow-raised-color: transparent;
   }
@@ -3654,12 +3796,12 @@
     --status: var(--color-yellow-76);
   }
 
-  .\[--table-fill\:var\(--color-panel\)\] {
-    --table-fill: var(--color-panel);
+  .\[--table-fill\:var\(--table-flush-fill\)\] {
+    --table-fill: var(--table-flush-fill);
   }
 
-  .\[--table-fill\:var\(--color-raised\)\] {
-    --table-fill: var(--color-raised);
+  .\[--table-fill\:var\(--table-raised-fill\)\] {
+    --table-fill: var(--table-raised-fill);
   }
 
   .\[--underline\:var\(--link-hover-underline\)\] {
@@ -3819,9 +3961,8 @@
     rotate: 90deg;
   }
 
-  .group-data-\[selected\]\:font-medium:is(:where(.group)[data-selected] *) {
-    --tw-font-weight: var(--font-weight-medium);
-    font-weight: var(--font-weight-medium);
+  .group-data-\[selected\]\:\[font-weight\:var\(--option-selected-font-weight\)\]:is(:where(.group)[data-selected] *) {
+    font-weight: var(--option-selected-font-weight);
   }
 
   .group-data-\[selected\]\/item\:border-ink:is(:where(.group\/item)[data-selected] *) {
@@ -4269,6 +4410,10 @@
     content: var(--tw-content);
   }
 
+  :where([data-density="compact"]) .in-data-\[density\=compact\]\:py-\(--table-compact-cell-padding-y\) {
+    padding-block: var(--table-compact-cell-padding-y);
+  }
+
   :where([data-density="compact"]) .in-data-\[density\=compact\]\:py-1\.5 {
     padding-block: calc(var(--spacing) * 1.5);
   }
@@ -4345,8 +4490,8 @@
     opacity: 0 !important;
   }
 
-  .data-\[stack-index\=0\]\:bg-scrim[data-stack-index="0"] {
-    background-color: var(--color-scrim);
+  .data-\[stack-index\=0\]\:bg-\(--sheet-backdrop\)[data-stack-index="0"] {
+    background-color: var(--sheet-backdrop);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -4855,8 +5000,8 @@
     opacity: 0 !important;
   }
 
-  [data-placement] > .\[\[data-placement\]\>\&\]\:\[--dialog-padding\:--spacing\(4\)\] {
-    --dialog-padding: calc(var(--spacing) * 4);
+  [data-placement] > .\[\[data-placement\]\>\&\]\:\[--dialog-padding\:var\(--dialog-popover-padding\)\] {
+    --dialog-padding: var(--dialog-popover-padding);
   }
 
   [data-pressed] + .\[\[data-pressed\]\+\&\]\:before\:opacity-0\!:before, [data-selected] + .\[\[data-selected\]\+\&\]\:before\:opacity-0\!:before {
