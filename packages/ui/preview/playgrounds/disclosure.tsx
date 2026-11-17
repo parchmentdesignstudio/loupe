@@ -86,7 +86,7 @@ export function DisclosurePlayground() {
 			controls={
 				<>
 					<ControlGroup label="Content">
-						<Choice label="How many" options={counts} value={count} onChange={setCount} isDisabled={!isGroup} />
+						{isGroup && <Choice label="How many" options={counts} value={count} onChange={setCount} />}
 						<SwitchControl label="Long title" value={isLongTitle} onChange={setLongTitle} />
 						<SwitchControl label="Long panel" value={isLongPanel} onChange={setLongPanel} />
 					</ControlGroup>

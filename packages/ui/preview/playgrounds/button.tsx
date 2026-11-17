@@ -43,7 +43,7 @@ export function ButtonPlayground() {
 					<ControlGroup label="Content">
 						<Choice label="Content" options={['label', 'icon'] as const} value={content} onChange={setContent} />
 						<TextControl label={isIconOnly ? 'Label, read out' : 'Label'} value={label} onChange={setLabel} />
-						<Choice label="Icon" options={places} value={place} onChange={setPlace} isDisabled={isIconOnly} />
+						{!isIconOnly && <Choice label="Icon" options={places} value={place} onChange={setPlace} />}
 						<Choice label="Icon style" options={['solid', 'line'] as const} value={iconVariant} onChange={setIconVariant} />
 						{(isIconOnly || hasStart) && <IconPicker label={isIconOnly ? 'Icon' : 'Start icon'} variant={iconVariant} value={startIcon} onChange={setStartIcon} />}
 						{hasEnd && <IconPicker label="End icon" variant={iconVariant} value={endIcon} onChange={setEndIcon} />}

@@ -35,7 +35,7 @@ export function KeyboardPlayground() {
 			preview={
 				<>
 					<Choice label="In" options={contexts} value={context} onChange={moveTo} />
-					<Choice label="Text size" options={Object.keys(sizes) as Size[]} value={size} onChange={setSize} isDisabled={context === 'tooltip'} />
+					{context !== 'tooltip' && <Choice label="Text size" options={Object.keys(sizes) as Size[]} value={size} onChange={setSize} />}
 				</>
 			}
 			controls={

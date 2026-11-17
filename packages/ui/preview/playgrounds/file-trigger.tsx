@@ -53,7 +53,7 @@ export function FileTriggerPlayground() {
 						<Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
-						<Choice label="Accepts" options={Object.keys(accepts) as Accepts[]} value={accepted} onChange={setAccepted} isDisabled={isDirectory} />
+						{!isDirectory && <Choice label="Accepts" options={Object.keys(accepts) as Accepts[]} value={accepted} onChange={setAccepted} />}
 						<SwitchControl label="Several at once" value={isMultiple} onChange={setMultiple} />
 						<SwitchControl label="A folder" value={isDirectory} onChange={setDirectory} />
 						<Choice label="Camera" options={cameras} value={camera} onChange={setCamera} />

@@ -91,7 +91,7 @@ export function DatePickerPlayground() {
 						<Choice label="Description" options={lengths} value={description} onChange={setDescription} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Months shown" options={months} value={visible} onChange={setVisible} isDisabled={kind === 'single'} />
+						{kind !== 'single' && <Choice label="Months shown" options={months} value={visible} onChange={setVisible} />}
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						<Choice label="Kind" options={kinds} value={kind} onChange={setKind} />

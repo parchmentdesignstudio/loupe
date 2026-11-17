@@ -59,7 +59,7 @@ export function ToggleButtonGroupPlayground() {
 					<ControlGroup label="Content">
 						<Choice label="Buttons" options={counts} value={count} onChange={setCount} />
 						<Choice label="Content" options={contents} value={content} onChange={setContent} />
-						<Choice label="Text" options={lengths} value={length} onChange={setLength} isDisabled={content === 'icon'} />
+						{content !== 'icon' && <Choice label="Text" options={lengths} value={length} onChange={setLength} />}
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />

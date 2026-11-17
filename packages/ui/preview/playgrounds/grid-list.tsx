@@ -100,7 +100,7 @@ export function GridListPlayground() {
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />
-						<Choice label="Selection behaviour" options={['toggle', 'replace'] as const} value={behaviour} onChange={setBehaviour} isDisabled={selectionMode === 'none'} />
+						{selectionMode !== 'none' && <Choice label="Selection behaviour" options={['toggle', 'replace'] as const} value={behaviour} onChange={setBehaviour} />}
 						<SwitchControl label="Keep one chosen" value={disallowEmpty} onChange={setDisallowEmpty} />
 					</ControlGroup>
 					<ControlGroup label="State">
