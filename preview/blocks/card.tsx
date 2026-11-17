@@ -125,7 +125,7 @@ export function CardPlayground() {
 				<>
 					<ControlGroup label="Content">
 						<Choice label="Image area" options={['example', 'none'] as const} value={hasMedia} onChange={setMedia} />
-						<Choice label="Example" options={exampleNames} value={example} onChange={setExample} isDisabled={hasMedia === 'none'} />
+						{hasMedia === 'example' && <Choice label="Example" options={exampleNames} value={example} onChange={setExample} />}
 						<TextControl label="Title" value={title} onChange={setTitle} />
 						<TextControl label="Description" value={description} onChange={setDescription} />
 						<Choice label="Buttons" options={buttonCounts} value={buttons} onChange={setButtons} />
