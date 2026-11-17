@@ -6,7 +6,7 @@ import { tv } from './tv.js';
 export { TooltipTrigger } from 'react-aria-components';
 
 const tooltip = tv({
-	base: 'max-w-64 rounded-(--tooltip-radius) bg-(--tooltip-fill) px-(--tooltip-padding-x) py-(--tooltip-padding-y) text-label text-(color:--tooltip-text) [&_kbd]:ms-2',
+	base: 'max-w-64 rounded-(--tooltip-radius) bg-(--tooltip-fill,var(--color-inverse)) px-(--tooltip-padding-x) py-(--tooltip-padding-y) text-label text-(color:--tooltip-text,var(--color-paper)) [&_kbd]:ms-2',
 	variants: {
 		isEntering: {
 			true: 'animate-enter motion-reduce:animate-fade-in',

@@ -15,11 +15,11 @@ export const status = tv({
 	},
 	variants: {
 		tone: {
-			neutral: { base: '[--status:var(--tone-neutral)]' },
-			info: { base: '[--status:var(--tone-info)]' },
-			success: { base: '[--status:var(--tone-success)]' },
-			warning: { base: '[--status:var(--tone-warning)]' },
-			danger: { base: '[--status:var(--tone-danger)]' },
+			neutral: { base: '[--status:var(--tone-neutral,var(--color-sand-66))]' },
+			info: { base: '[--status:var(--tone-info,var(--color-blue-56))]' },
+			success: { base: '[--status:var(--tone-success,var(--color-green-68))]' },
+			warning: { base: '[--status:var(--tone-warning,var(--color-yellow-76))]' },
+			danger: { base: '[--status:var(--tone-danger,var(--color-red-67))]' },
 		},
 		// A dot beside the text for a table or list, or a badge, a pill tinted in the tone, to stand out on a card or a heading.
 		// The badge is 20px tall, on the label's 16px line, so it fits a 20px line of text without growing it

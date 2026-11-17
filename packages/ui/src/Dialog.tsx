@@ -27,7 +27,7 @@ export interface DialogActionsProps {
 
 export function DialogActions({ children }: DialogActionsProps) {
 	// The negative margins undo the padding of the dialog or sheet it's in
-	return <div className="-mx-(--dialog-padding) mt-(--dialog-padding) -mb-(--dialog-padding) flex flex-wrap justify-end gap-2 bg-(--dialog-actions-fill) shadow-[inset_0_.5px_var(--color-scrim)] px-(--dialog-padding) py-4">{children}</div>;
+	return <div className="-mx-(--dialog-padding) mt-(--dialog-padding) -mb-(--dialog-padding) flex flex-wrap justify-end gap-2 bg-(--dialog-actions-fill,var(--color-panel)) shadow-[inset_0_.5px_var(--color-scrim)] px-(--dialog-padding) py-4">{children}</div>;
 }
 
 export interface DialogCloseProps {
@@ -46,8 +46,8 @@ export function DialogClose({ 'aria-label': label = 'Close' }: DialogCloseProps)
 
 const modal = tv({
 	slots: {
-		overlay: 'fixed inset-0 z-50 flex min-h-full items-center justify-center bg-(--modal-backdrop) p-4',
-		panel: 'max-h-full w-full overflow-hidden rounded-(--modal-radius) bg-(--modal-fill) [--bleed:var(--overlay-bleed)] text-ink shadow-overlay [--shadow-overlay-color:var(--modal-shadow)]',
+		overlay: 'fixed inset-0 z-50 flex min-h-full items-center justify-center bg-(--modal-backdrop,color-mix(in_oklab,var(--color-ground)_88%,transparent)) p-4',
+		panel: 'max-h-full w-full overflow-hidden rounded-(--modal-radius) bg-(--modal-fill,var(--color-overlay)) [--bleed:var(--overlay-bleed)] text-ink shadow-overlay [--shadow-overlay-color:var(--modal-shadow)]',
 	},
 	variants: {
 		size: {

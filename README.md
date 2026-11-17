@@ -152,7 +152,7 @@ A site imports `tokens.css`, which only gathers four files in `styles`, each wit
 | `theme.css` | The values everything is built from, and only values: the palette, roles, bleed, shadows, type, corners, spacing and motion |
 | `code-themes.css` | Code coloured as another of Parchment’s sites colours it, with `data-code-theme` |
 | `prose.css` | Styles for HTML no component renders, through the `prose` and `quote` classes. The only file with rules for elements |
-| `components.css` | Each component’s own tokens, such as `--button-radius`, in the sidebar’s order. Each starts at a value from `theme.css`, so a value the theme lacks goes there first |
+| `components.css` | Each component’s own tokens, such as `--button-radius`, in the sidebar’s order. Each starts at a value from `theme.css`, so a value the theme lacks goes there first. A colour is listed but left unset, and read with that value as its fallback, so it follows a section that re-sets the roles |
 
 ### Colours and elevation
 

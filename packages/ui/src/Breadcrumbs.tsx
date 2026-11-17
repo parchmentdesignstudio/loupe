@@ -6,7 +6,7 @@ import { Menu, MenuItem, MenuTrigger } from './Menu.js';
 import { focusRing, tv } from './tv.js';
 
 export const breadcrumbs = tv({
-	base: 'relative flex min-w-0 flex-1 text-control [font-weight:var(--breadcrumbs-font-weight)] text-(color:--breadcrumbs-text)',
+	base: 'relative flex min-w-0 flex-1 text-control [font-weight:var(--breadcrumbs-font-weight)] text-(color:--breadcrumbs-text,var(--color-muted))',
 });
 
 export const breadcrumb = tv({
@@ -14,7 +14,7 @@ export const breadcrumb = tv({
 	variants: {
 		// The page you're on gives way first, so it's the one that truncates when there's no room
 		isCurrent: {
-			true: 'min-w-0 text-(color:--breadcrumbs-current-text)',
+			true: 'min-w-0 text-(color:--breadcrumbs-current-text,var(--color-ink))',
 			false: 'shrink-0',
 		},
 	},
@@ -25,7 +25,7 @@ const crumbLink = tv({
 	base: 'min-w-0 truncate rounded-sm transition-colors duration-150 ease-out motion-reduce:transition-none',
 	variants: {
 		isHovered: {
-			true: 'text-(color:--breadcrumbs-current-text)',
+			true: 'text-(color:--breadcrumbs-current-text,var(--color-ink))',
 		},
 		isDisabled: {
 			true: 'text-muted',

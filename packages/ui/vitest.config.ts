@@ -7,5 +7,7 @@ export default defineConfig({
 		environment: 'jsdom',
 		include: ['test/**/*.test.tsx'],
 		setupFiles: ['test/setup.ts'],
+		// So a test can read a sheet with ?raw, as tokens.test.tsx does, rather than Vitest emptying it
+		css: { include: [/\/styles\//] },
 	},
 });

@@ -28,7 +28,7 @@ describe('NavigationTree', () => {
 		render(<Services />);
 		const current = screen.getByRole('link', { name: 'Website' });
 		expect(current.getAttribute('aria-current')).toBe('page');
-		expect(current.className).toContain('text-(color:--navigation-tree-item-current-text)');
+		expect(current.className).toContain('text-(color:--navigation-tree-item-current-text,var(--color-accent))');
 		expect(screen.getByRole('link', { name: 'Brand identity' }).hasAttribute('aria-current')).toBe(false);
 	});
 

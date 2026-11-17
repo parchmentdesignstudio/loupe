@@ -43,11 +43,11 @@
 		/* A link as Link draws one, from its tokens */
 		:where(a) {
 			text-decoration: underline;
-			text-decoration-color: var(--link-underline);
+			text-decoration-color: var(--link-underline, color-mix(in oklab, var(--color-ink) 32%, transparent));
 			text-underline-offset: var(--link-underline-offset);
 		}
 		:where(a:hover) {
-			text-decoration-color: var(--link-hover-underline);
+			text-decoration-color: var(--link-hover-underline, var(--color-ink));
 		}
 		:where(strong, b) {
 			font-weight: 500;

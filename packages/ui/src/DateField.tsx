@@ -15,7 +15,7 @@ import { composeClassName, tv } from './tv.js';
 // The box a date sits in, sized and lifted like a text field. Each segment pads 2px for its focus fill, so the box pads
 // 10px rather than 12px and the digits line up with a text field's text. A date picker's button sits in it too
 export const dateInput = tv({
-	base: ['flex w-full min-w-0 items-center rounded-(--field-radius) bg-(--field-fill) [--bleed:var(--raised-bleed)] px-[calc(var(--field-padding-x)-2px)] py-(--field-padding-y) text-control text-(color:--field-text) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-0 outline-(color:--field-focus-ring) forced-colors:outline-[Highlight]', readOnly],
+	base: ['flex w-full min-w-0 items-center rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) [--bleed:var(--raised-bleed)] px-[calc(var(--field-padding-x)-2px)] py-(--field-padding-y) text-control text-(color:--field-text,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-0 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight]', readOnly],
 	variants: {
 		isFocusWithin: {
 			false: 'outline-0',
@@ -40,7 +40,7 @@ export const dateSegment = tv({
 			true: 'px-0 text-muted',
 		},
 		isPlaceholder: {
-			true: 'text-(color:--field-placeholder)',
+			true: 'text-(color:--field-placeholder,var(--color-muted))',
 		},
 		isFocused: {
 			true: 'bg-highlight text-ink forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]',
