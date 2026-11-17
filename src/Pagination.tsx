@@ -42,7 +42,7 @@ export function Pagination({ page, count, onChange, siblings, 'aria-label': labe
 	const items = pageRange(page, count, siblings);
 	return (
 		<nav aria-label={label} className={className}>
-			<ul className="flex items-center gap-1">
+			<ul className="flex items-center gap-(--pagination-gap)">
 				<li>
 					<Button variant="ghost" size="small" aria-label="Previous page" isDisabled={page <= 1} onPress={() => onChange(page - 1)}>
 						<ChevronLeft className={glyph} />
@@ -55,7 +55,7 @@ export function Pagination({ page, count, onChange, siblings, 'aria-label': labe
 						</li>
 					) : item === page ? (
 						// The current page isn't a button, as there's nowhere for it to go
-						<li key={item} aria-current="page" className="min-w-7 rounded-lg bg-bleed/8 px-1.5 py-1 text-center text-control font-medium tabular-nums">
+						<li key={item} aria-current="page" className="min-w-7 rounded-(--pagination-current-radius) bg-bleed/8 px-1.5 py-1 text-center text-control font-medium tabular-nums">
 							<span className="sr-only">Page </span>
 							{item}
 						</li>

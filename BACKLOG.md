@@ -89,6 +89,9 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 
 ## Done
 
+- **16 November:** component tokens for the controls, the first of four waves: Link, Checkbox, Radio, Switch, Slider, Tabs, Tag, Pagination and Swatch, each starting at the value it had, with a sample on its page.
+  - **Left out:** fills mixed from `--bleed`, such as a tag's, a slider's rail and the current page's. A token on `:root` would fix the bleed of `:root`, not of the layer it's drawn on.
+  - **Still to do:** fields, then overlays and lists, then content.
 - **16 November:** the settings toggle's icon moves. Its main pane, split from sidebar-right by hand in `main.tsx`, stays still on hover, leans 1.5px towards where a press takes it in 150ms, and springs there over 500ms with a bounce of 0.3 on release.
   - **Rejected:** a 0.75px lean on hover too. It moved the icon before anything had been asked of it.
   - **Still to do:** draw the sidebar icons' frame and pane as parts in Sketch, so the move can come from the icon itself.

@@ -6,6 +6,7 @@ import {
 	AvatarGroup,
 	Button,
 	Cell,
+	Checkbox,
 	Chip,
 	Code,
 	Column,
@@ -19,18 +20,28 @@ import {
 	GridList,
 	GridListItem,
 	Keyboard,
+	Link,
 	ListBoxItem,
 	NumberField,
+	Pagination,
 	ProgressCircle,
 	Quote,
+	Radio,
+	RadioGroup,
 	Row,
 	Select,
+	Slider,
 	Status,
 	Swatch,
 	Switch,
+	Tab,
+	TabList,
 	Table,
 	TableBody,
 	TableHeader,
+	Tabs,
+	Tag,
+	TagGroup,
 	TextField,
 	ToggleButton,
 	ToggleButtonGroup,
@@ -70,6 +81,16 @@ const table = ({ table: own, column, cell }: { table?: Record<string, unknown>; 
 	</Table>
 );
 
+// Two tabs, for the tokens on a tab and on the row that holds them
+const tabs = (props: Record<string, unknown>) => (
+	<Tabs defaultSelectedKey="overview">
+		<TabList aria-label="Project" {...props}>
+			<Tab id="overview">Overview</Tab>
+			<Tab id="activity">Activity</Tab>
+		</TabList>
+	</Tabs>
+);
+
 /**
  * Each component drawn with some of its props, by its name, so the API reference can preview an option on hover, as
  * Button's variant set to ghost. Small, and as it would be used, so one option reads against another. A component that
@@ -96,6 +117,11 @@ export const samples: Partial<Record<string, Sample>> = {
 	),
 	Button: (props) => <Button {...props}>New project</Button>,
 	Cell: (props) => table({ column: props, cell: props }),
+	Checkbox: (props) => (
+		<Checkbox defaultSelected {...props}>
+			Email me a receipt
+		</Checkbox>
+	),
 	Chip: (props) => <Chip {...props}>Sounds good</Chip>,
 	Code: (props) => <Code code="pnpm add shiki" isCopyable={false} className="w-56" {...props} />,
 	Column: (props) => table({ column: props, cell: props }),
@@ -131,12 +157,25 @@ export const samples: Partial<Record<string, Sample>> = {
 		</GridList>
 	),
 	Keyboard: (props) => <Keyboard {...props}>⌘K</Keyboard>,
+	Link: (props) => (
+		<Link href="#" {...props}>
+			Read the guide
+		</Link>
+	),
 	NumberField: (props) => <NumberField label="Guests" defaultValue={2} className="w-40" {...props} />,
+	Pagination: (props) => <Pagination page={2} count={5} onChange={() => {}} {...props} />,
 	ProgressCircle: (props) => <ProgressCircle aria-label="Uploading" value={64} {...props} />,
 	Quote: (props) => (
 		<Quote cite={people[0].name} detail="Founder, Rothbury" avatar={people[0].src} className="w-72" {...props}>
 			It turned out we needed a better way to answer the phone
 		</Quote>
+	),
+	Radio: (props) => (
+		<RadioGroup aria-label="Delivery" defaultValue="standard">
+			<Radio value="standard" {...props}>
+				Standard
+			</Radio>
+		</RadioGroup>
 	),
 	Select: (props) => (
 		<Select label="Plan" defaultSelectedKey="studio" className="w-48" {...props}>
@@ -144,6 +183,7 @@ export const samples: Partial<Record<string, Sample>> = {
 			<ListBoxItem id="studio">Studio</ListBoxItem>
 		</Select>
 	),
+	Slider: (props) => <Slider label="Volume" defaultValue={60} className="w-40" {...props} />,
 	Status: (props) => <Status {...props}>In review</Status>,
 	Swatch: (props) => <Swatch color="var(--color-primary)" {...props} />,
 	Switch: (props) => (
@@ -151,7 +191,19 @@ export const samples: Partial<Record<string, Sample>> = {
 			Notifications
 		</Switch>
 	),
+	Tab: (props) => tabs(props),
+	TabList: (props) => tabs(props),
 	Table: (props) => table({ table: props }),
+	Tag: (props) => (
+		<TagGroup aria-label="Topics" selectionMode="single" defaultSelectedKeys={['design']}>
+			<Tag id="design" {...props}>
+				Design
+			</Tag>
+			<Tag id="code" {...props}>
+				Code
+			</Tag>
+		</TagGroup>
+	),
 	TextField: (props) => <TextField label="Project name" placeholder="New project" className="w-48" {...props} />,
 	ToggleButtonGroup: (props) => (
 		<ToggleButtonGroup aria-label="View" defaultSelectedKeys={['grid']} {...props}>

@@ -37,7 +37,7 @@ const tabList = tv({
 	variants: {
 		orientation: {
 			horizontal:
-				'-mx-1 -mt-1 gap-6 overflow-x-auto bg-[linear-gradient(color-mix(in_oklab,var(--color-bleed)_8%,transparent))] bg-size-[calc(100%-0.5rem)_1px] bg-position-[0.25rem_100%] bg-no-repeat px-1 pt-1 pb-1 [scrollbar-width:none]',
+				'-mx-1 -mt-1 gap-(--tab-list-gap) overflow-x-auto bg-[linear-gradient(color-mix(in_oklab,var(--color-bleed)_8%,transparent))] bg-size-[calc(100%-0.5rem)_1px] bg-position-[0.25rem_100%] bg-no-repeat px-1 pt-1 pb-1 [scrollbar-width:none]',
 			vertical: 'shrink-0 flex-col border-s',
 		},
 	},
@@ -45,7 +45,7 @@ const tabList = tv({
 
 const tab = tv({
 	extend: focusRing,
-	base: 'relative flex cursor-default items-center gap-2 rounded-sm py-1.5 text-control font-medium whitespace-nowrap text-muted transition-colors duration-150 ease-out [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
+	base: 'relative flex cursor-default items-center gap-2 rounded-sm py-1.5 text-control [font-weight:var(--tab-font-weight)] whitespace-nowrap text-(color:--tab-text) transition-colors duration-150 ease-out [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
 	variants: {
 		// 32px tall, as a button is
 		orientation: {
@@ -53,10 +53,10 @@ const tab = tv({
 			vertical: 'ps-4',
 		},
 		isSelected: {
-			true: 'text-ink',
+			true: 'text-(color:--tab-selected-text)',
 		},
 		isHovered: {
-			true: 'text-ink',
+			true: 'text-(color:--tab-selected-text)',
 		},
 		isDisabled: {
 			true: 'text-muted',
@@ -67,7 +67,7 @@ const tab = tv({
 // React Aria moves the bar to the chosen tab by its translate and size, so those are what transition. It covers the
 // list's line, half on it and half above
 const indicator = tv({
-	base: 'absolute rounded-full bg-ink transition-[translate,width,height] duration-250 ease-in-out motion-reduce:transition-none',
+	base: 'absolute rounded-full bg-(--tab-indicator) transition-[translate,width,height] duration-250 ease-in-out motion-reduce:transition-none',
 	variants: {
 		orientation: {
 			horizontal: '-bottom-1 start-0 h-0.5 w-full',

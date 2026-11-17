@@ -73,7 +73,7 @@ describe('Switch', () => {
 				<Switch shape="full">Full</Switch>
 			</>,
 		);
-		expect(trackOf('Rounded')?.className).toContain('rounded-lg');
+		expect(trackOf('Rounded')?.className).toContain('rounded-(--switch-radius)');
 		expect(trackOf('Full')?.className).toContain('rounded-full');
 	});
 

@@ -7,8 +7,8 @@ import { composeClassName, focusRing, tv } from './tv.js';
 // White whether chosen or not, as a checkbox is, with an ink dot that grows in when it's chosen
 const dot = tv({
 	slots: {
-		base: 'my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-full bg-raised shadow-raised transition-[scale] duration-150 ease-out motion-reduce:transition-none',
-		mark: 'size-2 rounded-full bg-ink transition-[scale] motion-reduce:transition-none',
+		base: 'my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-full bg-(--radio-fill) shadow-raised [--shadow-raised-color:var(--radio-shadow)] transition-[scale] duration-150 ease-out motion-reduce:transition-none',
+		mark: 'size-2 rounded-full bg-(--radio-dot) transition-[scale] motion-reduce:transition-none',
 	},
 	variants: {
 		isSelected: {
@@ -16,7 +16,7 @@ const dot = tv({
 			true: { mark: 'scale-100 duration-200 ease-out' },
 		},
 		isPressed: {
-			true: { base: 'scale-90' },
+			true: { base: 'scale-(--radio-press-scale)' },
 		},
 		isInvalid: {
 			true: { base: 'shadow-invalid', mark: 'bg-danger' },

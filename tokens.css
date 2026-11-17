@@ -873,5 +873,154 @@
 
 		/* The space between its controls */
 		--toolbar-gap: --spacing(1);
+
+		/* Link */
+
+		/* Space */
+
+		/* How far the underline sits below the text */
+		--link-underline-offset: 2px;
+
+		/* Colour */
+
+		/* The underline, a faint ink so the words lead */
+		--link-underline: color-mix(in oklab, var(--color-ink) 32%, transparent);
+		/* The underline on hover, full ink */
+		--link-hover-underline: var(--color-ink);
+
+		/* Checkbox */
+
+		/* Shape */
+
+		/* The box's corners */
+		--checkbox-radius: var(--radius-md);
+
+		/* Colour */
+
+		/* The box's fill, raised off the page */
+		--checkbox-fill: var(--color-raised);
+		/* The tick and the dash */
+		--checkbox-mark: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under the box. Transparent makes it flat and keeps its edge */
+		--checkbox-shadow: var(--shadow-raised-color);
+
+		/* Motion */
+
+		/* How small the box presses to */
+		--checkbox-press-scale: 0.9;
+
+		/* Radio */
+
+		/* Colour */
+
+		/* The circle's fill, raised off the page */
+		--radio-fill: var(--color-raised);
+		/* The dot in a chosen circle */
+		--radio-dot: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under the circle. Transparent makes it flat and keeps its edge */
+		--radio-shadow: var(--shadow-raised-color);
+
+		/* Motion */
+
+		/* How small the circle presses to */
+		--radio-press-scale: 0.9;
+
+		/* Switch */
+
+		/* Shape */
+
+		/* The track's corners, when its shape is rounded. The handle's are 2px less, so the two sit concentric */
+		--switch-radius: var(--radius-lg);
+
+		/* Colour */
+
+		/* The track when on, the green a success status uses */
+		--switch-on-fill: var(--color-green-68);
+		/* The handle when off */
+		--switch-handle: var(--color-knob);
+		/* The handle when on, white in both themes */
+		--switch-on-handle: var(--color-white);
+
+		/* Slider */
+
+		/* Colour */
+
+		/* The rail up to the thumb */
+		--slider-fill: var(--color-ink);
+		/* The thumb */
+		--slider-thumb: var(--color-knob);
+
+		/* TabList */
+
+		/* Space */
+
+		/* The space between tabs in a row */
+		--tab-list-gap: --spacing(6);
+
+		/* Tab */
+
+		/* Type */
+
+		/* A tab's weight. Its size is text-control, which every control shares */
+		--tab-font-weight: 500;
+
+		/* Colour */
+
+		/* A tab's label */
+		--tab-text: var(--color-muted);
+		/* The chosen tab's label, and any tab's on hover */
+		--tab-selected-text: var(--color-ink);
+		/* The bar under the chosen tab */
+		--tab-indicator: var(--color-ink);
+
+		/* Tag */
+
+		/* Shape */
+
+		/* A tag's corners */
+		--tag-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The padding beside a tag's label */
+		--tag-padding-x: --spacing(2);
+		/* The padding above and below the 16px line, so a tag is 24px tall */
+		--tag-padding-y: --spacing(1);
+
+		/* Colour */
+
+		/* A chosen tag's fill */
+		--tag-selected-fill: var(--color-ink);
+		/* A chosen tag's label */
+		--tag-selected-text: var(--color-paper);
+
+		/* Pagination */
+
+		/* Shape */
+
+		/* The current page's corners, as a button's */
+		--pagination-current-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The space between the pages */
+		--pagination-gap: --spacing(1);
+
+		/* Swatch */
+
+		/* Shape */
+
+		/* A large swatch's corners, the default */
+		--swatch-radius: var(--radius-lg);
+		/* A medium swatch's corners */
+		--swatch-medium-radius: var(--radius-md);
+		/* A small swatch's corners, which keep it a square at 12px */
+		--swatch-small-radius: 3px;
 	}
 }
