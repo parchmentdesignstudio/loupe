@@ -191,7 +191,10 @@ function spring(bounce: number, samples = 60) {
 	const ringing = stiffness * Math.sqrt(1 - damping * damping);
 	const points = Array.from({ length: samples + 1 }, (_, i) => {
 		const t = i / samples;
-		return i === samples ? 1 : 1 - Math.exp(-damping * stiffness * t) * (Math.cos(ringing * t) + ((damping * stiffness) / ringing) * Math.sin(ringing * t));
+		if (i === samples) return 1;
+		// Critically damped at bounce 0, where there's no ringing to divide by
+		if (damping >= 1) return 1 - (1 + stiffness * t) * Math.exp(-stiffness * t);
+		return 1 - Math.exp(-damping * stiffness * t) * (Math.cos(ringing * t) + ((damping * stiffness) / ringing) * Math.sin(ringing * t));
 	});
 	return `linear(${points.map((point) => Number(point.toFixed(4))).join(', ')})`;
 }
@@ -212,7 +215,7 @@ function SidebarIcon({ isOpen, isPressed }: { isOpen: boolean; isPressed: boolea
 	return (
 		<svg aria-hidden="true" viewBox="0 0 16 16" className="block size-4 fill-current">
 			<path d={frame} fillRule="evenodd" />
-			<rect x={anchor} y={3.5} width={edges.open - anchor} height={9} className="origin-[3px_8px] [transform-box:view-box] motion-reduce:transition-none" style={{ scale: `${(edge - anchor) / (edges.open - anchor)} 1`, transition: isPressed ? answer : settle }} />
+			<rect x={anchor} y={3.5} width={edges.open - anchor} height={9} className="origin-[3px_8px] [transform-box:view-box] motion-reduce:transition-none!" style={{ scale: `${(edge - anchor) / (edges.open - anchor)} 1`, transition: isPressed ? answer : settle }} />
 		</svg>
 	);
 }
