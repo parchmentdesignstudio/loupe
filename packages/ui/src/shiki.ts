@@ -20,7 +20,7 @@ type Element = Parameters<NonNullable<ShikiTransformer['code']>>[0];
 const role = (name: string, fallback?: string) => (fallback ? `var(--color-code-${name}, var(--color-code-${fallback}))` : `var(--color-code-${name})`);
 
 /**
- * One theme for light and dark, as each colour is a role token (tokens.css) that's already light-dark(). A site sets
+ * One theme for light and dark, as each colour is a role token (styles/theme.css) that's already light-dark(). A site sets
  * the tokens, or data-code-theme, to restyle its code, and passes this to its own Shiki, such as @shikijs/rehype
  */
 export const codeTheme: ThemeRegistration = {

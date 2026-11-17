@@ -1,7 +1,7 @@
 import "./colors-dark.elyx" as dark
 
 // Parchment’s colours: the palette, and the roles components use. colors-dark.elyx holds the roles’ dark values.
-// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+// Written from packages/ui/styles/theme.css by pnpm elyx:tokens, so edit the CSS rather than this file.
 file {}
 
 @variants(dark.dark-colors)

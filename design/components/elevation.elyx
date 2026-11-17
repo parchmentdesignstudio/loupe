@@ -3,7 +3,7 @@ import "tokens/lengths.elyx" as l
 
 // Parchment’s elevation: a frame per shadow, with the fill and corners it goes with. Instance one and give it a size
 // and contents. Each shadow is a soft drop and a 1px edge, in colours from colors.elyx, so it follows the theme.
-// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+// Written from packages/ui/styles/theme.css by pnpm elyx:tokens, so edit the CSS rather than this file.
 file {}
 
 export raised = frame {

@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Avatar } from './Avatar.js';
 import { tv } from './tv.js';
-// The quote class is in tokens.css, beside prose's blockquote, which it shares its rules with. A testimonial starts from
+// The quote class is in styles/prose.css, beside prose's blockquote, which it shares its rules with. A testimonial starts from
 // it and sets the words smaller and from the start edge, with the person under them, as utilities win over the class.
 // No before: utilities here: each sets content to Tailwind's empty one, which wipes out the opening mark
 export const quote = tv({

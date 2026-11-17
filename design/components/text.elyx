@@ -4,7 +4,7 @@ import "tokens/colors.elyx" as base
 
 // Parchment’s text styles: a text layer per text-* utility, in ink, with its size and leading from typography.elyx and
 // its family from fonts.elyx. Instance one, then set its contents, and its colour or weight where the design needs them.
-// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+// Written from packages/ui/styles/theme.css by pnpm elyx:tokens, so edit the CSS rather than this file.
 file {}
 
 export body = text {

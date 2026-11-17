@@ -1,6 +1,6 @@
 import type { ShikiTransformer, ThemeRegistration } from 'shiki/core';
 /**
- * One theme for light and dark, as each colour is a role token (tokens.css) that's already light-dark(). A site sets
+ * One theme for light and dark, as each colour is a role token (styles/theme.css) that's already light-dark(). A site sets
  * the tokens, or data-code-theme, to restyle its code, and passes this to its own Shiki, such as @shikijs/rehype
  */
 export declare const codeTheme: ThemeRegistration;

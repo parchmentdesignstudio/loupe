@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Writes Parchment’s colours, type, corners, spacing and elevation from packages/ui/tokens.css into the Elyx design
+// Writes Parchment’s colours, type, corners, spacing and elevation from packages/ui/styles/theme.css into the Elyx design
 // project: colour, type and length tokens in design/tokens, and a component per shadow and per text style in
 // design/components. The CSS is the source, so edit it and run this again. --check writes nothing, and fails when
 // the files are out of date, or a component uses a tint, corner or spacing step the tokens don’t have
@@ -11,12 +11,23 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const root = path.join(import.meta.dirname, '..')
-const css = fs.readFileSync(path.join(root, 'packages/ui/tokens.css'), 'utf8')
+// Without its P3 colours, as Elyx keeps each colour in sRGB
+const css = withoutGamut(fs.readFileSync(path.join(root, 'packages/ui/styles/theme.css'), 'utf8'))
+function withoutGamut(text) {
+  const at = text.indexOf('@media (color-gamut')
+  if (at === -1) return text
+  let end = text.indexOf('{', at)
+  for (let depth = 0; end < text.length; end++) {
+    if (text[end] === '{') depth++
+    if (text[end] === '}' && --depth === 0) break
+  }
+  return withoutGamut(text.slice(0, at) + text.slice(end + 1))
+}
 
-// The strengths tokens.css mixes tints at. Elyx can’t mix a token by the theme, so each bleed gets one per strength
+// The strengths styles/theme.css mixes tints at. Elyx can’t mix a token by the theme, so each bleed gets one per strength
 const strengths = [4, 8, 12, 16, 24, 32]
 
-// The steps of --spacing that Elyx gets, as tokens.css lists them. Tailwind takes any multiple, but Elyx needs a token
+// The steps of --spacing that Elyx gets, as styles/theme.css lists them. Tailwind takes any multiple, but Elyx needs a token
 // for each
 const steps = [0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 10, 12, 16]
 
@@ -32,7 +43,7 @@ const levels = {
   invalid: { fill: 'raised', corners: 'radius-lg', caption: 'A field whose value is wrong' },
 }
 
-// The families tokens.css names, from their Adobe Fonts web names to the names the same fonts have on the desktop,
+// The families styles/theme.css names, from their Adobe Fonts web names to the names the same fonts have on the desktop,
 // which is where Elyx finds them
 const families = { 'elza-round-variable': 'Elza Round Variable', 'auger-mono': 'Auger Mono', livory: 'Livory' }
 
@@ -260,14 +271,14 @@ const face = 'sans'
 const lengthDeclarations = blocks('@theme').flatMap(declarations)
 const corners = lengthDeclarations.filter(({ name }) => name.startsWith('radius-')).map((declaration) => ({ ...declaration, value: number(declaration.value) }))
 const spacing = lengthDeclarations.find(({ name }) => name === 'spacing')
-if (!spacing) throw new Error('Set --spacing in an @theme block in tokens.css, as Elyx gets its spacing steps from it')
+if (!spacing) throw new Error('Set --spacing in an @theme block in styles/theme.css, as Elyx gets its spacing steps from it')
 const space = steps.map((step, i) => ({
   name: `spacing-${String(step).replace('.', '-')}`,
   comment: i ? [] : [...spacing.comment, 'Named for Tailwind’s steps, so spacing-3 is p-3 or gap-3, and spacing-1-5 is p-1.5'],
   value: String(round(step * Number(number(spacing.value)))),
 }))
 for (const level of Object.values(levels)) {
-  if (!corners.some(({ name }) => name === level.corners)) throw new Error(`A level in scripts/elyx-tokens.mjs rounds to --${level.corners}, which tokens.css doesn’t set`)
+  if (!corners.some(({ name }) => name === level.corners)) throw new Error(`A level in scripts/elyx-tokens.mjs rounds to --${level.corners}, which styles/theme.css doesn’t set`)
 }
 
 // A media query that changes the type, such as control text on touch screens, becomes a context of its own. A wide
@@ -315,7 +326,7 @@ const paragraph = (text) =>
 const members = (list, value) => list.map((item) => `${lines(item.comment ?? [])}  ${item.name}: ${value(item)}`).join(',\n')
 const tints = (group) =>
   bleeds.flatMap((bleed) => strengths.map((strength) => ({ name: `${bleed.name.replace(/-bleed$/, '')}-${strength}`, value: `opacity(${group}.${bleed.name}, ${strength}%)` })))
-const source = 'Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.'
+const source = 'Written from packages/ui/styles/theme.css by pnpm elyx:tokens, so edit the CSS rather than this file.'
 
 // A component, with its properties in the order Elyx writes them
 const component = (kind, name, properties) => {
@@ -468,10 +479,10 @@ for (const strength of used.strengths) {
 }
 const cornerNames = corners.map(({ name }) => name)
 for (const corner of used.corners) {
-  if (!cornerNames.includes(corner)) problems.push(`A component rounds to --${corner}, which tokens.css doesn’t set. Use one of ${cornerNames.join(', ')}, or add it to tokens.css`)
+  if (!cornerNames.includes(corner)) problems.push(`A component rounds to --${corner}, which styles/theme.css doesn’t set. Use one of ${cornerNames.join(', ')}, or add it to styles/theme.css`)
 }
 for (const step of used.steps) {
-  if (step && !steps.includes(step)) problems.push(`A component spaces by ${step}, a step Elyx has no token for. Use one of ${steps.join(', ')}, or add it to tokens.css and scripts/elyx-tokens.mjs`)
+  if (step && !steps.includes(step)) problems.push(`A component spaces by ${step}, a step Elyx has no token for. Use one of ${steps.join(', ')}, or add it to styles/theme.css and scripts/elyx-tokens.mjs`)
 }
 
 const check = process.argv.includes('--check')
@@ -479,7 +490,7 @@ for (const [name, text] of Object.entries(files)) {
   const file = path.join(root, 'design', name)
   const current = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : ''
   if (current === text) continue
-  if (check) problems.push(`design/${name} is out of date with tokens.css. Run pnpm elyx:tokens`)
+  if (check) problems.push(`design/${name} is out of date with styles/theme.css. Run pnpm elyx:tokens`)
   else {
     fs.writeFileSync(file, text)
     console.log(`Wrote design/${name}`)
@@ -490,4 +501,4 @@ if (problems.length) {
   console.error(problems.join('\n'))
   process.exit(1)
 }
-if (check) console.log('The Elyx tokens match tokens.css')
+if (check) console.log('The Elyx tokens match styles/theme.css')

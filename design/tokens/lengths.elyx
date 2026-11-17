@@ -1,6 +1,6 @@
 // Parchment’s lengths: the corners and the steps of the spacing, in pixels, named as in Tailwind, so radius-lg is
 // rounded-lg and spacing-3 is p-3.
-// Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+// Written from packages/ui/styles/theme.css by pnpm elyx:tokens, so edit the CSS rather than this file.
 file {}
 
 export lengths = tokens {

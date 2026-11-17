@@ -96,7 +96,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `Code` | A block of code, highlighted by Shiki, with a title, Copy and line numbers, in Loupe's, iamsteve's or mcknny's colours |
 | `Keyboard` | A keyboard shortcut, such as ⌘Z, in a sentence, a tooltip, or at the end of a menu item |
 | `Prose` | Writing at length as plain HTML, such as a post from Markdown or a CMS, set in Loupe’s type with no classes inside. Without React, put the `prose` class from `tokens.css` on what holds it |
-| `Quote` | Someone else’s words in Livory’s italic, centred under an opening mark, with who said it under them, as a figure. It shares prose’s blockquote rules, through the `quote` class in `tokens.css`. `variant="testimonial"` sets them from the start edge, with the person’s photo beside their name |
+| `Quote` | Someone else’s words in Livory’s italic, centred under an opening mark, with who said it under them, as a figure. It shares prose’s blockquote rules, through the `quote` class in `styles/prose.css`. `variant="testimonial"` sets them from the start edge, with the person’s photo beside their name |
 | `Aside` | The writer’s own voice beside the main text: a signpost to what’s coming or what the reader needs first, behind the accent’s rule, or an afterthought in muted italic. In prose the rule hangs in the margin |
 | `Composer` | A message field with its send button |
 | `TextField` | Text, or several lines with `isMultiline` |
@@ -133,7 +133,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `Disclosure`, `DisclosureGroup` | A heading that shows or hides what’s under it, through `DisclosureHeader` and `DisclosurePanel`: medium for questions and answers, small for navigation or a title over its description |
 | `Tabs` | Panels shown one at a time, picked from a `TabList` of `Tab`s, in a row or a column, with a bar that slides to the chosen one. A `TabPanel` shares its tab’s id, and a tab with an `href` is a link |
 
-Fields share a `Label`, `Description` and `FieldError`, and each takes `label`, `description` and `errorMessage`. Overlays come and go with the `animate-enter` and `animate-exit` keyframes in `tokens.css`, and fade instead when reduced motion is on. Popovers and tooltips have no arrow unless you pass `showArrow`.
+Fields share a `Label`, `Description` and `FieldError`, and each takes `label`, `description` and `errorMessage`. Overlays come and go with the `animate-enter` and `animate-exit` keyframes in `styles/theme.css`, and fade instead when reduced motion is on. Popovers and tooltips have no arrow unless you pass `showArrow`.
 
 `FileTrigger` and `isFileDropItem` are React Aria’s own, passed through as they are. Wrap a `Button` in `FileTrigger` to open the file picker, and pick the files out of a `DropZone`’s drop with `isFileDropItem`.
 
@@ -143,11 +143,22 @@ What the library is still missing is in `packages/ui/BACKLOG.md`, found by build
 
 A dialog or sheet with a field puts focus in the first one: give it `autoFocus`, as React Aria’s own examples do. Lint allows `autoFocus` on the package’s components, but not on plain HTML elements.
 
+### Where the styles live
+
+A site imports `tokens.css`, which only gathers four files in `styles`, each with one job:
+
+| File | What goes in it |
+|---|---|
+| `theme.css` | The values everything is built from, and only values: the palette, roles, bleed, shadows, type, corners, spacing and motion |
+| `code-themes.css` | Code coloured as another of Parchment’s sites colours it, with `data-code-theme` |
+| `prose.css` | Styles for HTML no component renders, through the `prose` and `quote` classes. The only file with rules for elements |
+| `components.css` | Each component’s own tokens, such as `--button-radius`, in the sidebar’s order. Each starts at a value from `theme.css`, so a value the theme lacks goes there first |
+
 ### Colours and elevation
 
 Dark mode follows the system, with no toggle. Each colour is a role set with `light-dark()`, so the tokens alone give a site both modes. To keep a site light, set `color-scheme: light` on `:root`, and `scheme-light` or `scheme-dark` sets one for part of a page. `light-dark()` needs Safari 17.5 or later.
 
-`tokens.css` has two tiers. The palette holds the raw colours, named by hue and lightness, so `pine-26` is `oklch(0.26 …)`, and the further apart two numbers, the stronger the contrast. Parchment’s own five are `cream-99`, `blush-95`, `pine-26`, `rust-60` and `lime-91`, and the roles work out the rest of their colours from them. The roles are what components use, and each points at one palette colour in the light and another in the dark.
+`styles/theme.css` has two tiers. The palette holds the raw colours, named by hue and lightness, so `pine-26` is `oklch(0.26 …)`, and the further apart two numbers, the stronger the contrast. Parchment’s own five are `cream-99`, `blush-95`, `pine-26`, `rust-60` and `lime-91`, and the roles work out the rest of their colours from them. The roles are what components use, and each points at one palette colour in the light and another in the dark.
 
 The palette also has nine hues, `red`, `orange`, `yellow`, `green`, `teal`, `sky`, `blue`, `violet` and `pink`, each light, mid and dark, such as `teal-88`, `teal-69` and `teal-48`. Two greys come at the same ten steps, from 97 to 26: `sand` for the cream ground, in the light yellow’s hue, warming a little as it darkens, and `grey`, a neutral one for white. On the layer each is for, 56 and darker pass 4.5:1 for text, and 66 and darker 3:1 for a control’s edge. No role uses them yet, so take one as it is, as in `var(--sand-56)`. The preview’s Colour page shows the whole palette.
 
@@ -202,7 +213,7 @@ import { Button, Chip, ChipGroup } from '@parchment/ui'
 </ChipGroup>
 ```
 
-Each token is one of Tailwind’s own variables, set once in `tokens.css`, so `--color-ink` is `bg-ink` and `text-ink`, and `--text-label` is `text-label`. To change one, set its variable on `:root`, such as `--text-body`. A colour takes both modes, as in `--color-ink: light-dark(var(--color-pine-20), var(--color-cream-99))`, or one value for both. The type is Elza Round Variable, with Auger Mono for small labels, both from Adobe Fonts: load a kit with both, or set `--font-sans` and `--font-mono` to your own.
+Each token is one of Tailwind’s own variables, set once in `styles/theme.css`, so `--color-ink` is `bg-ink` and `text-ink`, and `--text-label` is `text-label`. To change one, set its variable on `:root`, such as `--text-body`. A colour takes both modes, as in `--color-ink: light-dark(var(--color-pine-20), var(--color-cream-99))`, or one value for both. The type is Elza Round Variable, with Auger Mono for small labels, both from Adobe Fonts: load a kit with both, or set `--font-sans` and `--font-mono` to your own.
 
 ### Code
 
@@ -228,7 +239,7 @@ import { codeTheme, codeTransformers } from '@parchment/ui/shiki'
 
 Lines can be marked out, and `Code` styles each mark. `{6-8}` in a fence's meta highlights lines 6 to 8, and `/gap/` a word. In the code, a comment ending a line marks it: `// [!code highlight]`, `[!code ++]` and `[!code --]` for a diff, `[!code focus]` to fade the rest until the block's hovered, and `[!code error]` or `[!code warning]`. Copy leaves the notes out. In the browser, pass the meta as `useHighlight(source, { meta: '{6-8}' })`. The marks come from `@shikijs/transformers`, which a site installs alongside Shiki.
 
-The theme names roles, not colours: `--color-code-keyword`, `-string`, `-quote`, `-constant`, `-number`, `-function`, `-type`, `-builtin`, `-tag`, `-attribute`, `-comment` and `-text`, each a `light-dark()` in `tokens.css`, so one theme covers both modes. In the light, Loupe's follows Nova's rules: one hue for keywords, tags and booleans, the rest a walk round the wheel from it at one lightness, and a string's quotes a darker shade of the string. The ground is a control's fill, white in the light and a step above the page in the dark, unless `--code-ground` sets another. Marked lines take `--color-code-mark`, `-add` and `-remove` for their ground, and the same with `-edge` for the line's bar, its number and the diff's counts. A removal is striped as well as tinted, so it reads apart from an addition by more than its colour, and a word marked on a changed line takes the line's tint again. To restyle code, set those tokens, or use iamsteve's or mcknny's with `theme="iamsteve"` on a `Code` or `data-code-theme="mcknny"` on anything around it. Loupe's transformers highlight Tailwind's `@theme` and bare custom properties as CSS, and number lines with `showLineNumbers` in a code fence's meta, or `showLineNumbers=12` to start at 12.
+The theme names roles, not colours: `--color-code-keyword`, `-string`, `-quote`, `-constant`, `-number`, `-function`, `-type`, `-builtin`, `-tag`, `-attribute`, `-comment` and `-text`, each a `light-dark()` in `styles/theme.css`, so one theme covers both modes. In the light, Loupe's follows Nova's rules: one hue for keywords, tags and booleans, the rest a walk round the wheel from it at one lightness, and a string's quotes a darker shade of the string. The ground is a control's fill, white in the light and a step above the page in the dark, unless `--code-ground` sets another. Marked lines take `--color-code-mark`, `-add` and `-remove` for their ground, and the same with `-edge` for the line's bar, its number and the diff's counts. A removal is striped as well as tinted, so it reads apart from an addition by more than its colour, and a word marked on a changed line takes the line's tint again. To restyle code, set those tokens, or use iamsteve's or mcknny's with `theme="iamsteve"` on a `Code` or `data-code-theme="mcknny"` on anything around it. Loupe's transformers highlight Tailwind's `@theme` and bare custom properties as CSS, and number lines with `showLineNumbers` in a code fence's meta, or `showLineNumbers=12` to start at 12.
 
 ### Writing a component
 
@@ -262,7 +273,7 @@ Size bars, headers and rows by padding around their content, not a fixed height,
 | Command | What it does |
 |---|---|
 | `pnpm ui` | The preview page, the palette and every component in its states, at localhost:5199 |
-| `pnpm test` | Vitest across the workspace, with an axe check for each component, then a check that the Elyx tokens match `tokens.css` |
+| `pnpm test` | Vitest across the workspace, with an axe check for each component, then a check that the Elyx tokens match `styles/theme.css` |
 | `pnpm lint` | oxlint, with the accessibility rules on. The icons package and device aren’t linted yet |
 | `pnpm --filter @parchment/ui build` | Builds `lib`, which is committed so releases can install it |
 
@@ -270,7 +281,7 @@ Size bars, headers and rows by padding around their content, not a fixed height,
 
 `design/` is the Elyx project, with `packages/ui` and `packages/icons` as its dependencies. `foundations.elyx` shows the colour roles, elevation, type, corners and spacing together, as the components use them: switch the theme to see them in the dark, and the pointer to coarse to see control text as it is on a touch screen.
 
-Its colours, type, corners, spacing and shadows are written from `packages/ui/tokens.css`, so change the CSS, then run:
+Its colours, type, corners, spacing and shadows are written from `packages/ui/styles/theme.css`, so change the CSS, then run:
 
 ```sh
 pnpm elyx:tokens
@@ -278,13 +289,13 @@ pnpm elyx:tokens
 
 That writes the tokens in `design/tokens` (`colors.elyx`, `colors-dark.elyx`, `typography.elyx`, `typography-coarse.elyx`, `lengths.elyx` and `fonts.elyx`) and the components in `design/components` (`elevation.elyx` and `text.elyx`). Don’t edit them by hand, as `pnpm test` fails when they don’t match the CSS.
 
-`colors` holds the palette, in hex, and the roles. `colors-dark.elyx` gives every role its dark value, in the `theme=dark` context, even a role that only names another, such as `inverse`, as Elyx would keep its light value. Elyx can’t mix a colour by the theme, so each tint is a token of its own in `tints`, named for its layer and strength: `tints.overlay-8` is `bg-bleed/8` on an overlay. Its tokens can’t hold a shadow either, so each level is a component in `elevation.elyx`, with the fill it goes with and its corners from `lengths`. Instance one, then give it a size and contents. CSS paints a shadow’s first layer on top and Elyx its last, so a level’s layers are in the opposite order to `tokens.css`.
+`colors` holds the palette, in hex, and the roles. `colors-dark.elyx` gives every role its dark value, in the `theme=dark` context, even a role that only names another, such as `inverse`, as Elyx would keep its light value. Elyx can’t mix a colour by the theme, so each tint is a token of its own in `tints`, named for its layer and strength: `tints.overlay-8` is `bg-bleed/8` on an overlay. Its tokens can’t hold a shadow either, so each level is a component in `elevation.elyx`, with the fill it goes with and its corners from `lengths`. Instance one, then give it a size and contents. CSS paints a shadow’s first layer on top and Elyx its last, so a level’s layers are in the opposite order to `styles/theme.css`.
 
-`typography` holds each text style’s size, in points, and its leading, as a multiple of the size, and `typography-coarse.elyx` gives control text its touch-screen 16 in the `pointer=coarse` context. `fonts` names the families as the desktop does, so Elyx draws Elza Round Variable and Auger Mono once they’re activated in Adobe Fonts. Each text style is a text layer in `text.elyx`: instance `body`, `control`, `label` or `title`, then set its contents. A weight or tracking that `tokens.css` sets for a style goes on its layer, as `title` is Bold and drawn in by 1%. Otherwise weights aren’t tokens, so set `font-style: "Medium"` where a component does. A new text style needs a caption, and a new family its desktop name, in `scripts/elyx-tokens.mjs`. The script stops and says which.
+`typography` holds each text style’s size, in points, and its leading, as a multiple of the size, and `typography-coarse.elyx` gives control text its touch-screen 16 in the `pointer=coarse` context. `fonts` names the families as the desktop does, so Elyx draws Elza Round Variable and Auger Mono once they’re activated in Adobe Fonts. Each text style is a text layer in `text.elyx`: instance `body`, `control`, `label` or `title`, then set its contents. A weight or tracking that `styles/theme.css` sets for a style goes on its layer, as `title` is Bold and drawn in by 1%. Otherwise weights aren’t tokens, so set `font-style: "Medium"` where a component does. A new text style needs a caption, and a new family its desktop name, in `scripts/elyx-tokens.mjs`. The script stops and says which.
 
 `control-leading` is 20px in the CSS, but Elyx takes leading only as a multiple of the size, so there it’s a multiple of `control-size`: 1.54, and 1.25 in the `pointer=coarse` context, which Elyx draws as 20px either way. So `control` text with 6px padding above and below comes out 32px tall, as in code.
 
-`lengths` holds the corners and spacing, in pixels, under Tailwind’s names: `radius-lg` is `rounded-lg`, and `spacing-3` is `p-3` or `gap-3`. A half step takes a dash, so `spacing-1-5` is `p-1.5`. `tokens.css` sets them in an `@theme` block of their own, so the components’ classes didn’t change. Tailwind spaces by any multiple of `--spacing`, but Elyx needs a token for each step, so it gets the 14 that `tokens.css` lists, from 2px to 64px. `pnpm test` fails when a component rounds to a corner or spaces by a step that has no token.
+`lengths` holds the corners and spacing, in pixels, under Tailwind’s names: `radius-lg` is `rounded-lg`, and `spacing-3` is `p-3` or `gap-3`. A half step takes a dash, so `spacing-1-5` is `p-1.5`. `styles/theme.css` sets them in an `@theme` block of their own, so the components’ classes didn’t change. Tailwind spaces by any multiple of `--spacing`, but Elyx needs a token for each step, so it gets the 14 that `styles/theme.css` lists, from 2px to 64px. `pnpm test` fails when a component rounds to a corner or spaces by a step that has no token.
 
 `packages/ui/elyx/README.md` covers placing the components themselves, as code layers.
 

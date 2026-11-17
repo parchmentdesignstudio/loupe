@@ -1,0 +1,254 @@
+/* Writing at length as plain HTML styles it, such as a post from Markdown or a CMS, with the prose class or Prose. Only
+   the tokens, so a gap in the scale shows as one. In the components layer, and :where() keeps each element's rule as
+   weak as a class, so a utility on an element inside still wins */
+@layer components {
+	.prose {
+		font-size: var(--text-body);
+		line-height: var(--text-body--line-height);
+		color: var(--color-ink);
+		text-wrap: pretty;
+
+		:where(* + *) {
+			margin-top: 1em;
+		}
+		:where(h1, h2, h3, h4, h5, h6) {
+			font-weight: 700;
+			letter-spacing: -0.0125em;
+			text-wrap: balance;
+		}
+		:where(* + h2, * + h3) {
+			margin-top: 2em;
+		}
+		:where(* + h4, * + h5, * + h6) {
+			margin-top: 1.5em;
+		}
+		:where(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *) {
+			margin-top: 0.5em;
+		}
+		:where(h1) {
+			font-size: var(--text-title);
+			line-height: var(--text-title--line-height);
+		}
+		:where(h3) {
+			font-size: var(--text-control);
+			line-height: var(--text-control--line-height);
+		}
+		:where(h4, h5, h6) {
+			font-size: var(--text-label);
+			line-height: var(--text-label--line-height);
+		}
+		:where(h6) {
+			color: var(--color-muted);
+		}
+		:where(a) {
+			text-decoration: underline;
+			text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
+			text-underline-offset: 2px;
+		}
+		:where(a:hover) {
+			text-decoration-color: currentColor;
+		}
+		:where(strong, b) {
+			font-weight: 500;
+		}
+		:where(small, figcaption, caption, footer) {
+			font-size: var(--text-label);
+			line-height: var(--text-label--line-height);
+			color: var(--color-muted);
+		}
+		:where(mark) {
+			border-radius: .125rem;
+			/* A tint rather than a blend: multiply took the text with it, and darkened it out of sight on the dark ground */
+			background: color-mix(in oklab, var(--color-marigold-83), transparent 80%);
+			color: inherit;
+		}
+		:where(del, s) {
+			color: var(--color-muted);
+		}
+		:where(ins) {
+			background-color: color-mix(in oklch, var(--color-green-68), transparent 80%);
+			text-decoration: none;
+			border-radius: .125rem;
+		}
+		:where(abbr[title]) {
+			text-decoration: underline dotted;
+			text-underline-offset: 1px;
+			cursor: help;
+		}
+		:where(sub, sup) {
+			font-size: 0.75em;
+			line-height: 0;
+		}
+		:where(code, kbd, samp, pre) {
+			font-family: var(--font-mono);
+			font-size: 0.875em;
+		}
+		:where(code, samp) {
+			border-radius: 4px;
+			background: color-mix(in oklab, var(--bleed) 8%, transparent);
+			padding: 0.125em 0.25em;
+		}
+		:where(kbd) {
+			border-radius: 4px;
+			box-shadow: var(--shadow-raised);
+			background: var(--color-raised);
+			padding: 0.0625em 0.375em;
+		}
+		:where(pre) {
+			overflow-x: auto;
+			border-radius: var(--radius-lg);
+			background: color-mix(in oklab, var(--bleed) 6%, transparent);
+			padding: 0.75rem 1rem;
+			font-size: var(--text-label);
+			line-height: 1.6;
+		}
+		:where(pre code) {
+			background: none;
+			padding: 0;
+			font-size: inherit;
+		}
+		:where(ul, ol) {
+			padding-inline-start: 1.25rem;
+		}
+		:where(ul) {
+			list-style: disc;
+		}
+		:where(ol) {
+			list-style: decimal;
+		}
+		:where(li + li, li > ul, li > ol) {
+			margin-top: 0.375em;
+		}
+		:where(li::marker) {
+			color: var(--color-muted);
+		}
+		:where(dt) {
+			font-weight: 500;
+		}
+		:where(dd) {
+			margin-top: 0.125em;
+			color: var(--color-muted);
+		}
+		:where(dd + dt) {
+			margin-top: 0.75em;
+		}
+		:where(hr) {
+			margin-block: 2em;
+			border-top: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
+		}
+		:where(table) {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: var(--text-control);
+			line-height: var(--text-control--line-height);
+			font-variant-numeric: tabular-nums;
+		}
+		:where(caption) {
+			caption-side: bottom;
+			padding-top: 0.5rem;
+			text-align: start;
+		}
+		:where(th, td) {
+			border-bottom: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
+			padding: 0.5rem 0.75rem 0.5rem 0;
+			text-align: start;
+		}
+		:where(thead th) {
+			font-size: var(--text-label);
+			font-weight: 500;
+			color: var(--color-muted);
+		}
+		:where(tfoot td, tfoot th) {
+			border-bottom: 0;
+			font-weight: 500;
+		}
+		:where(figure > div) {
+			border-radius: var(--radius-lg);
+		}
+		:where(figcaption) {
+			margin-top: 0.5rem;
+		}
+		:where(details) {
+			border-radius: var(--radius-lg);
+			box-shadow: var(--shadow-panel);
+			background: var(--color-raised);
+			padding: 0.5rem 0.75rem;
+		}
+		:where(summary) {
+			cursor: default;
+			font-size: var(--text-control);
+			font-weight: 500;
+		}
+		:where(address) {
+			font-style: normal;
+			color: var(--color-muted);
+		}
+		:where(dfn, cite, var) {
+			font-style: italic;
+		}
+	}
+
+	/* A pull quote, centred under an opening mark in Livory's italic: a blockquote in prose, or the quote class, which
+	   Quote puts on a figure around its blockquote and figcaption. One set of rules for both, so they can't drift apart.
+	   A Quote in prose is left out of prose's blockquote rules, so its own blockquote doesn't take a second mark */
+	.prose :where(blockquote:not(.quote > *)),
+	.quote {
+		font-family: var(--font-serif);
+		font-size: 1.5rem;
+		font-style: italic;
+		line-height: 1.2;
+		text-align: center;
+		text-wrap: balance;
+	}
+	/* Spaced by its own size, more than a paragraph, and the same above and below, so it stands apart from the writing
+	   around it. Only in prose, so a Quote on its own brings no margin with it */
+	.prose :where(blockquote:not(.quote > *), .quote) {
+		margin-block: 1.5em;
+	}
+	.prose :where(blockquote:not(.quote > *), .quote):where(:first-child) {
+		margin-top: 0;
+	}
+	.prose :where(blockquote:not(.quote > *), .quote):where(:last-child) {
+		margin-bottom: 0;
+	}
+	/* Upright, as a mark rather than a letter, and left out of what a screen reader says, as the words say it's a
+	   quote. Half its line tall, so the quote sits close under it */
+	.prose :where(blockquote:not(.quote > *))::before,
+	.quote::before {
+		content: '“' / '';
+		display: block;
+		height: 0.5lh;
+		font-size: 3em;
+		font-style: normal;
+		line-height: 1;
+	}
+	.prose :where(blockquote:not(.quote > *) > :first-child),
+	.quote > blockquote {
+		margin-top: 0.25em;
+	}
+	/* Prose spaces a blockquote's paragraphs already, and a Quote on its own spaces them the same */
+	.quote > blockquote > * + * {
+		margin-top: 1em;
+	}
+	/* Who said it, in the writing's own type: a cite for the name, and the rest under it */
+	.prose :where(blockquote:not(.quote > *) footer),
+	.quote > figcaption {
+		margin-top: 1em;
+		font-family: var(--font-sans);
+		font-size: var(--text-body);
+		font-style: normal;
+		line-height: var(--text-body--line-height);
+		color: var(--color-muted);
+		text-wrap: pretty;
+	}
+	.prose :where(blockquote:not(.quote > *) footer *),
+	.quote > figcaption * {
+		margin-top: 0;
+	}
+	.prose :where(blockquote:not(.quote > *) cite),
+	.quote cite {
+		display: block;
+		font-style: normal;
+		color: var(--color-ink);
+	}
+}

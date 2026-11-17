@@ -1,7 +1,7 @@
 import "./colors.elyx" as base
 
 // The dark values of colors.elyx. Every role is here, even one that only names another, as a role colors.elyx
-// gives keeps its light value in the dark. Written from packages/ui/tokens.css by pnpm elyx:tokens, so edit the CSS rather than this file.
+// gives keeps its light value in the dark. Written from packages/ui/styles/theme.css by pnpm elyx:tokens, so edit the CSS rather than this file.
 @context(theme="dark")
 file {}
 

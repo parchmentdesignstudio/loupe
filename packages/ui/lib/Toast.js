@@ -3,7 +3,7 @@ import { createContext, useContext, useLayoutEffect, useRef, useSyncExternalStor
 import { Button, Text, UNSTABLE_Toast as AriaToast, UNSTABLE_ToastContent as ToastContent, UNSTABLE_ToastQueue as AriaToastQueue, UNSTABLE_ToastRegion as AriaToastRegion, composeRenderProps, } from 'react-aria-components';
 import { Cross } from './glyphs.js';
 import { composeClassName, focusRing, tv } from './tv.js';
-// As long as animate-toast-out in tokens.css
+// As long as animate-toast-out in styles/theme.css
 const exitDuration = 150;
 /**
  * The toasts waiting to show. Make one for the app, render a ToastRegion with it, and add to it from anywhere.

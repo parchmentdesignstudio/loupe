@@ -4,7 +4,7 @@ import { composeClassName, tv } from './tv.js';
 export { SheetTrigger } from 'react-aria-components';
 
 // React Aria moves a sheet by scrolling. The backdrop’s fade and the step back of a sheet under another
-// are keyframes in tokens.css, which it plays in time with the swipe. Overscroll padding sits outside
+// are keyframes in styles/theme.css, which it plays in time with the swipe. Overscroll padding sits outside
 // the sheet’s size, hence box-content
 const sheet = tv({
 	slots: {
