@@ -54,7 +54,31 @@ describe('parseAnyColor', () => {
 		expect(parseAnyColor('oklch(0.6 0.15 40 / 0.4)')?.hasAlpha).toBe(true);
 	});
 
+	it('brings a colour a hair outside sRGB in as CSS does, by clipping it', () => {
+		expect(hex('oklch(45.22% 0.3131 264.12)')).toBe('#0100FFFF');
+		for (const text of ['#0000ff', '#0100ff', '#0001ff', '#0201ff']) expect(hex(formatOklch(parseAnyColor(text)!.oklch))).toBe(hex(text));
+	});
+
 	it('is null for what isn’t a colour', () => {
 		for (const text of ['', 'blurple', '#12', 'rgb(1, 2)', 'oklch(a b c)', 'color(rec2020 1 0 0)']) expect(parseAnyColor(text)).toBeNull();
+	});
+
+	it('is null, rather than throwing, for a name an object has and a number too big to use', () => {
+		for (const text of ['constructor', '__proto__', 'toString', 'oklch(0.5 1e999 0)', 'hsl(1e999 50% 50%)']) expect(parseAnyColor(text)).toBeNull();
+	});
+
+	it('clamps what CSS clamps as it parses, so the oklch it gives back is the same colour', () => {
+		expect(hex('rgb(300 0 0)')).toBe('#FF0000FF');
+		expect(hex('rgb(-50 0 0)')).toBe('#000000FF');
+		expect(hex('rgb(1e999 0 0)')).toBe('#FF0000FF');
+		expect(hex('hsl(0 -50% 50%)')).toBe('#808080FF');
+		expect(hex('hsl(0 100% 150%)')).toBe('#FFFFFFFF');
+		expect(hex('hwb(0 -20% 0%)')).toBe('#FF0000FF');
+		expect(hex('oklch(0.5 -0.1 30)')).toBe(hex('oklch(0.5 0 30)'));
+		expect(parseAnyColor('oklch(-19.91% 0.0817 209.23)')?.oklch.l).toBe(0);
+		expect(hex('lab(150 0 0)')).toBe('#FFFFFFFF');
+		const huge = parseAnyColor('hsl(0 5e130% 50%)')!;
+		expect(huge.color.toString('hex')).toBe('#FF0000');
+		expect(hex(formatOklch(huge.oklch))).toBe('#FF0000FF');
 	});
 });

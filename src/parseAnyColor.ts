@@ -25,15 +25,16 @@ type Vector = [number, number, number];
 /**
  * Any CSS colour as a React Aria Color, which only parses hex, rgb(), hsl() and hsb() itself. Takes hex with or without
  * its #, a name such as rebeccapurple, transparent, rgb(), hsl(), hwb(), lab(), lch(), oklab(), oklch() and color() in
- * srgb, srgb-linear, display-p3 or xyz, in modern or comma syntax. A colour outside sRGB loses chroma until it fits,
- * keeping its lightness and hue, so a vivid P3 or oklch colour stays as close as sRGB allows, while oklch keeps it exactly.
+ * srgb, srgb-linear, display-p3 or xyz, in modern or comma syntax. A colour outside sRGB is brought in as CSS does,
+ * losing chroma but keeping its lightness and hue, so a vivid P3 or oklch colour stays as close as sRGB allows, while
+ * oklch keeps it exactly.
  * Null when it isn't a colour
  */
 export function parseAnyColor(text: string): ParsedColor | null {
 	const source = text.trim().toLowerCase();
 	if (source === '') return null;
 	if (source === 'transparent') return result([0, 0, 0], 0, true);
-	const named = names()[source];
+	const named = names().get(source);
 	if (named) return fromHex(named);
 	const hex = /^#?([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/.exec(source);
 	if (hex) return fromHex(hex[1]);
@@ -65,44 +66,46 @@ function fromChannels(name: string, args: string[], alphaText: string | undefine
 	const alpha = alphaText === undefined ? 1 : number(alphaText, 1);
 	if (alpha === null) return null;
 	const hasAlpha = alphaText !== undefined;
+	// CSS clamps these as it parses them, so rgb(300 0 0) is red and oklch(0.5 -0.1 30) grey. color() isn't clamped, as
+	// it reaches outside sRGB
 	switch (name) {
 		case 'rgb':
 		case 'rgba': {
-			const channels = args.map((arg) => number(arg, 255));
+			const channels = args.map((arg) => within(number(arg, 255), 0, 255));
 			if (channels.some((channel) => channel === null)) return null;
 			return result(linear((channels as number[]).map((channel) => channel / 255) as Vector), alpha, hasAlpha, false);
 		}
 		case 'hsl':
 		case 'hsla': {
-			const [hue, saturation, lightness] = [angle(args[0]), number(args[1], 100), number(args[2], 100)];
+			const [hue, saturation, lightness] = [angle(args[0]), within(number(args[1], 100), 0, 100), within(number(args[2], 100), 0, 100)];
 			if (hue === null || saturation === null || lightness === null) return null;
 			return result(linear(hslToRgb(hue, saturation / 100, lightness / 100)), alpha, hasAlpha, false);
 		}
 		case 'hwb': {
-			const [hue, white, black] = [angle(args[0]), number(args[1], 100), number(args[2], 100)];
+			const [hue, white, black] = [angle(args[0]), within(number(args[1], 100), 0, 100), within(number(args[2], 100), 0, 100)];
 			if (hue === null || white === null || black === null) return null;
 			return result(linear(hwbToRgb(hue, white / 100, black / 100)), alpha, hasAlpha, false);
 		}
 		case 'lab': {
-			const [l, a, b] = [number(args[0], 100), number(args[1], 125), number(args[2], 125)];
+			const [l, a, b] = [within(number(args[0], 100), 0, 100), number(args[1], 125), number(args[2], 125)];
 			if (l === null || a === null || b === null) return null;
 			return result(labToLinear(l, a, b), alpha, hasAlpha);
 		}
 		case 'lch': {
-			const [l, c, h] = [number(args[0], 100), number(args[1], 150), angle(args[2])];
+			const [l, c, h] = [within(number(args[0], 100), 0, 100), within(number(args[1], 150), 0), angle(args[2])];
 			if (l === null || c === null || h === null) return null;
 			return result(labToLinear(l, c * Math.cos((h * Math.PI) / 180), c * Math.sin((h * Math.PI) / 180)), alpha, hasAlpha);
 		}
 		case 'oklab': {
-			const [l, a, b] = [number(args[0], 1), number(args[1], 0.4), number(args[2], 0.4)];
+			const [l, a, b] = [within(number(args[0], 1), 0, 1), number(args[1], 0.4), number(args[2], 0.4)];
 			if (l === null || a === null || b === null) return null;
 			const c = Math.hypot(a, b);
 			return result(oklabToLinear([l, a, b]), alpha, hasAlpha, true, { l, c, h: c === 0 ? 0 : (((Math.atan2(b, a) * 180) / Math.PI) % 360 + 360) % 360 });
 		}
 		case 'oklch': {
-			const [l, c, h] = [number(args[0], 1), number(args[1], 0.4), angle(args[2])];
+			const [l, c, h] = [within(number(args[0], 1), 0, 1), within(number(args[1], 0.4), 0), angle(args[2])];
 			if (l === null || c === null || h === null) return null;
-			return result(oklabToLinear([l, c * Math.cos((h * Math.PI) / 180), c * Math.sin((h * Math.PI) / 180)]), alpha, hasAlpha, true, { l, c, h });
+			return fromOklch({ l, c, h }, alpha, hasAlpha);
 		}
 		default:
 			return null;
@@ -143,6 +146,8 @@ function number(text: string, reference: number): number | null {
 	return match[2] ? (value / 100) * reference : value;
 }
 
+const within = (value: number | null, min: number, max = Number.POSITIVE_INFINITY) => (value === null ? null : Math.min(max, Math.max(min, value)));
+
 // A hue in degrees, from a bare number or deg, rad, grad or turn
 function angle(text: string): number | null {
 	if (text === 'none') return 0;
@@ -153,14 +158,22 @@ function angle(text: string): number | null {
 	return ((degrees % 360) + 360) % 360;
 }
 
+/** An oklch colour, such as one a ParsedColor kept, as a ParsedColor again, without the rounding formatOklch's text has */
+export function fromOklch(oklch: Oklch, alpha = 1, hasAlpha = alpha < 1): ParsedColor | null {
+	const hue = (oklch.h * Math.PI) / 180;
+	return result(oklabToLinear([oklch.l, oklch.c * Math.cos(hue), oklch.c * Math.sin(hue)]), alpha, hasAlpha, true, oklch);
+}
+
 // Linear sRGB in, which may be out of gamut for anything wider. The oklch is taken before it's brought in, so it stays
-// exact, and the sRGB colour is brought in by chroma first, then clipped
-function result(rgb: Vector, alpha: number, hasAlpha: boolean, isWide = true, exact?: Oklch): ParsedColor {
+// exact. A number too big to work with, such as 1e999, ends in NaN, which parseColor throws on, so it isn't a colour
+function result(rgb: Vector, alpha: number, hasAlpha: boolean, isWide = true, exact?: Oklch): ParsedColor | null {
+	const oklch = exact ?? toOklch(rgb);
 	const fitted = isWide ? fit(rgb) : rgb;
+	if (![...rgb, ...fitted, oklch.l, oklch.c, oklch.h].every(Number.isFinite)) return null;
 	const [r, g, b] = fitted.map((channel) => Math.round(clamp(encode(channel)) * 255));
 	const opacity = Math.round(clamp(alpha) * 1000) / 1000;
 	const color = parseColor(`rgba(${r}, ${g}, ${b}, ${opacity})`);
-	return { color, oklch: exact ?? toOklch(rgb), alpha: opacity, hasAlpha, isInSrgb: inGamut(rgb) };
+	return { color, oklch, alpha: opacity, hasAlpha, isInSrgb: inGamut(rgb) };
 }
 
 function toOklch(rgb: Vector): Oklch {
@@ -183,25 +196,48 @@ export function formatOklch({ l, c, h }: Oklch, alpha = 1): string {
 	return `oklch(${trim(l * 100, 2)}% ${chroma} ${hue}${opacity})`;
 }
 
+// CSS Color 4's gamut mapping, so a colour comes in as a browser brings it in. A colour that clipping moves by less than a
+// just noticeable difference is clipped, such as one formatOklch rounded a hair outside sRGB. Any other loses chroma,
+// keeping its lightness and hue, until clipping it moves it by just under that
 function fit(rgb: Vector): Vector {
 	if (inGamut(rgb)) return rgb;
-	const [l, a, b] = linearToOklab(rgb);
+	const origin = linearToOklab(rgb);
+	const [l, a, b] = origin;
 	if (l >= 1) return [1, 1, 1];
 	if (l <= 0) return [0, 0, 0];
-	const chroma = Math.hypot(a, b);
 	const hue = Math.atan2(b, a);
-	let low = 0;
-	let high = chroma;
-	for (let step = 0; step < 24; step++) {
-		const middle = (low + high) / 2;
-		if (inGamut(oklabToLinear([l, middle * Math.cos(hue), middle * Math.sin(hue)]))) low = middle;
-		else high = middle;
+	let clipped = clip(rgb);
+	if (difference(clipped, origin) < JND) return clipped;
+	let min = 0;
+	let max = Math.hypot(a, b);
+	let isMinInGamut = true;
+	while (max - min > 1e-4) {
+		const chroma = (min + max) / 2;
+		const current: Vector = [l, chroma * Math.cos(hue), chroma * Math.sin(hue)];
+		const linearCurrent = oklabToLinear(current);
+		if (isMinInGamut && inGamut(linearCurrent)) {
+			min = chroma;
+			continue;
+		}
+		clipped = clip(linearCurrent);
+		const moved = difference(clipped, current);
+		if (moved >= JND) {
+			max = chroma;
+			continue;
+		}
+		if (JND - moved < 1e-4) return clipped;
+		isMinInGamut = false;
+		min = chroma;
 	}
-	return oklabToLinear([l, low * Math.cos(hue), low * Math.sin(hue)]);
+	return clipped;
 }
 
+const JND = 0.02;
 const inGamut = (rgb: Vector) => rgb.every((channel) => channel >= -1e-4 && channel <= 1 + 1e-4);
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
+const clip = (rgb: Vector) => rgb.map(clamp) as Vector;
+// deltaEOK, the distance between two colours in Oklab
+const difference = (rgb: Vector, oklab: Vector) => Math.hypot(...linearToOklab(rgb).map((value, index) => value - oklab[index]));
 
 function linear(rgb: Vector): Vector {
 	return rgb.map((channel) => {
@@ -297,10 +333,11 @@ const D50_TO_D65 = [
 	[0.012314014864481998, -0.020507649298898964, 1.330365926242124],
 ];
 
-// CSS's named colours, unpacked the first time a name is looked up
-let named: Record<string, string> | undefined;
+// CSS's named colours, unpacked the first time a name is looked up. A Map, as an object would find constructor or
+// __proto__ on its prototype
+let named: Map<string, string> | undefined;
 function names() {
-	named ??= Object.fromEntries(NAMES.split(' ').map((entry) => entry.split(':') as [string, string]));
+	named ??= new Map(NAMES.split(' ').map((entry) => entry.split(':') as [string, string]));
 	return named;
 }
 
