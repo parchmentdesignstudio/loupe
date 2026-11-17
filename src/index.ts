@@ -9,6 +9,7 @@ export { Checkbox, CheckboxGroup, checkboxBox, type CheckboxGroupProps, type Che
 export { Chip, ChipGroup, chip, type ChipGroupProps, type ChipProps } from './Chip.js';
 export { ColorArea, type ColorAreaProps } from './ColorArea.js';
 export { ColorField, type ColorFieldProps } from './ColorField.js';
+export { parseAnyColor, type ParsedColor } from './parseAnyColor.js';
 export { ColorPicker, type ColorPickerProps } from './ColorPicker.js';
 export { ColorSlider, type ColorSliderProps } from './ColorSlider.js';
 export { ColorSwatch, colorSwatch, type ColorSwatchProps } from './ColorSwatch.js';

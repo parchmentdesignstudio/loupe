@@ -1580,6 +1580,10 @@
     width: calc(var(--spacing) * 96);
   }
 
+  .w-\[5ch\] {
+    width: 5ch;
+  }
+
   .w-\[calc\(100\%_-_1rem\)\] {
     width: calc(100% - 1rem);
   }
@@ -1650,6 +1654,10 @@
 
   .flex-1 {
     flex: 1;
+  }
+
+  .flex-none {
+    flex: none;
   }
 
   .shrink {
@@ -2178,19 +2186,9 @@
     border-end-start-radius: var(--calendar-day-radius);
   }
 
-  .rounded-s-md {
-    border-start-start-radius: var(--radius-md);
-    border-end-start-radius: var(--radius-md);
-  }
-
   .rounded-e-\(--calendar-day-radius\) {
     border-start-end-radius: var(--calendar-day-radius);
     border-end-end-radius: var(--calendar-day-radius);
-  }
-
-  .rounded-e-md {
-    border-start-end-radius: var(--radius-md);
-    border-end-end-radius: var(--radius-md);
   }
 
   .border {
@@ -2266,16 +2264,8 @@
     border-color: color-mix(in oklab, var(--bleed) 24%, transparent);
   }
 
-  .border-ink {
-    border-color: var(--color-ink);
-  }
-
   .border-muted {
     border-color: var(--color-muted);
-  }
-
-  .border-white {
-    border-color: var(--color-white);
   }
 
   .bg-\(--calendar-selected-fill\) {
@@ -2490,10 +2480,6 @@
     background-color: var(--color-highlight);
   }
 
-  .bg-ink {
-    background-color: var(--color-ink);
-  }
-
   .bg-ink\/88 {
     background-color: color-mix(in oklab, var(--color-ink) 88%, transparent);
   }
@@ -2644,10 +2630,6 @@
 
   .p-4 {
     padding: calc(var(--spacing) * 4);
-  }
-
-  .p-6 {
-    padding: calc(var(--spacing) * 6);
   }
 
   .px-\(--button-padding-x\) {
@@ -2902,6 +2884,14 @@
     padding-top: calc(var(--spacing) * 4);
   }
 
+  .pr-\(--field-padding-x\) {
+    padding-right: var(--field-padding-x);
+  }
+
+  .pr-\(--field-small-padding-x\) {
+    padding-right: var(--field-small-padding-x);
+  }
+
   .pr-0 {
     padding-right: 0;
   }
@@ -2936,10 +2926,6 @@
 
   .pb-1 {
     padding-bottom: var(--spacing);
-  }
-
-  .pb-4 {
-    padding-bottom: calc(var(--spacing) * 4);
   }
 
   .pb-\[calc\(var\(--dialog-padding\)_\+_var\(--sheet-scroll-padding-y\)\)\] {
@@ -2980,6 +2966,10 @@
 
   .text-left {
     text-align: left;
+  }
+
+  .text-right {
+    text-align: right;
   }
 
   .text-start {
@@ -3275,10 +3265,6 @@
 
   .text-\(color\:--tooltip-text\) {
     color: var(--tooltip-text);
-  }
-
-  .text-accent {
-    color: var(--color-accent);
   }
 
   .text-code-add-edge {
@@ -4561,16 +4547,6 @@
     background-color: var(--calendar-today);
   }
 
-  .after\:bg-accent:after {
-    content: var(--tw-content);
-    background-color: var(--color-accent);
-  }
-
-  .after\:bg-paper:after {
-    content: var(--tw-content);
-    background-color: var(--color-paper);
-  }
-
   .after\:opacity-0:after {
     content: var(--tw-content);
     opacity: 0;
@@ -4841,10 +4817,6 @@
       width: var(--navigation-width);
     }
 
-    .md\:w-60 {
-      width: calc(var(--spacing) * 60);
-    }
-
     .md\:shrink-0 {
       flex-shrink: 0;
     }
@@ -4866,16 +4838,8 @@
       padding-inline: var(--navigation-padding-x);
     }
 
-    .md\:px-3 {
-      padding-inline: calc(var(--spacing) * 3);
-    }
-
     .md\:py-\(--navigation-padding-y\) {
       padding-block: var(--navigation-padding-y);
-    }
-
-    .md\:py-6 {
-      padding-block: calc(var(--spacing) * 6);
     }
   }
 
@@ -5289,19 +5253,9 @@
     border-end-start-radius: var(--calendar-day-radius);
   }
 
-  td:first-child .\[td\:first-child_\&\]\:rounded-s-md {
-    border-start-start-radius: var(--radius-md);
-    border-end-start-radius: var(--radius-md);
-  }
-
   td:last-child .\[td\:last-child_\&\]\:rounded-e-\(--calendar-day-radius\) {
     border-start-end-radius: var(--calendar-day-radius);
     border-end-end-radius: var(--calendar-day-radius);
-  }
-
-  td:last-child .\[td\:last-child_\&\]\:rounded-e-md {
-    border-start-end-radius: var(--radius-md);
-    border-end-end-radius: var(--radius-md);
   }
 
 

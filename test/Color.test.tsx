@@ -62,6 +62,57 @@ describe('ColorField', () => {
 		expect(onChange.mock.lastCall?.[0].toString('hex')).toBe('#F6A57F');
 	});
 
+	it('takes any colour pasted over it, and shows it as hex', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<ColorField label="Background" defaultValue="#fbf6ef" onChange={onChange} />);
+		const field = screen.getByRole('textbox', { name: 'Background' });
+		await user.tripleClick(field);
+		await user.paste('oklch(0.628 0.2577 29.23)');
+		expect(onChange.mock.lastCall?.[0].toString('hexa')).toBe('#FF0000FF');
+		expect((field as HTMLInputElement).value).toBe('#FF0000');
+	});
+
+	it('takes another format typed in on Enter, and goes back on what isn’t a colour', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<ColorField label="Background" defaultValue="#fbf6ef" onChange={onChange} />);
+		const field = screen.getByRole('textbox', { name: 'Background' });
+		await user.clear(field);
+		await user.type(field, 'rgb(31 47 49){Enter}');
+		expect(onChange.mock.lastCall?.[0].toString('hex')).toBe('#1F2F31');
+		await user.clear(field);
+		await user.type(field, 'blurple');
+		await user.tab();
+		expect(onChange).toHaveBeenCalledTimes(1);
+		expect((field as HTMLInputElement).value).toBe('#1F2F31');
+	});
+
+	it('keeps its opacity for a colour without alpha, and takes one with it', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<ColorField label="Background" defaultValue="rgba(251, 246, 239, 0.5)" onChange={onChange} />);
+		const field = screen.getByRole('textbox', { name: 'Background' });
+		const opacity = screen.getByRole('textbox', { name: 'Opacity' });
+		expect((opacity as HTMLInputElement).value).toBe('50%');
+		await user.tripleClick(field);
+		await user.paste('#1f2f31');
+		expect(onChange.mock.lastCall?.[0].getChannelValue('alpha')).toBe(0.5);
+		await user.tripleClick(field);
+		await user.paste('#1f2f3133');
+		expect((opacity as HTMLInputElement).value).toBe('20%');
+	});
+
+	it('changes only the opacity from its own field', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<ColorField label="Background" defaultValue="#1f2f31" onChange={onChange} />);
+		const opacity = screen.getByRole('textbox', { name: 'Opacity' });
+		await user.clear(opacity);
+		await user.type(opacity, '40{Enter}');
+		expect(onChange.mock.lastCall?.[0].toString('hexa')).toBe('#1F2F3166');
+	});
+
 	it('has nothing for axe to flag', async () => {
 		const { container } = render(<ColorField label="Background" description="As hex" defaultValue="#fbf6ef" />);
 		await expectAccessible(container);
