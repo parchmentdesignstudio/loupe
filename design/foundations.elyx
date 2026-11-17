@@ -107,7 +107,7 @@ layers = frame {
         shadow: [
           {
             drop-shadow: {
-              color: c.colors.drop-raised,
+              color: c.colors.shadow-raised-color,
               offset: point(0px, 2px),
               blur-radius: 4px,
               spread: -2px
@@ -115,7 +115,7 @@ layers = frame {
           },
           {
             drop-shadow: {
-              color: c.colors.drop-raised,
+              color: c.colors.shadow-raised-color,
               offset: point(0px, 1px),
               blur-radius: 3px,
               spread: -1.5px
@@ -123,7 +123,7 @@ layers = frame {
           },
           {
             drop-shadow: {
-              color: c.colors.drop-raised,
+              color: c.colors.shadow-raised-color,
               offset: point(0px, 1px),
               blur-radius: 1px,
               spread: -1px
@@ -195,7 +195,7 @@ layers = frame {
         shadow: [
           {
             drop-shadow: {
-              color: c.colors.drop-raised,
+              color: c.colors.shadow-raised-color,
               offset: point(0px, 2px),
               blur-radius: 4px,
               spread: -2px
@@ -203,7 +203,7 @@ layers = frame {
           },
           {
             drop-shadow: {
-              color: c.colors.drop-raised,
+              color: c.colors.shadow-raised-color,
               offset: point(0px, 1px),
               blur-radius: 3px,
               spread: -1.5px
@@ -211,7 +211,7 @@ layers = frame {
           },
           {
             drop-shadow: {
-              color: c.colors.drop-raised,
+              color: c.colors.shadow-raised-color,
               offset: point(0px, 1px),
               blur-radius: 1px,
               spread: -1px
