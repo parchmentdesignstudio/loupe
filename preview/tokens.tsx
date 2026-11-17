@@ -363,7 +363,8 @@ export function Tokens({ tokens, detail, sample }: { tokens: ComponentToken[]; d
 	const [measured, setMeasured] = useState<Measure>();
 	const stage = useRef<HTMLDivElement>(null);
 	useLayoutEffect(() => {
-		const root = stage.current?.firstElementChild?.firstElementChild;
+		// The sample's root, or the part marked as the component where it sits inside another, as an option does in a list
+		const root = stage.current?.querySelector('[data-token-root]') ?? stage.current?.firstElementChild?.firstElementChild;
 		setMeasured(stage.current && root instanceof HTMLElement ? measure(stage.current, root) : undefined);
 		// active isn't read, but each change re-renders the sample with its props, so its parts are measured again
 		// oxlint-disable-next-line react/exhaustive-deps
