@@ -1,4 +1,4 @@
-import { type ClipboardEvent, useRef, useState } from 'react';
+import { type ClipboardEvent, type Ref, useEffect, useRef, useState } from 'react';
 import {
 	ColorField as AriaColorField,
 	ColorFieldContext,
@@ -10,28 +10,35 @@ import {
 	NumberField as AriaNumberField,
 	parseColor,
 	TextField as AriaTextField,
+	type TextFieldProps as AriaTextFieldProps,
 	useContextProps,
 } from 'react-aria-components';
 import { Description, FieldError, type FieldTextProps, type FieldVariant, Label, type Size } from './Field.js';
 import { numberField } from './NumberField.js';
-import { formatOklch, type Oklch, parseAnyColor } from './parseAnyColor.js';
+import { formatOklch, fromOklch, type Oklch, parseAnyColor } from './parseAnyColor.js';
 import { textFieldInput } from './TextField.js';
 import { composeClassName } from './tv.js';
 
-export interface ColorFieldProps extends Omit<AriaColorFieldProps, 'onChange'>, FieldTextProps {
+export interface ColorFieldProps extends Omit<AriaColorFieldProps, 'onChange' | 'className' | 'style' | 'render'>, FieldTextProps {
 	/** Called with the colour in sRGB, for React Aria's other colour components, and exactly as oklch CSS, such as
 	 * oklch(65.3% 0.1934 40.25 / 0.6), which keeps a colour outside sRGB that the Color can't */
 	onChange?: (color: Color | null, oklch: string | null) => void;
 	/** Shown as oklch, the default, which holds any colour exactly, or as hex */
 	format?: 'oklch' | 'hex';
 	placeholder?: string;
-	/** Shows the opacity beside the colour, as a percentage to type or step with the arrow keys. On by default. A field
-	 * given a channel types only that channel, so it has none */
+	/** Shows the opacity beside the colour, as a percentage to type or step with the arrow keys. On by default. Without
+	 * it, the text shows the opacity, so a colour typed without one is opaque. A field given a channel types only that
+	 * channel, so it has none */
 	hasOpacity?: boolean;
 	/** Raised, white with a lift, by default. Filled is flat and grey, for a dense panel of settings */
 	variant?: FieldVariant;
 	/** 32px tall, or 28px when small, as a button is */
 	size?: Size;
+	// A field without a channel is a text field, so these are given its state rather than a ColorField's
+	className?: AriaTextFieldProps['className'];
+	style?: AriaTextFieldProps['style'];
+	render?: AriaTextFieldProps['render'];
+	ref?: Ref<HTMLDivElement>;
 }
 
 /**
@@ -56,11 +63,35 @@ function ChannelField({ label, description, errorMessage, placeholder, hasOpacit
 	);
 }
 
-function AnyColorField(given: ColorFieldProps) {
+function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 	// Inside a ColorPicker, its colour and setter arrive through React Aria's context, as they do for its own field
-	const ref = useRef<HTMLInputElement>(null);
-	const [props] = useContextProps(given, ref, ColorFieldContext);
-	const { label, description, errorMessage, placeholder, hasOpacity = true, format = 'oklch', variant, size = 'medium', value, defaultValue, onChange, name, form, className } = props;
+	const [props, ref] = useContextProps(given, givenRef, ColorFieldContext);
+	const {
+		label,
+		description,
+		errorMessage,
+		placeholder,
+		hasOpacity = true,
+		format = 'oklch',
+		variant,
+		size = 'medium',
+		value,
+		defaultValue,
+		onChange,
+		name,
+		form,
+		validate,
+		onBlur,
+		onKeyDown,
+		className,
+		children: _children,
+		channel: _channel,
+		colorSpace: _colorSpace,
+		isWheelDisabled: _isWheelDisabled,
+		slot: _slot,
+		...rest
+	} = props;
+	const input = useRef<HTMLInputElement>(null);
 	const [own, setOwn] = useState<Entry>(() => toEntry(defaultValue));
 	const entry = value === undefined ? own : toEntry(value);
 	const color = entry.color;
@@ -82,83 +113,121 @@ function AnyColorField(given: ColorFieldProps) {
 	const commit = (text: string | null = draft) => {
 		setDraft(null);
 		if (text === null) return;
-		if (text.trim() === '') return set(null, null);
 		const parsed = parseAnyColor(text);
-		if (!parsed) return;
-		const nextAlpha = parsed.hasAlpha || !color ? parsed.alpha : alpha;
-		set(parsed.color.toFormat(color?.getColorSpace() ?? 'rgb').withChannelValue('alpha', nextAlpha), parsed.oklch);
+		if (text.trim() === '') set(null, null);
+		else if (parsed) {
+			const nextAlpha = parsed.hasAlpha || !color || !hasOpacity ? parsed.alpha : alpha;
+			set(parsed.color.toFormat(color?.getColorSpace() ?? 'rgb').withChannelValue('alpha', nextAlpha), parsed.oklch);
+		}
+		// React Aria shows the field's validation once its input says it changed, which a paste or Enter doesn't, so it's
+		// said here. It doesn't bubble, so it reaches React Aria's own listener and nothing else
+		input.current?.dispatchEvent(new Event('change'));
 	};
+
+	// A form's reset puts the colour back as it started, as React Aria's own fields do. The text and opacity inside reset
+	// themselves to what they first showed, so what they set is ignored until it's over
+	const [start] = useState(() => (value === undefined ? defaultValue : value));
+	const isResetting = useRef(false);
+	useEffect(() => {
+		const owner = input.current?.form;
+		if (!owner) return;
+		// The document, or the shadow root when there is one, as a reset doesn't leave it
+		const root = owner.getRootNode();
+		const reset = (event: Event) => {
+			if (event.target !== owner) return;
+			isResetting.current = true;
+			setTimeout(() => {
+				isResetting.current = false;
+			});
+			const first = toEntry(start);
+			setDraft(null);
+			set(first.color, first.color && (first.exact ?? oklchOf(first.color)));
+		};
+		// Caught on its way down to the form, so it's ahead of the text and opacity fields' own
+		root.addEventListener('reset', reset, true);
+		return () => root.removeEventListener('reset', reset, true);
+	});
 
 	// Without its own opacity, the text carries it
 	const shown = !color || !exact ? '' : format === 'hex' ? color.toString(!hasOpacity && alpha < 1 ? 'hexa' : 'hex') : formatOklch(exact, hasOpacity ? 1 : alpha);
 
 	// React Aria stops a key here unless it's let through, so only Escape over an edit stays, to undo it rather than close a popover
-	const onKeyDown = (event: KeyboardEvent) => {
+	const keyDown = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') commit();
-		if (event.key === 'Escape' && draft !== null) return setDraft(null);
-		event.continuePropagation();
+		if (event.key === 'Escape' && draft !== null) setDraft(null);
+		else event.continuePropagation();
+		onKeyDown?.(event);
 	};
 
-	// A paste over the whole value, or into an empty field, commits at once when it's a colour
+	// A paste over the whole value, or into an empty field, commits at once when it's a colour. A read-only field still
+	// takes a paste, as does a disabled one clicked into, so it's left alone there, as it is when the caller's handler
+	// prevented it
 	const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
-		const input = event.currentTarget;
+		if (event.defaultPrevented || props.isReadOnly || props.isDisabled) return;
+		const target = event.currentTarget;
 		const text = event.clipboardData.getData('text');
-		const isWhole = input.value === '' || (input.selectionStart === 0 && input.selectionEnd === input.value.length);
+		const isWhole = target.value === '' || (target.selectionStart === 0 && target.selectionEnd === target.value.length);
 		if (!isWhole || !parseAnyColor(text)) return;
 		event.preventDefault();
 		commit(text);
 	};
 
-	const slots = numberField({ variant, size, isInvalid: props.isInvalid, isDisabled: props.isDisabled });
 	const opacity = numberField({ variant, size }).input({
 		className: ['flex-none pl-2 text-right', size === 'small' ? 'w-14 pr-(--field-small-padding-x)' : 'w-16 pr-(--field-padding-x)'],
 	});
 
 	return (
 		<AriaTextField
-			aria-label={props['aria-label']}
-			aria-labelledby={props['aria-labelledby']}
-			aria-describedby={props['aria-describedby']}
-			id={props.id}
-			autoFocus={props.autoFocus}
-			isDisabled={props.isDisabled}
-			isReadOnly={props.isReadOnly}
-			isRequired={props.isRequired}
-			isInvalid={props.isInvalid}
-			validationBehavior={props.validationBehavior}
+			{...rest}
+			ref={ref}
+			name={name}
+			form={form}
 			value={draft ?? shown}
-			onChange={setDraft}
+			onChange={(text) => {
+				if (!isResetting.current) setDraft(text);
+			}}
+			validate={validate && (() => validate(color))}
 			onBlur={(event) => {
 				commit();
-				props.onBlur?.(event);
+				onBlur?.(event);
 			}}
-			onFocus={props.onFocus}
-			onKeyDown={onKeyDown}
-			className={composeClassName(typeof className === 'string' ? className : undefined, 'flex flex-col gap-1.5')}
+			onKeyDown={keyDown}
+			className={composeClassName(className, 'flex flex-col gap-1.5')}
 		>
-			{label && <Label>{label}</Label>}
-			<Group isDisabled={props.isDisabled} isInvalid={props.isInvalid} className={(state) => slots.group({ ...state, className: 'pr-0' })}>
-				<Input ref={ref} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: 'truncate' })} />
-				{hasOpacity && (
-					<AriaNumberField
-						aria-label="Opacity"
-						value={color ? color.getChannelValue('alpha') : Number.NaN}
-						onChange={(next) => color && !Number.isNaN(next) && set(color.withChannelValue('alpha', next), exact)}
-						minValue={0}
-						maxValue={1}
-						step={0.01}
-						formatOptions={{ style: 'percent' }}
-						isDisabled={props.isDisabled || !color}
-						isReadOnly={props.isReadOnly}
-						className="contents"
-					>
-						<Input className={opacity} />
-					</AriaNumberField>
-				)}
-			</Group>
-			{name && <input type="hidden" name={name} form={form} value={color && exact ? (format === 'hex' ? color.toString('hexa') : formatOklch(exact, alpha)) : ''} />}
-			{description && <Description>{description}</Description>}
-			<FieldError>{errorMessage}</FieldError>
+			{({ isInvalid, isDisabled }) => {
+				const slots = numberField({ variant, size, isInvalid, isDisabled });
+				return (
+					<>
+						{label && <Label>{label}</Label>}
+						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: 'pr-0' })}>
+							{/* The name is the TextField's, for React Aria to find a form's errors by. The hidden input below submits
+							    the colour with its opacity, so the text, without it, isn't submitted beside it */}
+							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: 'truncate' })} />
+							{hasOpacity && (
+								<AriaNumberField
+									aria-label="Opacity"
+									value={color ? color.getChannelValue('alpha') : Number.NaN}
+									onChange={(next) => {
+										if (!isResetting.current && color && !Number.isNaN(next)) set(color.withChannelValue('alpha', next), exact);
+									}}
+									minValue={0}
+									maxValue={1}
+									step={0.01}
+									formatOptions={{ style: 'percent' }}
+									isDisabled={isDisabled || !color}
+									isReadOnly={props.isReadOnly}
+									className="contents"
+								>
+									<Input className={opacity} />
+								</AriaNumberField>
+							)}
+						</Group>
+						{name && <input type="hidden" name={name} form={form} disabled={isDisabled} value={color && exact ? (format === 'hex' ? color.toString('hexa') : formatOklch(exact, alpha)) : ''} />}
+						{description && <Description>{description}</Description>}
+						<FieldError>{errorMessage}</FieldError>
+					</>
+				);
+			}}
 		</AriaTextField>
 	);
 }
@@ -185,9 +254,10 @@ function oklchString(color: Color | null): string | null {
 	return color && exact ? formatOklch(exact, color.getChannelValue('alpha')) : null;
 }
 
-// Whether an exact colour comes to this Color in sRGB, so it's the same colour and can be shown as it was given
+// Whether an exact colour comes to this Color in sRGB, so it's the same colour and can be shown as it was given. From the
+// numbers, not formatOklch's text, as rounding them can land a step away
 function sameColor(exact: Oklch, color: Color): boolean {
-	return parseAnyColor(formatOklch(exact))?.color.toString('hex') === color.toString('hex');
+	return fromOklch(exact)?.color.toString('hex') === color.toString('hex');
 }
 
 function safeParse(value: string): Color | null {
