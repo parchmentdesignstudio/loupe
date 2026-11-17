@@ -59,7 +59,7 @@ const divider = [
 
 export const toggleButton = tv({
 	extend: focusRing,
-	base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control [font-weight:var(--toggle-button-group-font-weight)] text-muted [&>svg]:my-[calc((1lh-1rem)/2)] outline-offset-0 transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
+	base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control font-(--toggle-button-group-font-weight) text-muted [&>svg]:my-[calc((1lh-1rem)/2)] outline-offset-0 transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
 	variants: {
 		isSelected: {
 			true: 'text-ink',

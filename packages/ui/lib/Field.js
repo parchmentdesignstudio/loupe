@@ -5,7 +5,7 @@ import { composeClassName, tv } from './tv.js';
 // which screen readers skip, as the field already says it's required
 export const field = tv({
     slots: {
-        label: "w-fit cursor-default text-control [font-weight:var(--field-label-font-weight)] text-ink in-data-required:after:ms-0.5 in-data-required:after:text-muted in-data-required:after:content-['*'_/_'']",
+        label: "w-fit cursor-default text-control font-(--field-label-font-weight) text-ink in-data-required:after:ms-0.5 in-data-required:after:text-muted in-data-required:after:content-['*'_/_'']",
         description: 'text-control text-muted',
         error: 'text-label text-danger',
     },

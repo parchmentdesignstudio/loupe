@@ -22,7 +22,7 @@ export const status = tv({
         // The badge is 20px tall, on the label's 16px line, so it fits a 20px line of text without growing it
         variant: {
             dot: { base: 'text-control' },
-            badge: { base: 'gap-1.5 rounded-full bg-[color-mix(in_oklab,var(--status)_16%,transparent)] px-(--status-badge-padding-x) py-(--status-badge-padding-y) text-label [font-weight:var(--status-badge-font-weight)]', dot: 'size-1.5' },
+            badge: { base: 'gap-1.5 rounded-full bg-[color-mix(in_oklab,var(--status)_16%,transparent)] px-(--status-badge-padding-x) py-(--status-badge-padding-y) text-label font-(--status-badge-font-weight)', dot: 'size-1.5' },
         },
     },
     defaultVariants: { tone: 'neutral', variant: 'dot' },

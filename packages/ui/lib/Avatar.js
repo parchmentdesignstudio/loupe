@@ -12,7 +12,7 @@ export const avatar = tv({
         // where middle would push the line a pixel or two taller
         base: 'relative inline-flex shrink-0 align-top',
         face: [
-            'relative flex size-(--avatar-size) items-center justify-center overflow-hidden rounded-(--avatar-radius) bg-(color:--avatar-fill) [font-weight:var(--avatar-font-weight)] text-(color:--avatar-text) select-none',
+            'relative flex size-(--avatar-size) items-center justify-center overflow-hidden rounded-(--avatar-radius) bg-(color:--avatar-fill) font-(--avatar-font-weight) text-(color:--avatar-text) select-none',
             'forced-colors:border forced-colors:border-[CanvasText]',
         ],
         // Over the initials, and see-through until it loads, so a slow or broken image never shows a broken icon or shifts anything

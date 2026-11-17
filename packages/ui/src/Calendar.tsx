@@ -28,7 +28,7 @@ export const calendar = tv({
 		months: 'flex flex-wrap items-start gap-x-6 gap-y-4',
 		month: 'flex flex-col gap-2',
 		header: 'flex items-center gap-1',
-		heading: 'min-w-0 flex-1 truncate text-center [font-weight:var(--calendar-heading-font-weight)]',
+		heading: 'min-w-0 flex-1 truncate text-center font-(--calendar-heading-font-weight)',
 		// The width of a small square button, holding the place of a missing one so the headings line up
 		spacer: 'size-7 shrink-0',
 		grid: 'border-collapse [&_td]:p-0',

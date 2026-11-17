@@ -59,7 +59,7 @@ const inset = tv({ extend: focusRing, base: '-outline-offset-2' });
 export const tableColumn = tv({
 	extend: inset,
 	// Opaque and sticky, so rows scroll under the header when the box has a height
-	base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label [font-weight:var(--table-column-font-weight)] text-(color:--table-column-text,var(--color-muted)) transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
+	base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label font-(--table-column-font-weight) text-(color:--table-column-text,var(--color-muted)) transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'text-ink',

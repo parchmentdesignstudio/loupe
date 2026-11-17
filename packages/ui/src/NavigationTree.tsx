@@ -71,7 +71,7 @@ export function NavigationTreeItem<T extends object>(props: NavigationTreeItemPr
 // The link fills its row, so the row's states are the link's: hovered, the current page and the focus ring
 export const navigationTreeLink = tv({
 	extend: focusRing,
-	base: 'flex cursor-default items-center gap-2 rounded-(--navigation-tree-item-radius) px-(--navigation-tree-item-padding-x) py-(--navigation-tree-item-padding-y) text-control [font-weight:var(--navigation-tree-item-font-weight)] text-(color:--navigation-tree-item-text,var(--color-ink))',
+	base: 'flex cursor-default items-center gap-2 rounded-(--navigation-tree-item-radius) px-(--navigation-tree-item-padding-x) py-(--navigation-tree-item-padding-y) text-control font-(--navigation-tree-item-font-weight) text-(color:--navigation-tree-item-text,var(--color-ink))',
 	variants: {
 		isHovered: {
 			true: 'bg-bleed/4',

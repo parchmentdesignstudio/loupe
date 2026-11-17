@@ -114,6 +114,13 @@ describe('Button', () => {
 		expect(screen.getByRole('button').className).toContain('text-(color:--button-primary-text,var(--color-on-primary))');
 	});
 
+	it('takes its weight from a font-* className', () => {
+		render(<Button className="font-semibold">Schedule call</Button>);
+		const { className } = screen.getByRole('button');
+		expect(className).toContain('font-semibold');
+		expect(className).not.toContain('--button-font-weight');
+	});
+
 	it('has nothing for axe to flag', async () => {
 		const { container } = render(
 			<>

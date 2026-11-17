@@ -153,7 +153,7 @@ export function Toast<T>({ children, ...props }: ToastProps<T>) {
 			<ToastContent className="flex min-w-0 flex-1 flex-col gap-0.5">
 				{children ?? (
 					<>
-						<Text slot="title" className="text-body [font-weight:var(--toast-title-font-weight)]">
+						<Text slot="title" className="text-body font-(--toast-title-font-weight)">
 							{message.title}
 						</Text>
 						{message.description && (

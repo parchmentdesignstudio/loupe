@@ -6,7 +6,7 @@ import { Menu, MenuItem, MenuTrigger } from './Menu.js';
 import { focusRing, tv } from './tv.js';
 
 export const breadcrumbs = tv({
-	base: 'relative flex min-w-0 flex-1 text-control [font-weight:var(--breadcrumbs-font-weight)] text-(color:--breadcrumbs-text,var(--color-muted))',
+	base: 'relative flex min-w-0 flex-1 text-control font-(--breadcrumbs-font-weight) text-(color:--breadcrumbs-text,var(--color-muted))',
 });
 
 export const breadcrumb = tv({
