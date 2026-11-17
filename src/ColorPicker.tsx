@@ -53,7 +53,7 @@ export function ColorPicker({ label, 'aria-label': ariaLabel = 'Colour', childre
 									<>
 										<ColorArea colorSpace="hsb" xChannel="saturation" yChannel="brightness" />
 										<ColorSlider colorSpace="hsb" channel="hue" />
-										<ColorField label="Hex" />
+										<ColorField label="Hex" format="hex" hasOpacity={false} />
 									</>
 								)}
 							</Dialog>

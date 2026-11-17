@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
-import { type Color, parseColor } from 'react-aria-components';
+import { type Color, Form, parseColor } from 'react-aria-components';
 import { describe, expect, it, vi } from 'vitest';
 import { ColorArea, ColorField, ColorPicker, ColorSlider, ColorSwatch, ColorSwatchPicker, ColorSwatchPickerItem } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
@@ -143,6 +143,123 @@ describe('ColorField', () => {
 		expect(onChange.mock.lastCall?.[0].toString('hexa')).toBe('#1F2F3166');
 	});
 
+	it('makes a colour typed without an alpha opaque when the text is the only place its opacity shows', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<ColorField label="Background" format="hex" hasOpacity={false} defaultValue="#ff000080" onChange={onChange} />);
+		const field = screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement;
+		expect(field.value).toBe('#FF000080');
+		await user.clear(field);
+		await user.type(field, '#00ff00{Enter}');
+		expect(onChange.mock.lastCall?.[0].toString('hexa')).toBe('#00FF00FF');
+		expect(field.value).toBe('#00FF00');
+	});
+
+	it('keeps the exact colour given back as a Color, however its oklch rounds', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		function Picker() {
+			const [color, setColor] = useState<Color | null>(() => parseColor('#f00'));
+			return (
+				<ColorField
+					label="Background"
+					value={color}
+					onChange={(next, oklch) => {
+						setColor(next);
+						onChange(oklch);
+					}}
+				/>
+			);
+		}
+		render(<Picker />);
+		const field = screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement;
+		await user.tripleClick(field);
+		await user.paste('color(display-p3 0 0.25 0.7)');
+		const exact = onChange.mock.lastCall?.[0];
+		expect(field.value).toBe(exact);
+		await user.click(screen.getByRole('textbox', { name: 'Opacity' }));
+		await user.keyboard('{ArrowDown}');
+		expect(onChange.mock.lastCall?.[0]).toBe(exact.replace(')', ' / 0.99)'));
+	});
+
+	it('runs validate on its colour, and shows what it says once a paste is committed', async () => {
+		const user = userEvent.setup();
+		const validate = vi.fn((color: Color | null) => (color?.toString('hex') === '#FF0000' ? 'Not that one' : null));
+		render(<ColorField label="Background" defaultValue="#fbf6ef" validate={validate} />);
+		const field = screen.getByRole('textbox', { name: 'Background' });
+		await user.tripleClick(field);
+		await user.paste('#ff0000');
+		await user.tab();
+		expect(field.getAttribute('aria-invalid')).toBe('true');
+		expect(screen.getByText('Not that one')).toBeTruthy();
+	});
+
+	it('leaves a read-only field as it is when a colour is pasted into it', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<ColorField label="Background" isReadOnly defaultValue="#0000ff" onChange={onChange} />);
+		const field = screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement;
+		const shown = field.value;
+		await user.tripleClick(field);
+		await user.paste('#ff0000');
+		expect(onChange).not.toHaveBeenCalled();
+		expect(field.value).toBe(shown);
+	});
+
+	it('submits its colour with its opacity once, and nothing while it’s disabled', () => {
+		render(
+			<form aria-label="Theme">
+				<ColorField label="Background" name="bg" defaultValue="rgba(251, 246, 239, 0.5)" />
+				<ColorField label="Text" name="ink" isDisabled defaultValue="#1f2f31" />
+			</form>,
+		);
+		const data = new FormData(screen.getByRole('form') as HTMLFormElement);
+		expect(data.getAll('bg')).toEqual(['oklch(97.51% 0.0107 76.6 / 0.5)']);
+		expect(data.has('ink')).toBe(false);
+	});
+
+	it('goes back to the colour it started with when its form is reset', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(
+			<form aria-label="Theme">
+				<ColorField label="Background" name="bg" defaultValue="#fbf6ef" onChange={onChange} />
+				<button type="reset">Reset</button>
+			</form>,
+		);
+		const form = screen.getByRole('form') as HTMLFormElement;
+		const field = screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement;
+		const shown = field.value;
+		await user.tripleClick(field);
+		await user.paste('#ff0000');
+		await user.clear(screen.getByRole('textbox', { name: 'Opacity' }));
+		await user.type(screen.getByRole('textbox', { name: 'Opacity' }), '40{Enter}');
+		expect(new FormData(form).get('bg')).toBe('oklch(62.8% 0.2577 29.23 / 0.4)');
+		onChange.mockClear();
+		await user.click(screen.getByRole('button', { name: 'Reset' }));
+		expect(new FormData(form).get('bg')).toBe(shown);
+		expect(field.value).toBe(shown);
+		expect(onChange).toHaveBeenCalledTimes(1);
+		expect(onChange.mock.lastCall?.[1]).toBe(shown);
+	});
+
+	it('belongs to the form it names from outside it, and shows that form’s error for its name', () => {
+		render(
+			<>
+				<form id="theme" aria-label="Theme" />
+				<ColorField label="Background" name="bg" form="theme" isRequired />
+				<Form validationErrors={{ ink: 'Server says no' }}>
+					<ColorField label="Text" name="ink" defaultValue="#1f2f31" />
+				</Form>
+			</>,
+		);
+		const form = screen.getByRole('form', { name: 'Theme' }) as HTMLFormElement;
+		expect((screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement).form).toBe(form);
+		expect(form.checkValidity()).toBe(false);
+		expect(screen.getByRole('textbox', { name: 'Text' }).getAttribute('aria-invalid')).toBe('true');
+		expect(screen.getByText('Server says no')).toBeTruthy();
+	});
+
 	it('has nothing for axe to flag', async () => {
 		const { container } = render(<ColorField label="Background" description="As hex" defaultValue="#fbf6ef" />);
 		await expectAccessible(container);
@@ -199,6 +316,8 @@ describe('ColorPicker', () => {
 		expect(screen.getByRole('dialog', { name: 'Theme' })).toBeTruthy();
 		expect(screen.getByRole('slider', { name: 'Hue' })).toBeTruthy();
 		const hex = screen.getByRole('textbox', { name: 'Hex' });
+		expect((hex as HTMLInputElement).value).toBe('#0F3D30');
+		expect(screen.queryByRole('textbox', { name: 'Opacity' })).toBeNull();
 		await user.clear(hex);
 		await user.type(hex, '1f2f31{Enter}');
 		await user.keyboard('{Escape}');
