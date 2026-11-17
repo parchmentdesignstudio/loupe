@@ -5,7 +5,8 @@ import { tv } from './tv.js';
 
 export const code = tv({
 	slots: {
-		base: 'relative flex flex-col overflow-hidden rounded-(--code-radius) text-code-text shadow-[0_0_0_.5px_var(--edge)] [--bleed:var(--panel-bleed)]',
+		// not-prose, so in Prose its parts are laid out as Code lays them out, rather than as writing
+		base: 'not-prose relative flex flex-col overflow-hidden rounded-(--code-radius) text-code-text shadow-[0_0_0_.5px_var(--edge)] [--bleed:var(--panel-bleed)]',
 		// The title, what's changed and Copy, on a line of their own above the code, as an editor's tab bar has them.
 		// The ground under the block shows through it, lightened in the light, and as it is in the dark, where the code is a
 		// step lighter, as a button is. The code casts the line between them, so it sits a little above the bar
@@ -40,13 +41,18 @@ export const code = tv({
 			'[&_.diff.add]:bg-code-add [&_[data-line-number].add]:text-code-add-edge',
 			'[&_:is(.diff.remove,.error)]:bg-code-remove [&_[data-line-number]:is(.remove,.error)]:text-code-remove-edge',
 			// A removed line's stripes, under its number too, so it reads apart from an added one by more than its colour.
-			// Fixed to the page, so they run on unbroken from the number to the line, and from one line to the next
-			'[&_:is(.line,[data-line-number]):is(.diff.remove,.error)]:bg-[repeating-linear-gradient(-45deg,color-mix(in_oklch,var(--color-code-remove-edge)_8%,transparent)_0_1px,transparent_1px_3px)] [&_:is(.line,[data-line-number]):is(.diff.remove,.error)]:bg-fixed',
+			// Tiled a line square, with a whole number of stripes across the tile, so they run on from one line to the next.
+			// A numbered line's are set back by its number's width, its digits and the padding either side, so they run on
+			// from its number's. Not fixed to the page, which would keep them joined as the lines scroll sideways, but has
+			// browsers repaint the page on the main thread as it scrolls
+			'[&_:is(.line,[data-line-number]):is(.diff.remove,.error)]:bg-[repeating-linear-gradient(-45deg,color-mix(in_oklch,var(--color-code-remove-edge)_8%,transparent)_0_1px,transparent_1px_10%)] [&_:is(.line,[data-line-number]):is(.diff.remove,.error)]:bg-size-[1lh_1lh]',
+			'[&_[data-line-numbers-content]_.line]:bg-position-[calc(var(--line-number-digits)*-1ch-(--spacing(8)))_0]',
 			// A bar down the changed line's edge, or its number's with numbers: solid for an addition, and for a removal its
-			// fine stripes in the edge colour on a paler red, so it reads as one bar, striped up close. The red is mixed with the
-			// ground as bg-code-ground reads it, where it's used, as --color-code-ground by name resolves on :root
+			// fine stripes in the edge colour on a paler red, tiled as the line's are, so it reads as one bar, striped up
+			// close. The red is mixed with the ground as bg-code-ground reads it, where it's used, as --color-code-ground by
+			// name resolves on :root
 			"[&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.diff,.error)]:before:absolute [&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.diff,.error)]:before:inset-y-0 [&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.diff,.error)]:before:start-0 [&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.diff,.error)]:before:w-0.75 [&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.diff,.error)]:before:content-['']",
-			'[&_:is(code:not([data-line-numbers])_.line,[data-line-number]).add]:before:bg-code-add-edge [&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.remove,.error)]:before:bg-[repeating-linear-gradient(-45deg,var(--color-code-remove-edge)_0_1px,color-mix(in_oklch,var(--color-code-remove-edge)_35%,light-dark(white,--theme(--color-code-ground)))_1px_3px)] [&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.remove,.error)]:before:bg-fixed',
+			'[&_:is(code:not([data-line-numbers])_.line,[data-line-number]).add]:before:bg-code-add-edge [&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.remove,.error)]:before:bg-[repeating-linear-gradient(-45deg,var(--color-code-remove-edge)_0_1px,color-mix(in_oklch,var(--color-code-remove-edge)_35%,light-dark(white,--theme(--color-code-ground)))_1px_10%)] [&_:is(code:not([data-line-numbers])_.line,[data-line-number]):is(.remove,.error)]:before:bg-size-[1lh_1lh]',
 			'[&_.highlighted-word]:-mx-0.5 [&_.highlighted-word]:rounded-sm [&_.highlighted-word]:bg-code-mark [&_.highlighted-word]:px-0.5',
 			// A word marked on a changed line, as what changed in it, takes the line's tint again over the line's own
 			'[&_.diff.add_.highlighted-word]:bg-code-add [&_:is(.diff.remove,.error)_.highlighted-word]:bg-code-remove',
@@ -57,9 +63,11 @@ export const code = tv({
 		plain: 'px-4 whitespace-pre',
 		// Copy, without a title to sit beside, over the code's corner, so the code scrolls the block's full width. Set as
 		// the code is, with Copy centred on a line's height, so it's level with the first line. Outlined, on the code's
-		// ground, so a line that runs under it stops at its edge
+		// ground, so a line that runs under it stops at its edge. The ground is under Copy rather than on it, where it
+		// would cover the tint Copy takes on hover
 		aside: 'pointer-events-none absolute end-0 top-0 py-3 pe-2 font-mono text-label/5',
-		line: 'flex h-[1lh] items-center [&>*]:pointer-events-auto [&>*]:bg-code-ground',
+		line: 'flex h-[1lh] items-center',
+		ground: 'pointer-events-auto flex rounded-(--button-radius) bg-code-ground',
 	},
 	variants: {
 		hasBar: { true: { body: 'relative shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--shadow-raised-color)]' } },
@@ -68,22 +76,51 @@ export const code = tv({
 
 export type CodeTheme = 'loupe' | 'iamsteve' | 'mcknny';
 
+// The notes Loupe's transformers read, as each takes them out of a comment: every one of a kind, but only the first
+// word note. And any note at all, read or not, so its -- isn't taken for a comment
+const readNotes = /#?\s*\[!code (?:\+\+|--|highlight|hl|focus|error|warning|info)(?::\d+)?\]/gi;
+const wordNote = /\s*\[!code word:(?:\\.|[^:\]])+(?::\d+)?\]/;
+const anyNote = /\[!code\b(?:\\.|[^\]])*\]/gi;
+
+/** Where the comment that ends a line starts, as Shiki finds it, with its opener and closer */
+function lastComment(end: string): [number, string, string] | undefined {
+	for (const [open, close] of [['{/*', '*/}'], ['/*', '*/'], ['<!--', '-->']] as const) {
+		const at = end.endsWith(close) ? end.lastIndexOf(open, end.length - close.length - open.length) : -1;
+		if (at >= 0) return [at, open, close];
+	}
+	// A line comment, from the opener nearest its last note, as Shiki splits one at each //, or a doc comment's *
+	const last = [...end.matchAll(anyNote)].at(-1);
+	if (last == null) return;
+	const before = end.slice(0, last.index).replace(anyNote, (note) => ' '.repeat(note.length));
+	const opener = [...before.matchAll(/\/\/+|-{2,}|;+|%+|#+|(?<=^\s*)\*(?!\/)/g)].at(-1);
+	if (opener == null) return;
+	// Not one in a string, which a quote before it opens and one after the note closes
+	const after = end.slice(last.index + last[0].length);
+	if (["'", '"', '`'].some((quote) => end.slice(0, opener.index).split(quote).length % 2 === 0 && after.includes(quote))) return;
+	return [opener.index, opener[0].slice(0, /^[#*]/.test(opener[0]) ? 1 : 2), ''];
+}
+
 /**
- * The code without Shiki's [!code ++] style notes, as Shiki shows it, for Copy and for the code before it's highlighted.
- * A comment left empty goes with them, and so does a line that was only that comment. A note inside a line stays, as
- * Shiki leaves it
+ * The code without the [!code ++] style notes Loupe's transformers read, as Shiki shows it, for Copy and for the code
+ * before it's highlighted. Shiki reads them in the comment that ends a line, after its last //, so one in a string
+ * stays, and so does one before another //. A comment left empty goes, and so does a line that was only that comment
  */
 export function withoutNotes(source: string) {
 	return source
 		.split('\n')
 		.flatMap((line) => {
-			// Shiki only reads a note in a comment that ends its line
-			if (!/\[!code [^\]]+\]\s*(?:\*\/\}|\*\/|-->)?\s*$/.test(line)) return [line];
-			const rest = line
-				.replace(/\s*\[!code [^\]]+\]/g, '')
-				.replace(/\s*(?:\/\/|#|--)\s*$/, '')
-				.replace(/\s*(?:\/\*\s*\*\/|<!--\s*-->|\{\/\*\s*\*\/\})\s*$/, '');
-			return rest.trim() ? [rest] : [];
+			const end = line.trimEnd();
+			const comment = lastComment(end);
+			if (comment == null) return [line];
+			const [at, open, close] = comment;
+			const text = end.slice(at + open.length, end.length - close.length);
+			const rest = text.replace(readNotes, '').replace(wordNote, '');
+			if (rest === text) return [line];
+			// With an opener the notes leave at its end gone too, as Shiki takes it
+			const kept = rest.replace(/\s*(?:\/\/|#|;{1,2}|%{1,2}|--)\s*$/, '');
+			if (kept.trim()) return [end.slice(0, at + open.length) + kept + close];
+			const left = end.slice(0, at).trimEnd();
+			return left.trim() ? [left] : [];
 		})
 		.join('\n');
 }
@@ -111,12 +148,15 @@ export interface CodeProps {
 	className?: string;
 }
 
-// How many lines a diff removes and adds, from Shiki's marks on them
-const changesIn = (html = '') => ({ removed: html.match(/class="line diff remove\b/g)?.length ?? 0, added: html.match(/class="line diff add\b/g)?.length ?? 0 });
+// How many lines a diff removes and adds, from Shiki's marks on them, which can sit among others, such as highlighted
+function changesIn(html = '') {
+	const lines = [...html.matchAll(/class="([^"]*)"/g)].map(([, names]) => new Set(names?.split(/\s+/))).filter((names) => names.has('line') && names.has('diff'));
+	return { removed: lines.filter((names) => names.has('remove')).length, added: lines.filter((names) => names.has('add')).length };
+}
 
 /** A block of code, highlighted, with a title, what a diff changes, and Copy. Long code scrolls inside it, both ways */
 export function Code({ code: text, html, title, theme, isCopyable = true, copyIcon, copiedIcon, className }: CodeProps) {
-	const { base, bar, title: name, folder, changes, swap, gone, body, plain, aside, line } = code({ hasBar: title != null });
+	const { base, bar, title: name, folder, changes, swap, gone, body, plain, aside, line, ground } = code({ hasBar: title != null });
 	const [isCopied, setCopied] = useState(false);
 	useEffect(() => {
 		if (!isCopied) return;
@@ -187,7 +227,9 @@ export function Code({ code: text, html, title, theme, isCopyable = true, copyIc
 			)}
 			{title == null && copy && (
 				<div className={aside()}>
-					<div className={line()}>{copy}</div>
+					<div className={line()}>
+						<div className={ground()}>{copy}</div>
+					</div>
 				</div>
 			)}
 		</figure>

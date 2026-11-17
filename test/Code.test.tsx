@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { withoutNotes } from '../src/Code.js';
 import { Code } from '../src/index.js';
 import { codeToHtml } from 'shiki';
-import { codeTheme, highlight, transformerLineNumbers } from '../src/shiki.js';
+import { type CodeLanguage, codeTheme, highlight, transformerLineNumbers } from '../src/shiki.js';
 import { expectAccessible } from './accessible.js';
 
 describe('Code', () => {
@@ -34,6 +34,12 @@ describe('Code', () => {
 		await expectAccessible(container);
 	});
 
+	it('counts a diff’s lines when the meta highlights them too', async () => {
+		const html = await highlight('a // [!code --]\nb // [!code ++]\nc // [!code ++]', { language: 'js', meta: '{1-3}', lineNumbers: true });
+		render(<Code code="a" html={html} title="a.ts" isCopyable={false} />);
+		expect(screen.getByText('1 line removed, 2 added')).toBeTruthy();
+	});
+
 	it('copies with an icon, named in a tooltip, and fades it for the copied one once copied', async () => {
 		const writeText = vi.fn().mockResolvedValue(undefined);
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
@@ -56,6 +62,20 @@ describe('withoutNotes', () => {
 	it('drops Shiki’s notes that end a line, the comments they leave empty, and lines that were only a note', () => {
 		const code = ['a(); // [!code ++]', 'b(); // keep [!code --]', '// [!code highlight:2]', 'c { color: red } /* [!code focus] */', '<p>{/* [!code error] */}</p>', '<b /> {/* [!code ++] */}'].join('\n');
 		expect(withoutNotes(code)).toBe(['a();', 'b(); // keep', 'c { color: red }', '<p>{/* [!code error] */}</p>', '<b />'].join('\n'));
+	});
+
+	it('leaves the code as Shiki shows it, wherever the notes are in the comment that ends a line', async () => {
+		const cases: [CodeLanguage, string[]][] = [
+			['ts', ['foo() // [!code focus] after', 'a = 1 // [!code ++] // [!code highlight]', "s = '// [!code ++]'", 'a;//[!code ++]', '// a; [!code ++]', '/// [!code ++]', 'b = 2 // [!code foo]', 'c = 3 // [!CODE ++]', 'd = 4 // [!code word:a] [!code word:b]', ' * [!code ++]', 'e()']],
+			['tsx', ['<b /> {/* keep [!code ++] */}', '\t{/* [!code ++] */}', '<i />']],
+			['html', ['<p>Hi</p> <!-- keep [!code ++] -->', '<!-- [!code highlight] -->', '<b>Bye</b>']],
+			['bash', ['pnpm add a#b # [!code --] [!code word:#b:1]', "echo 'a # [!code ++]'", '## [!code ++]', 'ls']],
+		];
+		for (const [language, lines] of cases) {
+			const code = lines.join('\n');
+			const shown = new DOMParser().parseFromString(await highlight(code, { language }), 'text/html').querySelectorAll('.line');
+			expect(withoutNotes(code).split('\n'), language).toEqual([...shown].map((line) => line.textContent));
+		}
 	});
 });
 
@@ -83,8 +103,9 @@ describe('highlight', () => {
 
 	it('numbers the lines from where it’s told', async () => {
 		const html = await highlight('a\nb', { language: 'text', lineNumbers: 9 });
-		const numbers = [...new DOMParser().parseFromString(html, 'text/html').querySelectorAll('[data-line-number]')].map((each) => each.textContent);
-		expect(numbers).toEqual(['9', '10']);
+		const page = new DOMParser().parseFromString(html, 'text/html');
+		expect([...page.querySelectorAll('[data-line-number]')].map((each) => each.textContent)).toEqual(['9', '10']);
+		expect(page.querySelector('code')?.style.getPropertyValue('--line-number-digits')).toBe('2');
 	});
 
 	it('marks a line’s number as its line is marked, such as highlighted', async () => {
