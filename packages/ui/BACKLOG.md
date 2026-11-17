@@ -89,6 +89,9 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 
 ## Done
 
+- **17 November:** component tokens for the fields, the second of four waves. Text field, Search field, Number field, Select, Combo box, Date field, Date picker, Colour field and Composer share one set, `--field-*`, so they change together: corners, the label's weight, padding at both sizes, fill, text, placeholder, focus ring and shadow, each starting at the value it had. A page lists the shared tokens its component reads.
+  - **Left out:** Select's focus ring, which is a button's, as it shows on keyboard focus only, and the disabled and filled fills, which mix from `--bleed`.
+  - **Still to do:** overlays and lists, then content.
 - **16 November:** component tokens for the controls, the first of four waves: Link, Checkbox, Radio, Switch, Slider, Tabs, Tag, Pagination and Swatch, each starting at the value it had, with a sample on its page.
   - **Left out:** fills mixed from `--bleed`, such as a tag's, a slider's rail and the current page's. A token on `:root` would fix the bleed of `:root`, not of the layer it's drawn on.
   - **Still to do:** fields, then overlays and lists, then content.

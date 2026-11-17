@@ -8,9 +8,9 @@ import { composeClassName, tv } from './tv.js';
 // ends in an ellipsis rather than being cut
 const searchField = tv({
 	slots: {
-		group: ['flex items-center rounded-lg bg-raised [--bleed:var(--raised-bleed)] pr-1 pl-2.5 shadow-raised outline-offset-0 outline-ink forced-colors:outline-[Highlight]', readOnly],
+		group: ['flex items-center rounded-(--field-radius) bg-(--field-fill) [--bleed:var(--raised-bleed)] pr-1 pl-2.5 shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-0 outline-(color:--field-focus-ring) forced-colors:outline-[Highlight]', readOnly],
 		glass: 'size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted',
-		input: 'min-w-0 flex-1 appearance-none bg-transparent py-1.5 pl-1.5 text-control text-ellipsis text-ink outline-none placeholder:text-muted [&::-webkit-search-cancel-button]:hidden',
+		input: 'min-w-0 flex-1 appearance-none bg-transparent py-(--field-padding-y) pl-1.5 text-control text-ellipsis text-(color:--field-text) outline-none placeholder:text-(color:--field-placeholder) [&::-webkit-search-cancel-button]:hidden',
 		clear: 'flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
 	},
 	variants: {

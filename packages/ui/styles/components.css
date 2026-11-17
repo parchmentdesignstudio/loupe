@@ -160,6 +160,45 @@
 		/* The space between its controls */
 		--toolbar-gap: --spacing(1);
 
+		/* Fields: every box you type or pick in, from a text field to a date picker, so they change together */
+
+		/* Shape */
+
+		/* A field's corners */
+		--field-radius: var(--radius-lg);
+
+		/* Type */
+
+		/* A field's label's weight. Its size is text-control, which every control shares */
+		--field-label-font-weight: 500;
+
+		/* Space */
+
+		/* The padding beside the text */
+		--field-padding-x: --spacing(3);
+		/* The padding above and below the 20px line, so a medium field is 32px tall, as a button is */
+		--field-padding-y: --spacing(1.5);
+		/* A small field's padding beside the text */
+		--field-small-padding-x: --spacing(2.5);
+		/* A small field's padding above and below, so it's 28px tall */
+		--field-small-padding-y: --spacing(1);
+
+		/* Colour */
+
+		/* The box's fill, raised off the page */
+		--field-fill: var(--color-raised);
+		/* What's typed */
+		--field-text: var(--color-ink);
+		/* The hint shown while it's empty */
+		--field-placeholder: var(--color-muted);
+		/* The ring round the field that has focus */
+		--field-focus-ring: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under the box. Transparent makes it flat and keeps its edge */
+		--field-shadow: var(--shadow-raised-color);
+
 		/* Checkbox */
 
 		/* Shape */

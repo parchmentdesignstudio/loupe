@@ -6,17 +6,17 @@ import { composeClassName, tv } from './tv.js';
 // 20px line make it 32px tall. Chrome ignores an input's line if it's no taller than the text, so a 16px line, an
 // icon's, would make it 37px on a touch screen. A field shows its focus however it was focused
 export const textFieldInput = tv({
-	base: ['w-full rounded-lg text-control text-ink outline-offset-0 outline-ink placeholder:text-muted forced-colors:outline-[Highlight]', readOnly],
+	base: ['w-full rounded-(--field-radius) text-control text-(color:--field-text) outline-offset-0 outline-(color:--field-focus-ring) placeholder:text-(color:--field-placeholder) forced-colors:outline-[Highlight]', readOnly],
 	variants: {
 		// Before the states, so invalid's ring and disabled's fill win over them
 		variant: {
-			raised: 'bg-raised shadow-raised',
+			raised: 'bg-(--field-fill) shadow-raised [--shadow-raised-color:var(--field-shadow)]',
 			filled: 'bg-bleed/8 shadow-none',
 		},
 		// The 20px line and this padding make 32px, or 28px when small, as a button's do
 		size: {
-			medium: 'px-3 py-1.5',
-			small: 'px-2.5 py-1',
+			medium: 'px-(--field-padding-x) py-(--field-padding-y)',
+			small: 'px-(--field-small-padding-x) py-(--field-small-padding-y)',
 		},
 		isFocused: {
 			false: 'outline-0',
