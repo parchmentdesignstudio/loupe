@@ -9,8 +9,8 @@ export const aside = tv({
 		// A signpost is the writing's own text, behind the accent's rule, as what the reader needs before they go on.
 		// An afterthought is quieter: a hairline, and muted italic, to read or skip
 		variant: {
-			signpost: 'border-accent text-ink [--rule:2px]',
-			afterthought: 'border-bleed/24 text-muted italic [--rule:1px]',
+			signpost: 'border-(color:--aside-signpost-rule) text-ink [--rule:var(--aside-signpost-rule-width)]',
+			afterthought: 'border-bleed/24 text-(color:--aside-afterthought-text) italic [--rule:var(--aside-afterthought-rule-width)]',
 		},
 	},
 	defaultVariants: { variant: 'signpost' },

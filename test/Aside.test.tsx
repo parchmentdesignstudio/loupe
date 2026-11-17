@@ -21,9 +21,9 @@ describe('Aside', () => {
 			</>,
 		);
 		const [signpost, afterthought] = container.querySelectorAll('aside');
-		expect(signpost.className).toContain('border-accent');
+		expect(signpost.className).toContain('border-(color:--aside-signpost-rule)');
 		expect(afterthought.className).toContain('italic');
-		expect(afterthought.className).toContain('text-muted');
+		expect(afterthought.className).toContain('text-(color:--aside-afterthought-text)');
 	});
 
 	it('sits in prose, with paragraphs inside', async () => {

@@ -101,7 +101,7 @@ function useSlide(ref: RefObject<HTMLDivElement | null>) {
 // On ink, so its tints are paper
 const surface = tv({
 	extend: focusRing,
-	base: 'flex w-[min(22rem,calc(100vw-2rem))] animate-toast-in items-start gap-3 rounded-lg bg-inverse py-3 pr-2 pl-4 text-paper shadow-overlay [--bleed:var(--inverse-bleed)] motion-reduce:animate-fade-in',
+	base: 'flex w-[min(22rem,calc(100vw-2rem))] animate-toast-in items-start gap-3 rounded-(--toast-radius) bg-(--toast-fill) py-3 pr-2 pl-4 text-(color:--toast-text) shadow-overlay [--shadow-overlay-color:var(--toast-shadow)] [--bleed:var(--inverse-bleed)] motion-reduce:animate-fade-in',
 	variants: {
 		isExiting: {
 			true: 'pointer-events-none animate-toast-out motion-reduce:animate-fade-out',
@@ -153,7 +153,7 @@ export function Toast<T>({ children, ...props }: ToastProps<T>) {
 			<ToastContent className="flex min-w-0 flex-1 flex-col gap-0.5">
 				{children ?? (
 					<>
-						<Text slot="title" className="text-body font-medium">
+						<Text slot="title" className="text-body [font-weight:var(--toast-title-font-weight)]">
 							{message.title}
 						</Text>
 						{message.description && (

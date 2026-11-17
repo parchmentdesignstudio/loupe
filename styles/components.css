@@ -267,6 +267,20 @@
 		/* The handle when on, white in both themes */
 		--switch-on-handle: var(--color-white);
 
+		/* Avatar */
+
+		/* Type */
+
+		/* The initials' weight */
+		--avatar-font-weight: 500;
+
+		/* Code */
+
+		/* Shape */
+
+		/* A block's corners */
+		--code-radius: var(--radius-xl);
+
 		/* GridListItem */
 
 		/* Shape */
@@ -347,6 +361,139 @@
 		--tag-selected-fill: var(--color-ink);
 		/* A chosen tag's label */
 		--tag-selected-text: var(--color-paper);
+
+		/* Tones: what alerts, statuses and an avatar's status dot are coloured by, shared so they agree */
+
+		/* Colour */
+
+		/* Nothing to act on, sand */
+		--tone-neutral: var(--color-sand-66);
+		/* Worth knowing, blue */
+		--tone-info: var(--color-blue-56);
+		/* Done or well, green, as an avatar is online */
+		--tone-success: var(--color-green-68);
+		/* Needs a look, yellow, as an avatar is away */
+		--tone-warning: var(--color-yellow-76);
+		/* Gone wrong, red, as an avatar is busy */
+		--tone-danger: var(--color-red-67);
+
+		/* Alert */
+
+		/* Shape */
+
+		/* The box's corners */
+		--alert-radius: var(--radius-lg);
+
+		/* Type */
+
+		/* The title's weight */
+		--alert-title-font-weight: 500;
+
+		/* Space */
+
+		/* The padding round what's in the box */
+		--alert-padding: --spacing(3);
+
+		/* EmptyState */
+
+		/* Shape */
+
+		/* The icon's tile's corners */
+		--empty-state-icon-radius: var(--radius-xl);
+
+		/* Type */
+
+		/* The title's weight */
+		--empty-state-title-font-weight: 500;
+
+		/* Space */
+
+		/* The padding beside it */
+		--empty-state-padding-x: --spacing(6);
+		/* The padding above and below it */
+		--empty-state-padding-y: --spacing(12);
+
+		/* Colour */
+
+		/* The icon's tile, raised off the page */
+		--empty-state-icon-fill: var(--color-raised);
+		/* The icon */
+		--empty-state-icon: var(--color-muted);
+
+		/* ProgressBar */
+
+		/* Space */
+
+		/* The bar's thickness */
+		--progress-bar-height: --spacing(1);
+
+		/* Colour */
+
+		/* How far it's come */
+		--progress-bar-fill: var(--color-ink);
+
+		/* Status */
+
+		/* Type */
+
+		/* A badge's weight */
+		--status-badge-font-weight: 500;
+
+		/* Space */
+
+		/* A badge's padding beside its text */
+		--status-badge-padding-x: --spacing(2);
+		/* A badge's padding above and below, so it's 20px tall on the label's line */
+		--status-badge-padding-y: --spacing(0.5);
+
+		/* Toast */
+
+		/* Shape */
+
+		/* The corners */
+		--toast-radius: var(--radius-lg);
+
+		/* Type */
+
+		/* The title's weight */
+		--toast-title-font-weight: 500;
+
+		/* Colour */
+
+		/* The fill, ink as a surface */
+		--toast-fill: var(--color-inverse);
+		/* The text on it */
+		--toast-text: var(--color-paper);
+
+		/* Shadow */
+
+		/* The shadow's colour under it */
+		--toast-shadow: var(--shadow-overlay-color);
+
+		/* Aside */
+
+		/* Space */
+
+		/* A signpost's rule's width */
+		--aside-signpost-rule-width: 2px;
+		/* An afterthought's rule's width */
+		--aside-afterthought-rule-width: 1px;
+
+		/* Colour */
+
+		/* A signpost's rule, the accent */
+		--aside-signpost-rule: var(--color-accent);
+		/* An afterthought's text */
+		--aside-afterthought-text: var(--color-muted);
+
+		/* Quote */
+
+		/* Type */
+
+		/* The family, Livory, in its italic. A quote in prose takes it too */
+		--quote-font-family: var(--font-serif);
+		/* The size */
+		--quote-font-size: 1.5rem;
 
 		/* Options: each choice in a menu, a select or a combo box, shared so they change together */
 

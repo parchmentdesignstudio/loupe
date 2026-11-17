@@ -92,6 +92,11 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 
 ## Done
 
+- **17 November:** component tokens for the content, the fourth of five waves: Alert, Status, Avatar, Code, Empty state, Progress bar, Toast, Aside and Quote, each starting at the value it had. Alert, Status and Avatar's dots share `--tone-*`, so neutral, info, success, warning and danger change together. Prose reads Link's underline tokens and Quote's type tokens, so a link or a quote in prose matches the component. The empty state, progress bar and meter pages have samples.
+  - **Left out:** the tinted fills and rings mixed from a tone, the progress bar's track and an afterthought's rule, which mix from `--bleed`, and a toast's description, mixed from its text.
+  - **No sample:** Toast, which only shows in its region.
+  - **Still to do:** navigation and the remaining form controls: Breadcrumbs, Disclosure, Navigation, Navigation tree, Calendar, the colour pickers and Drop zone.
+
 - **17 November:** component tokens for the overlays and lists, the third of four waves: Popover, Dialog, Modal, Sheet, Tooltip, Grid list and Table, each starting at the value it had. Menus, selects and combo boxes share `--option-*` for their options, as fields share `--field-*`. Dialog's and Sheet's padding is now `--dialog-padding` on `:root`, with `--dialog-popover-padding` in a popover. The menu, list, popover and dialog pages have samples, drawn in place.
   - **Left out:** hover, selected and pressed fills, and the grid list's and table's lines, which mix from `--bleed`.
   - **No sample:** Modal, Sheet and Tooltip, which only open in a portal.

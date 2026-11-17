@@ -25,6 +25,7 @@ import {
 	DisclosureHeader,
 	DisclosurePanel,
 	DropZone,
+	EmptyState,
 	FileList,
 	FileListItem,
 	GridList,
@@ -34,9 +35,11 @@ import {
 	ListBox,
 	ListBoxItem,
 	MenuItem,
+	Meter,
 	NumberField,
 	Pagination,
 	popover,
+	ProgressBar,
 	ProgressCircle,
 	Quote,
 	Radio,
@@ -201,6 +204,11 @@ export const samples: Partial<Record<string, Sample>> = {
 		</DisclosureGroup>
 	),
 	DropZone: (props) => <DropZone label="Drop files here" className="w-56" {...props} />,
+	EmptyState: (props) => (
+		<EmptyState icon={<Icon name="square-on-square" />} title="No blocks yet" actions={<Button>New block</Button>} className="w-64" {...props}>
+			Blocks you make will show here
+		</EmptyState>
+	),
 	FileListItem: (props) => (
 		<FileList aria-label="Uploads" className="w-64">
 			<FileListItem id="brief" name="brief.pdf" size={482_000} progress={45} errorMessage="The connection dropped" {...props} />
@@ -223,6 +231,7 @@ export const samples: Partial<Record<string, Sample>> = {
 	ListBoxItem: (props) => options(props, 'item'),
 	Menu: (props) => menu(props, 'list'),
 	MenuItem: (props) => menu(props, 'item'),
+	Meter: (props) => <Meter label="Storage" value={72} className="w-48" {...props} />,
 	NumberField: (props) => <NumberField label="Guests" defaultValue={2} className="w-40" {...props} />,
 	Pagination: (props) => <Pagination page={2} count={5} onChange={() => {}} {...props} />,
 	Popover: (props) => (
@@ -230,6 +239,7 @@ export const samples: Partial<Record<string, Sample>> = {
 			Shared with three people
 		</div>
 	),
+	ProgressBar: (props) => <ProgressBar label="Uploading" value={64} className="w-48" {...props} />,
 	ProgressCircle: (props) => <ProgressCircle aria-label="Uploading" value={64} {...props} />,
 	Quote: (props) => (
 		<Quote cite={people[0].name} detail="Founder, Rothbury" avatar={people[0].src} className="w-72" {...props}>

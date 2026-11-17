@@ -40,13 +40,14 @@
 		:where(h6) {
 			color: var(--color-muted);
 		}
+		/* A link as Link draws one, from its tokens */
 		:where(a) {
 			text-decoration: underline;
-			text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
-			text-underline-offset: 2px;
+			text-decoration-color: var(--link-underline);
+			text-underline-offset: var(--link-underline-offset);
 		}
 		:where(a:hover) {
-			text-decoration-color: currentColor;
+			text-decoration-color: var(--link-hover-underline);
 		}
 		:where(strong, b) {
 			font-weight: 500;
@@ -193,8 +194,8 @@
 	   A Quote in prose is left out of prose's blockquote rules, so its own blockquote doesn't take a second mark */
 	.prose :where(blockquote:not(.quote > *)),
 	.quote {
-		font-family: var(--font-serif);
-		font-size: 1.5rem;
+		font-family: var(--quote-font-family);
+		font-size: var(--quote-font-size);
 		font-style: italic;
 		line-height: 1.2;
 		text-align: center;

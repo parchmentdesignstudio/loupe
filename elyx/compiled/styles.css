@@ -641,6 +641,8 @@
     --switch-on-fill: var(--color-green-68);
     --switch-handle: var(--color-knob);
     --switch-on-handle: var(--color-white);
+    --avatar-font-weight: 500;
+    --code-radius: var(--radius-xl);
     --grid-list-item-radius: var(--radius-lg);
     --grid-list-item-padding-x: calc(var(--spacing) * 3);
     --grid-list-item-padding-y: calc(var(--spacing) * 1.5);
@@ -661,6 +663,36 @@
     --tag-padding-y: var(--spacing);
     --tag-selected-fill: var(--color-ink);
     --tag-selected-text: var(--color-paper);
+    --tone-neutral: var(--color-sand-66);
+    --tone-info: var(--color-blue-56);
+    --tone-success: var(--color-green-68);
+    --tone-warning: var(--color-yellow-76);
+    --tone-danger: var(--color-red-67);
+    --alert-radius: var(--radius-lg);
+    --alert-title-font-weight: 500;
+    --alert-padding: calc(var(--spacing) * 3);
+    --empty-state-icon-radius: var(--radius-xl);
+    --empty-state-title-font-weight: 500;
+    --empty-state-padding-x: calc(var(--spacing) * 6);
+    --empty-state-padding-y: calc(var(--spacing) * 12);
+    --empty-state-icon-fill: var(--color-raised);
+    --empty-state-icon: var(--color-muted);
+    --progress-bar-height: var(--spacing);
+    --progress-bar-fill: var(--color-ink);
+    --status-badge-font-weight: 500;
+    --status-badge-padding-x: calc(var(--spacing) * 2);
+    --status-badge-padding-y: calc(var(--spacing) * .5);
+    --toast-radius: var(--radius-lg);
+    --toast-title-font-weight: 500;
+    --toast-fill: var(--color-inverse);
+    --toast-text: var(--color-paper);
+    --toast-shadow: var(--shadow-overlay-color);
+    --aside-signpost-rule-width: 2px;
+    --aside-afterthought-rule-width: 1px;
+    --aside-signpost-rule: var(--color-accent);
+    --aside-afterthought-text: var(--color-muted);
+    --quote-font-family: var(--font-serif);
+    --quote-font-size: 1.5rem;
     --option-radius: var(--radius-sm);
     --option-selected-font-weight: 500;
     --option-list-padding: var(--spacing);
@@ -759,14 +791,16 @@
 
   .prose :where(a) {
     text-decoration: underline;
-    -webkit-text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
-    -webkit-text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
-    text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
-    text-underline-offset: 2px;
+    -webkit-text-decoration-color: var(--link-underline);
+    -webkit-text-decoration-color: var(--link-underline);
+    text-decoration-color: var(--link-underline);
+    text-underline-offset: var(--link-underline-offset);
   }
 
   .prose :where(a:hover) {
-    text-decoration-color: currentColor;
+    -webkit-text-decoration-color: var(--link-hover-underline);
+    -webkit-text-decoration-color: var(--link-hover-underline);
+    text-decoration-color: var(--link-hover-underline);
   }
 
   .prose :where(strong, b) {
@@ -940,10 +974,10 @@
   }
 
   .prose :where(blockquote:not(.quote > *)), .quote {
-    font-family: var(--font-serif);
+    font-family: var(--quote-font-family);
+    font-size: var(--quote-font-size);
     text-align: center;
     text-wrap: balance;
-    font-size: 1.5rem;
     font-style: italic;
     line-height: 1.2;
   }
@@ -1387,6 +1421,10 @@
 
   .h-\(--disclosure-panel-height\) {
     height: var(--disclosure-panel-height);
+  }
+
+  .h-\(--progress-bar-height\) {
+    height: var(--progress-bar-height);
   }
 
   .h-0 {
@@ -1946,6 +1984,10 @@
     border-radius: .25rem;
   }
 
+  .rounded-\(--alert-radius\) {
+    border-radius: var(--alert-radius);
+  }
+
   .rounded-\(--avatar-radius\) {
     border-radius: var(--avatar-radius);
   }
@@ -1968,6 +2010,14 @@
 
   .rounded-\(--chip-small-radius\) {
     border-radius: var(--chip-small-radius);
+  }
+
+  .rounded-\(--code-radius\) {
+    border-radius: var(--code-radius);
+  }
+
+  .rounded-\(--empty-state-icon-radius\) {
+    border-radius: var(--empty-state-icon-radius);
   }
 
   .rounded-\(--field-radius\) {
@@ -2024,6 +2074,10 @@
 
   .rounded-\(--tag-radius\) {
     border-radius: var(--tag-radius);
+  }
+
+  .rounded-\(--toast-radius\) {
+    border-radius: var(--toast-radius);
   }
 
   .rounded-\(--toggle-button-group-radius\) {
@@ -2125,6 +2179,10 @@
     border-color: var(--grid-list-item-selected-edge);
   }
 
+  .border-\(color\:--aside-signpost-rule\) {
+    border-color: var(--aside-signpost-rule);
+  }
+
   .border-accent {
     border-color: var(--color-accent);
   }
@@ -2177,6 +2235,10 @@
     background-color: var(--dialog-actions-fill);
   }
 
+  .bg-\(--empty-state-icon-fill\) {
+    background-color: var(--empty-state-icon-fill);
+  }
+
   .bg-\(--field-fill\) {
     background-color: var(--field-fill);
   }
@@ -2195,6 +2257,10 @@
 
   .bg-\(--popover-fill\) {
     background-color: var(--popover-fill);
+  }
+
+  .bg-\(--progress-bar-fill\) {
+    background-color: var(--progress-bar-fill);
   }
 
   .bg-\(--radio-dot\) {
@@ -2247,6 +2313,22 @@
 
   .bg-\(--tag-selected-fill\) {
     background-color: var(--tag-selected-fill);
+  }
+
+  .bg-\(--toast-fill\) {
+    background-color: var(--toast-fill);
+  }
+
+  .bg-\(--tone-danger\) {
+    background-color: var(--tone-danger);
+  }
+
+  .bg-\(--tone-success\) {
+    background-color: var(--tone-success);
+  }
+
+  .bg-\(--tone-warning\) {
+    background-color: var(--tone-warning);
   }
 
   .bg-\(--tooltip-fill\) {
@@ -2529,6 +2611,10 @@
     padding-inline: var(--dialog-padding);
   }
 
+  .px-\(--empty-state-padding-x\) {
+    padding-inline: var(--empty-state-padding-x);
+  }
+
   .px-\(--field-padding-x\) {
     padding-inline: var(--field-padding-x);
   }
@@ -2547,6 +2633,10 @@
 
   .px-\(--option-padding-x\) {
     padding-inline: var(--option-padding-x);
+  }
+
+  .px-\(--status-badge-padding-x\) {
+    padding-inline: var(--status-badge-padding-x);
   }
 
   .px-\(--table-cell-padding-x\) {
@@ -2605,6 +2695,10 @@
     padding-inline: round(.307692em, 1px);
   }
 
+  .py-\(--alert-padding\) {
+    padding-block: var(--alert-padding);
+  }
+
   .py-\(--button-padding-y\) {
     padding-block: var(--button-padding-y);
   }
@@ -2625,6 +2719,10 @@
     padding-block: var(--chip-small-padding-y);
   }
 
+  .py-\(--empty-state-padding-y\) {
+    padding-block: var(--empty-state-padding-y);
+  }
+
   .py-\(--field-padding-y\) {
     padding-block: var(--field-padding-y);
   }
@@ -2643,6 +2741,10 @@
 
   .py-\(--option-padding-y\) {
     padding-block: var(--option-padding-y);
+  }
+
+  .py-\(--status-badge-padding-y\) {
+    padding-block: var(--status-badge-padding-y);
   }
 
   .py-\(--table-cell-padding-y\) {
@@ -2689,6 +2791,10 @@
     padding-block: calc(var(--spacing) * 12);
   }
 
+  .ps-\(--alert-padding\) {
+    padding-inline-start: var(--alert-padding);
+  }
+
   .ps-3 {
     padding-inline-start: calc(var(--spacing) * 3);
   }
@@ -2699,6 +2805,10 @@
 
   .ps-\[calc\(--spacing\(4\)-var\(--rule\)\)\] {
     padding-inline-start: calc(calc(var(--spacing) * 4) - var(--rule));
+  }
+
+  .pe-\(--alert-padding\) {
+    padding-inline-end: var(--alert-padding);
   }
 
   .pe-1 {
@@ -2912,12 +3022,28 @@
     font-weight: var(--font-weight-normal);
   }
 
+  .\[font-weight\:var\(--alert-title-font-weight\)\] {
+    font-weight: var(--alert-title-font-weight);
+  }
+
+  .\[font-weight\:var\(--avatar-font-weight\)\] {
+    font-weight: var(--avatar-font-weight);
+  }
+
   .\[font-weight\:var\(--button-font-weight\)\] {
     font-weight: var(--button-font-weight);
   }
 
+  .\[font-weight\:var\(--empty-state-title-font-weight\)\] {
+    font-weight: var(--empty-state-title-font-weight);
+  }
+
   .\[font-weight\:var\(--field-label-font-weight\)\] {
     font-weight: var(--field-label-font-weight);
+  }
+
+  .\[font-weight\:var\(--status-badge-font-weight\)\] {
+    font-weight: var(--status-badge-font-weight);
   }
 
   .\[font-weight\:var\(--tab-font-weight\)\] {
@@ -2926,6 +3052,10 @@
 
   .\[font-weight\:var\(--table-column-font-weight\)\] {
     font-weight: var(--table-column-font-weight);
+  }
+
+  .\[font-weight\:var\(--toast-title-font-weight\)\] {
+    font-weight: var(--toast-title-font-weight);
   }
 
   .\[font-weight\:var\(--toggle-button-group-font-weight\)\] {
@@ -2960,6 +3090,10 @@
     color: var(--alert-icon);
   }
 
+  .text-\(color\:--aside-afterthought-text\) {
+    color: var(--aside-afterthought-text);
+  }
+
   .text-\(color\:--avatar-text\) {
     color: var(--avatar-text);
   }
@@ -2982,6 +3116,10 @@
 
   .text-\(color\:--chip-text\) {
     color: var(--chip-text);
+  }
+
+  .text-\(color\:--empty-state-icon\) {
+    color: var(--empty-state-icon);
   }
 
   .text-\(color\:--field-placeholder\) {
@@ -3018,6 +3156,10 @@
 
   .text-\(color\:--tag-selected-text\) {
     color: var(--tag-selected-text);
+  }
+
+  .text-\(color\:--toast-text\) {
+    color: var(--toast-text);
   }
 
   .text-\(color\:--toggle-button-group-raised-chosen-text\) {
@@ -3536,6 +3678,26 @@
     --alert: var(--color-yellow-76);
   }
 
+  .\[--alert\:var\(--tone-danger\)\] {
+    --alert: var(--tone-danger);
+  }
+
+  .\[--alert\:var\(--tone-info\)\] {
+    --alert: var(--tone-info);
+  }
+
+  .\[--alert\:var\(--tone-neutral\)\] {
+    --alert: var(--tone-neutral);
+  }
+
+  .\[--alert\:var\(--tone-success\)\] {
+    --alert: var(--tone-success);
+  }
+
+  .\[--alert\:var\(--tone-warning\)\] {
+    --alert: var(--tone-warning);
+  }
+
   .\[--avatar-dot\:6px\] {
     --avatar-dot: 6px;
   }
@@ -3736,6 +3898,14 @@
     --rule: 2px;
   }
 
+  .\[--rule\:var\(--aside-afterthought-rule-width\)\] {
+    --rule: var(--aside-afterthought-rule-width);
+  }
+
+  .\[--rule\:var\(--aside-signpost-rule-width\)\] {
+    --rule: var(--aside-signpost-rule-width);
+  }
+
   .\[--shadow-overlay-color\:var\(--modal-shadow\)\] {
     --shadow-overlay-color: var(--modal-shadow);
   }
@@ -3746,6 +3916,10 @@
 
   .\[--shadow-overlay-color\:var\(--sheet-shadow\)\] {
     --shadow-overlay-color: var(--sheet-shadow);
+  }
+
+  .\[--shadow-overlay-color\:var\(--toast-shadow\)\] {
+    --shadow-overlay-color: var(--toast-shadow);
   }
 
   .\[--shadow-raised-color\:transparent\] {
@@ -3794,6 +3968,26 @@
 
   .\[--status\:var\(--color-yellow-76\)\] {
     --status: var(--color-yellow-76);
+  }
+
+  .\[--status\:var\(--tone-danger\)\] {
+    --status: var(--tone-danger);
+  }
+
+  .\[--status\:var\(--tone-info\)\] {
+    --status: var(--tone-info);
+  }
+
+  .\[--status\:var\(--tone-neutral\)\] {
+    --status: var(--tone-neutral);
+  }
+
+  .\[--status\:var\(--tone-success\)\] {
+    --status: var(--tone-success);
+  }
+
+  .\[--status\:var\(--tone-warning\)\] {
+    --status: var(--tone-warning);
   }
 
   .\[--table-fill\:var\(--table-flush-fill\)\] {
