@@ -12,7 +12,7 @@ export function details() {
 	let root = '';
 	let packages = [];
 	let data;
-	const concerns = (file) => file === join(ui, 'tokens.css') || (/\.tsx?$/.test(file) && packages.some((dir) => file.startsWith(join(dir, 'src') + sep)));
+	const concerns = (file) => file.startsWith(join(ui, 'styles') + sep) || (/\.tsx?$/.test(file) && packages.some((dir) => file.startsWith(join(dir, 'src') + sep)));
 	return {
 		name: 'details',
 		configResolved(config) {
@@ -178,7 +178,7 @@ function variantsOf(source, node) {
 // isFocusVisible → focus-visible
 const stateOf = (variant) => variant.slice(2).replace(/[A-Z]/g, (letter, at) => (at ? '-' : '') + letter.toLowerCase());
 
-// tokens.css’s theme, by kind, each name with its value
+// The theme, by kind, each name with its value
 const kinds = { color: 'colours', text: 'text', font: 'fonts', shadow: 'shadows', radius: 'corners', animate: 'animations' };
 function themeOf(path) {
 	const theme = Object.fromEntries(Object.values(kinds).map((kind) => [kind, new Map()]));
@@ -200,9 +200,13 @@ function themeOf(path) {
 	return theme;
 }
 
-// What tokens.css sets each custom property to, and where, as --color-ink is light-dark(var(--color-pine-26), var(--color-cream-95))
-function declarationsOf(path, root) {
-	const declarations = new Map();
+// What the styles set each custom property to, and where, as --color-ink is light-dark(var(--color-pine-26), var(--color-cream-95))
+function declarationsOf(paths, root, declarations = new Map()) {
+	if (Array.isArray(paths)) {
+		for (const path of paths) declarationsOf(path, root, declarations);
+		return declarations;
+	}
+	const path = paths;
 	if (!existsSync(path)) return declarations;
 	// Comments are blanked rather than cut, so an offset still finds its line
 	const css = readFileSync(path, 'utf8').replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '));
@@ -267,23 +271,22 @@ function chainOf(value, declarations) {
 	return { chain: chain.map((token) => `--${token}`), utility: themeUtility(chain[0]), steps };
 }
 
-// Each component's own tokens, from the base layer's block at the end of tokens.css: a heading on its own line, as
+// Each component's own tokens, from styles/components.css: a heading on its own line, as
 // Shape, groups the tokens under it, and the comment right above a token says what it changes. Keyed by component,
 // as --button-radius is Button's, and --toggle-button-group-radius ToggleButtonGroup's rather than ToggleButton's
 const kebab = (name) => name.replace(/(?<!^)([A-Z])/g, '-$1').toLowerCase();
-function componentTokensOf(path, root, names) {
+function componentTokensOf(path, theme, root, names) {
 	const owners = names.map((name) => [kebab(name), name]).toSorted(([a], [b]) => b.length - a.length);
 	const tokens = {};
-	const declarations = declarationsOf(path, root);
+	const declarations = declarationsOf([theme, path], root);
 	if (!existsSync(path)) return tokens;
 	const css = readFileSync(path, 'utf8');
-	const block = css.lastIndexOf('/* Component tokens');
-	if (block === -1) return tokens;
+	const block = css.indexOf('/*');
 	const source = { file: relative(root, path).split(sep).join('/'), lines: [0] };
 	for (let at = css.indexOf('\n'); at !== -1; at = css.indexOf('\n', at + 1)) source.lines.push(at + 1);
 	let group = '';
 	let doc = '';
-	// Skip the block's own comment, then read comments and declarations in turn
+	// Skip the file's own comment, then read comments and declarations in turn
 	const body = css.indexOf('*/', block) + 2;
 	for (const match of css.slice(body).matchAll(/\/\*([\s\S]*?)\*\/(\s*)|--([\w-]+)\s*:\s*([^;]+);/g)) {
 		if (match[1] !== undefined) {
@@ -318,7 +321,7 @@ function sidesOf(value) {
 	return [value];
 }
 
-// Each colour token, with the role it stands for: where tokens.css sets it, and to what in the light and the dark
+// Each colour token, with the role it stands for: where the theme sets it, and to what in the light and the dark
 function coloursOf(theme, path, root) {
 	const declarations = declarationsOf(path, root);
 	return Object.fromEntries(
@@ -337,7 +340,7 @@ function coloursOf(theme, path, root) {
 	);
 }
 
-// Each size and family, for the typography page: what tokens.css sets it to, and where
+// Each size and family, for the typography page: what the theme sets it to, and where
 function typographyOf(theme, path, root) {
 	const declarations = declarationsOf(path, root);
 	const sizes = [...theme.text.keys()].map((name) => {
@@ -395,7 +398,8 @@ function fill(props, defaults) {
 }
 
 function read(root, ui, packages) {
-	const theme = themeOf(join(ui, 'tokens.css'));
+	const sheet = join(ui, 'styles', 'theme.css');
+	const theme = themeOf(sheet);
 	const packageName = JSON.parse(readFileSync(join(ui, 'package.json'), 'utf8')).name;
 	const library = new Map();
 	for (const path of filesIn(join(ui, 'src'))) {
@@ -627,5 +631,5 @@ function read(root, ui, packages) {
 		detail.uses.sort((a, b) => (a.project === own) - (b.project === own) || a.project.localeCompare(b.project) || a.path.localeCompare(b.path) || a.line - b.line);
 	}
 
-	return { project: own, components, colours: coloursOf(theme, join(ui, 'tokens.css'), root), type: typographyOf(theme, join(ui, 'tokens.css'), root), componentTokens: componentTokensOf(join(ui, 'tokens.css'), root, Object.keys(components)) };
+	return { project: own, components, colours: coloursOf(theme, sheet, root), type: typographyOf(theme, sheet, root), componentTokens: componentTokensOf(join(ui, 'styles', 'components.css'), sheet, root, Object.keys(components)) };
 }

@@ -1,0 +1,312 @@
+/* Component tokens: the few choices on each component that a site may want to restyle, named --component-what. Each
+   starts at a value from theme.css, so they agree until one is changed, and sets no value of its own the theme could
+   hold. Set one on :root to restyle every button, or on an element to restyle the buttons inside it. In the base
+   layer, so a site's own :root wins without !important.
+
+   Components come in the preview sidebar's order. A heading on its own line names a component, then groups its tokens
+   as Shape, Type, Space, Colour, Shadow and Motion, in that order, and the line above each token says what it changes.
+   A fill mixed from --bleed stays in its component, as one set here would take the bleed of :root, not its layer's */
+@layer base {
+	:root {
+		/* Button */
+
+		/* Shape */
+
+		/* The corners. Inside a rounded box, the box's radius less the gap round the button, so the two sit concentric */
+		--button-radius: var(--radius-lg);
+
+		/* Type */
+
+		/* The label's weight. Its size is text-control, which every control shares */
+		--button-font-weight: 500;
+
+		/* Space */
+
+		/* The padding beside an icon. A label brings 4px of its own, more as the text grows, so beside text it's that much more */
+		--button-padding-x: --spacing(2);
+		/* The padding above and below the 20px line, so a medium button is 32px tall */
+		--button-padding-y: --spacing(1.5);
+		/* A small button's padding beside an icon */
+		--button-small-padding-x: --spacing(1.5);
+		/* A small button's padding above and below, so it's 28px tall */
+		--button-small-padding-y: --spacing(1);
+
+		/* Colour */
+
+		/* Primary's fill, marigold */
+		--button-primary-fill: var(--color-primary);
+		/* The text on primary, ink */
+		--button-primary-text: var(--color-on-primary);
+		/* Quiet's fill, slate */
+		--button-quiet-fill: var(--color-quiet);
+		/* The text on quiet, ink */
+		--button-quiet-text: var(--color-on-quiet);
+		/* Danger's fill, red in both themes */
+		--button-danger-fill: var(--color-red-50);
+		/* The text on danger, white in both themes */
+		--button-danger-text: var(--color-white);
+
+		/* Shadow */
+
+		/* The shadow's colour under a raised button, which grows on hover. Transparent makes it flat and keeps its edge */
+		--button-shadow: var(--shadow-raised-color);
+
+		/* Motion */
+
+		/* How small the contents press to */
+		--button-press-scale: 0.95;
+
+		/* Chip */
+
+		/* Shape */
+
+		/* A large chip's corners, the default, as a button's */
+		--chip-radius: var(--radius-lg);
+		/* A medium chip's corners */
+		--chip-medium-radius: var(--radius-md);
+		/* A small chip's corners */
+		--chip-small-radius: var(--radius-md);
+
+		/* Space */
+
+		/* A large chip's padding beside its label */
+		--chip-padding-x: --spacing(3);
+		/* A large chip's padding above and below the 20px line, so it's 32px tall */
+		--chip-padding-y: --spacing(1.5);
+		/* A medium chip's padding beside its label */
+		--chip-medium-padding-x: --spacing(2);
+		/* A medium chip's padding above and below the 16px line, so it's 24px tall */
+		--chip-medium-padding-y: --spacing(1);
+		/* A small chip's padding beside its label */
+		--chip-small-padding-x: --spacing(1.5);
+		/* A small chip's padding above and below, so it's 20px tall */
+		--chip-small-padding-y: --spacing(0.5);
+
+		/* Colour */
+
+		/* The fill, raised off the page */
+		--chip-fill: var(--color-raised);
+		/* The fill on hover */
+		--chip-hover-fill: var(--color-surface);
+		/* The label's colour */
+		--chip-text: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under a chip. Transparent makes it flat and keeps its edge */
+		--chip-shadow: var(--shadow-raised-color);
+
+		/* Motion */
+
+		/* How small a chip presses to */
+		--chip-press-scale: 0.97;
+
+		/* Keyboard */
+
+		/* Shape */
+
+		/* A raised key's corners */
+		--keyboard-radius: var(--radius-sm);
+
+		/* Space */
+
+		/* The padding beside a raised key's characters */
+		--keyboard-padding-x: --spacing(1.5);
+		/* The padding above and below a raised key's characters, which keeps it close to the line it sits in */
+		--keyboard-padding-y: --spacing(0.25);
+
+		/* Colour */
+
+		/* A raised key's fill */
+		--keyboard-fill: var(--color-raised);
+		/* A raised key's characters */
+		--keyboard-text: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under a raised key. Transparent makes it flat and keeps its edge */
+		--keyboard-shadow: var(--shadow-raised-color);
+
+		/* ToggleButtonGroup */
+
+		/* Shape */
+
+		/* The track's corners. Each button's are these less the inset, so the two sit concentric */
+		--toggle-button-group-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The track's padding round its buttons */
+		--toggle-button-group-inset: --spacing(0.75);
+
+		/* Type */
+
+		/* The buttons' weight */
+		--toggle-button-group-font-weight: 500;
+
+		/* Colour */
+
+		/* The fill that marks the chosen button in a well */
+		--toggle-button-group-chosen-fill: var(--color-chosen);
+		/* The tint on each chosen button in a raised group, pink */
+		--toggle-button-group-raised-chosen-fill: var(--color-chosen-tint);
+		/* A chosen button's text in a raised group */
+		--toggle-button-group-raised-chosen-text: var(--color-on-chosen-tint);
+
+		/* Toolbar */
+
+		/* Space */
+
+		/* The space between its controls */
+		--toolbar-gap: --spacing(1);
+
+		/* Checkbox */
+
+		/* Shape */
+
+		/* The box's corners */
+		--checkbox-radius: var(--radius-md);
+
+		/* Colour */
+
+		/* The box's fill, raised off the page */
+		--checkbox-fill: var(--color-raised);
+		/* The tick and the dash */
+		--checkbox-mark: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under the box. Transparent makes it flat and keeps its edge */
+		--checkbox-shadow: var(--shadow-raised-color);
+
+		/* Motion */
+
+		/* How small the box presses to */
+		--checkbox-press-scale: 0.9;
+
+		/* Radio */
+
+		/* Colour */
+
+		/* The circle's fill, raised off the page */
+		--radio-fill: var(--color-raised);
+		/* The dot in a chosen circle */
+		--radio-dot: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under the circle. Transparent makes it flat and keeps its edge */
+		--radio-shadow: var(--shadow-raised-color);
+
+		/* Motion */
+
+		/* How small the circle presses to */
+		--radio-press-scale: 0.9;
+
+		/* Slider */
+
+		/* Colour */
+
+		/* The rail up to the thumb */
+		--slider-fill: var(--color-ink);
+		/* The thumb */
+		--slider-thumb: var(--color-knob);
+
+		/* Switch */
+
+		/* Shape */
+
+		/* The track's corners, when its shape is rounded. The handle's are 2px less, so the two sit concentric */
+		--switch-radius: var(--radius-lg);
+
+		/* Colour */
+
+		/* The track when on, the green a success status uses */
+		--switch-on-fill: var(--color-green-68);
+		/* The handle when off */
+		--switch-handle: var(--color-knob);
+		/* The handle when on, white in both themes */
+		--switch-on-handle: var(--color-white);
+
+		/* Swatch */
+
+		/* Shape */
+
+		/* A large swatch's corners, the default */
+		--swatch-radius: var(--radius-lg);
+		/* A medium swatch's corners */
+		--swatch-medium-radius: var(--radius-md);
+		/* A small swatch's corners, which keep it a square at 12px */
+		--swatch-small-radius: 3px;
+
+		/* Tag */
+
+		/* Shape */
+
+		/* A tag's corners */
+		--tag-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The padding beside a tag's label */
+		--tag-padding-x: --spacing(2);
+		/* The padding above and below the 16px line, so a tag is 24px tall */
+		--tag-padding-y: --spacing(1);
+
+		/* Colour */
+
+		/* A chosen tag's fill */
+		--tag-selected-fill: var(--color-ink);
+		/* A chosen tag's label */
+		--tag-selected-text: var(--color-paper);
+
+		/* Link */
+
+		/* Space */
+
+		/* How far the underline sits below the text */
+		--link-underline-offset: 2px;
+
+		/* Colour */
+
+		/* The underline, a faint ink so the words lead */
+		--link-underline: color-mix(in oklab, var(--color-ink) 32%, transparent);
+		/* The underline on hover, full ink */
+		--link-hover-underline: var(--color-ink);
+
+		/* Pagination */
+
+		/* Shape */
+
+		/* The current page's corners, as a button's */
+		--pagination-current-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The space between the pages */
+		--pagination-gap: --spacing(1);
+
+		/* TabList */
+
+		/* Space */
+
+		/* The space between tabs in a row */
+		--tab-list-gap: --spacing(6);
+
+		/* Tab */
+
+		/* Type */
+
+		/* A tab's weight. Its size is text-control, which every control shares */
+		--tab-font-weight: 500;
+
+		/* Colour */
+
+		/* A tab's label */
+		--tab-text: var(--color-muted);
+		/* The chosen tab's label, and any tab's on hover */
+		--tab-selected-text: var(--color-ink);
+		/* The bar under the chosen tab */
+		--tab-indicator: var(--color-ink);
+	}
+}

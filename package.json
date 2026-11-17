@@ -8,6 +8,7 @@
   ],
   "files": [
     "lib",
+    "styles",
     "tokens.css"
   ],
   "exports": {

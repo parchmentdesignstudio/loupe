@@ -1,6 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { parseColor } from 'react-aria-components';
-import tokens from '../tokens.css?raw';
+import tokens from '../styles/theme.css?raw';
 import { Button, ColorPicker, ListBoxItem, Select, Slider } from '../src/index.js';
 
 // A theme to try the library in, kept in the browser. It writes over the tokens on :root, so it reaches every page and
@@ -26,10 +26,10 @@ const typefaces: { id: Typeface; name: string; stack?: string }[] = [
 	{ id: 'mono', name: 'Mono', stack: 'var(--font-mono)' },
 ];
 
-// The tokens as tokens.css has them, so each override works from the real value
+// The tokens as styles/theme.css has them, so each override works from the real value
 const oklchOf = (name: string) => {
 	const match = new RegExp(`--color-${name}:\\s*oklch\\(([\\d.]+) ([\\d.]+) ([\\d.]+)\\)`).exec(tokens);
-	if (!match) throw new Error(`No --color-${name} in tokens.css`);
+	if (!match) throw new Error(`No --color-${name} in styles/theme.css`);
 	return match.slice(1).map(Number) as [number, number, number];
 };
 // The neutrals: pine for ink and the dark layers, linen and cream for the light ones, and umber under them

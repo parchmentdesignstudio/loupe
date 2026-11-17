@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
-import tokens from '../tokens.css?raw';
+import tokens from '../styles/theme.css?raw';
 
-// The palette’s hexes, read from tokens.css so the colour page shows what the CSS sets. The sums are the ones
+// The palette’s hexes, read from styles/theme.css so the colour page shows what the CSS sets. The sums are the ones
 // scripts/elyx-tokens.mjs uses, so a hex here is the hex Elyx has
 const channel = (x: number) => Math.round(Math.min(1, Math.max(0, x <= 0.0031308 ? 12.92 * x : 1.055 * x ** (1 / 2.4) - 0.055)) * 255);
 
@@ -29,6 +29,6 @@ const palette = new Map(
 /** A palette colour’s hex, such as #0c2920 for pine-26 */
 export function hexOf(name: string) {
 	const value = palette.get(name);
-	if (!value) throw new Error(`--color-${name} isn’t in tokens.css`);
+	if (!value) throw new Error(`--color-${name} isn’t in styles/theme.css`);
 	return value;
 }

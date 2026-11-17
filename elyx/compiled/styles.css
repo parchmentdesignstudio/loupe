@@ -485,6 +485,14 @@
     display: none !important;
   }
 
+  @media (color-gamut: p3) {
+    :root {
+      --color-jade-49: oklch(49% .12 175);
+      --color-cyan-50: oklch(50% .15 206);
+      --color-sky-52: oklch(52% .15 238);
+    }
+  }
+
   :root {
     color-scheme: light dark;
     --ground-bleed: var(--color-linen-30);
@@ -509,6 +517,22 @@
     :root {
       --text-control: 1rem;
     }
+  }
+
+  [data-placement="bottom"] {
+    --enter-y: -4px;
+  }
+
+  [data-placement="top"] {
+    --enter-y: 4px;
+  }
+
+  [data-placement="left"] {
+    --enter-x: 4px;
+  }
+
+  [data-placement="right"] {
+    --enter-x: -4px;
   }
 
   [data-code-theme="iamsteve"] {
@@ -547,30 +571,6 @@
     --color-code-add-edge: var(--color-code-string);
     --color-code-remove: oklch(62% .15 29.7 / .16);
     --color-code-remove-edge: var(--color-code-constant);
-  }
-
-  [data-placement="bottom"] {
-    --enter-y: -4px;
-  }
-
-  [data-placement="top"] {
-    --enter-y: 4px;
-  }
-
-  [data-placement="left"] {
-    --enter-x: 4px;
-  }
-
-  [data-placement="right"] {
-    --enter-x: -4px;
-  }
-
-  @media (color-gamut: p3) {
-    :root {
-      --color-jade-49: oklch(49% .12 175);
-      --color-cyan-50: oklch(50% .15 206);
-      --color-sky-52: oklch(52% .15 238);
-    }
   }
 
   :root {
@@ -615,9 +615,6 @@
     --toggle-button-group-raised-chosen-fill: var(--color-chosen-tint);
     --toggle-button-group-raised-chosen-text: var(--color-on-chosen-tint);
     --toolbar-gap: var(--spacing);
-    --link-underline-offset: 2px;
-    --link-underline: color-mix(in oklab, var(--color-ink) 32%, transparent);
-    --link-hover-underline: var(--color-ink);
     --checkbox-radius: var(--radius-md);
     --checkbox-fill: var(--color-raised);
     --checkbox-mark: var(--color-ink);
@@ -627,27 +624,30 @@
     --radio-dot: var(--color-ink);
     --radio-shadow: var(--shadow-raised-color);
     --radio-press-scale: .9;
+    --slider-fill: var(--color-ink);
+    --slider-thumb: var(--color-knob);
     --switch-radius: var(--radius-lg);
     --switch-on-fill: var(--color-green-68);
     --switch-handle: var(--color-knob);
     --switch-on-handle: var(--color-white);
-    --slider-fill: var(--color-ink);
-    --slider-thumb: var(--color-knob);
-    --tab-list-gap: calc(var(--spacing) * 6);
-    --tab-font-weight: 500;
-    --tab-text: var(--color-muted);
-    --tab-selected-text: var(--color-ink);
-    --tab-indicator: var(--color-ink);
+    --swatch-radius: var(--radius-lg);
+    --swatch-medium-radius: var(--radius-md);
+    --swatch-small-radius: 3px;
     --tag-radius: var(--radius-lg);
     --tag-padding-x: calc(var(--spacing) * 2);
     --tag-padding-y: var(--spacing);
     --tag-selected-fill: var(--color-ink);
     --tag-selected-text: var(--color-paper);
+    --link-underline-offset: 2px;
+    --link-underline: color-mix(in oklab, var(--color-ink) 32%, transparent);
+    --link-hover-underline: var(--color-ink);
     --pagination-current-radius: var(--radius-lg);
     --pagination-gap: var(--spacing);
-    --swatch-radius: var(--radius-lg);
-    --swatch-medium-radius: var(--radius-md);
-    --swatch-small-radius: 3px;
+    --tab-list-gap: calc(var(--spacing) * 6);
+    --tab-font-weight: 500;
+    --tab-text: var(--color-muted);
+    --tab-selected-text: var(--color-ink);
+    --tab-indicator: var(--color-ink);
   }
 
   body {
@@ -1957,10 +1957,6 @@
     border-radius: var(--radius-3xl);
   }
 
-  .rounded-\[3px\] {
-    border-radius: 3px;
-  }
-
   .rounded-\[calc\(var\(--switch-radius\)-2px\)\] {
     border-radius: calc(var(--switch-radius) - 2px);
   }
@@ -2244,10 +2240,6 @@
     background-color: var(--color-inverse);
   }
 
-  .bg-knob {
-    background-color: var(--color-knob);
-  }
-
   .bg-muted {
     background-color: var(--color-muted);
   }
@@ -2274,10 +2266,6 @@
 
   .bg-transparent {
     background-color: #0000;
-  }
-
-  .bg-white {
-    background-color: var(--color-white);
   }
 
   .bg-yellow-76 {
@@ -2926,24 +2914,8 @@
     text-decoration-color: var(--underline);
   }
 
-  .decoration-ink {
-    -webkit-text-decoration-color: var(--color-ink);
-    -webkit-text-decoration-color: var(--color-ink);
-    text-decoration-color: var(--color-ink);
-  }
-
-  .decoration-ink\/32 {
-    -webkit-text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
-    -webkit-text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
-    text-decoration-color: color-mix(in oklab, var(--color-ink) 32%, transparent);
-  }
-
   .underline-offset-\(--link-underline-offset\) {
     text-underline-offset: var(--link-underline-offset);
-  }
-
-  .underline-offset-2 {
-    text-underline-offset: 2px;
   }
 
   .caret-transparent {

@@ -25,7 +25,7 @@ export interface ToastMessage {
 
 type ToastQueueOptions = NonNullable<ConstructorParameters<typeof AriaToastQueue>[0]>;
 
-// As long as animate-toast-out in tokens.css
+// As long as animate-toast-out in styles/theme.css
 const exitDuration = 150;
 
 /**
