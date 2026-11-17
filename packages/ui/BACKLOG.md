@@ -92,6 +92,10 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 
 ## Done
 
+- **17 November:** component tokens for the navigation and the remaining form controls, the last of five waves: Breadcrumbs, Disclosure, Navigation, Navigation tree, Calendar, Colour area, Colour slider, Colour swatch picker, Colour thumb and Drop zone, each starting at the value it had. Every component now draws from a token in `styles/components.css`. The breadcrumbs, calendar, colour area, colour slider, colour swatch picker and navigation tree pages have samples.
+  - **Left out:** fills and lines mixed from `--bleed`: hovers, a range's band, the navigation's edge, a dashed zone's edge and the colour tracks' rings. The colour thumb's shadow, which stays dark on any colour.
+  - **No sample:** Navigation, which fills the page's side, and Disclosure's header and panel, which its own sample shows.
+
 - **17 November:** component tokens for the content, the fourth of five waves: Alert, Status, Avatar, Code, Empty state, Progress bar, Toast, Aside and Quote, each starting at the value it had. Alert, Status and Avatar's dots share `--tone-*`, so neutral, info, success, warning and danger change together. Prose reads Link's underline tokens and Quote's type tokens, so a link or a quote in prose matches the component. The empty state, progress bar and meter pages have samples.
   - **Left out:** the tinted fills and rings mixed from a tone, the progress bar's track and an afterthought's rule, which mix from `--bleed`, and a toast's description, mixed from its text.
   - **No sample:** Toast, which only shows in its region.

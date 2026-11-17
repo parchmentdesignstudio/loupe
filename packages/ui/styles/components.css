@@ -267,6 +267,74 @@
 		/* The handle when on, white in both themes */
 		--switch-on-handle: var(--color-white);
 
+		/* Calendar */
+
+		/* Shape */
+
+		/* A day's corners, which a range's band rounds to where it begins and ends */
+		--calendar-day-radius: var(--radius-md);
+
+		/* Type */
+
+		/* The month's weight over each grid */
+		--calendar-heading-font-weight: 500;
+
+		/* Colour */
+
+		/* A chosen day's fill, and a range's ends */
+		--calendar-selected-fill: var(--color-ink);
+		/* A chosen day's number */
+		--calendar-selected-text: var(--color-paper);
+		/* The dot under today */
+		--calendar-today: var(--color-accent);
+
+		/* ColorArea */
+
+		/* Shape */
+
+		/* The square's corners */
+		--color-area-radius: var(--radius-lg);
+
+		/* ColorSlider */
+
+		/* Shape */
+
+		/* The track's corners */
+		--color-slider-radius: var(--radius-lg);
+
+		/* ColorSwatchPickerItem */
+
+		/* Shape */
+
+		/* A swatch's corners, which its ring follows */
+		--color-swatch-picker-item-radius: var(--radius-lg);
+
+		/* ColorThumb */
+
+		/* Colour */
+
+		/* The edge round the thumb, white in both themes so it shows on any colour */
+		--color-thumb-edge: var(--color-white);
+
+		/* DropZone */
+
+		/* Shape */
+
+		/* A dashed zone's corners */
+		--drop-zone-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The padding round what's in a dashed zone */
+		--drop-zone-padding: --spacing(6);
+
+		/* Colour */
+
+		/* A dashed zone's text */
+		--drop-zone-text: var(--color-muted);
+		/* A dashed zone's edge and text while a file is over it */
+		--drop-zone-target: var(--color-ink);
+
 		/* Avatar */
 
 		/* Type */
@@ -612,6 +680,78 @@
 		--tooltip-fill: var(--color-inverse);
 		/* The text on it */
 		--tooltip-text: var(--color-paper);
+
+		/* Breadcrumbs */
+
+		/* Type */
+
+		/* The weight. Its size is text-control, which every control shares */
+		--breadcrumbs-font-weight: 500;
+
+		/* Colour */
+
+		/* A page on the way */
+		--breadcrumbs-text: var(--color-muted);
+		/* The current page, and a page on hover */
+		--breadcrumbs-current-text: var(--color-ink);
+
+		/* DisclosureHeader */
+
+		/* Type */
+
+		/* The trigger's weight */
+		--disclosure-header-font-weight: 500;
+
+		/* Space */
+
+		/* The padding above and below a medium trigger, which a group's lines run between */
+		--disclosure-header-padding-y: --spacing(4);
+		/* The same for a small trigger */
+		--disclosure-header-small-padding-y: --spacing(1.5);
+
+		/* DisclosurePanel */
+
+		/* Space */
+
+		/* The space under a medium panel's content, to the next line */
+		--disclosure-panel-padding-bottom: --spacing(4);
+
+		/* Navigation */
+
+		/* Space */
+
+		/* The sidebar's width, on a wide screen */
+		--navigation-width: --spacing(60);
+		/* The padding beside its links */
+		--navigation-padding-x: --spacing(3);
+		/* The padding above and below them */
+		--navigation-padding-y: --spacing(6);
+
+		/* NavigationTreeItem */
+
+		/* Shape */
+
+		/* A link's corners */
+		--navigation-tree-item-radius: var(--radius-lg);
+
+		/* Type */
+
+		/* A link's weight. Its size is text-control, which every control shares */
+		--navigation-tree-item-font-weight: 500;
+
+		/* Space */
+
+		/* The padding beside a link's text */
+		--navigation-tree-item-padding-x: --spacing(3);
+		/* The padding above and below its 20px line, so it's 32px tall */
+		--navigation-tree-item-padding-y: --spacing(1.5);
+
+		/* Colour */
+
+		/* A link's text */
+		--navigation-tree-item-text: var(--color-ink);
+		/* The current page's link, the accent */
+		--navigation-tree-item-current-text: var(--color-accent);
 
 		/* Link */
 

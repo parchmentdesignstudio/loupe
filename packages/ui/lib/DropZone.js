@@ -16,7 +16,7 @@ export const dropZone = tv({
     base: 'relative',
     variants: {
         variant: {
-            dashed: 'flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-bleed/16 p-6 text-center text-label text-muted transition-colors duration-150 ease-out motion-reduce:transition-none',
+            dashed: 'flex flex-col items-center justify-center gap-3 rounded-(--drop-zone-radius) border border-dashed border-bleed/16 p-(--drop-zone-padding) text-center text-label text-(color:--drop-zone-text) transition-colors duration-150 ease-out motion-reduce:transition-none',
             quiet: '',
         },
         isDropTarget: {
@@ -27,7 +27,7 @@ export const dropZone = tv({
         },
     },
     compoundVariants: [
-        { variant: 'dashed', isDropTarget: true, class: 'border-solid border-ink bg-bleed/4 text-ink' },
+        { variant: 'dashed', isDropTarget: true, class: 'border-solid border-(color:--drop-zone-target) bg-bleed/4 text-(color:--drop-zone-target)' },
         // A quiet zone fills its panel, so its rings sit inside the edges rather than outside, where they'd be cut off
         { variant: 'quiet', isFocusVisible: true, class: '-outline-offset-8' },
         { variant: 'quiet', isDropTarget: true, class: 'outline-2 -outline-offset-8 outline-dashed' },

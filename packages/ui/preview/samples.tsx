@@ -6,12 +6,19 @@ import {
 	Aside,
 	Avatar,
 	AvatarGroup,
+	Breadcrumb,
+	Breadcrumbs,
 	Button,
+	Calendar,
 	Cell,
 	Checkbox,
 	Chip,
 	Code,
+	ColorArea,
 	ColorField,
+	ColorSlider,
+	ColorSwatchPicker,
+	ColorSwatchPickerItem,
 	ComboBox,
 	Composer,
 	DateField,
@@ -36,6 +43,9 @@ import {
 	ListBoxItem,
 	MenuItem,
 	Meter,
+	NavigationTree,
+	NavigationTreeItem,
+	NavigationTreeItemContent,
 	NumberField,
 	Pagination,
 	popover,
@@ -131,6 +141,28 @@ const tabs = (props: Record<string, unknown>) => (
 	</Tabs>
 );
 
+function swatches(props: object, part: 'list' | 'item') {
+	return (
+		<ColorSwatchPicker aria-label="Fill" defaultValue="#c76024" {...(part === 'list' ? props : {})}>
+			{['#c76024', '#3f6b5c', '#26323a'].map((color, i) => (
+				<ColorSwatchPickerItem key={color} color={color} data-token-root={(part === 'item' && i === 0) || undefined} {...(part === 'item' && i === 0 ? props : {})} />
+			))}
+		</ColorSwatchPicker>
+	);
+}
+
+function tree(props: object, part: 'tree' | 'item') {
+	return (
+		<NavigationTree aria-label="Pages" selectedRoute="#overview" className="w-48" {...(part === 'tree' ? props : {})}>
+			{['Overview', 'Tokens', 'Samples'].map((name) => (
+				<NavigationTreeItem key={name} id={name} href={`#${name.toLowerCase()}`} textValue={name} {...(part === 'item' && name === 'Overview' ? props : {})}>
+					<NavigationTreeItemContent>{name}</NavigationTreeItemContent>
+				</NavigationTreeItem>
+			))}
+		</NavigationTree>
+	);
+}
+
 /**
  * Each component drawn with some of its props, by its name, so the API reference can preview an option on hover, as
  * Button's variant set to ghost. Small, and as it would be used, so one option reads against another. A component that
@@ -155,7 +187,15 @@ export const samples: Partial<Record<string, Sample>> = {
 			))}
 		</AvatarGroup>
 	),
+	Breadcrumbs: (props) => (
+		<Breadcrumbs className="w-64" {...props}>
+			<Breadcrumb href="#">Projects</Breadcrumb>
+			<Breadcrumb href="#">Loupe</Breadcrumb>
+			<Breadcrumb>Settings</Breadcrumb>
+		</Breadcrumbs>
+	),
 	Button: (props) => <Button {...props}>New project</Button>,
+	Calendar: (props) => <Calendar aria-label="Due" {...props} />,
 	Cell: (props) => table({ column: props, cell: props }),
 	Checkbox: (props) => (
 		<Checkbox defaultSelected {...props}>
@@ -164,7 +204,11 @@ export const samples: Partial<Record<string, Sample>> = {
 	),
 	Chip: (props) => <Chip {...props}>Sounds good</Chip>,
 	Code: (props) => <Code code="pnpm add shiki" isCopyable={false} className="w-56" {...props} />,
+	ColorArea: (props) => <ColorArea aria-label="Colour" defaultValue="hsb(24, 72%, 78%)" className="w-40" {...props} />,
 	ColorField: (props) => <ColorField label="Accent" defaultValue="#c76024" className="w-40" {...props} />,
+	ColorSlider: (props) => <ColorSlider label="Hue" defaultValue="hsl(24, 72%, 50%)" channel="hue" className="w-48" {...props} />,
+	ColorSwatchPicker: (props) => swatches(props, 'list'),
+	ColorSwatchPickerItem: (props) => swatches(props, 'item'),
 	Column: (props) => table({ column: props, cell: props }),
 	ComboBox: (props) => (
 		<ComboBox label="Country" placeholder="Pick one" className="w-48" {...props}>
@@ -232,6 +276,8 @@ export const samples: Partial<Record<string, Sample>> = {
 	Menu: (props) => menu(props, 'list'),
 	MenuItem: (props) => menu(props, 'item'),
 	Meter: (props) => <Meter label="Storage" value={72} className="w-48" {...props} />,
+	NavigationTree: (props) => tree(props, 'tree'),
+	NavigationTreeItem: (props) => tree(props, 'item'),
 	NumberField: (props) => <NumberField label="Guests" defaultValue={2} className="w-40" {...props} />,
 	Pagination: (props) => <Pagination page={2} count={5} onChange={() => {}} {...props} />,
 	Popover: (props) => (

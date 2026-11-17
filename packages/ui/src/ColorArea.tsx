@@ -5,7 +5,7 @@ import { tv } from './tv.js';
 export type { ColorAreaProps };
 
 const colorArea = tv({
-	base: 'aspect-square w-full shrink-0 rounded-lg inset-ring inset-ring-bleed/12',
+	base: 'aspect-square w-full shrink-0 rounded-(--color-area-radius) inset-ring inset-ring-bleed/12',
 	variants: {
 		isDisabled: {
 			true: 'grayscale',

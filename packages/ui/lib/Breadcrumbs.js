@@ -6,14 +6,14 @@ import { Ellipsis } from './glyphs.js';
 import { Menu, MenuItem, MenuTrigger } from './Menu.js';
 import { focusRing, tv } from './tv.js';
 export const breadcrumbs = tv({
-    base: 'relative flex min-w-0 flex-1 text-control font-medium text-muted',
+    base: 'relative flex min-w-0 flex-1 text-control [font-weight:var(--breadcrumbs-font-weight)] text-(color:--breadcrumbs-text)',
 });
 export const breadcrumb = tv({
     base: 'flex items-center gap-1.5',
     variants: {
         // The page you're on gives way first, so it's the one that truncates when there's no room
         isCurrent: {
-            true: 'min-w-0 text-ink',
+            true: 'min-w-0 text-(color:--breadcrumbs-current-text)',
             false: 'shrink-0',
         },
     },
@@ -23,7 +23,7 @@ const crumbLink = tv({
     base: 'min-w-0 truncate rounded-sm transition-colors duration-150 ease-out motion-reduce:transition-none',
     variants: {
         isHovered: {
-            true: 'text-ink',
+            true: 'text-(color:--breadcrumbs-current-text)',
         },
         isDisabled: {
             true: 'text-muted',

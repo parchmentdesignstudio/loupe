@@ -7,12 +7,12 @@ import { composeClassName, focusRing, tv } from './tv.js';
 const SizeContext = createContext('medium');
 const trigger = tv({
     extend: focusRing,
-    base: 'flex w-full cursor-default items-center justify-between gap-4 rounded-sm text-left font-medium text-ink',
+    base: 'flex w-full cursor-default items-center justify-between gap-4 rounded-sm text-left [font-weight:var(--disclosure-header-font-weight)] text-ink',
     variants: {
         size: {
-            medium: 'py-4 text-base',
+            medium: 'py-(--disclosure-header-padding-y) text-base',
             // The chevron follows the title, so it stays put when a wider panel opens
-            small: 'justify-start gap-1.5 py-1.5 text-body',
+            small: 'justify-start gap-1.5 py-(--disclosure-header-small-padding-y) text-body',
         },
         isDisabled: {
             true: 'text-muted',
@@ -39,7 +39,7 @@ const panel = tv({
     },
     variants: {
         size: {
-            medium: { content: 'pb-4' },
+            medium: { content: 'pb-(--disclosure-panel-padding-bottom)' },
             small: { content: '' },
         },
     },
