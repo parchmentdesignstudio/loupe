@@ -11,7 +11,7 @@ const slider = tv({
         output: 'ms-auto text-control whitespace-nowrap text-muted tabular-nums',
         track: 'relative',
         rail: 'absolute rounded-full bg-bleed/12',
-        fill: 'rounded-full bg-(--slider-fill)',
+        fill: 'rounded-full bg-(--slider-fill,var(--color-ink))',
     },
     variants: {
         orientation: {
@@ -28,7 +28,7 @@ const slider = tv({
 // React Aria sets the thumb's left and a translate of -50% both ways, so top-1/2 is all it takes to centre it on the rail
 const thumb = tv({
     extend: focusRing,
-    base: 'size-5 rounded-full bg-(--slider-thumb) shadow-handle',
+    base: 'size-5 rounded-full bg-(--slider-thumb,var(--color-knob)) shadow-handle',
     variants: {
         isDisabled: {
             true: 'bg-bleed/24 shadow-none',

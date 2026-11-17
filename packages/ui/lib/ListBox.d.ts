@@ -13,7 +13,7 @@ export declare const listBoxItem: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "group flex cursor-default items-center gap-3 rounded-(--option-radius) px-(--option-padding-x) py-(--option-padding-y) text-control text-(color:--option-text) outline-0 select-none forced-color-adjust-none", undefined, undefined, undefined>;
+}, undefined, "group flex cursor-default items-center gap-3 rounded-(--option-radius) px-(--option-padding-x) py-(--option-padding-y) text-control text-(color:--option-text,var(--color-ink)) outline-0 select-none forced-color-adjust-none", undefined, undefined, undefined>;
 export declare function truncateText(children: ReactNode): (bigint | import("react").JSX.Element | Iterable<ReactNode> | Promise<string | number | bigint | boolean | Iterable<ReactNode> | import("react").ReactElement<unknown, string | import("react").JSXElementConstructor<any>> | import("react").ReactPortal | null | undefined>)[] | null | undefined;
 /** An option with its text as children. It's ticked when selected */
 export declare function ListBoxItem(props: ListBoxItemProps): import("react").JSX.Element;

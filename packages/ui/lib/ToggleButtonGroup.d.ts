@@ -17,7 +17,7 @@ export declare const toggleButtonGroup: import("tailwind-variants").TVReturnType
     isDisabled: {
         false: string;
     };
-}, undefined, "group/toggle isolate inline-flex w-fit gap-(--gap) rounded-(--toggle-button-group-radius) p-(--inset) [--divider:light-dark(color-mix(in_oklab,var(--bleed)_14%,transparent),color-mix(in_oklab,white_10%,transparent))] [--chosen-tint:var(--toggle-button-group-raised-chosen-fill)] [--chosen-edge:light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--dark-edge))] [--chosen:var(--toggle-button-group-chosen-fill)] [--inset:var(--toggle-button-group-inset)]", undefined, undefined, undefined>;
+}, undefined, "group/toggle isolate inline-flex w-fit gap-(--gap) rounded-(--toggle-button-group-radius) p-(--inset) [--divider:light-dark(color-mix(in_oklab,var(--bleed)_14%,transparent),color-mix(in_oklab,white_10%,transparent))] [--chosen-tint:var(--toggle-button-group-raised-chosen-fill,var(--color-chosen-tint))] [--chosen-edge:light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--dark-edge))] [--chosen:var(--toggle-button-group-chosen-fill,var(--color-chosen))] [--inset:var(--toggle-button-group-inset)]", undefined, undefined, undefined>;
 export declare const toggleButton: import("tailwind-variants").TVReturnType<{
     isSelected: {
         true: string;

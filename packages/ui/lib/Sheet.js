@@ -7,8 +7,8 @@ export { SheetTrigger } from 'react-aria-components';
 // the sheet’s size, hence box-content
 const sheet = tv({
     slots: {
-        backdrop: 'data-[stack-index=0]:bg-(--sheet-backdrop)',
-        panel: 'z-1 box-content overflow-clip rounded-(--sheet-radius) bg-(--sheet-fill) [--bleed:var(--overlay-bleed)] text-ink shadow-overlay [--shadow-overlay-color:var(--sheet-shadow)] outline-0 will-change-transform transform-[perspective(1000px)] forced-colors:bg-[Canvas]',
+        backdrop: 'data-[stack-index=0]:bg-(--sheet-backdrop,var(--color-scrim))',
+        panel: 'z-1 box-content overflow-clip rounded-(--sheet-radius) bg-(--sheet-fill,var(--color-overlay)) [--bleed:var(--overlay-bleed)] text-ink shadow-overlay [--shadow-overlay-color:var(--sheet-shadow)] outline-0 will-change-transform transform-[perspective(1000px)] forced-colors:bg-[Canvas]',
         content: 'relative box-border h-full overflow-hidden p-(--dialog-padding) pb-[calc(var(--dialog-padding)_+_var(--sheet-scroll-padding-y))] outline-0 group-data-expanded/sheet:overflow-auto',
     },
     variants: {

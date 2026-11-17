@@ -9,7 +9,7 @@ import { focusRing, tv } from './tv.js';
 // two chosen side by side don't share an edge, and a hairline divides each from the next, as macOS's segmented controls
 // do, unless it's turned off
 export const toggleButtonGroup = tv({
-    base: 'group/toggle isolate inline-flex w-fit gap-(--gap) rounded-(--toggle-button-group-radius) p-(--inset) [--divider:light-dark(color-mix(in_oklab,var(--bleed)_14%,transparent),color-mix(in_oklab,white_10%,transparent))] [--chosen-tint:var(--toggle-button-group-raised-chosen-fill)] [--chosen-edge:light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--dark-edge))] [--chosen:var(--toggle-button-group-chosen-fill)] [--inset:var(--toggle-button-group-inset)]',
+    base: 'group/toggle isolate inline-flex w-fit gap-(--gap) rounded-(--toggle-button-group-radius) p-(--inset) [--divider:light-dark(color-mix(in_oklab,var(--bleed)_14%,transparent),color-mix(in_oklab,white_10%,transparent))] [--chosen-tint:var(--toggle-button-group-raised-chosen-fill,var(--color-chosen-tint))] [--chosen-edge:light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--dark-edge))] [--chosen:var(--toggle-button-group-chosen-fill,var(--color-chosen))] [--inset:var(--toggle-button-group-inset)]',
     variants: {
         orientation: {
             horizontal: '',
@@ -77,7 +77,7 @@ export const toggleButton = tv({
     compoundVariants: [
         { variant: 'well', hasIndicator: false, isSelected: true, class: 'bg-(--chosen) shadow-raised [--edge:var(--chosen-edge)]' },
         { variant: 'well', hasIndicator: false, isSelected: true, isDisabled: true, class: 'bg-bleed/12 shadow-none' },
-        { variant: 'raised', isSelected: true, class: 'bg-(--chosen-tint) text-(color:--toggle-button-group-raised-chosen-text)' },
+        { variant: 'raised', isSelected: true, class: 'bg-(--chosen-tint) text-(color:--toggle-button-group-raised-chosen-text,var(--color-on-chosen-tint))' },
         { variant: 'raised', isSelected: true, isDisabled: true, class: 'bg-bleed/12 text-muted' },
         { variant: 'well', hasIndicator: false, isSelected: false, isHovered: true, class: 'bg-bleed/4' },
         // In a raised group, the hovered one sinks in the dark, to the panel's fill below the group's, rather than lift

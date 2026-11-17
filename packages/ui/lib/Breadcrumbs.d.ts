@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import { type BreadcrumbProps as AriaBreadcrumbProps, type BreadcrumbsProps as AriaBreadcrumbsProps } from 'react-aria-components';
-export declare const breadcrumbs: import("tailwind-variants").TVReturnType<{}, undefined, "relative flex min-w-0 flex-1 text-control [font-weight:var(--breadcrumbs-font-weight)] text-(color:--breadcrumbs-text)", undefined, undefined, undefined>;
+export declare const breadcrumbs: import("tailwind-variants").TVReturnType<{}, undefined, "relative flex min-w-0 flex-1 text-control [font-weight:var(--breadcrumbs-font-weight)] text-(color:--breadcrumbs-text,var(--color-muted))", undefined, undefined, undefined>;
 export declare const breadcrumb: import("tailwind-variants").TVReturnType<{
     isCurrent: {
         true: string;
