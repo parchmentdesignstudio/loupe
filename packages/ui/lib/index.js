@@ -9,6 +9,7 @@ export { Checkbox, CheckboxGroup, checkboxBox } from './Checkbox.js';
 export { Chip, ChipGroup, chip } from './Chip.js';
 export { ColorArea } from './ColorArea.js';
 export { ColorField } from './ColorField.js';
+export { parseAnyColor } from './parseAnyColor.js';
 export { ColorPicker } from './ColorPicker.js';
 export { ColorSlider } from './ColorSlider.js';
 export { ColorSwatch, colorSwatch } from './ColorSwatch.js';

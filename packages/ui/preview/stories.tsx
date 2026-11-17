@@ -764,10 +764,13 @@ const groups: Group[] = [
 			{
 				id: 'color-field',
 				name: 'Colour field',
-				description: 'A colour typed as its hex',
-				exports: ['ColorField'],
+				description: 'A colour pasted or typed in any CSS format, with its opacity beside it',
+				exports: ['ColorField', 'parseAnyColor'],
 				stories: [
-					{ name: 'Build one', render: ColorFieldPlayground },{ name: 'Hex', render: () => <ColorField label="Theme colour" description="Browsers tint their toolbar with it" defaultValue="#0c2920" className="w-56" /> }],
+					{ name: 'Build one', render: ColorFieldPlayground },
+					{ name: 'Paste any colour', render: () => <ColorField label="Fill" description="Paste oklch(), rgb(), a name or hex" defaultValue="oklch(0.6 0.16 45 / 0.8)" className="w-56" /> },
+					{ name: 'Without opacity', render: () => <ColorField label="Theme colour" description="Browsers tint their toolbar with it" defaultValue="#0c2920" hasOpacity={false} className="w-56" /> },
+				],
 			},
 		],
 	},
