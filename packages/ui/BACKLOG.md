@@ -36,7 +36,12 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
   - React Aria’s colour area reads “Color picker”, and names colours such as “grayish”, in American spelling, whatever its label.
 - **ColorField:**
   - No swatch inside the field, as Figma's has.
-  - The colour area and slider, and so the picker, still work in sRGB, as React Aria's `Color` can't hold more. An oklch area and slider, drawn with oklch gradients and a gamut line, would keep a wide colour exact end to end.
+  - The colour area and slider, and so the picker, still work in sRGB, as React Aria's `Color` can't hold more. An oklch area and slider, drawn with oklch gradients and a gamut line, would keep a wide colour exact end to end (Steve, 17 November, to come back to).
+    - No new library. Lightness, chroma, hue and opacity are each React Aria's plain `Slider`, which takes any number.
+    - The area, chroma across and lightness up, is our own, on `useMove` and the keyboard hooks from `react-aria`. That's installed already under `react-aria-components`, but would be listed in `package.json` as it's imported directly.
+    - The conversions and gamut check are in `parseAnyColor.ts`. The same check finds where sRGB ends at each lightness and hue, for the gamut line.
+    - Browsers draw the tracks with `linear-gradient(in oklch, …)`, and a swatch takes the oklch string as it is.
+    - The cost is keeping our own area: its dragging, keyboard steps and what a screen reader hears.
 - **ColorSwatchPicker:**
   - Showing nothing chosen takes a colour that matches no swatch: device passes its custom colour, or `#fffffe`.
   - An item takes no `title` or tooltip, so device’s preset names no longer show on hover. React Aria passes `aria-label` on, but the type doesn’t allow it.
