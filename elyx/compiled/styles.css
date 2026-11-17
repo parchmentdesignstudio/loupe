@@ -535,6 +535,13 @@
     --enter-x: -4px;
   }
 
+  [data-code-theme] {
+    --color-code-ground: var(--code-ground, var(--color-raised));
+    --color-code-quote: var(--color-code-string);
+    --color-code-number: var(--color-code-constant);
+    --color-code-attribute: var(--color-code-function);
+  }
+
   [data-code-theme="iamsteve"] {
     --code-ground: oklch(98.4% .003 39.5);
     --color-code-text: oklch(39.6% .082 174);
@@ -4951,7 +4958,7 @@
     content: var(--tw-content);
   }
 
-  .\[\&_\:is\(code\:not\(\[data-line-numbers\]\)_\.line\,\[data-line-number\]\)\:is\(\.remove\,\.error\)\]\:before\:bg-\[repeating-linear-gradient\(-45deg\,var\(--color-code-remove-edge\)_0_1px\,color-mix\(in_oklch\,var\(--color-code-remove-edge\)_35\%\,light-dark\(white\,var\(--color-code-ground\)\)\)_1px_3px\)\] :is(code:not([data-line-numbers]) .line, [data-line-number]):is(.remove, .error):before {
+  .\[\&_\:is\(code\:not\(\[data-line-numbers\]\)_\.line\,\[data-line-number\]\)\:is\(\.remove\,\.error\)\]\:before\:bg-\[repeating-linear-gradient\(-45deg\,var\(--color-code-remove-edge\)_0_1px\,color-mix\(in_oklch\,var\(--color-code-remove-edge\)_35\%\,light-dark\(white\,--theme\(--color-code-ground\)\)\)_1px_3px\)\] :is(code:not([data-line-numbers]) .line, [data-line-number]):is(.remove, .error):before {
     content: var(--tw-content);
     background-image: repeating-linear-gradient(-45deg,var(--color-code-remove-edge) 0 1px,color-mix(in oklch,var(--color-code-remove-edge) 35%,white) 1px 3px);
   }

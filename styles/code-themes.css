@@ -2,6 +2,14 @@
    <Code theme="iamsteve"> or data-code-theme="mcknny" on the body. Their palettes aren't Loupe's, so each colour
    is written out here, copied from the site's own tokens */
 @layer base {
+	/* What a theme would otherwise keep from :root, where it resolved to Loupe's: the ground by name, as a site's own
+	   Shiki reads it, and the roles split out of others since the themes were written, as the roles they came from */
+	[data-code-theme] {
+		--color-code-ground: var(--code-ground, var(--color-raised));
+		--color-code-quote: var(--color-code-string);
+		--color-code-number: var(--color-code-constant);
+		--color-code-attribute: var(--color-code-function);
+	}
 	[data-code-theme='iamsteve'] {
 		/* neutral-01-50 and fern-1200 */
 		--code-ground: light-dark(oklch(0.984 0.003 39.5), oklch(0.229 0.039 171.7));
