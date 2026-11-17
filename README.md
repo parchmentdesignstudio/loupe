@@ -217,7 +217,7 @@ Each token is one of Tailwind’s own variables, set once in `styles/theme.css`,
 
 ### Code
 
-`Code` shows code Shiki has highlighted with Loupe's theme. Everything for Shiki is in `@parchment/ui/shiki`, so a site that doesn't highlight never loads it, and Shiki itself is installed by the site (`pnpm add shiki`). In the browser, `useHighlight` loads Shiki, with its JavaScript engine rather than WebAssembly, and each language's grammar the first time it's needed:
+`Code` shows code Shiki has highlighted with Loupe's theme. Everything for Shiki is in `@parchment/ui/shiki`, so a site that doesn't highlight never loads it, and Shiki itself, with its transformers, is installed by the site (`pnpm add shiki @shikijs/transformers`). The entry needs both, even for the theme alone. In the browser, `useHighlight` loads Shiki, with its JavaScript engine rather than WebAssembly, and each language's grammar the first time it's needed:
 
 ```jsx
 import { Code } from '@parchment/ui'
@@ -237,7 +237,7 @@ import { codeTheme, codeTransformers } from '@parchment/ui/shiki'
 [rehypeShiki, { theme: codeTheme, transformers: codeTransformers() }]
 ```
 
-Lines can be marked out, and `Code` styles each mark. `{6-8}` in a fence's meta highlights lines 6 to 8, and `/gap/` a word. In the code, a comment ending a line marks it: `// [!code highlight]`, `[!code ++]` and `[!code --]` for a diff, `[!code focus]` to fade the rest until the block's hovered, and `[!code error]` or `[!code warning]`. Copy leaves the notes out. In the browser, pass the meta as `useHighlight(source, { meta: '{6-8}' })`. The marks come from `@shikijs/transformers`, which a site installs alongside Shiki.
+Lines can be marked out, and `Code` styles each mark. `{6-8}` in a fence's meta highlights lines 6 to 8, and `/gap/` a word. In the code, a comment ending a line marks it: `// [!code highlight]`, `[!code ++]` and `[!code --]` for a diff, `[!code focus]` to fade the rest until the block's hovered, and `[!code error]` or `[!code warning]`. Copy leaves the notes out. In the browser, pass the meta as `useHighlight(source, { meta: '{6-8}' })`. The marks come from `@shikijs/transformers`.
 
 The theme names roles, not colours: `--color-code-keyword`, `-string`, `-quote`, `-constant`, `-number`, `-function`, `-type`, `-builtin`, `-tag`, `-attribute`, `-comment` and `-text`, each a `light-dark()` in `styles/theme.css`, so one theme covers both modes. In the light, Loupe's follows Nova's rules: one hue for keywords, tags and booleans, the rest a walk round the wheel from it at one lightness, and a string's quotes a darker shade of the string. The ground is a control's fill, white in the light and a step above the page in the dark, unless `--code-ground` sets another. Marked lines take `--color-code-mark`, `-add` and `-remove` for their ground, and the same with `-edge` for the line's bar, its number and the diff's counts. A removal is striped as well as tinted, so it reads apart from an addition by more than its colour, and a word marked on a changed line takes the line's tint again. To restyle code, set those tokens, or use iamsteve's or mcknny's with `theme="iamsteve"` on a `Code` or `data-code-theme="mcknny"` on anything around it. Loupe's transformers highlight Tailwind's `@theme` and bare custom properties as CSS, and number lines with `showLineNumbers` in a code fence's meta, or `showLineNumbers=12` to start at 12.
 
