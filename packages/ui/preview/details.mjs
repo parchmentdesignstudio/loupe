@@ -100,7 +100,13 @@ function parse(path, root, code = readFileSync(path, 'utf8')) {
 		}
 		const declaration = statement.type === 'ExportNamedDeclaration' ? statement.declaration : statement;
 		if (declaration?.type === 'VariableDeclaration') {
-			for (const declarator of declaration.declarations) if (declarator.id.type === 'Identifier') declarations.set(declarator.id.name, { node: declarator, statement });
+			for (const declarator of declaration.declarations) {
+				if (declarator.id.type === 'Identifier') declarations.set(declarator.id.name, { node: declarator, statement });
+				// A name taken out of an object keeps the key it came from, as Calendar takes root out of calendar()
+				else if (declarator.id.type === 'ObjectPattern') {
+					for (const property of declarator.id.properties) if (property.type === 'Property' && !property.computed && property.value.type === 'Identifier') declarations.set(property.value.name, { node: declarator, statement, key: nameOf(property.key) });
+				}
+			}
 		} else if (declaration?.id?.type === 'Identifier' && declaration.type.endsWith('Declaration')) {
 			declarations.set(declaration.id.name, { node: declaration, statement });
 		}
@@ -173,6 +179,48 @@ function variantsOf(source, node) {
 			const options = property.value.type === 'ObjectExpression' ? property.value.properties.map((option) => nameOf(option.key)) : [];
 			return { name, options, default: fallback && textOf(source, fallback) };
 		});
+}
+
+// A tv() call’s class lists in order, each with the slot it styles and the variants it hangs on. As tailwind-variants
+// has it, a list that names no slot styles base. What’s neither, such as an extended tv(), has no slot
+function classListsOf(config) {
+	if (config?.type !== 'ObjectExpression') return [{ node: config }];
+	const slotted = propertyOf(config, 'slots')?.type === 'ObjectExpression';
+	const lists = [];
+	const add = (node, when = []) => {
+		if (!slotted || node.type !== 'ObjectExpression') return void lists.push({ node, slot: 'base', when });
+		for (const property of node.properties) lists.push(property.type === 'Property' ? { node: property.value, slot: nameOf(property.key), when } : { node: property });
+	};
+	for (const property of config.properties) {
+		const key = property.type === 'Property' && !property.computed && nameOf(property.key);
+		const value = property.value;
+		if (key === 'base' || (key === 'slots' && slotted)) add(value);
+		else if (key === 'variants' && value.type === 'ObjectExpression') {
+			for (const variant of value.properties) {
+				if (variant.type !== 'Property' || variant.value.type !== 'ObjectExpression') {
+					lists.push({ node: variant });
+					continue;
+				}
+				for (const option of variant.value.properties) {
+					if (option.type === 'Property') add(option.value, [nameOf(variant.key)]);
+					else lists.push({ node: option });
+				}
+			}
+		} else if (key === 'compoundVariants' && value.type === 'ArrayExpression') {
+			for (const compound of value.elements) {
+				if (compound?.type !== 'ObjectExpression') {
+					lists.push({ node: compound });
+					continue;
+				}
+				const classes = compound.properties.filter((one) => one.type === 'Property' && ['class', 'className'].includes(nameOf(one.key)));
+				const when = compound.properties.filter((one) => one.type === 'Property' && !classes.includes(one)).map((one) => nameOf(one.key));
+				for (const one of classes) add(one.value, when);
+			}
+		} else if (key === 'extend') lists.push({ node: value, extend: true });
+		// The default variants name options rather than classes
+		else if (key !== 'defaultVariants') lists.push({ node: property });
+	}
+	return lists;
 }
 
 // isFocusVisible → focus-visible
@@ -537,7 +585,9 @@ function read(root, ui, packages) {
 	};
 
 	// What a component draws, from React Aria and the library, and the states and tokens its classes use, following
-	// its tv() calls and the constants it reads
+	// its tv() calls, the constants it reads and the library’s unexported components and functions it uses, as
+	// ColorField draws AnyColorField. Of styles with slots, only the slots it reads count, as Description draws
+	// field()’s description and not its label
 	const surveyOf = (source, start, self) => {
 		const strings = [];
 		const states = new Set();
@@ -545,36 +595,78 @@ function read(root, ui, packages) {
 		const parts = new Set();
 		const styles = new Set();
 		const defaults = new Map();
-		const visited = new Set([self]);
+		// Each declaration walked, whole, or the slots of it walked so far
+		const visited = new Map([[self, true]]);
+		const parents = new WeakMap();
+		// The slots read from tv() styles, as slots.label() reads label, or undefined for all of them. Styles are called
+		// for their slots, so a call is passed through, and slots held in a variable are those read from it
+		const slotsOf = (node, scope, given) => {
+			let parent = parents.get(node);
+			if (parent?.type === 'CallExpression' && parent.callee === node) [node, parent] = [parent, parents.get(parent)];
+			if (node === scope) return given;
+			if (parent?.type === 'MemberExpression' && parent.object === node && !parent.computed) return new Set([parent.property.name]);
+			if (parent?.type !== 'VariableDeclarator' || parent.init !== node) return;
+			const target = parent.id;
+			if (target.type === 'ObjectPattern') return target.properties.every((property) => property.type === 'Property' && !property.computed) ? new Set(target.properties.map((property) => nameOf(property.key))) : undefined;
+			if (target.type !== 'Identifier') return;
+			const reads = new Set();
+			let whole = false;
+			walk(scope, (child, above, key) => {
+				if (child.type !== 'Identifier' || child.name !== target.name || child === target || !above || isKey(above, key)) return;
+				if (above.type === 'MemberExpression' && above.object === child && !above.computed) reads.add(above.property.name);
+				else whole = true;
+			});
+			return whole ? undefined : reads;
+		};
+		// A tv() call’s classes, of the slots given or all of them, and the states its variants style there
+		const draw = (from, node, extended, slots) => {
+			const lists = classListsOf(node.init.arguments[0]).filter((list) => !slots || !list.slot || slots.has(list.slot));
+			for (const variant of variantsOf(from, node)) {
+				if (!/^is[A-Z]/.test(variant.name)) {
+					if (!extended && variant.default && !defaults.has(variant.name)) defaults.set(variant.name, variant.default);
+				} else if (!slots || lists.some((list) => list.when?.includes(variant.name))) states.add(stateOf(variant.name));
+			}
+			if (!extended && publicOf.has(node)) styles.add(publicOf.get(node));
+			for (const list of lists) {
+				if (list.extend && list.node.type === 'Identifier') follow(resolve(from, list.node.name), true, slots);
+				else visit(from, list.node, true);
+			}
+		};
+		const follow = (found, extended, slots) => {
+			const node = found?.node;
+			const body = node?.type === 'FunctionDeclaration' ? node : node?.type === 'VariableDeclarator' ? node.init : undefined;
+			const seen = visited.get(node);
+			if (!body || seen === true) return;
+			const left = slots && node.type === 'VariableDeclarator' ? new Set([...slots].filter((slot) => !seen?.has(slot))) : undefined;
+			if (left?.size === 0) return;
+			visited.set(node, left ? new Set([...(seen ?? []), ...left]) : true);
+			if (isStyles(node)) draw(found.source, node, extended, left);
+			else visit(found.source, body, extended, left);
+		};
 		// Styles another tv() extends, as button does focusRing, aren’t the component’s own
-		const visit = (from, node, extended = false) =>
-			walk(node, (child, parent, key) => {
+		const visit = (from, scope, extended, slots) =>
+			walk(scope, (child, parent, key) => {
+				parents.set(child, parent);
 				if (child.type === 'JSXOpeningElement') {
 					if (child.name.type !== 'JSXIdentifier' || !/^[A-Z]/.test(child.name.name)) return;
 					const found = resolve(from, child.name.name);
 					if (found?.aria) aria.add(found.aria);
-					else if (found?.node !== self && publicOf.has(found?.node)) parts.add(publicOf.get(found.node));
+					else if (!publicOf.has(found?.node)) follow(found, extended);
+					else if (found.node !== self) parts.add(publicOf.get(found.node));
 				} else if (child.type === 'Literal' && typeof child.value === 'string') strings.push(child.value);
 				else if (child.type === 'TemplateElement') strings.push(child.value.cooked ?? child.value.raw);
-				else if (child.type === 'Identifier' && !isKey(parent, key)) {
+				else if (child.type === 'Identifier' && !(parent && isKey(parent, key))) {
 					const found = resolve(from, child.name);
-					if (found?.node?.type !== 'VariableDeclarator' || !found.node.init || visited.has(found.node)) return;
-					visited.add(found.node);
-					const styled = isStyles(found.node);
-					if (styled) {
-						for (const variant of variantsOf(found.source, found.node)) {
-							if (/^is[A-Z]/.test(variant.name)) states.add(stateOf(variant.name));
-							else if (!extended && variant.default && !defaults.has(variant.name)) defaults.set(variant.name, variant.default);
-						}
-						if (!extended && publicOf.has(found.node)) styles.add(publicOf.get(found.node));
-					}
-					visit(found.source, found.node.init, extended || styled);
+					// A function the package exports, such as composeClassName, draws for itself
+					if (found?.node?.type !== 'FunctionDeclaration' || !publicOf.has(found.node)) follow(found, extended, found?.key ? new Set([found.key]) : slotsOf(child, scope, slots));
 				}
 			});
 		visit(source, start, isStyles(self));
-		return { survey: { aria: [...aria], parts: [...parts], states: [...states], styles: [...styles], tokens: tokensOf(strings, theme) }, defaults };
+		return { survey: { aria: [...aria], parts: [...parts], states: [...states], styles: [...styles], tokens: tokensOf(strings, theme) }, defaults, strings };
 	};
 
+	// The classes each component draws with, for the shared tokens they read
+	const drawn = new Map();
 	const describe = (exported, found) => {
 		if (found.aria) return { name: exported, kind: 'aria', place: placeOf(found.source, found.node.start), aria: [found.aria], uses: [] };
 		const { source, node, statement } = found;
@@ -590,7 +682,8 @@ function read(root, ui, packages) {
 		}
 		if (fn && /^[A-Z]/.test(exported)) {
 			const { props, rest } = propsOf(source, fn);
-			const { survey, defaults } = surveyOf(source, fn, node);
+			const { survey, defaults, strings } = surveyOf(source, fn, node);
+			drawn.set(exported, strings);
 			return { ...detail, kind: 'component', props: fill(props, defaults), rest, ...survey };
 		}
 		return { ...detail, kind: fn ? 'function' : 'value' };
@@ -632,30 +725,15 @@ function read(root, ui, packages) {
 		detail.uses.sort((a, b) => (a.project === own) - (b.project === own) || a.project.localeCompare(b.project) || a.path.localeCompare(b.path) || a.line - b.line);
 	}
 
-	// A shared token belongs to each export that reads it: in its declaration, what that uses from its own file, and
-	// what it imports from the library, followed as far in that file, as ColorField takes the fields' tokens through
-	// TextField's styles. No further, as beyond are other components' own, such as the checkbox in a table's row
-	const drawnBy = (source, name, outward, seen = new Set()) => {
-		if (seen.has(name)) return '';
-		seen.add(name);
-		const declaration = source.declarations.get(name);
-		const binding = !declaration && outward && source.imports.get(name);
-		if (binding) {
-			const file = binding.from.startsWith('.') && fileOf(source, binding.from);
-			return file ? drawnBy(file, binding.name, false) : '';
-		}
-		// Types and comments name things without drawing them
-		if (!declaration || declaration.node.type.startsWith('TS')) return '';
-		const text = source.code.slice(declaration.statement.start, declaration.statement.end).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
-		return text + [...new Set(text.match(/\b[A-Za-z_$][\w$]*\b/g))].map((word) => drawnBy(source, word, outward, seen)).join('');
-	};
+	// A shared token belongs to each component that draws with it, itself or through the library’s components it draws,
+	// as TextField takes the label’s weight through Label. No further, as beyond are other components’ own, such as the
+	// checkbox in a table’s row
 	const componentTokens = componentTokensOf(join(ui, 'styles', 'components.css'), sheet, root, Object.keys(components));
 	const sharedTokens = componentTokens[shared] ?? [];
 	delete componentTokens[shared];
-	for (const [name, found] of publics) {
-		if (!components[name] || !/^[A-Z]/.test(name)) continue;
-		const code = drawnBy(found.source, found.node.id?.name ?? name, true);
-		const reads = sharedTokens.filter((token) => code.includes(`${token.name})`) || code.includes(`${token.name},`));
+	for (const [name, strings] of drawn) {
+		const classes = [strings, ...components[name].parts.map((part) => drawn.get(part) ?? [])].flat().join(' ');
+		const reads = sharedTokens.filter((token) => classes.includes(`${token.name})`) || classes.includes(`${token.name},`));
 		if (reads.length) componentTokens[name] = [...reads, ...(componentTokens[name] ?? [])];
 	}
 
