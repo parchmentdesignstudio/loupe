@@ -275,8 +275,10 @@ function chainOf(value, declarations) {
 // Shape, groups the tokens under it, and the comment right above a token says what it changes. Keyed by component,
 // as --button-radius is Button's, and --toggle-button-group-radius ToggleButtonGroup's rather than ToggleButton's
 const kebab = (name) => name.replace(/(?<!^)([A-Z])/g, '-$1').toLowerCase();
+// Tokens that no export's name starts, such as the fields' --field-radius, come back under shared
+const shared = '';
 function componentTokensOf(path, theme, root, names) {
-	const owners = names.map((name) => [kebab(name), name]).toSorted(([a], [b]) => b.length - a.length);
+	const owners = names.filter((name) => /^[A-Z]/.test(name)).map((name) => [kebab(name), name]).toSorted(([a], [b]) => b.length - a.length);
 	const tokens = {};
 	const declarations = declarationsOf([theme, path], root);
 	if (!existsSync(path)) return tokens;
@@ -299,8 +301,7 @@ function componentTokensOf(path, theme, root, names) {
 			continue;
 		}
 		const name = match[3];
-		const component = owners.find(([prefix]) => name.startsWith(`${prefix}-`))?.[1];
-		if (!component) continue;
+		const component = owners.find(([prefix]) => name.startsWith(`${prefix}-`))?.[1] ?? shared;
 		const value = match[4].replace(/\s+/g, ' ').trim();
 		(tokens[component] ??= []).push({ name: `--${name}`, value, ...chainOf(value, declarations), group, doc: doc || undefined, place: placeOf(source, body + match.index) });
 		doc = '';
@@ -631,5 +632,22 @@ function read(root, ui, packages) {
 		detail.uses.sort((a, b) => (a.project === own) - (b.project === own) || a.project.localeCompare(b.project) || a.path.localeCompare(b.path) || a.line - b.line);
 	}
 
-	return { project: own, components, colours: coloursOf(theme, sheet, root), type: typographyOf(theme, sheet, root), componentTokens: componentTokensOf(join(ui, 'styles', 'components.css'), sheet, root, Object.keys(components)) };
+	// A shared token belongs to each export that reads it, in its own file or one that file imports from the library,
+	// as ColorField takes the fields' tokens through TextField's styles
+	const componentTokens = componentTokensOf(join(ui, 'styles', 'components.css'), sheet, root, Object.keys(components));
+	const sharedTokens = componentTokens[shared] ?? [];
+	delete componentTokens[shared];
+	const readIn = (source, seen = new Set()) => {
+		if (seen.has(source)) return '';
+		seen.add(source);
+		return source.code + [...source.imports.values()].map((binding) => (binding.from.startsWith('.') ? fileOf(source, binding.from) : undefined)).filter(Boolean).map((file) => readIn(file, seen)).join('');
+	};
+	for (const [name, found] of publics) {
+		if (!components[name] || !/^[A-Z]/.test(name)) continue;
+		const code = readIn(found.source);
+		const reads = sharedTokens.filter((token) => code.includes(`${token.name})`) || code.includes(`${token.name},`));
+		if (reads.length) componentTokens[name] = [...reads, ...(componentTokens[name] ?? [])];
+	}
+
+	return { project: own, components, colours: coloursOf(theme, sheet, root), type: typographyOf(theme, sheet, root), componentTokens };
 }
