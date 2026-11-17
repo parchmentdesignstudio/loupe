@@ -2999,6 +2999,76 @@
     line-height: 1;
   }
 
+  .font-\(--alert-title-font-weight\) {
+    --tw-font-weight: var(--alert-title-font-weight);
+    font-weight: var(--alert-title-font-weight);
+  }
+
+  .font-\(--avatar-font-weight\) {
+    --tw-font-weight: var(--avatar-font-weight);
+    font-weight: var(--avatar-font-weight);
+  }
+
+  .font-\(--breadcrumbs-font-weight\) {
+    --tw-font-weight: var(--breadcrumbs-font-weight);
+    font-weight: var(--breadcrumbs-font-weight);
+  }
+
+  .font-\(--button-font-weight\) {
+    --tw-font-weight: var(--button-font-weight);
+    font-weight: var(--button-font-weight);
+  }
+
+  .font-\(--calendar-heading-font-weight\) {
+    --tw-font-weight: var(--calendar-heading-font-weight);
+    font-weight: var(--calendar-heading-font-weight);
+  }
+
+  .font-\(--disclosure-header-font-weight\) {
+    --tw-font-weight: var(--disclosure-header-font-weight);
+    font-weight: var(--disclosure-header-font-weight);
+  }
+
+  .font-\(--empty-state-title-font-weight\) {
+    --tw-font-weight: var(--empty-state-title-font-weight);
+    font-weight: var(--empty-state-title-font-weight);
+  }
+
+  .font-\(--field-label-font-weight\) {
+    --tw-font-weight: var(--field-label-font-weight);
+    font-weight: var(--field-label-font-weight);
+  }
+
+  .font-\(--navigation-tree-item-font-weight\) {
+    --tw-font-weight: var(--navigation-tree-item-font-weight);
+    font-weight: var(--navigation-tree-item-font-weight);
+  }
+
+  .font-\(--status-badge-font-weight\) {
+    --tw-font-weight: var(--status-badge-font-weight);
+    font-weight: var(--status-badge-font-weight);
+  }
+
+  .font-\(--tab-font-weight\) {
+    --tw-font-weight: var(--tab-font-weight);
+    font-weight: var(--tab-font-weight);
+  }
+
+  .font-\(--table-column-font-weight\) {
+    --tw-font-weight: var(--table-column-font-weight);
+    font-weight: var(--table-column-font-weight);
+  }
+
+  .font-\(--toast-title-font-weight\) {
+    --tw-font-weight: var(--toast-title-font-weight);
+    font-weight: var(--toast-title-font-weight);
+  }
+
+  .font-\(--toggle-button-group-font-weight\) {
+    --tw-font-weight: var(--toggle-button-group-font-weight);
+    font-weight: var(--toggle-button-group-font-weight);
+  }
+
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
@@ -3007,62 +3077,6 @@
   .font-normal {
     --tw-font-weight: var(--font-weight-normal);
     font-weight: var(--font-weight-normal);
-  }
-
-  .\[font-weight\:var\(--alert-title-font-weight\)\] {
-    font-weight: var(--alert-title-font-weight);
-  }
-
-  .\[font-weight\:var\(--avatar-font-weight\)\] {
-    font-weight: var(--avatar-font-weight);
-  }
-
-  .\[font-weight\:var\(--breadcrumbs-font-weight\)\] {
-    font-weight: var(--breadcrumbs-font-weight);
-  }
-
-  .\[font-weight\:var\(--button-font-weight\)\] {
-    font-weight: var(--button-font-weight);
-  }
-
-  .\[font-weight\:var\(--calendar-heading-font-weight\)\] {
-    font-weight: var(--calendar-heading-font-weight);
-  }
-
-  .\[font-weight\:var\(--disclosure-header-font-weight\)\] {
-    font-weight: var(--disclosure-header-font-weight);
-  }
-
-  .\[font-weight\:var\(--empty-state-title-font-weight\)\] {
-    font-weight: var(--empty-state-title-font-weight);
-  }
-
-  .\[font-weight\:var\(--field-label-font-weight\)\] {
-    font-weight: var(--field-label-font-weight);
-  }
-
-  .\[font-weight\:var\(--navigation-tree-item-font-weight\)\] {
-    font-weight: var(--navigation-tree-item-font-weight);
-  }
-
-  .\[font-weight\:var\(--status-badge-font-weight\)\] {
-    font-weight: var(--status-badge-font-weight);
-  }
-
-  .\[font-weight\:var\(--tab-font-weight\)\] {
-    font-weight: var(--tab-font-weight);
-  }
-
-  .\[font-weight\:var\(--table-column-font-weight\)\] {
-    font-weight: var(--table-column-font-weight);
-  }
-
-  .\[font-weight\:var\(--toast-title-font-weight\)\] {
-    font-weight: var(--toast-title-font-weight);
-  }
-
-  .\[font-weight\:var\(--toggle-button-group-font-weight\)\] {
-    font-weight: var(--toggle-button-group-font-weight);
   }
 
   .text-balance {
@@ -4134,7 +4148,8 @@
     rotate: 90deg;
   }
 
-  .group-data-\[selected\]\:\[font-weight\:var\(--option-selected-font-weight\)\]:is(:where(.group)[data-selected] *) {
+  .group-data-\[selected\]\:font-\(--option-selected-font-weight\):is(:where(.group)[data-selected] *) {
+    --tw-font-weight: var(--option-selected-font-weight);
     font-weight: var(--option-selected-font-weight);
   }
 

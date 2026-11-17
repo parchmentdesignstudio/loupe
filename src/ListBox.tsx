@@ -38,7 +38,7 @@ export function ListBoxItem(props: ListBoxItemProps) {
 		<AriaListBoxItem {...props} textValue={textValue} className={composeRenderProps(props.className, (className, state) => listBoxItem({ ...state, className }))}>
 			{composeRenderProps(props.children, (children, { isSelected }) => (
 				<>
-					<span className="flex min-w-0 flex-1 items-center gap-2 group-data-[selected]:[font-weight:var(--option-selected-font-weight)]">{truncateText(children)}</span>
+					<span className="flex min-w-0 flex-1 items-center gap-2 group-data-[selected]:font-(--option-selected-font-weight)">{truncateText(children)}</span>
 					{isSelected && <Check />}
 				</>
 			))}
