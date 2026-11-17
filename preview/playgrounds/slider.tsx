@@ -41,7 +41,7 @@ export function SliderPlayground() {
 	return (
 		<Playground
 			onRandom={shuffle}
-			preview={<Choice label={isVertical ? 'Width, when horizontal' : 'Width'} options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} isDisabled={isVertical} />}
+			preview={isVertical ? undefined : <Choice label="Width" options={Object.keys(widths) as Width[]} value={width} onChange={setWidth} />}
 			controls={
 				<>
 					<ControlGroup label="Content">

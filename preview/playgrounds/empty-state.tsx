@@ -41,7 +41,7 @@ export function EmptyStatePlayground() {
 						<SwitchControl label="Icon" value={hasIcon} onChange={setHasIcon} />
 						{hasIcon && <IconPicker label="Icon name" value={icon} onChange={setIcon} />}
 						<Choice label="Actions" options={['none', 'one', 'two'] as const} value={actions} onChange={setActions} />
-						<Choice label="Action label" options={['short', 'long'] as const} value={action} onChange={setAction} isDisabled={actions === 'none'} />
+						{actions !== 'none' && <Choice label="Action label" options={['short', 'long'] as const} value={action} onChange={setAction} />}
 					</ControlGroup>
 				</>
 			}

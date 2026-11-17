@@ -91,7 +91,7 @@ export function DateFieldPlayground() {
 					<ControlGroup label="Behaviour">
 						<Choice label="Kind" options={kinds} value={kind} onChange={changeKind} />
 						<Choice label="Locale" options={Object.keys(locales) as LocaleName[]} value={locale} onChange={setLocale} />
-						<Choice label="Clock" options={clocks} value={clock} onChange={setClock} isDisabled={kind === 'date'} />
+						{kind !== 'date' && <Choice label="Clock" options={clocks} value={clock} onChange={setClock} />}
 						<SwitchControl label="A month either side of today" value={hasLimits} onChange={setLimits} />
 					</ControlGroup>
 					<ControlGroup label="State">

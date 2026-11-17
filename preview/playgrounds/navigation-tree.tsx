@@ -129,7 +129,7 @@ export function NavigationTreePlayground() {
 						<SwitchControl label="Parents are links" value={parentsLink} onChange={setParentsLink} />
 					</ControlGroup>
 					<ControlGroup label="State">
-						<Choice label="Open at start" options={openings} value={opened} onChange={setOpened} isDisabled={depth === '1'} />
+						{depth !== '1' && <Choice label="Open at start" options={openings} value={opened} onChange={setOpened} />}
 						<SwitchControl label="A disabled page" value={hasDisabled} onChange={setHasDisabled} />
 						<ControlRow label="Current page">
 							<div className="flex items-center gap-2">
