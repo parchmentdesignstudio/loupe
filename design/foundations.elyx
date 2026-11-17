@@ -514,14 +514,13 @@ typeSpecimen = frame {
 
     titleName = text : styles.label {
       width: 120px,
-      contents: "Title, medium",
+      contents: "Title",
       font-family: f.fonts.mono,
       fill[0].color: c.colors.muted
     }
 
     titleSample = text : styles.title {
-      contents: "Export your favicons",
-      font-style: "Medium"
+      contents: "Export your favicons"
     }
   }
 
