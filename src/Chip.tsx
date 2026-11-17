@@ -4,7 +4,7 @@ import { composeClassName, focusRing, tv } from './tv.js';
 export const chip = tv({
 	extend: focusRing,
 	// The after reaches at least 44 × 44 around the chip, so a small one still takes a finger
-	base: 'relative inline-flex cursor-default after:absolute after:top-1/2 after:left-1/2 after:size-full after:min-h-11 after:min-w-11 after:-translate-1/2 items-center bg-(--chip-fill) text-(color:--chip-text) shadow-raised [--shadow-raised-color:var(--chip-shadow)] transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none',
+	base: 'relative inline-flex cursor-default after:absolute after:top-1/2 after:left-1/2 after:size-full after:min-h-11 after:min-w-11 after:-translate-1/2 items-center bg-(--chip-fill,var(--color-raised)) text-(color:--chip-text,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--chip-shadow)] transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none',
 	variants: {
 		// Small and medium share the label's 16px line, so a swatch or 12px icon sits level with the text
 		size: {
@@ -13,7 +13,7 @@ export const chip = tv({
 			large: 'gap-1.5 rounded-(--chip-radius) px-(--chip-padding-x) py-(--chip-padding-y) text-control',
 		},
 		isHovered: {
-			true: 'bg-(--chip-hover-fill)',
+			true: 'bg-(--chip-hover-fill,var(--color-surface))',
 		},
 		isPressed: {
 			true: 'scale-(--chip-press-scale)',

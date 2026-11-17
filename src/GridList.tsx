@@ -58,7 +58,7 @@ export const gridListItem = tv({
 		{ layout: 'stack', isPressed: true, class: 'bg-bleed/12' },
 		{ layout: 'grid', isHovered: true, class: 'border-bleed/24' },
 		// Two pixels of ink, from the border and a ring over it, so nothing moves
-		{ layout: 'grid', isSelected: true, class: 'border-(--grid-list-item-selected-edge) shadow-[0_0_0_1px_var(--grid-list-item-selected-edge)]' },
+		{ layout: 'grid', isSelected: true, class: 'border-(--grid-list-item-selected-edge,var(--color-ink)) shadow-[0_0_0_1px_var(--grid-list-item-selected-edge,var(--color-ink))]' },
 	],
 });
 

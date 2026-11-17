@@ -29,7 +29,8 @@ const stepLabels = { component: 'Component', role: 'Role', palette: 'Palette', t
 // as a shadow's light-dark() mix, goes by the token it comes from, as shadow-raised-color, with a swatch if it's a colour
 function shownOf(token: ComponentToken) {
 	const last = token.steps?.at(-1);
-	const value = resolved(token.name);
+	// A colour token is left unset, and read with its value as the fallback, as a component reads it
+	const value = resolved(token.name) || token.value;
 	const palette = Boolean(token.steps?.some((step) => step.name.startsWith('--color-')));
 	const long = !palette && value.includes('(') && Boolean(last);
 	const shown = (palette ? last?.name.replace(/^--color-/, '') : long ? last?.name.replace(/^--/, '') : value) ?? value;
@@ -166,7 +167,7 @@ function TokenValue({ token }: { token: ComponentToken }) {
 				{/* The value and the tick stacked, as Code's copy button swaps its icons: one blurs, fades and shrinks a
 				little as the other comes in, and the value keeps its room so the chip holds its width */}
 				<span className={`col-start-1 row-start-1 flex items-center gap-1 ${swap} ${isCopied ? gone : ''}`}>
-					{colour && <Swatch color={`var(${token.name})`} size="small" />}
+					{colour && <Swatch color={`var(${token.name}, ${token.value})`} size="small" />}
 					{shown}
 				</span>
 				<span className={`col-start-1 row-start-1 flex items-center justify-center ${swap} ${isCopied ? '' : gone}`}>
@@ -178,7 +179,7 @@ function TokenValue({ token }: { token: ComponentToken }) {
 			</Chip>
 			<Popover placement="end top" className="flex w-max max-w-[min(36rem,calc(100vw-2rem))] flex-col text-label leading-5">
 				<div className="flex items-center gap-2 px-3 py-2.5">
-					{colour && <Swatch color={`var(${token.name})`} size="small" />}
+					{colour && <Swatch color={`var(${token.name}, ${token.value})`} size="small" />}
 					<p className="flex min-w-0 flex-wrap items-baseline gap-x-2">
 						<span className="font-semibold text-ink tabular-nums">{shown}</span>
 						{!themed && derivation && derivation !== shown && <span className={`text-muted tabular-nums ${derivation.includes('(') ? 'font-mono' : ''}`}>{derivation}</span>}

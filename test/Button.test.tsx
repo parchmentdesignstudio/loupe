@@ -103,15 +103,15 @@ describe('Button', () => {
 			</>,
 		);
 		const [primary, quiet] = screen.getAllByRole('button').map((button) => button.className.split(' '));
-		expect(primary).toEqual(expect.arrayContaining(['[--fill:var(--button-primary-fill)]', 'text-(color:--button-primary-text)']));
-		expect(quiet).toEqual(expect.arrayContaining(['[--fill:var(--button-quiet-fill)]', 'text-(color:--button-quiet-text)']));
-		expect(quiet).not.toContain('[--fill:var(--button-primary-fill)]');
+		expect(primary).toEqual(expect.arrayContaining(['[--fill:var(--button-primary-fill,var(--color-primary))]', 'text-(color:--button-primary-text,var(--color-on-primary))']));
+		expect(quiet).toEqual(expect.arrayContaining(['[--fill:var(--button-quiet-fill,var(--color-quiet))]', 'text-(color:--button-quiet-text,var(--color-on-quiet))']));
+		expect(quiet).not.toContain('[--fill:var(--button-primary-fill,var(--color-primary))]');
 	});
 
 	it('keeps text-body and text-ink apart when merging', () => {
 		render(<Button className="text-body">Schedule call</Button>);
 		expect(screen.getByRole('button').className).toContain('text-body');
-		expect(screen.getByRole('button').className).toContain('text-(color:--button-primary-text)');
+		expect(screen.getByRole('button').className).toContain('text-(color:--button-primary-text,var(--color-on-primary))');
 	});
 
 	it('has nothing for axe to flag', async () => {

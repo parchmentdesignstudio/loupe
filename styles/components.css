@@ -3,9 +3,14 @@
    hold. Set one on :root to restyle every button, or on an element to restyle the buttons inside it. In the base
    layer, so a site's own :root wins without !important.
 
+   A colour starts at a role, which a section can re-set, as a brand band sets its own --color-raised. Set here, a
+   colour would take :root's role rather than the section's, so the colours are left unset: each component reads one
+   with the value here as its fallback, and @media not all lists them without setting them. A site's own CSS reads one
+   with the same fallback. A fill mixed from --bleed stays in its component for the same reason. A shadow's colour is
+   set here all the same, as the theme sets its shadow colours on :root too.
+
    Components come in the preview sidebar's order. A heading on its own line names a component, then groups its tokens
-   as Shape, Type, Space, Colour, Shadow and Motion, in that order, and the line above each token says what it changes.
-   A fill mixed from --bleed stays in its component, as one set here would take the bleed of :root, not its layer's */
+   as Shape, Type, Space, Colour, Shadow and Motion, in that order, and the line above each token says what it changes */
 @layer base {
 	:root {
 		/* Button */
@@ -33,18 +38,20 @@
 
 		/* Colour */
 
-		/* Primary's fill, marigold */
-		--button-primary-fill: var(--color-primary);
-		/* The text on primary, ink */
-		--button-primary-text: var(--color-on-primary);
-		/* Quiet's fill, slate */
-		--button-quiet-fill: var(--color-quiet);
-		/* The text on quiet, ink */
-		--button-quiet-text: var(--color-on-quiet);
-		/* Danger's fill, red in both themes */
-		--button-danger-fill: var(--color-red-50);
-		/* The text on danger, white in both themes */
-		--button-danger-text: var(--color-white);
+		@media not all {
+			/* Primary's fill, marigold */
+			--button-primary-fill: var(--color-primary);
+			/* The text on primary, ink */
+			--button-primary-text: var(--color-on-primary);
+			/* Quiet's fill, slate */
+			--button-quiet-fill: var(--color-quiet);
+			/* The text on quiet, ink */
+			--button-quiet-text: var(--color-on-quiet);
+			/* Danger's fill, red in both themes */
+			--button-danger-fill: var(--color-red-50);
+			/* The text on danger, white in both themes */
+			--button-danger-text: var(--color-white);
+		}
 
 		/* Shadow */
 
@@ -84,12 +91,14 @@
 
 		/* Colour */
 
-		/* The fill, raised off the page */
-		--chip-fill: var(--color-raised);
-		/* The fill on hover */
-		--chip-hover-fill: var(--color-surface);
-		/* The label's colour */
-		--chip-text: var(--color-ink);
+		@media not all {
+			/* The fill, raised off the page */
+			--chip-fill: var(--color-raised);
+			/* The fill on hover */
+			--chip-hover-fill: var(--color-surface);
+			/* The label's colour */
+			--chip-text: var(--color-ink);
+		}
 
 		/* Shadow */
 
@@ -117,10 +126,12 @@
 
 		/* Colour */
 
-		/* A raised key's fill */
-		--keyboard-fill: var(--color-raised);
-		/* A raised key's characters */
-		--keyboard-text: var(--color-ink);
+		@media not all {
+			/* A raised key's fill */
+			--keyboard-fill: var(--color-raised);
+			/* A raised key's characters */
+			--keyboard-text: var(--color-ink);
+		}
 
 		/* Shadow */
 
@@ -146,12 +157,14 @@
 
 		/* Colour */
 
-		/* The fill that marks the chosen button in a well */
-		--toggle-button-group-chosen-fill: var(--color-chosen);
-		/* The tint on each chosen button in a raised group, pink */
-		--toggle-button-group-raised-chosen-fill: var(--color-chosen-tint);
-		/* A chosen button's text in a raised group */
-		--toggle-button-group-raised-chosen-text: var(--color-on-chosen-tint);
+		@media not all {
+			/* The fill that marks the chosen button in a well */
+			--toggle-button-group-chosen-fill: var(--color-chosen);
+			/* The tint on each chosen button in a raised group, pink */
+			--toggle-button-group-raised-chosen-fill: var(--color-chosen-tint);
+			/* A chosen button's text in a raised group */
+			--toggle-button-group-raised-chosen-text: var(--color-on-chosen-tint);
+		}
 
 		/* Toolbar */
 
@@ -185,14 +198,16 @@
 
 		/* Colour */
 
-		/* The box's fill, raised off the page */
-		--field-fill: var(--color-raised);
-		/* What's typed */
-		--field-text: var(--color-ink);
-		/* The hint shown while it's empty */
-		--field-placeholder: var(--color-muted);
-		/* The ring round the field that has focus */
-		--field-focus-ring: var(--color-ink);
+		@media not all {
+			/* The box's fill, raised off the page */
+			--field-fill: var(--color-raised);
+			/* What's typed */
+			--field-text: var(--color-ink);
+			/* The hint shown while it's empty */
+			--field-placeholder: var(--color-muted);
+			/* The ring round the field that has focus */
+			--field-focus-ring: var(--color-ink);
+		}
 
 		/* Shadow */
 
@@ -208,10 +223,12 @@
 
 		/* Colour */
 
-		/* The box's fill, raised off the page */
-		--checkbox-fill: var(--color-raised);
-		/* The tick and the dash */
-		--checkbox-mark: var(--color-ink);
+		@media not all {
+			/* The box's fill, raised off the page */
+			--checkbox-fill: var(--color-raised);
+			/* The tick and the dash */
+			--checkbox-mark: var(--color-ink);
+		}
 
 		/* Shadow */
 
@@ -227,10 +244,12 @@
 
 		/* Colour */
 
-		/* The circle's fill, raised off the page */
-		--radio-fill: var(--color-raised);
-		/* The dot in a chosen circle */
-		--radio-dot: var(--color-ink);
+		@media not all {
+			/* The circle's fill, raised off the page */
+			--radio-fill: var(--color-raised);
+			/* The dot in a chosen circle */
+			--radio-dot: var(--color-ink);
+		}
 
 		/* Shadow */
 
@@ -246,10 +265,12 @@
 
 		/* Colour */
 
-		/* The rail up to the thumb */
-		--slider-fill: var(--color-ink);
-		/* The thumb */
-		--slider-thumb: var(--color-knob);
+		@media not all {
+			/* The rail up to the thumb */
+			--slider-fill: var(--color-ink);
+			/* The thumb */
+			--slider-thumb: var(--color-knob);
+		}
 
 		/* Switch */
 
@@ -260,12 +281,14 @@
 
 		/* Colour */
 
-		/* The track when on, the green a success status uses */
-		--switch-on-fill: var(--color-green-68);
-		/* The handle when off */
-		--switch-handle: var(--color-knob);
-		/* The handle when on, white in both themes */
-		--switch-on-handle: var(--color-white);
+		@media not all {
+			/* The track when on, the green a success status uses */
+			--switch-on-fill: var(--color-green-68);
+			/* The handle when off */
+			--switch-handle: var(--color-knob);
+			/* The handle when on, white in both themes */
+			--switch-on-handle: var(--color-white);
+		}
 
 		/* Calendar */
 
@@ -281,12 +304,14 @@
 
 		/* Colour */
 
-		/* A chosen day's fill, and a range's ends */
-		--calendar-selected-fill: var(--color-ink);
-		/* A chosen day's number */
-		--calendar-selected-text: var(--color-paper);
-		/* The dot under today */
-		--calendar-today: var(--color-accent);
+		@media not all {
+			/* A chosen day's fill, and a range's ends */
+			--calendar-selected-fill: var(--color-ink);
+			/* A chosen day's number */
+			--calendar-selected-text: var(--color-paper);
+			/* The dot under today */
+			--calendar-today: var(--color-accent);
+		}
 
 		/* ColorArea */
 
@@ -313,8 +338,10 @@
 
 		/* Colour */
 
-		/* The edge round the thumb, white in both themes so it shows on any colour */
-		--color-thumb-edge: var(--color-white);
+		@media not all {
+			/* The edge round the thumb, white in both themes so it shows on any colour */
+			--color-thumb-edge: var(--color-white);
+		}
 
 		/* DropZone */
 
@@ -330,10 +357,12 @@
 
 		/* Colour */
 
-		/* A dashed zone's text */
-		--drop-zone-text: var(--color-muted);
-		/* A dashed zone's edge and text while a file is over it */
-		--drop-zone-target: var(--color-ink);
+		@media not all {
+			/* A dashed zone's text */
+			--drop-zone-text: var(--color-muted);
+			/* A dashed zone's edge and text while a file is over it */
+			--drop-zone-target: var(--color-ink);
+		}
 
 		/* Avatar */
 
@@ -365,8 +394,10 @@
 
 		/* Colour */
 
-		/* The edge round a chosen tile, in a grid */
-		--grid-list-item-selected-edge: var(--color-ink);
+		@media not all {
+			/* The edge round a chosen tile, in a grid */
+			--grid-list-item-selected-edge: var(--color-ink);
+		}
 
 		/* Swatch */
 
@@ -402,12 +433,14 @@
 
 		/* Colour */
 
-		/* A raised table's fill, which its sticky header shares */
-		--table-raised-fill: var(--color-raised);
-		/* A flush table's header fill, the panel it fills */
-		--table-flush-fill: var(--color-panel);
-		/* A column heading, muted until it's sorted or hovered */
-		--table-column-text: var(--color-muted);
+		@media not all {
+			/* A raised table's fill, which its sticky header shares */
+			--table-raised-fill: var(--color-raised);
+			/* A flush table's header fill, the panel it fills */
+			--table-flush-fill: var(--color-panel);
+			/* A column heading, muted until it's sorted or hovered */
+			--table-column-text: var(--color-muted);
+		}
 
 		/* Tag */
 
@@ -425,25 +458,29 @@
 
 		/* Colour */
 
-		/* A chosen tag's fill */
-		--tag-selected-fill: var(--color-ink);
-		/* A chosen tag's label */
-		--tag-selected-text: var(--color-paper);
+		@media not all {
+			/* A chosen tag's fill */
+			--tag-selected-fill: var(--color-ink);
+			/* A chosen tag's label */
+			--tag-selected-text: var(--color-paper);
+		}
 
 		/* Tones: what alerts, statuses and an avatar's status dot are coloured by, shared so they agree */
 
 		/* Colour */
 
-		/* Nothing to act on, sand */
-		--tone-neutral: var(--color-sand-66);
-		/* Worth knowing, blue */
-		--tone-info: var(--color-blue-56);
-		/* Done or well, green, as an avatar is online */
-		--tone-success: var(--color-green-68);
-		/* Needs a look, yellow, as an avatar is away */
-		--tone-warning: var(--color-yellow-76);
-		/* Gone wrong, red, as an avatar is busy */
-		--tone-danger: var(--color-red-67);
+		@media not all {
+			/* Nothing to act on, sand */
+			--tone-neutral: var(--color-sand-66);
+			/* Worth knowing, blue */
+			--tone-info: var(--color-blue-56);
+			/* Done or well, green, as an avatar is online */
+			--tone-success: var(--color-green-68);
+			/* Needs a look, yellow, as an avatar is away */
+			--tone-warning: var(--color-yellow-76);
+			/* Gone wrong, red, as an avatar is busy */
+			--tone-danger: var(--color-red-67);
+		}
 
 		/* Alert */
 
@@ -483,10 +520,12 @@
 
 		/* Colour */
 
-		/* The icon's tile, raised off the page */
-		--empty-state-icon-fill: var(--color-raised);
-		/* The icon */
-		--empty-state-icon: var(--color-muted);
+		@media not all {
+			/* The icon's tile, raised off the page */
+			--empty-state-icon-fill: var(--color-raised);
+			/* The icon */
+			--empty-state-icon: var(--color-muted);
+		}
 
 		/* ProgressBar */
 
@@ -497,8 +536,10 @@
 
 		/* Colour */
 
-		/* How far it's come */
-		--progress-bar-fill: var(--color-ink);
+		@media not all {
+			/* How far it's come */
+			--progress-bar-fill: var(--color-ink);
+		}
 
 		/* Status */
 
@@ -528,10 +569,12 @@
 
 		/* Colour */
 
-		/* The fill, ink as a surface */
-		--toast-fill: var(--color-inverse);
-		/* The text on it */
-		--toast-text: var(--color-paper);
+		@media not all {
+			/* The fill, ink as a surface */
+			--toast-fill: var(--color-inverse);
+			/* The text on it */
+			--toast-text: var(--color-paper);
+		}
 
 		/* Shadow */
 
@@ -549,10 +592,12 @@
 
 		/* Colour */
 
-		/* A signpost's rule, the accent */
-		--aside-signpost-rule: var(--color-accent);
-		/* An afterthought's text */
-		--aside-afterthought-text: var(--color-muted);
+		@media not all {
+			/* A signpost's rule, the accent */
+			--aside-signpost-rule: var(--color-accent);
+			/* An afterthought's text */
+			--aside-afterthought-text: var(--color-muted);
+		}
 
 		/* Quote */
 
@@ -586,8 +631,10 @@
 
 		/* Colour */
 
-		/* An option's text */
-		--option-text: var(--color-ink);
+		@media not all {
+			/* An option's text */
+			--option-text: var(--color-ink);
+		}
 
 		/* Dialog */
 
@@ -600,8 +647,10 @@
 
 		/* Colour */
 
-		/* The footer behind a dialog's actions */
-		--dialog-actions-fill: var(--color-panel);
+		@media not all {
+			/* The footer behind a dialog's actions */
+			--dialog-actions-fill: var(--color-panel);
+		}
 
 		/* Modal */
 
@@ -612,10 +661,12 @@
 
 		/* Colour */
 
-		/* The box's fill */
-		--modal-fill: var(--color-overlay);
-		/* What covers the page behind it, the ground most of the way to opaque */
-		--modal-backdrop: color-mix(in oklab, var(--color-ground) 88%, transparent);
+		@media not all {
+			/* The box's fill */
+			--modal-fill: var(--color-overlay);
+			/* What covers the page behind it, the ground most of the way to opaque */
+			--modal-backdrop: color-mix(in oklab, var(--color-ground) 88%, transparent);
+		}
 
 		/* Shadow */
 
@@ -631,10 +682,12 @@
 
 		/* Colour */
 
-		/* The fill, which its arrow shares */
-		--popover-fill: var(--color-overlay);
-		/* The text in it */
-		--popover-text: var(--color-ink);
+		@media not all {
+			/* The fill, which its arrow shares */
+			--popover-fill: var(--color-overlay);
+			/* The text in it */
+			--popover-text: var(--color-ink);
+		}
 
 		/* Shadow */
 
@@ -650,10 +703,12 @@
 
 		/* Colour */
 
-		/* The fill */
-		--sheet-fill: var(--color-overlay);
-		/* What covers the page behind the first sheet */
-		--sheet-backdrop: var(--color-scrim);
+		@media not all {
+			/* The fill */
+			--sheet-fill: var(--color-overlay);
+			/* What covers the page behind the first sheet */
+			--sheet-backdrop: var(--color-scrim);
+		}
 
 		/* Shadow */
 
@@ -676,10 +731,12 @@
 
 		/* Colour */
 
-		/* The fill, ink as a surface */
-		--tooltip-fill: var(--color-inverse);
-		/* The text on it */
-		--tooltip-text: var(--color-paper);
+		@media not all {
+			/* The fill, ink as a surface */
+			--tooltip-fill: var(--color-inverse);
+			/* The text on it */
+			--tooltip-text: var(--color-paper);
+		}
 
 		/* Breadcrumbs */
 
@@ -690,10 +747,12 @@
 
 		/* Colour */
 
-		/* A page on the way */
-		--breadcrumbs-text: var(--color-muted);
-		/* The current page, and a page on hover */
-		--breadcrumbs-current-text: var(--color-ink);
+		@media not all {
+			/* A page on the way */
+			--breadcrumbs-text: var(--color-muted);
+			/* The current page, and a page on hover */
+			--breadcrumbs-current-text: var(--color-ink);
+		}
 
 		/* DisclosureHeader */
 
@@ -748,10 +807,12 @@
 
 		/* Colour */
 
-		/* A link's text */
-		--navigation-tree-item-text: var(--color-ink);
-		/* The current page's link, the accent */
-		--navigation-tree-item-current-text: var(--color-accent);
+		@media not all {
+			/* A link's text */
+			--navigation-tree-item-text: var(--color-ink);
+			/* The current page's link, the accent */
+			--navigation-tree-item-current-text: var(--color-accent);
+		}
 
 		/* Link */
 
@@ -762,10 +823,12 @@
 
 		/* Colour */
 
-		/* The underline, a faint ink so the words lead */
-		--link-underline: color-mix(in oklab, var(--color-ink) 32%, transparent);
-		/* The underline on hover, full ink */
-		--link-hover-underline: var(--color-ink);
+		@media not all {
+			/* The underline, a faint ink so the words lead */
+			--link-underline: color-mix(in oklab, var(--color-ink) 32%, transparent);
+			/* The underline on hover, full ink */
+			--link-hover-underline: var(--color-ink);
+		}
 
 		/* Pagination */
 
@@ -795,11 +858,14 @@
 
 		/* Colour */
 
-		/* A tab's label */
-		--tab-text: var(--color-muted);
-		/* The chosen tab's label, and any tab's on hover */
-		--tab-selected-text: var(--color-ink);
-		/* The bar under the chosen tab */
-		--tab-indicator: var(--color-ink);
+		@media not all {
+			/* A tab's label */
+			--tab-text: var(--color-muted);
+			/* The chosen tab's label, and any tab's on hover */
+			--tab-selected-text: var(--color-ink);
+			/* The bar under the chosen tab */
+			--tab-indicator: var(--color-ink);
+		}
+
 	}
 }

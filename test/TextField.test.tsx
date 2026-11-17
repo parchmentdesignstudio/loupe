@@ -14,13 +14,13 @@ describe('TextField', () => {
 			</>,
 		);
 		const raised = screen.getByRole('textbox', { name: 'Name' }).className;
-		expect(raised).toContain('bg-(--field-fill)');
+		expect(raised).toContain('bg-(--field-fill,var(--color-raised))');
 		expect(raised).toContain('py-(--field-padding-y)');
 		const filled = screen.getByRole('textbox', { name: 'Width' }).className;
 		expect(filled).toContain('bg-bleed/8');
 		expect(filled).toContain('shadow-none');
 		expect(filled).toContain('py-(--field-small-padding-y)');
-		expect(filled).not.toContain('bg-(--field-fill)');
+		expect(filled).not.toContain('bg-(--field-fill,var(--color-raised))');
 		// Filled is already grey, so disabled goes lighter
 		expect(screen.getByRole('textbox', { name: 'Height' }).className).toContain('bg-bleed/4');
 	});

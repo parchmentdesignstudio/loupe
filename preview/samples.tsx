@@ -220,7 +220,7 @@ export const samples: Partial<Record<string, Sample>> = {
 	DateField: (props) => <DateField label="Due" className="w-40" {...props} />,
 	DatePicker: (props) => <DatePicker label="Due" className="w-48" {...props} />,
 	Dialog: (props) => (
-		<div className="w-72 rounded-(--modal-radius) bg-(--modal-fill) shadow-overlay [--bleed:var(--overlay-bleed)]">
+		<div className="w-72 rounded-(--modal-radius) bg-(--modal-fill,var(--color-overlay)) shadow-overlay [--bleed:var(--overlay-bleed)]">
 			<Dialog aria-label="Delete project" {...props}>
 				<DialogHeading>Delete project?</DialogHeading>
 				<DialogActions>

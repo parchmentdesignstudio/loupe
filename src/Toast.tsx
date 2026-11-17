@@ -101,7 +101,7 @@ function useSlide(ref: RefObject<HTMLDivElement | null>) {
 // On ink, so its tints are paper
 const surface = tv({
 	extend: focusRing,
-	base: 'flex w-[min(22rem,calc(100vw-2rem))] animate-toast-in items-start gap-3 rounded-(--toast-radius) bg-(--toast-fill) py-3 pr-2 pl-4 text-(color:--toast-text) shadow-overlay [--shadow-overlay-color:var(--toast-shadow)] [--bleed:var(--inverse-bleed)] motion-reduce:animate-fade-in',
+	base: 'flex w-[min(22rem,calc(100vw-2rem))] animate-toast-in items-start gap-3 rounded-(--toast-radius) bg-(--toast-fill,var(--color-inverse)) py-3 pr-2 pl-4 text-(color:--toast-text,var(--color-paper)) shadow-overlay [--shadow-overlay-color:var(--toast-shadow)] [--bleed:var(--inverse-bleed)] motion-reduce:animate-fade-in',
 	variants: {
 		isExiting: {
 			true: 'pointer-events-none animate-toast-out motion-reduce:animate-fade-out',

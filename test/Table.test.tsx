@@ -158,6 +158,6 @@ describe('Table', () => {
 		rerender(<Invoices variant="flush" />);
 		expect(box()).not.toContain('shadow-panel');
 		expect(box()).not.toContain('rounded-(--table-radius)');
-		expect(box()).toContain('--table-fill:var(--table-flush-fill)');
+		expect(box()).toContain('--table-fill:var(--table-flush-fill,var(--color-panel))');
 	});
 });

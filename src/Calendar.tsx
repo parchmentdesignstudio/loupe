@@ -55,10 +55,10 @@ export const calendarDay = tv({
 			true: { cell: 'rounded-e-(--calendar-day-radius)' },
 		},
 		isEnd: {
-			true: { mark: 'bg-(--calendar-selected-fill) font-medium text-(color:--calendar-selected-text) forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]' },
+			true: { mark: 'bg-(--calendar-selected-fill,var(--color-ink)) font-medium text-(color:--calendar-selected-text,var(--color-paper)) forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]' },
 		},
 		isToday: {
-			true: { mark: 'after:absolute after:bottom-1 after:size-1 after:rounded-full after:bg-(--calendar-today)' },
+			true: { mark: 'after:absolute after:bottom-1 after:size-1 after:rounded-full after:bg-(--calendar-today,var(--color-accent))' },
 		},
 		isHovered: {
 			true: '',
@@ -83,8 +83,8 @@ export const calendarDay = tv({
 	compoundVariants: [
 		{ isEnd: false, isHovered: true, class: { mark: 'bg-bleed/8' } },
 		{ isEnd: false, isPressed: true, class: { mark: 'bg-bleed/12' } },
-		{ isEnd: true, isHovered: true, class: { mark: 'bg-(--calendar-selected-fill)/88' } },
-		{ isEnd: true, isToday: true, class: { mark: 'after:bg-(--calendar-selected-text)' } },
+		{ isEnd: true, isHovered: true, class: { mark: 'bg-(--calendar-selected-fill,var(--color-ink))/88' } },
+		{ isEnd: true, isToday: true, class: { mark: 'after:bg-(--calendar-selected-text,var(--color-paper))' } },
 		{ isEnd: true, isInvalid: true, class: { mark: 'bg-danger' } },
 		{ isBand: true, isInvalid: true, class: { cell: 'bg-danger/12' } },
 	],
