@@ -22,7 +22,6 @@ export const MotionIcon = forwardRef(function MotionIcon({ name, label, ...rest 
   return createElement('svg', {
     ...iconAttributes({ label }),
     viewBox: icon.viewBox,
-    overflow: 'visible',
     'data-motion': name,
     ref,
     ...rest,

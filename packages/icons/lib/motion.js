@@ -1,8 +1,8 @@
 import { resolveIcon, iconAttributes } from './index.js'
 
 // Icons that move, drawn from the solid 16px icons' parts (data-part). Each move happens inside the icon's own 16 grid,
-// in its units. The svg draws past its box, and fades over the 2 units either side of it, so a plane or car leaves and
-// comes back at the icon's edges softly, at any size, while the box it takes up stays 16
+// in its units. While it moves, the svg draws past its box, and fades over the 2 units either side of it, so a plane or
+// car leaves and comes back at the icon's edges softly, at any size, while the box it takes up stays 16
 
 const bodyOf = (name) => {
   const icon = resolveIcon(name)
@@ -176,16 +176,53 @@ export function resolveMotionIcon(name, { id = `motion-${++count}` } = {}) {
   if (!move) throw new Error(`No moving icon called ${name}`)
   // Gone by 18 either way, where across() takes a move off and brings it back
   const fade = `<linearGradient id="${id}-fade" gradientUnits="userSpaceOnUse" x1="-2" x2="18"><stop offset="0" stop-color="#000"/><stop offset=".1" stop-color="#fff"/><stop offset=".9" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>`
-  const mask = `<mask id="${id}-edge" maskUnits="userSpaceOnUse" x="-2" y="-8" width="20" height="32"><rect x="-2" y="-8" width="20" height="32" fill="url(#${id}-fade)"/></mask>`
-  return { name, viewBox: '0 0 16 16', body: `<defs>${fade}${mask}</defs><g mask="url(#${id}-edge)">${move.draw(id)}</g>` }
+  // The fade comes in over what showed at rest, a rect that fadeEdges sizes as a move starts
+  const mask = `<mask id="${id}-edge" maskUnits="userSpaceOnUse" x="-2" y="-8" width="20" height="32"><rect width="16" height="16" fill="#fff" data-rest/><rect x="-2" y="-8" width="20" height="32" fill="url(#${id}-fade)" opacity="0" data-fade/></mask>`
+  return { name, viewBox: '0 0 16 16', body: `<defs>${fade}${mask}</defs><g data-edge="url(#${id}-edge)">${move.draw(id)}</g>` }
 }
 
 /** A complete <svg> string of a moving icon, at rest */
 export function toMotionSvg(name, { label, class: className, id } = {}) {
   const icon = resolveMotionIcon(name, { id })
-  const attrs = { ...iconAttributes({ label }), viewBox: icon.viewBox, overflow: 'visible', 'data-motion': name, ...(className ? { class: className } : {}) }
+  const attrs = { ...iconAttributes({ label }), viewBox: icon.viewBox, 'data-motion': name, ...(className ? { class: className } : {}) }
   const open = Object.entries(attrs).map(([k, v]) => `${k}="${String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"`).join(' ')
   return `<svg ${open}>${icon.body}</svg>`
+}
+
+// The overflow attribute each svg had at rest, while its edges fade
+const unclipped = new WeakMap()
+
+// Only while a move plays, as at rest the fade would cut into what runs past the box on purpose, such as a ferry's water
+// out to the edge of a circle around it. It comes in over what showed at rest as the move starts, and goes as it ends,
+// so it doesn't jump
+function fadeEdges(svg, animations) {
+  const edge = svg.querySelector('[data-edge]')
+  if (!unclipped.has(svg)) {
+    // All of it, where what holds it lets it spill, or its box, where the svg clips as it does by default
+    const area = getComputedStyle(svg).overflowX === 'visible' ? { x: -2, y: -8, width: 20, height: 32 } : { x: 0, y: 0, width: 16, height: 16 }
+    const rest = svg.querySelector('[data-rest]')
+    for (const [key, value] of Object.entries(area)) rest.setAttribute(key, value)
+    unclipped.set(svg, svg.getAttribute('overflow'))
+    svg.setAttribute('overflow', 'visible')
+    edge.setAttribute('mask', edge.dataset.edge)
+  }
+  const duration = Math.max(...animations.map((animation) => animation.effect.getComputedTiming().endTime))
+  // Over 150ms at either end
+  const ramp = Math.min(150 / duration, 0.5)
+  const fade = svg.querySelector('[data-fade]').animate(
+    [{ opacity: 0, easing: 'ease-in-out' }, { opacity: 1, offset: ramp }, { opacity: 1, offset: 1 - ramp, easing: 'ease-in-out' }, { opacity: 0 }],
+    { duration },
+  )
+  Promise.allSettled([...animations, fade].map((animation) => animation.finished)).then(() => {
+    // Unless another move has started since
+    if (svg.getAnimations({ subtree: true }).length > 0 || !unclipped.has(svg)) return
+    const overflow = unclipped.get(svg)
+    unclipped.delete(svg)
+    if (overflow === null) svg.removeAttribute('overflow')
+    else svg.setAttribute('overflow', overflow)
+    edge.removeAttribute('mask')
+  })
+  return fade
 }
 
 /** Plays a moving icon's move through once, unless it's moving already. Not with reduced motion */
@@ -193,7 +230,8 @@ export function playMotion(svg) {
   const move = moves[svg?.dataset?.motion]
   if (!move || svg.getAnimations({ subtree: true }).length > 0) return []
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return []
-  return move.play(svg)
+  const animations = move.play(svg)
+  return [...animations, fadeEdges(svg, animations)]
 }
 
 /**
