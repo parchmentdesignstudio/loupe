@@ -10,16 +10,16 @@ import { composeClassName, focusRing, tv } from './tv.js';
 // focus only. The chevron sits 8px in, as a circle button's icon does
 export const selectTrigger = tv({
 	extend: focusRing,
-	base: 'flex w-full cursor-default items-center gap-2 rounded-lg text-left text-control font-medium text-ink outline-offset-0 [-webkit-tap-highlight-color:transparent]',
+	base: 'flex w-full cursor-default items-center gap-2 rounded-(--field-radius) text-left text-control font-medium text-(color:--field-text) outline-offset-0 [-webkit-tap-highlight-color:transparent]',
 	variants: {
 		// As a text field's, before the states so theirs win
 		variant: {
-			raised: 'bg-raised shadow-raised',
+			raised: 'bg-(--field-fill) shadow-raised [--shadow-raised-color:var(--field-shadow)]',
 			filled: 'bg-bleed/8 shadow-none',
 		},
 		size: {
-			medium: 'py-1.5 pr-2 pl-3',
-			small: 'py-1 pr-1.5 pl-2.5',
+			medium: 'py-(--field-padding-y) pr-2 pl-(--field-padding-x)',
+			small: 'py-(--field-small-padding-y) pr-1.5 pl-(--field-small-padding-x)',
 		},
 		isInvalid: {
 			true: 'shadow-invalid',
@@ -50,7 +50,7 @@ export function Select<T extends object>({ label, description, errorMessage, ite
 				<>
 					{label && <Label>{label}</Label>}
 					<Button className={(state) => selectTrigger({ ...state, isInvalid, variant, size })}>
-						<SelectValue className="min-w-0 flex-1 truncate data-[placeholder]:text-muted">{({ isPlaceholder, selectedText, defaultChildren }) => (isPlaceholder ? defaultChildren : selectedText)}</SelectValue>
+						<SelectValue className="min-w-0 flex-1 truncate data-[placeholder]:text-(color:--field-placeholder)">{({ isPlaceholder, selectedText, defaultChildren }) => (isPlaceholder ? defaultChildren : selectedText)}</SelectValue>
 						<ChevronDown className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" />
 					</Button>
 					{description && <Description>{description}</Description>}

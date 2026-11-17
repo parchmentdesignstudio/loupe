@@ -615,6 +615,17 @@
     --toggle-button-group-raised-chosen-fill: var(--color-chosen-tint);
     --toggle-button-group-raised-chosen-text: var(--color-on-chosen-tint);
     --toolbar-gap: var(--spacing);
+    --field-radius: var(--radius-lg);
+    --field-label-font-weight: 500;
+    --field-padding-x: calc(var(--spacing) * 3);
+    --field-padding-y: calc(var(--spacing) * 1.5);
+    --field-small-padding-x: calc(var(--spacing) * 2.5);
+    --field-small-padding-y: var(--spacing);
+    --field-fill: var(--color-raised);
+    --field-text: var(--color-ink);
+    --field-placeholder: var(--color-muted);
+    --field-focus-ring: var(--color-ink);
+    --field-shadow: var(--shadow-raised-color);
     --checkbox-radius: var(--radius-md);
     --checkbox-fill: var(--color-raised);
     --checkbox-mark: var(--color-ink);
@@ -1921,6 +1932,10 @@
     border-radius: var(--chip-small-radius);
   }
 
+  .rounded-\(--field-radius\) {
+    border-radius: var(--field-radius);
+  }
+
   .rounded-\(--keyboard-radius\) {
     border-radius: var(--keyboard-radius);
   }
@@ -2090,6 +2105,10 @@
 
   .bg-\(--chosen-tint\) {
     background-color: var(--chosen-tint);
+  }
+
+  .bg-\(--field-fill\) {
+    background-color: var(--field-fill);
   }
 
   .bg-\(--keyboard-fill\) {
@@ -2424,6 +2443,14 @@
     padding-inline: var(--dialog-padding);
   }
 
+  .px-\(--field-padding-x\) {
+    padding-inline: var(--field-padding-x);
+  }
+
+  .px-\(--field-small-padding-x\) {
+    padding-inline: var(--field-small-padding-x);
+  }
+
   .px-\(--keyboard-padding-x\) {
     padding-inline: var(--keyboard-padding-x);
   }
@@ -2468,6 +2495,10 @@
     padding-inline: calc(var(--spacing) * 6);
   }
 
+  .px-\[calc\(var\(--field-padding-x\)-2px\)\] {
+    padding-inline: calc(var(--field-padding-x) - 2px);
+  }
+
   .px-\[round\(1em\*4\/13\,1px\)\] {
     padding-inline: round(.307692em, 1px);
   }
@@ -2490,6 +2521,14 @@
 
   .py-\(--chip-small-padding-y\) {
     padding-block: var(--chip-small-padding-y);
+  }
+
+  .py-\(--field-padding-y\) {
+    padding-block: var(--field-padding-y);
+  }
+
+  .py-\(--field-small-padding-y\) {
+    padding-block: var(--field-small-padding-y);
   }
 
   .py-\(--keyboard-padding-y\) {
@@ -2620,6 +2659,14 @@
     padding-bottom: calc(var(--dialog-padding) + var(--sheet-scroll-padding-y));
   }
 
+  .pl-\(--field-padding-x\) {
+    padding-left: var(--field-padding-x);
+  }
+
+  .pl-\(--field-small-padding-x\) {
+    padding-left: var(--field-small-padding-x);
+  }
+
   .pl-1\.5 {
     padding-left: calc(var(--spacing) * 1.5);
   }
@@ -2630,10 +2677,6 @@
 
   .pl-2\.5 {
     padding-left: calc(var(--spacing) * 2.5);
-  }
-
-  .pl-3 {
-    padding-left: calc(var(--spacing) * 3);
   }
 
   .pl-4 {
@@ -2759,6 +2802,10 @@
     font-weight: var(--button-font-weight);
   }
 
+  .\[font-weight\:var\(--field-label-font-weight\)\] {
+    font-weight: var(--field-label-font-weight);
+  }
+
   .\[font-weight\:var\(--tab-font-weight\)\] {
     font-weight: var(--tab-font-weight);
   }
@@ -2817,6 +2864,14 @@
 
   .text-\(color\:--chip-text\) {
     color: var(--chip-text);
+  }
+
+  .text-\(color\:--field-placeholder\) {
+    color: var(--field-placeholder);
+  }
+
+  .text-\(color\:--field-text\) {
+    color: var(--field-text);
   }
 
   .text-\(color\:--keyboard-text\) {
@@ -3097,6 +3152,10 @@
 
   .outline-offset-4 {
     outline-offset: 4px;
+  }
+
+  .outline-\(color\:--field-focus-ring\) {
+    outline-color: var(--field-focus-ring);
   }
 
   .outline-\[color\:light-dark\(color-mix\(in_oklab\,var\(--color-black\)_10\%\,transparent\)\,color-mix\(in_oklab\,var\(--color-white\)_10\%\,transparent\)\)\] {
@@ -3563,6 +3622,10 @@
     --shadow-raised-color: var(--chip-shadow);
   }
 
+  .\[--shadow-raised-color\:var\(--field-shadow\)\] {
+    --shadow-raised-color: var(--field-shadow);
+  }
+
   .\[--shadow-raised-color\:var\(--keyboard-shadow\)\] {
     --shadow-raised-color: var(--keyboard-shadow);
   }
@@ -3777,8 +3840,8 @@
     flex: 1;
   }
 
-  .placeholder\:text-muted::placeholder {
-    color: var(--color-muted);
+  .placeholder\:text-\(color\:--field-placeholder\)::placeholder {
+    color: var(--field-placeholder);
   }
 
   .before\:pointer-events-none:before {
@@ -4265,8 +4328,8 @@
     visibility: hidden;
   }
 
-  .data-\[placeholder\]\:text-muted[data-placeholder] {
-    color: var(--color-muted);
+  .data-\[placeholder\]\:text-\(color\:--field-placeholder\)[data-placeholder] {
+    color: var(--field-placeholder);
   }
 
   .data-\[pressed\]\:bg-bleed\/12[data-pressed] {

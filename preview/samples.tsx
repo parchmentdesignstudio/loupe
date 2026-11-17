@@ -1,3 +1,4 @@
+import { Icon } from '@parchment/icons/react';
 import type { ReactNode } from 'react';
 import {
 	Alert,
@@ -9,6 +10,11 @@ import {
 	Checkbox,
 	Chip,
 	Code,
+	ColorField,
+	ComboBox,
+	Composer,
+	DateField,
+	DatePicker,
 	Column,
 	Disclosure,
 	DisclosureGroup,
@@ -29,6 +35,7 @@ import {
 	Radio,
 	RadioGroup,
 	Row,
+	SearchField,
 	Select,
 	Slider,
 	Status,
@@ -124,7 +131,17 @@ export const samples: Partial<Record<string, Sample>> = {
 	),
 	Chip: (props) => <Chip {...props}>Sounds good</Chip>,
 	Code: (props) => <Code code="pnpm add shiki" isCopyable={false} className="w-56" {...props} />,
+	ColorField: (props) => <ColorField label="Accent" defaultValue="#c76024" className="w-40" {...props} />,
 	Column: (props) => table({ column: props, cell: props }),
+	ComboBox: (props) => (
+		<ComboBox label="Country" placeholder="Pick one" className="w-48" {...props}>
+			<ListBoxItem id="nz">New Zealand</ListBoxItem>
+			<ListBoxItem id="uk">United Kingdom</ListBoxItem>
+		</ComboBox>
+	),
+	Composer: (props) => <Composer aria-label="Message" placeholder="Write a reply" submitLabel="Send" submitIcon={<Icon name="arrow-up" />} onSubmit={() => {}} className="w-72" {...props} />,
+	DateField: (props) => <DateField label="Due" className="w-40" {...props} />,
+	DatePicker: (props) => <DatePicker label="Due" className="w-48" {...props} />,
 	Disclosure: (props) => (
 		<Disclosure className="w-56" defaultExpanded {...props}>
 			<DisclosureHeader>Delivery</DisclosureHeader>
@@ -177,6 +194,7 @@ export const samples: Partial<Record<string, Sample>> = {
 			</Radio>
 		</RadioGroup>
 	),
+	SearchField: (props) => <SearchField aria-label="Search" placeholder="Search projects" className="w-48" {...props} />,
 	Select: (props) => (
 		<Select label="Plan" defaultSelectedKey="studio" className="w-48" {...props}>
 			<ListBoxItem id="solo">Solo</ListBoxItem>
