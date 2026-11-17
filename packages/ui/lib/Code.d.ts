@@ -17,12 +17,13 @@ export declare const code: import("tailwind-variants").TVReturnType<{
     plain: string;
     aside: string;
     line: string;
+    ground: string;
 }, undefined, undefined, undefined, undefined>;
 export type CodeTheme = 'loupe' | 'iamsteve' | 'mcknny';
 /**
- * The code without Shiki's [!code ++] style notes, as Shiki shows it, for Copy and for the code before it's highlighted.
- * A comment left empty goes with them, and so does a line that was only that comment. A note inside a line stays, as
- * Shiki leaves it
+ * The code without the [!code ++] style notes Loupe's transformers read, as Shiki shows it, for Copy and for the code
+ * before it's highlighted. Shiki reads them in the comment that ends a line, after its last //, so one in a string
+ * stays, and so does one before another //. A comment left empty goes, and so does a line that was only that comment
  */
 export declare function withoutNotes(source: string): string;
 export interface CodeProps {
