@@ -15,7 +15,7 @@ export interface MenuProps<T> extends AriaMenuProps<T> {
 export function Menu<T extends object>({ placement, ...props }: MenuProps<T>) {
 	return (
 		<Popover placement={placement} className="min-w-52">
-			<AriaMenu {...props} className="max-h-[inherit] overflow-auto p-1 outline-0" />
+			<AriaMenu {...props} className="max-h-[inherit] overflow-auto p-(--option-list-padding) outline-0" />
 		</Popover>
 	);
 }

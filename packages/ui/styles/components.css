@@ -267,6 +267,25 @@
 		/* The handle when on, white in both themes */
 		--switch-on-handle: var(--color-white);
 
+		/* GridListItem */
+
+		/* Shape */
+
+		/* An item's corners, in a stack or a grid */
+		--grid-list-item-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The padding beside a row's text, in a stack */
+		--grid-list-item-padding-x: --spacing(3);
+		/* The padding above and below a row's 20px line, so it's 32px tall */
+		--grid-list-item-padding-y: --spacing(1.5);
+
+		/* Colour */
+
+		/* The edge round a chosen tile, in a grid */
+		--grid-list-item-selected-edge: var(--color-ink);
+
 		/* Swatch */
 
 		/* Shape */
@@ -277,6 +296,36 @@
 		--swatch-medium-radius: var(--radius-md);
 		/* A small swatch's corners, which keep it a square at 12px */
 		--swatch-small-radius: 3px;
+
+		/* Table */
+
+		/* Shape */
+
+		/* A raised table's corners */
+		--table-radius: var(--radius-lg);
+
+		/* Type */
+
+		/* A column heading's weight */
+		--table-column-font-weight: 500;
+
+		/* Space */
+
+		/* The padding beside a cell's text. The first and last cells keep 16px at the box's edges */
+		--table-cell-padding-x: --spacing(3);
+		/* The padding above and below a cell's 20px line, so a row is 40px tall */
+		--table-cell-padding-y: --spacing(2.5);
+		/* The same in a compact table, so a row is 32px tall */
+		--table-compact-cell-padding-y: --spacing(1.5);
+
+		/* Colour */
+
+		/* A raised table's fill, which its sticky header shares */
+		--table-raised-fill: var(--color-raised);
+		/* A flush table's header fill, the panel it fills */
+		--table-flush-fill: var(--color-panel);
+		/* A column heading, muted until it's sorted or hovered */
+		--table-column-text: var(--color-muted);
 
 		/* Tag */
 
@@ -298,6 +347,124 @@
 		--tag-selected-fill: var(--color-ink);
 		/* A chosen tag's label */
 		--tag-selected-text: var(--color-paper);
+
+		/* Options: each choice in a menu, a select or a combo box, shared so they change together */
+
+		/* Shape */
+
+		/* An option's corners: the popover's less the list's padding, so the two run parallel */
+		--option-radius: var(--radius-sm);
+
+		/* Type */
+
+		/* A chosen option's weight, in a select or combo box */
+		--option-selected-font-weight: 500;
+
+		/* Space */
+
+		/* The padding round the options, between them and the popover's edge */
+		--option-list-padding: --spacing(1);
+		/* The padding beside an option's text */
+		--option-padding-x: --spacing(3);
+		/* The padding above and below its 20px line, so it's 32px tall */
+		--option-padding-y: --spacing(1.5);
+
+		/* Colour */
+
+		/* An option's text */
+		--option-text: var(--color-ink);
+
+		/* Dialog */
+
+		/* Space */
+
+		/* The padding round what a dialog holds, which its actions' footer runs flush to. A sheet's too */
+		--dialog-padding: --spacing(6);
+		/* The same for a dialog in a popover */
+		--dialog-popover-padding: --spacing(4);
+
+		/* Colour */
+
+		/* The footer behind a dialog's actions */
+		--dialog-actions-fill: var(--color-panel);
+
+		/* Modal */
+
+		/* Shape */
+
+		/* The box's corners */
+		--modal-radius: var(--radius-xl);
+
+		/* Colour */
+
+		/* The box's fill */
+		--modal-fill: var(--color-overlay);
+		/* What covers the page behind it, the ground most of the way to opaque */
+		--modal-backdrop: color-mix(in oklab, var(--color-ground) 88%, transparent);
+
+		/* Shadow */
+
+		/* The shadow's colour under the box */
+		--modal-shadow: var(--shadow-overlay-color);
+
+		/* Popover */
+
+		/* Shape */
+
+		/* The corners, which a menu's, a select's and a combo box's lists share */
+		--popover-radius: var(--radius-lg);
+
+		/* Colour */
+
+		/* The fill, which its arrow shares */
+		--popover-fill: var(--color-overlay);
+		/* The text in it */
+		--popover-text: var(--color-ink);
+
+		/* Shadow */
+
+		/* The shadow's colour under it */
+		--popover-shadow: var(--shadow-overlay-color);
+
+		/* Sheet */
+
+		/* Shape */
+
+		/* The corners */
+		--sheet-radius: var(--radius-3xl);
+
+		/* Colour */
+
+		/* The fill */
+		--sheet-fill: var(--color-overlay);
+		/* What covers the page behind the first sheet */
+		--sheet-backdrop: var(--color-scrim);
+
+		/* Shadow */
+
+		/* The shadow's colour under it */
+		--sheet-shadow: var(--shadow-overlay-color);
+
+		/* Tooltip */
+
+		/* Shape */
+
+		/* The corners */
+		--tooltip-radius: var(--radius-lg);
+
+		/* Space */
+
+		/* The padding beside the text */
+		--tooltip-padding-x: --spacing(2.5);
+		/* The padding above and below the text */
+		--tooltip-padding-y: --spacing(1.5);
+
+		/* Colour */
+
+		/* The fill, ink as a surface */
+		--tooltip-fill: var(--color-inverse);
+		/* The text on it */
+		--tooltip-text: var(--color-paper);
 
 		/* Link */
 
