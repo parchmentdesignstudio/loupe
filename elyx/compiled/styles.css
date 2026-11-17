@@ -4548,6 +4548,11 @@
     transition-duration: .15s;
   }
 
+  :is(.\*\:after\:-z-1 > *):after {
+    content: var(--tw-content);
+    z-index: calc(1 * -1);
+  }
+
   .first\:pl-4:first-child {
     padding-left: calc(var(--spacing) * 4);
   }

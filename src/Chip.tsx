@@ -38,5 +38,7 @@ export function Chip({ size, ...props }: ChipProps) {
 
 /** Chips that go together, under a name for screen readers: give it an aria-label, or aria-labelledby */
 export function ChipGroup(props: ChipGroupProps) {
-	return <Group {...props} className={composeClassName(props.className, 'flex flex-wrap gap-2')} />;
+	// A chip's reach runs past the gap into the next row, where a later chip's would take a press on this one, so the
+	// reaches go under every chip. Isolated, so they stay above what the group sits on
+	return <Group {...props} className={composeClassName(props.className, 'isolate flex flex-wrap gap-2 *:after:-z-1')} />;
 }
