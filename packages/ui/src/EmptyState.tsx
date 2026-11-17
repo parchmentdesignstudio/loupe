@@ -3,11 +3,11 @@ import { tv } from './tv.js';
 
 export const emptyState = tv({
 	slots: {
-		base: 'flex flex-col items-center gap-4 px-6 py-12 text-center',
+		base: 'flex flex-col items-center gap-4 px-(--empty-state-padding-x) py-(--empty-state-padding-y) text-center',
 		// A raised tile, like a secondary button, so the icon reads as the thing that'll be here
-		icon: 'flex size-10 items-center justify-center rounded-xl bg-raised text-muted shadow-panel',
+		icon: 'flex size-10 items-center justify-center rounded-(--empty-state-icon-radius) bg-(--empty-state-icon-fill) text-(color:--empty-state-icon) shadow-panel',
 		text: 'flex max-w-[36ch] flex-col gap-1',
-		title: 'font-medium text-ink',
+		title: '[font-weight:var(--empty-state-title-font-weight)] text-ink',
 		description: 'text-pretty text-muted',
 		actions: 'mt-1 flex flex-wrap justify-center gap-2',
 	},

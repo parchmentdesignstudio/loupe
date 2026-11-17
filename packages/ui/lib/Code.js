@@ -5,7 +5,7 @@ import { Tooltip, TooltipTrigger } from './Tooltip.js';
 import { tv } from './tv.js';
 export const code = tv({
     slots: {
-        base: 'relative flex flex-col overflow-hidden rounded-xl text-code-text shadow-[0_0_0_.5px_var(--edge)] [--bleed:var(--panel-bleed)]',
+        base: 'relative flex flex-col overflow-hidden rounded-(--code-radius) text-code-text shadow-[0_0_0_.5px_var(--edge)] [--bleed:var(--panel-bleed)]',
         // The title, what's changed and Copy, on a line of their own above the code, as an editor's tab bar has them.
         // The ground under the block shows through it, lightened in the light, and as it is in the dark, where the code is a
         // step lighter, as a button is. The code casts the line between them, so it sits a little above the bar

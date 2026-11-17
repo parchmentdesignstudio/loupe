@@ -15,7 +15,7 @@ export const alert = tv({
 		// On the text's first line, as an icon in a button is
 		icon: 'flex shrink-0 text-(--alert-icon) *:my-[calc((1lh-1rem)/2)]',
 		content: 'flex min-w-0 flex-1 flex-col gap-0.5 wrap-break-word',
-		title: 'font-medium text-pretty',
+		title: '[font-weight:var(--alert-title-font-weight)] text-pretty',
 		description: 'text-pretty *:not-first:mt-2',
 		actions: 'mt-2.5 flex flex-wrap gap-2',
 		// A 28px button on the 20px line, centred on it
@@ -23,17 +23,17 @@ export const alert = tv({
 	},
 	variants: {
 		tone: {
-			neutral: { base: '[--alert-icon:light-dark(var(--color-sand-46),var(--color-sand-84))] [--alert:var(--color-sand-66)]' },
-			info: { base: '[--alert-icon:light-dark(var(--color-blue-56),var(--color-blue-82))] [--alert:var(--color-blue-56)]' },
-			success: { base: '[--alert-icon:light-dark(var(--color-green-46),var(--color-green-89))] [--alert:var(--color-green-68)]' },
-			warning: { base: '[--alert-icon:light-dark(var(--color-yellow-40),var(--color-yellow-91))] [--alert:var(--color-yellow-76)]' },
-			danger: { base: '[--alert-icon:light-dark(var(--color-red-50),var(--color-red-81))] [--alert:var(--color-red-67)]' },
+			neutral: { base: '[--alert-icon:light-dark(var(--color-sand-46),var(--color-sand-84))] [--alert:var(--tone-neutral)]' },
+			info: { base: '[--alert-icon:light-dark(var(--color-blue-56),var(--color-blue-82))] [--alert:var(--tone-info)]' },
+			success: { base: '[--alert-icon:light-dark(var(--color-green-46),var(--color-green-89))] [--alert:var(--tone-success)]' },
+			warning: { base: '[--alert-icon:light-dark(var(--color-yellow-40),var(--color-yellow-91))] [--alert:var(--tone-warning)]' },
+			danger: { base: '[--alert-icon:light-dark(var(--color-red-50),var(--color-red-81))] [--alert:var(--tone-danger)]' },
 		},
 		// An alert is a box tinted in the tone, edged a little deeper, to draw the eye. A notice is a line in the flow,
 		// with no box: the icon in the tone and muted text, for something worth knowing that needn't stop anyone
 		variant: {
 			alert: {
-				base: 'rounded-lg bg-[color-mix(in_oklab,var(--alert)_12%,transparent)] py-3 ps-3 pe-3 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--alert)_20%,transparent)]',
+				base: 'rounded-(--alert-radius) bg-[color-mix(in_oklab,var(--alert)_12%,transparent)] py-(--alert-padding) ps-(--alert-padding) pe-(--alert-padding) shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--alert)_20%,transparent)]',
 			},
 			notice: {
 				description: 'text-muted',
