@@ -16,7 +16,7 @@ export declare const checkboxBox: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-(--checkbox-radius) bg-(--checkbox-fill) text-(color:--checkbox-mark) shadow-raised [--shadow-raised-color:var(--checkbox-shadow)] transition-[scale] duration-150 ease-out motion-reduce:transition-none", {
+}, undefined, "my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-(--checkbox-radius) bg-(--checkbox-fill,var(--color-raised)) text-(color:--checkbox-mark,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--checkbox-shadow)] transition-[scale] duration-150 ease-out motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

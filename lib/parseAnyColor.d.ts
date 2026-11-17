@@ -20,11 +20,14 @@ export interface ParsedColor {
 /**
  * Any CSS colour as a React Aria Color, which only parses hex, rgb(), hsl() and hsb() itself. Takes hex with or without
  * its #, a name such as rebeccapurple, transparent, rgb(), hsl(), hwb(), lab(), lch(), oklab(), oklch() and color() in
- * srgb, srgb-linear, display-p3 or xyz, in modern or comma syntax. A colour outside sRGB loses chroma until it fits,
- * keeping its lightness and hue, so a vivid P3 or oklch colour stays as close as sRGB allows, while oklch keeps it exactly.
+ * srgb, srgb-linear, display-p3 or xyz, in modern or comma syntax. A colour outside sRGB is brought in as CSS does,
+ * losing chroma but keeping its lightness and hue, so a vivid P3 or oklch colour stays as close as sRGB allows, while
+ * oklch keeps it exactly.
  * Null when it isn't a colour
  */
 export declare function parseAnyColor(text: string): ParsedColor | null;
+/** An oklch colour, such as one a ParsedColor kept, as a ParsedColor again, without the rounding formatOklch's text has */
+export declare function fromOklch(oklch: Oklch, alpha?: number, hasAlpha?: boolean): ParsedColor | null;
 /** An oklch colour as CSS, such as oklch(65.3% 0.1934 40.25 / 0.6), precise enough to come back as the same colour.
  * Alpha is left out when it's 1 */
 export declare function formatOklch({ l, c, h }: Oklch, alpha?: number): string;
