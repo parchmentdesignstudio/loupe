@@ -19,6 +19,8 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   type ColorAreaProps,
+  formatOklch,
+  parseAnyColor,
 } from '@parchment/ui'
 import { useState } from 'react'
 import { layoutOf } from '../devices/frames'
@@ -232,7 +234,9 @@ const presetOf = (fill: string | null) => fills.find((each) => each.value === fi
 function Fill() {
   const fill = useStore((state) => state.doc.artboard.fill)
   const preset = presetOf(fill)
-  const custom = !preset && fill !== null && isHex(fill) ? fill : null
+  const custom = !preset && fill !== null ? fill : null
+  // React Aria’s swatches can’t read oklch, so a custom fill shows as its nearest hex
+  const customSwatch = custom ? (parseAnyColor(custom)?.color.toString('hexa') ?? null) : null
 
   // Eight squares to a row: the presets take seven columns of the eight, so their squares match the last one
   return (
@@ -240,7 +244,7 @@ function Fill() {
       <ColorSwatchPicker
         aria-label="Fill"
         // A colour none of the presets has, so none of them shows as chosen while another colour is
-        value={preset?.swatch ?? custom ?? '#fffffe'}
+        value={preset?.swatch ?? customSwatch ?? '#fffffe'}
         onChange={(color) => {
           const chosen = fills.find((each) => hexa(each.swatch) === color.toString('hexa'))
           if (chosen) actions.setArtboard({ fill: chosen.value })
@@ -251,13 +255,13 @@ function Fill() {
           <ColorSwatchPickerItem key={each.name} color={each.swatch} aria-label={each.name} className="aspect-square size-auto w-full" />
         ))}
       </ColorSwatchPicker>
-      <AnotherColour custom={custom} start={custom ?? (preset?.value ? preset.swatch : '#fff')} />
+      <AnotherColour custom={custom} swatch={customSwatch} start={custom ?? preset?.value ?? '#fff'} />
     </div>
   )
 }
 
 /** Any other colour, from a square after the presets: a plus until one’s chosen, then that colour */
-function AnotherColour({ custom, start }: { custom: string | null; start: string }) {
+function AnotherColour({ custom, swatch, start }: { custom: string | null; swatch: string | null; start: string }) {
   const label = custom ? `Another colour, ${custom}` : 'Another colour'
   return (
     <DialogTrigger>
@@ -271,7 +275,7 @@ function AnotherColour({ custom, start }: { custom: string | null; start: string
             custom && 'after:absolute after:inset-0 after:rounded-[inherit] after:border-2 after:border-paper after:outline-2 after:outline-ink',
           )}
         >
-          {custom ? <ColorSwatch color={custom} className="size-full rounded-[inherit]" /> : <Icon name="plus" />}
+          {swatch ? <ColorSwatch color={swatch} className="size-full rounded-[inherit]" /> : <Icon name="plus" />}
         </Button>
       </WithTooltip>
       <Popover placement="bottom end">
@@ -283,20 +287,24 @@ function AnotherColour({ custom, start }: { custom: string | null; start: string
   )
 }
 
-/** The area, hue and hex, sharing one colour while the popover’s open, so the hue holds through greys */
+/** The area, hue and colour, sharing one colour while the popover’s open, so the hue holds through greys. Fills are
+ * kept as oklch, exactly as typed, though the area and hue work in the nearest sRGB */
 function ColourControls({ start }: { start: string }) {
-  const [color, setColor] = useState<Color | string>(start)
-  const change = (next: Color | null) => {
+  const [color, setColor] = useState<Color | null>(() => parseAnyColor(start)?.color ?? null)
+  const [typed, setTyped] = useState<Color | string>(start)
+  const change = (next: Color | null, oklch?: string | null) => {
     if (!next) return
     setColor(next)
+    setTyped(oklch ?? next)
     const preset = fills.find((each) => hexa(each.swatch) === next.toString('hexa'))
-    actions.setArtboard({ fill: preset ? preset.value : next.toString('hex').toLowerCase() })
+    const exact = oklch ?? formatOklch(parseAnyColor(next.toString('rgba'))?.oklch ?? { l: 1, c: 0, h: 0 }, next.getChannelValue('alpha'))
+    actions.setArtboard({ fill: preset && !oklch ? preset.value : exact })
   }
   return (
     <div className="flex flex-col gap-3">
-      <ColorArea colorSpace="hsb" xChannel="saturation" yChannel="brightness" value={color} onChange={change} />
-      <ColorSlider colorSpace="hsb" channel="hue" value={color} onChange={change} />
-      <ColorField label="Hex" value={color} onChange={change} />
+      {color && <ColorArea colorSpace="hsb" xChannel="saturation" yChannel="brightness" value={color} onChange={(next) => change(next)} />}
+      {color && <ColorSlider colorSpace="hsb" channel="hue" value={color} onChange={(next) => change(next)} />}
+      <ColorField label="Colour" value={typed} onChange={change} />
     </div>
   )
 }

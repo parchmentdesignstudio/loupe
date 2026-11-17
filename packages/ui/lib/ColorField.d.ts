@@ -1,6 +1,11 @@
-import { type ColorFieldProps as AriaColorFieldProps } from 'react-aria-components';
+import { type ColorFieldProps as AriaColorFieldProps, type Color } from 'react-aria-components';
 import { type FieldTextProps, type FieldVariant, type Size } from './Field.js';
-export interface ColorFieldProps extends AriaColorFieldProps, FieldTextProps {
+export interface ColorFieldProps extends Omit<AriaColorFieldProps, 'onChange'>, FieldTextProps {
+    /** Called with the colour in sRGB, for React Aria's other colour components, and exactly as oklch CSS, such as
+     * oklch(65.3% 0.1934 40.25 / 0.6), which keeps a colour outside sRGB that the Color can't */
+    onChange?: (color: Color | null, oklch: string | null) => void;
+    /** Shown as oklch, the default, which holds any colour exactly, or as hex */
+    format?: 'oklch' | 'hex';
     placeholder?: string;
     /** Shows the opacity beside the colour, as a percentage to type or step with the arrow keys. On by default. A field
      * given a channel types only that channel, so it has none */
@@ -12,7 +17,9 @@ export interface ColorFieldProps extends AriaColorFieldProps, FieldTextProps {
 }
 /**
  * A colour, which takes any CSS colour pasted or typed into it, such as oklch(), rgb(), a name or hex, and shows it as
- * hex once it's committed, on Enter, on leaving the field or straight away when pasted. Its opacity sits beside it, so a
- * pasted colour with an alpha sets it, and one without keeps it. Given a channel, it types that one channel as a number
+ * oklch once it's committed, on Enter, on leaving the field or straight away when pasted. It keeps a colour outside sRGB
+ * exactly, though React Aria's Color, and so a picker's area and slider, hold the nearest sRGB. Its opacity sits beside
+ * it, so a pasted colour with an alpha sets it, and one without keeps it. Given a channel, it types that one channel as a
+ * number
  */
 export declare function ColorField(props: ColorFieldProps): import("react").JSX.Element;

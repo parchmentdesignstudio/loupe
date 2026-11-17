@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { type Color, type ColorChannel, type ColorSpace, parseColor } from 'react-aria-components';
 import { ColorField } from '../../src/index.js';
 import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
-import { ColourControl, channels, randomColour, spaces } from './colour.js';
+import { ColourControl, channels, randomColour, spaces, spaceLabels } from './colour.js';
 
 const widths = { narrow: 'w-28', medium: 'w-56', wide: 'w-full max-w-md' } as const;
 type Width = keyof typeof widths;
@@ -19,7 +19,7 @@ export function ColorFieldPlayground() {
 	const [channel, setChannel] = useState<ColorChannel>('red');
 	const [label, setLabel] = useState('Theme colour');
 	const [description, setDescription] = useState('Browsers tint their toolbar with it');
-	const [placeholder, setPlaceholder] = useState('#000000');
+	const [placeholder, setPlaceholder] = useState('oklch(0% 0 0)');
 	const [errorMessage, setErrorMessage] = useState('Use a colour, such as #0c2920 or oklch(0.27 0.04 168)');
 	const [width, setWidth] = useState<Width>('medium');
 	const [isInvalid, setInvalid] = useState(false);
@@ -66,7 +66,7 @@ export function ColorFieldPlayground() {
 						{!isChannel && <SwitchControl label="Opacity" value={hasOpacity} onChange={setOpacity} />}
 						{!isChannel && <Choice label="Variant" options={['raised', 'filled'] as const} value={variant} onChange={setVariant} />}
 						{!isChannel && <Choice label="Size" options={['medium', 'small'] as const} value={size} onChange={setSize} />}
-						{isChannel && <Choice label="Colour space" options={spaces} value={space} onChange={setColourSpace} />}
+						{isChannel && <Choice label="Colour space" options={spaces} labels={spaceLabels} value={space} onChange={setColourSpace} />}
 						{isChannel && <Choice label="Channel" options={channels[space]} value={channel} onChange={setChannel} />}
 					</ControlGroup>
 					<ControlGroup label="State">

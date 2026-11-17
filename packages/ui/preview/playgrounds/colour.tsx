@@ -9,6 +9,9 @@ export const extremes = ['#ffffff', '#fffdf8', '#fff3a0', '#ff2d00', '#00e05a', 
 
 export const spaces = ['rgb', 'hsl', 'hsb'] as const satisfies readonly ColorSpace[];
 
+/** The spaces as they're written, which capitalising gets wrong */
+export const spaceLabels = { rgb: 'RGB', hsl: 'HSL', hsb: 'HSB' } as const;
+
 /** Each space's channels, without alpha */
 export const channels = {
 	rgb: ['red', 'green', 'blue'],
@@ -25,7 +28,7 @@ export function randomColour(): Color {
 	return parseColor(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
 }
 
-/** The extremes to tap, and a hex field for anything else */
+/** The extremes to tap, and a field for anything else */
 export function ColourControl({ label = 'Colour', value, onChange }: { label?: string; value: Color; onChange: (color: Color) => void }) {
 	return (
 		<ControlRow label={label}>
@@ -35,7 +38,7 @@ export function ColourControl({ label = 'Colour', value, onChange }: { label?: s
 						<ColorSwatchPickerItem key={color} color={color} className="size-6" />
 					))}
 				</ColorSwatchPicker>
-				<ColorField aria-label={`${label}, as hex`} value={value} onChange={(color) => color && onChange(color)} className="w-28" />
+				<ColorField aria-label={`${label}, typed`} value={value} onChange={(color) => color && onChange(color)} className="w-56" />
 			</div>
 		</ControlRow>
 	);

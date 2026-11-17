@@ -168,7 +168,7 @@ export const examples: Record<string, () => ReactNode> = {
 	'Colour area': () => (
 		<ColorArea aria-label="Colour" defaultValue="hsb(150, 70%, 50%)" xChannel="saturation" yChannel="brightness" className="w-32" />
 	),
-	'Colour field': () => <ColorField label="Theme colour" defaultValue="#0c2920" className="w-44" />,
+	'Colour field': () => <ColorField label="Theme colour" defaultValue="oklch(27% 0.04 168)" className="w-56" />,
 	'Colour picker': () => <ColorPicker label="Background" defaultValue="#f5c03c" className="w-48" />,
 	'Colour slider': () => <ColorSlider label="Hue" defaultValue="hsl(150, 70%, 40%)" channel="hue" className="w-48" />,
 	'Colour swatch picker': () => (

@@ -1,10 +1,23 @@
 import { type Color, parseColor } from 'react-aria-components';
 
+/** A colour in oklch: lightness from 0 to 1, chroma from 0, and hue in degrees */
+export interface Oklch {
+	l: number;
+	c: number;
+	h: number;
+}
+
 export interface ParsedColor {
-	/** In sRGB, with its alpha, or 1 when none was given */
+	/** In sRGB, with its alpha, or 1 when none was given. A colour outside sRGB is brought in, so it's the nearest */
 	color: Color;
+	/** The colour exactly, as given, so nothing outside sRGB is lost */
+	oklch: Oklch;
+	/** Its alpha, from 0 to 1 */
+	alpha: number;
 	/** Whether the text gave an alpha, so a field can keep the opacity it had when it didn't */
 	hasAlpha: boolean;
+	/** Whether it fits in sRGB, so color is exact too */
+	isInSrgb: boolean;
 }
 
 type Vector = [number, number, number];
@@ -13,7 +26,8 @@ type Vector = [number, number, number];
  * Any CSS colour as a React Aria Color, which only parses hex, rgb(), hsl() and hsb() itself. Takes hex with or without
  * its #, a name such as rebeccapurple, transparent, rgb(), hsl(), hwb(), lab(), lch(), oklab(), oklch() and color() in
  * srgb, srgb-linear, display-p3 or xyz, in modern or comma syntax. A colour outside sRGB loses chroma until it fits,
- * keeping its lightness and hue, so a vivid P3 or oklch colour stays as close as sRGB allows. Null when it isn't a colour
+ * keeping its lightness and hue, so a vivid P3 or oklch colour stays as close as sRGB allows, while oklch keeps it exactly.
+ * Null when it isn't a colour
  */
 export function parseAnyColor(text: string): ParsedColor | null {
 	const source = text.trim().toLowerCase();
@@ -82,12 +96,13 @@ function fromChannels(name: string, args: string[], alphaText: string | undefine
 		case 'oklab': {
 			const [l, a, b] = [number(args[0], 1), number(args[1], 0.4), number(args[2], 0.4)];
 			if (l === null || a === null || b === null) return null;
-			return result(oklabToLinear([l, a, b]), alpha, hasAlpha);
+			const c = Math.hypot(a, b);
+			return result(oklabToLinear([l, a, b]), alpha, hasAlpha, true, { l, c, h: c === 0 ? 0 : (((Math.atan2(b, a) * 180) / Math.PI) % 360 + 360) % 360 });
 		}
 		case 'oklch': {
 			const [l, c, h] = [number(args[0], 1), number(args[1], 0.4), angle(args[2])];
 			if (l === null || c === null || h === null) return null;
-			return result(oklabToLinear([l, c * Math.cos((h * Math.PI) / 180), c * Math.sin((h * Math.PI) / 180)]), alpha, hasAlpha);
+			return result(oklabToLinear([l, c * Math.cos((h * Math.PI) / 180), c * Math.sin((h * Math.PI) / 180)]), alpha, hasAlpha, true, { l, c, h });
 		}
 		default:
 			return null;
@@ -138,12 +153,34 @@ function angle(text: string): number | null {
 	return ((degrees % 360) + 360) % 360;
 }
 
-// Linear sRGB in, which may be out of gamut for anything wider. It's brought in by chroma first, then clipped
-function result(rgb: Vector, alpha: number, hasAlpha: boolean, isWide = true): ParsedColor {
+// Linear sRGB in, which may be out of gamut for anything wider. The oklch is taken before it's brought in, so it stays
+// exact, and the sRGB colour is brought in by chroma first, then clipped
+function result(rgb: Vector, alpha: number, hasAlpha: boolean, isWide = true, exact?: Oklch): ParsedColor {
 	const fitted = isWide ? fit(rgb) : rgb;
 	const [r, g, b] = fitted.map((channel) => Math.round(clamp(encode(channel)) * 255));
-	const color = parseColor(`rgba(${r}, ${g}, ${b}, ${Math.round(clamp(alpha) * 1000) / 1000})`);
-	return { color, hasAlpha };
+	const opacity = Math.round(clamp(alpha) * 1000) / 1000;
+	const color = parseColor(`rgba(${r}, ${g}, ${b}, ${opacity})`);
+	return { color, oklch: exact ?? toOklch(rgb), alpha: opacity, hasAlpha, isInSrgb: inGamut(rgb) };
+}
+
+function toOklch(rgb: Vector): Oklch {
+	const [l, a, b] = linearToOklab(rgb);
+	const c = Math.hypot(a, b);
+	// A grey's hue is noise from the conversion, so it's 0, as CSS writes it
+	if (c < 2e-4) return { l, c: 0, h: 0 };
+	return { l, c, h: (((Math.atan2(b, a) * 180) / Math.PI) % 360 + 360) % 360 };
+}
+
+// A number to so many places, without trailing zeros
+const trim = (value: number, places: number) => String(Number(value.toFixed(places)));
+
+/** An oklch colour as CSS, such as oklch(65.3% 0.1934 40.25 / 0.6), precise enough to come back as the same colour.
+ * Alpha is left out when it's 1 */
+export function formatOklch({ l, c, h }: Oklch, alpha = 1): string {
+	const chroma = trim(c, 4);
+	const hue = chroma === '0' ? '0' : trim(h, 2);
+	const opacity = alpha < 1 ? ` / ${trim(alpha, 3)}` : '';
+	return `oklch(${trim(l * 100, 2)}% ${chroma} ${hue}${opacity})`;
 }
 
 function fit(rgb: Vector): Vector {

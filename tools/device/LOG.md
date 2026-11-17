@@ -143,3 +143,13 @@ Asked for, in `packages/ui`: buttons named primary, secondary, accent, outline a
 
 - The inspector’s white raised button for choosing a screen, tertiary before, is `secondary`. It looks the same
 - The toolbar and inspector’s bare buttons, quiet before, are `ghost`. They look the same
+
+### 12. Fills kept in oklch
+
+17 November 2026 · Open
+
+Asked for, in `packages/ui`: oklch preferred over hex, for its wider gamut, so a colour stays accurate.
+
+- Another colour’s field is labelled Colour rather than Hex. It takes any CSS colour and shows it as oklch
+- A custom fill is stored as oklch, exactly as typed, even outside sRGB. Picked in the area or the hue, it’s stored as that colour’s oklch
+- Its swatch, and the area and hue, still show the nearest sRGB, as React Aria’s colours can’t hold more

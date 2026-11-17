@@ -1556,6 +1556,14 @@
     width: calc(var(--spacing) * 9);
   }
 
+  .w-14 {
+    width: calc(var(--spacing) * 14);
+  }
+
+  .w-16 {
+    width: calc(var(--spacing) * 16);
+  }
+
   .w-56 {
     width: calc(var(--spacing) * 56);
   }
@@ -1578,10 +1586,6 @@
 
   .w-96 {
     width: calc(var(--spacing) * 96);
-  }
-
-  .w-\[5ch\] {
-    width: 5ch;
   }
 
   .w-\[calc\(100\%_-_1rem\)\] {

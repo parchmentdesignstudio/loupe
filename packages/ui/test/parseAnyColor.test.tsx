@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseAnyColor } from '../src/index.js';
+import { formatOklch, parseAnyColor } from '../src/index.js';
 
 const hex = (text: string) => parseAnyColor(text)?.color.toString('hexa');
 
@@ -40,6 +40,13 @@ describe('parseAnyColor', () => {
 		expect(vivid?.getChannelValue('green')).toBeGreaterThan(230);
 		expect(vivid?.getChannelValue('red')).toBeLessThan(80);
 		expect(hex('oklch(0.7 0.4 145)')).toMatch(/^#[0-9A-F]{6}FF$/);
+	});
+
+	it('keeps the oklch exactly, even outside sRGB', () => {
+		expect(formatOklch(parseAnyColor('oklch(0.7 0.3 145 / 0.5)')!.oklch, 0.5)).toBe('oklch(70% 0.3 145 / 0.5)');
+		expect(parseAnyColor('oklch(0.7 0.3 145)')?.isInSrgb).toBe(false);
+		expect(parseAnyColor('#c76024')?.isInSrgb).toBe(true);
+		expect(formatOklch(parseAnyColor('#808080')!.oklch)).toMatch(/^oklch\(59\.\d+% 0 0\)$/);
 	});
 
 	it('says whether alpha was given', () => {

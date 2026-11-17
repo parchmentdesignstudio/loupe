@@ -3,7 +3,8 @@ import { parseColor } from 'react-aria-components';
  * Any CSS colour as a React Aria Color, which only parses hex, rgb(), hsl() and hsb() itself. Takes hex with or without
  * its #, a name such as rebeccapurple, transparent, rgb(), hsl(), hwb(), lab(), lch(), oklab(), oklch() and color() in
  * srgb, srgb-linear, display-p3 or xyz, in modern or comma syntax. A colour outside sRGB loses chroma until it fits,
- * keeping its lightness and hue, so a vivid P3 or oklch colour stays as close as sRGB allows. Null when it isn't a colour
+ * keeping its lightness and hue, so a vivid P3 or oklch colour stays as close as sRGB allows, while oklch keeps it exactly.
+ * Null when it isn't a colour
  */
 export function parseAnyColor(text) {
     const source = text.trim().toLowerCase();
@@ -86,13 +87,14 @@ function fromChannels(name, args, alphaText) {
             const [l, a, b] = [number(args[0], 1), number(args[1], 0.4), number(args[2], 0.4)];
             if (l === null || a === null || b === null)
                 return null;
-            return result(oklabToLinear([l, a, b]), alpha, hasAlpha);
+            const c = Math.hypot(a, b);
+            return result(oklabToLinear([l, a, b]), alpha, hasAlpha, true, { l, c, h: c === 0 ? 0 : (((Math.atan2(b, a) * 180) / Math.PI) % 360 + 360) % 360 });
         }
         case 'oklch': {
             const [l, c, h] = [number(args[0], 1), number(args[1], 0.4), angle(args[2])];
             if (l === null || c === null || h === null)
                 return null;
-            return result(oklabToLinear([l, c * Math.cos((h * Math.PI) / 180), c * Math.sin((h * Math.PI) / 180)]), alpha, hasAlpha);
+            return result(oklabToLinear([l, c * Math.cos((h * Math.PI) / 180), c * Math.sin((h * Math.PI) / 180)]), alpha, hasAlpha, true, { l, c, h });
         }
         default:
             return null;
@@ -145,12 +147,32 @@ function angle(text) {
     const degrees = { deg: value, rad: (value * 180) / Math.PI, grad: value * 0.9, turn: value * 360 }[match[2] ?? 'deg'] ?? value;
     return ((degrees % 360) + 360) % 360;
 }
-// Linear sRGB in, which may be out of gamut for anything wider. It's brought in by chroma first, then clipped
-function result(rgb, alpha, hasAlpha, isWide = true) {
+// Linear sRGB in, which may be out of gamut for anything wider. The oklch is taken before it's brought in, so it stays
+// exact, and the sRGB colour is brought in by chroma first, then clipped
+function result(rgb, alpha, hasAlpha, isWide = true, exact) {
     const fitted = isWide ? fit(rgb) : rgb;
     const [r, g, b] = fitted.map((channel) => Math.round(clamp(encode(channel)) * 255));
-    const color = parseColor(`rgba(${r}, ${g}, ${b}, ${Math.round(clamp(alpha) * 1000) / 1000})`);
-    return { color, hasAlpha };
+    const opacity = Math.round(clamp(alpha) * 1000) / 1000;
+    const color = parseColor(`rgba(${r}, ${g}, ${b}, ${opacity})`);
+    return { color, oklch: exact ?? toOklch(rgb), alpha: opacity, hasAlpha, isInSrgb: inGamut(rgb) };
+}
+function toOklch(rgb) {
+    const [l, a, b] = linearToOklab(rgb);
+    const c = Math.hypot(a, b);
+    // A grey's hue is noise from the conversion, so it's 0, as CSS writes it
+    if (c < 2e-4)
+        return { l, c: 0, h: 0 };
+    return { l, c, h: (((Math.atan2(b, a) * 180) / Math.PI) % 360 + 360) % 360 };
+}
+// A number to so many places, without trailing zeros
+const trim = (value, places) => String(Number(value.toFixed(places)));
+/** An oklch colour as CSS, such as oklch(65.3% 0.1934 40.25 / 0.6), precise enough to come back as the same colour.
+ * Alpha is left out when it's 1 */
+export function formatOklch({ l, c, h }, alpha = 1) {
+    const chroma = trim(c, 4);
+    const hue = chroma === '0' ? '0' : trim(h, 2);
+    const opacity = alpha < 1 ? ` / ${trim(alpha, 3)}` : '';
+    return `oklch(${trim(l * 100, 2)}% ${chroma} ${hue}${opacity})`;
 }
 function fit(rgb) {
     if (inGamut(rgb))
