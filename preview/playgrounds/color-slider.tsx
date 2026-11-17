@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { type ColorChannel, type ColorSpace, parseColor } from 'react-aria-components';
 import { ColorSlider, ColorSwatch } from '../../src/index.js';
 import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
-import { ColourControl, channels, randomColour, spaces } from './colour.js';
+import { ColourControl, channels, randomColour, spaces, spaceLabels } from './colour.js';
 
 const lengths = {
 	horizontal: { short: 'w-32', medium: 'w-64', long: 'w-full max-w-lg' },
@@ -55,7 +55,7 @@ export function ColorSliderPlayground() {
 						<Choice label="Orientation" options={['horizontal', 'vertical'] as const} value={orientation} onChange={setOrientation} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
-						<Choice label="Colour space" options={spaces} value={space} onChange={setColourSpace} />
+						<Choice label="Colour space" options={spaces} labels={spaceLabels} value={space} onChange={setColourSpace} />
 						<Choice label="Channel" options={channelsWithAlpha(space)} value={channel} onChange={setChannel} />
 					</ControlGroup>
 					<ControlGroup label="State">

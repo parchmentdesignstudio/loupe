@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { type ColorChannel, type ColorSpace, parseColor } from 'react-aria-components';
 import { ColorArea, ColorSlider } from '../../src/index.js';
 import { Choice, ControlGroup, ControlRow, Playground, SwitchControl, pick } from '../playground.js';
-import { ColourControl, channels, randomColour, spaces } from './colour.js';
+import { ColourControl, channels, randomColour, spaces, spaceLabels } from './colour.js';
 
 const sizes = { small: 'w-32', medium: 'w-56', large: 'w-80' } as const;
 type Size = keyof typeof sizes;
@@ -47,7 +47,7 @@ export function ColorAreaPlayground() {
 			controls={
 				<>
 					<ControlGroup label="Behaviour">
-						<Choice label="Colour space" options={spaces} value={space} onChange={(next) => setChannels(next, channels[next][1], channels[next][2])} />
+						<Choice label="Colour space" options={spaces} labels={spaceLabels} value={space} onChange={(next) => setChannels(next, channels[next][1], channels[next][2])} />
 						<Choice label="Across" options={channels[space]} value={x} onChange={(channel) => setAxis('x', channel)} />
 						<Choice label="Up" options={channels[space]} value={y} onChange={(channel) => setAxis('y', channel)} />
 					</ControlGroup>

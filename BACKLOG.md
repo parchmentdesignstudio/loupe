@@ -35,8 +35,8 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
   - React Aria’s `parseColor` throws on `oklch()` and `transparent`, so device gives its fills a hex for their swatches. `parseAnyColor` takes both now, so device could keep its fills in oklch.
   - React Aria’s colour area reads “Color picker”, and names colours such as “grayish”, in American spelling, whatever its label.
 - **ColorField:**
-  - It shows hex once a colour's committed, so an oklch colour outside sRGB comes back as the nearest hex. Showing the format it was given would keep it.
   - No swatch inside the field, as Figma's has.
+  - The colour area and slider, and so the picker, still work in sRGB, as React Aria's `Color` can't hold more. An oklch area and slider, drawn with oklch gradients and a gamut line, would keep a wide colour exact end to end.
 - **ColorSwatchPicker:**
   - Showing nothing chosen takes a colour that matches no swatch: device passes its custom colour, or `#fffffe`.
   - An item takes no `title` or tooltip, so device’s preset names no longer show on hover. React Aria passes `aria-label` on, but the type doesn’t allow it.
@@ -91,6 +91,8 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 - Elyx paints a frame’s last shadow on top, and CSS its first, so `elevation.elyx` lists a level’s layers in the opposite order to `tokens.css`. `elyx css` keeps the order it finds, so its shadows come out upside down
 
 ## Done
+
+- **17 November:** `ColorField` prefers oklch, for its wider gamut. It shows a colour as oklch, such as `oklch(65.3% 0.1934 40.25)`, and keeps it exactly, even outside sRGB, while the `Color` it gives React Aria is the nearest sRGB. `onChange` gets the exact oklch as its second argument, and `format="hex"` shows hex instead. `parseAnyColor` keeps each colour's oklch, says whether it's in sRGB, and `formatOklch` writes one. Device stores custom fills as oklch. A colour too long for its field ends in an ellipsis, and the playgrounds' colour spaces read RGB, HSL and HSB.
 
 - **17 November:** `ColorField` takes any CSS colour pasted or typed in: hex with or without its #, names, `transparent`, `rgb()`, `hsl()`, `hwb()`, `lab()`, `lch()`, `oklab()`, `oklch()` and `color()` in srgb, display-p3 or xyz. A paste over the value commits straight away, and anything else on Enter or on leaving the field. What isn't a colour goes back to the colour it had. Its opacity sits beside it as a percentage, which a colour with an alpha sets and one without keeps, and `hasOpacity={false}` hides it. A colour outside sRGB loses chroma until it fits, keeping its lightness and hue. It takes `variant` and `size`, as a number field does. The parser is exported as `parseAnyColor`.
 

@@ -768,7 +768,7 @@ const groups: Group[] = [
 				exports: ['ColorField', 'parseAnyColor'],
 				stories: [
 					{ name: 'Build one', render: ColorFieldPlayground },
-					{ name: 'Paste any colour', render: () => <ColorField label="Fill" description="Paste oklch(), rgb(), a name or hex" defaultValue="oklch(0.6 0.16 45 / 0.8)" className="w-56" /> },
+					{ name: 'Paste any colour', render: () => <ColorField label="Fill" description="Paste oklch(), rgb(), a name or hex" defaultValue="oklch(0.6 0.16 45 / 0.8)" className="w-64" /> },
 					{ name: 'Without opacity', render: () => <ColorField label="Theme colour" description="Browsers tint their toolbar with it" defaultValue="#0c2920" hasOpacity={false} className="w-56" /> },
 				],
 			},

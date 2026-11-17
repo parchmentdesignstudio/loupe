@@ -1,8 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { useState } from 'react';
+import { type Color, parseColor } from 'react-aria-components';
 import { describe, expect, it, vi } from 'vitest';
 import { ColorArea, ColorField, ColorPicker, ColorSlider, ColorSwatch, ColorSwatchPicker, ColorSwatchPickerItem } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
+
+// Held as a Color, as a picker holds it, so what comes back is the nearest sRGB
+function Controlled() {
+	const [color, setColor] = useState<Color | null>(() => parseColor('#fbf6ef'));
+	return <ColorField label="Background" value={color} onChange={setColor} />;
+}
 
 const palette = ['#fbf6ef', '#f8de7e', '#f6a57f', '#1f2f31'];
 
@@ -62,21 +70,43 @@ describe('ColorField', () => {
 		expect(onChange.mock.lastCall?.[0].toString('hex')).toBe('#F6A57F');
 	});
 
-	it('takes any colour pasted over it, and shows it as hex', async () => {
+	it('takes any colour pasted over it, and shows it as oklch', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
 		render(<ColorField label="Background" defaultValue="#fbf6ef" onChange={onChange} />);
 		const field = screen.getByRole('textbox', { name: 'Background' });
 		await user.tripleClick(field);
-		await user.paste('oklch(0.628 0.2577 29.23)');
+		await user.paste('rgb(255 0 0)');
 		expect(onChange.mock.lastCall?.[0].toString('hexa')).toBe('#FF0000FF');
-		expect((field as HTMLInputElement).value).toBe('#FF0000');
+		expect(onChange.mock.lastCall?.[1]).toBe('oklch(62.8% 0.2577 29.23)');
+		expect((field as HTMLInputElement).value).toBe('oklch(62.8% 0.2577 29.23)');
+	});
+
+	it('keeps a colour outside sRGB exactly, though its Color is the nearest', async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<ColorField label="Background" defaultValue="#fbf6ef" onChange={onChange} />);
+		const field = screen.getByRole('textbox', { name: 'Background' });
+		await user.tripleClick(field);
+		await user.paste('oklch(0.7 0.3 145)');
+		expect(onChange.mock.lastCall?.[1]).toBe('oklch(70% 0.3 145)');
+		expect((field as HTMLInputElement).value).toBe('oklch(70% 0.3 145)');
+		expect(onChange.mock.lastCall?.[0].toString('hex')).toMatch(/^#[0-9A-F]{6}$/);
+	});
+
+	it('keeps the exact colour while its Color comes back as the nearest sRGB, as in a picker', async () => {
+		const user = userEvent.setup();
+		render(<Controlled />);
+		const field = screen.getByRole('textbox', { name: 'Background' });
+		await user.tripleClick(field);
+		await user.paste('color(display-p3 0 1 0)');
+		expect((field as HTMLInputElement).value).toMatch(/^oklch\(84\.\d+% 0\.3\d+ 14\d/);
 	});
 
 	it('takes another format typed in on Enter, and goes back on what isn’t a colour', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		render(<ColorField label="Background" defaultValue="#fbf6ef" onChange={onChange} />);
+		render(<ColorField label="Background" format="hex" defaultValue="#fbf6ef" onChange={onChange} />);
 		const field = screen.getByRole('textbox', { name: 'Background' });
 		await user.clear(field);
 		await user.type(field, 'rgb(31 47 49){Enter}');

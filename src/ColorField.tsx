@@ -14,11 +14,16 @@ import {
 } from 'react-aria-components';
 import { Description, FieldError, type FieldTextProps, type FieldVariant, Label, type Size } from './Field.js';
 import { numberField } from './NumberField.js';
-import { parseAnyColor } from './parseAnyColor.js';
+import { formatOklch, type Oklch, parseAnyColor } from './parseAnyColor.js';
 import { textFieldInput } from './TextField.js';
 import { composeClassName } from './tv.js';
 
-export interface ColorFieldProps extends AriaColorFieldProps, FieldTextProps {
+export interface ColorFieldProps extends Omit<AriaColorFieldProps, 'onChange'>, FieldTextProps {
+	/** Called with the colour in sRGB, for React Aria's other colour components, and exactly as oklch CSS, such as
+	 * oklch(65.3% 0.1934 40.25 / 0.6), which keeps a colour outside sRGB that the Color can't */
+	onChange?: (color: Color | null, oklch: string | null) => void;
+	/** Shown as oklch, the default, which holds any colour exactly, or as hex */
+	format?: 'oklch' | 'hex';
 	placeholder?: string;
 	/** Shows the opacity beside the colour, as a percentage to type or step with the arrow keys. On by default. A field
 	 * given a channel types only that channel, so it has none */
@@ -31,16 +36,18 @@ export interface ColorFieldProps extends AriaColorFieldProps, FieldTextProps {
 
 /**
  * A colour, which takes any CSS colour pasted or typed into it, such as oklch(), rgb(), a name or hex, and shows it as
- * hex once it's committed, on Enter, on leaving the field or straight away when pasted. Its opacity sits beside it, so a
- * pasted colour with an alpha sets it, and one without keeps it. Given a channel, it types that one channel as a number
+ * oklch once it's committed, on Enter, on leaving the field or straight away when pasted. It keeps a colour outside sRGB
+ * exactly, though React Aria's Color, and so a picker's area and slider, hold the nearest sRGB. Its opacity sits beside
+ * it, so a pasted colour with an alpha sets it, and one without keeps it. Given a channel, it types that one channel as a
+ * number
  */
 export function ColorField(props: ColorFieldProps) {
 	return props.channel ? <ChannelField {...props} /> : <AnyColorField {...props} />;
 }
 
-function ChannelField({ label, description, errorMessage, placeholder, hasOpacity: _hasOpacity, variant, size, ...props }: ColorFieldProps) {
+function ChannelField({ label, description, errorMessage, placeholder, hasOpacity: _hasOpacity, format: _format, variant, size, onChange, ...props }: ColorFieldProps) {
 	return (
-		<AriaColorField {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
+		<AriaColorField {...props} onChange={(color) => onChange?.(color, oklchString(color))} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
 			{label && <Label>{label}</Label>}
 			<Input placeholder={placeholder} className={(state) => textFieldInput({ ...state, variant, size })} />
 			{description && <Description>{description}</Description>}
@@ -53,26 +60,37 @@ function AnyColorField(given: ColorFieldProps) {
 	// Inside a ColorPicker, its colour and setter arrive through React Aria's context, as they do for its own field
 	const ref = useRef<HTMLInputElement>(null);
 	const [props] = useContextProps(given, ref, ColorFieldContext);
-	const { label, description, errorMessage, placeholder, hasOpacity = true, variant, size = 'medium', value, defaultValue, onChange, name, form, className } = props;
-	const [own, setOwn] = useState<Color | null>(() => toColor(defaultValue));
-	const color = value === undefined ? own : toColor(value);
+	const { label, description, errorMessage, placeholder, hasOpacity = true, format = 'oklch', variant, size = 'medium', value, defaultValue, onChange, name, form, className } = props;
+	const [own, setOwn] = useState<Entry>(() => toEntry(defaultValue));
+	const entry = value === undefined ? own : toEntry(value);
+	const color = entry.color;
+	// The exact colour last set here, kept while the Color given back is its nearest sRGB, as a picker's is
+	const [kept, setKept] = useState<Oklch | null>(null);
+	const exact = color ? (entry.exact ?? (kept && sameColor(kept, color) ? kept : oklchOf(color))) : null;
+	const alpha = color?.getChannelValue('alpha') ?? 1;
 	const [draft, setDraft] = useState<string | null>(null);
 
-	const set = (next: Color | null) => {
-		if (value === undefined) setOwn(next);
-		if (next?.toString('hexa') !== color?.toString('hexa')) onChange?.(next);
+	const set = (next: Color | null, nextExact: Oklch | null) => {
+		if (value === undefined) setOwn({ color: next, exact: nextExact });
+		setKept(nextExact);
+		const css = next && nextExact ? formatOklch(nextExact, next.getChannelValue('alpha')) : null;
+		const current = color && exact ? formatOklch(exact, alpha) : null;
+		if (css !== current || next?.toString('hexa') !== color?.toString('hexa')) onChange?.(next, css);
 	};
 
 	// What was typed or pasted becomes the colour if it is one. Otherwise the field goes back to the colour it had
 	const commit = (text: string | null = draft) => {
 		setDraft(null);
 		if (text === null) return;
-		if (text.trim() === '') return set(null);
+		if (text.trim() === '') return set(null, null);
 		const parsed = parseAnyColor(text);
 		if (!parsed) return;
-		const alpha = parsed.hasAlpha || !color ? parsed.color.getChannelValue('alpha') : color.getChannelValue('alpha');
-		set(parsed.color.toFormat(color?.getColorSpace() ?? 'rgb').withChannelValue('alpha', alpha));
+		const nextAlpha = parsed.hasAlpha || !color ? parsed.alpha : alpha;
+		set(parsed.color.toFormat(color?.getColorSpace() ?? 'rgb').withChannelValue('alpha', nextAlpha), parsed.oklch);
 	};
+
+	// Without its own opacity, the text carries it
+	const shown = !color || !exact ? '' : format === 'hex' ? color.toString(!hasOpacity && alpha < 1 ? 'hexa' : 'hex') : formatOklch(exact, hasOpacity ? 1 : alpha);
 
 	// React Aria stops a key here unless it's let through, so only Escape over an edit stays, to undo it rather than close a popover
 	const onKeyDown = (event: KeyboardEvent) => {
@@ -108,7 +126,7 @@ function AnyColorField(given: ColorFieldProps) {
 			isRequired={props.isRequired}
 			isInvalid={props.isInvalid}
 			validationBehavior={props.validationBehavior}
-			value={draft ?? (color ? color.toString('hex') : '')}
+			value={draft ?? shown}
 			onChange={setDraft}
 			onBlur={(event) => {
 				commit();
@@ -120,12 +138,12 @@ function AnyColorField(given: ColorFieldProps) {
 		>
 			{label && <Label>{label}</Label>}
 			<Group isDisabled={props.isDisabled} isInvalid={props.isInvalid} className={(state) => slots.group({ ...state, className: 'pr-0' })}>
-				<Input ref={ref} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input()} />
+				<Input ref={ref} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: 'truncate' })} />
 				{hasOpacity && (
 					<AriaNumberField
 						aria-label="Opacity"
 						value={color ? color.getChannelValue('alpha') : Number.NaN}
-						onChange={(alpha) => color && !Number.isNaN(alpha) && set(color.withChannelValue('alpha', alpha))}
+						onChange={(next) => color && !Number.isNaN(next) && set(color.withChannelValue('alpha', next), exact)}
 						minValue={0}
 						maxValue={1}
 						step={0.01}
@@ -138,17 +156,38 @@ function AnyColorField(given: ColorFieldProps) {
 					</AriaNumberField>
 				)}
 			</Group>
-			{name && <input type="hidden" name={name} form={form} value={color ? color.toString(hasOpacity ? 'hexa' : 'hex') : ''} />}
+			{name && <input type="hidden" name={name} form={form} value={color && exact ? (format === 'hex' ? color.toString('hexa') : formatOklch(exact, alpha)) : ''} />}
 			{description && <Description>{description}</Description>}
 			<FieldError>{errorMessage}</FieldError>
 		</AriaTextField>
 	);
 }
 
-function toColor(value: string | Color | null | undefined): Color | null {
-	if (value == null) return null;
-	if (typeof value !== 'string') return value;
-	return safeParse(value) ?? parseAnyColor(value)?.color ?? null;
+interface Entry {
+	color: Color | null;
+	/** The colour exactly, when it was given as text, which may be outside sRGB */
+	exact: Oklch | null;
+}
+
+function toEntry(value: string | Color | null | undefined): Entry {
+	if (value == null) return { color: null, exact: null };
+	if (typeof value !== 'string') return { color: value, exact: null };
+	const parsed = parseAnyColor(value);
+	return { color: safeParse(value) ?? parsed?.color ?? null, exact: parsed?.oklch ?? null };
+}
+
+function oklchOf(color: Color): Oklch | null {
+	return parseAnyColor(color.toString('rgb'))?.oklch ?? null;
+}
+
+function oklchString(color: Color | null): string | null {
+	const exact = color && oklchOf(color);
+	return color && exact ? formatOklch(exact, color.getChannelValue('alpha')) : null;
+}
+
+// Whether an exact colour comes to this Color in sRGB, so it's the same colour and can be shown as it was given
+function sameColor(exact: Oklch, color: Color): boolean {
+	return parseAnyColor(formatOklch(exact))?.color.toString('hex') === color.toString('hex');
 }
 
 function safeParse(value: string): Color | null {
