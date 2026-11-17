@@ -3,7 +3,7 @@ import { type Key, PopoverContext, type Selection } from 'react-aria-components'
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, Header, Keyboard, Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger } from '../../src/index.js';
-import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { type Align, type Side, aligns, placementOf, sides } from './overlay.js';
 
 const actions: { label: string; icon: IconName; shortcut?: string }[] = [
@@ -32,22 +32,22 @@ function NonModal({ isOn, children }: { isOn: boolean; children: ReactNode }) {
 }
 
 export function MenuPlayground() {
-	const [count, setCount] = useState(5);
-	const [grouping, setGrouping] = useState<(typeof groupings)[number]>('none');
-	const [hasIcons, setHasIcons] = useState(false);
-	const [hasShortcuts, setHasShortcuts] = useState(false);
-	const [hasLong, setHasLong] = useState(false);
-	const [hasDisabled, setHasDisabled] = useState(false);
-	const [hasSubmenu, setHasSubmenu] = useState(false);
-	const [hasDanger, setHasDanger] = useState(true);
-	const [selectionMode, setSelectionMode] = useState<(typeof selectionModes)[number]>('none');
+	const [count, setCount] = useRemembered('count', 5, (stored) => stored >= 1 && stored <= 60);
+	const [grouping, setGrouping] = useRemembered('grouping', 'none', groupings);
+	const [hasIcons, setHasIcons] = useRemembered('hasIcons', false);
+	const [hasShortcuts, setHasShortcuts] = useRemembered('hasShortcuts', false);
+	const [hasLong, setHasLong] = useRemembered('hasLong', false);
+	const [hasDisabled, setHasDisabled] = useRemembered('hasDisabled', false);
+	const [hasSubmenu, setHasSubmenu] = useRemembered('hasSubmenu', false);
+	const [hasDanger, setHasDanger] = useRemembered('hasDanger', true);
+	const [selectionMode, setSelectionMode] = useRemembered('selectionMode', 'none', selectionModes);
 	const [selected, setSelected] = useState<Selection>(new Set<Key>(['item-0']));
-	const [side, setSide] = useState<Side>('bottom');
-	const [align, setAlign] = useState<Align>('start');
-	const [longPress, setLongPress] = useState(false);
-	const [keepOpen, setKeepOpen] = useState(false);
-	const [isOpen, setOpen] = useState(false);
-	const [trigger, setTrigger] = useState('Project');
+	const [side, setSide] = useRemembered<Side>('side', 'bottom', sides);
+	const [align, setAlign] = useRemembered<Align>('align', 'start', aligns);
+	const [longPress, setLongPress] = useRemembered('longPress', false);
+	const [keepOpen, setKeepOpen] = useRemembered('keepOpen', false);
+	const [isOpen, setOpen] = useState(keepOpen);
+	const [trigger, setTrigger] = useRemembered('trigger', 'Project');
 	const shuffle = () => {
 		setCount(Math.random() < 0.2 ? 20 + Math.floor(Math.random() * 30) : 1 + Math.floor(Math.random() * 8));
 		setGrouping(pick(groupings));

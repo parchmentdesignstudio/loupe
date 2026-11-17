@@ -3,7 +3,7 @@ import { type Key, RouterProvider } from 'react-aria-components';
 import { type IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Tab, TabList, TabPanel, Tabs } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const pages = [
 	{ name: 'Brief', icon: 'note-text', panel: 'A studio site that shows the work first, then the people behind it.' },
@@ -27,15 +27,15 @@ const counts = ['2', '5', '12'] as const;
 
 // With links on, each tab has an href and the router chooses the tab its href names, as a site's own router would
 export function TabsPlayground() {
-	const [orientation, setOrientation] = useState<(typeof orientations)[number]>('horizontal');
-	const [count, setCount] = useState<(typeof counts)[number]>('5');
+	const [orientation, setOrientation] = useRemembered('orientation', 'horizontal', orientations);
+	const [count, setCount] = useRemembered('count', '5', counts);
 	const [selected, setSelected] = useState<Key>('tab-1');
-	const [hasIcons, setIcons] = useState(false);
+	const [hasIcons, setIcons] = useRemembered('hasIcons', false);
 	const [icons, setIconNames] = useState<IconName[]>(pages.map((page) => page.icon));
-	const [isLongLabel, setLongLabel] = useState(false);
-	const [isLongPanel, setLongPanel] = useState(false);
-	const [hasDisabled, setHasDisabled] = useState(false);
-	const [asLinks, setAsLinks] = useState(false);
+	const [isLongLabel, setLongLabel] = useRemembered('isLongLabel', false);
+	const [isLongPanel, setLongPanel] = useRemembered('isLongPanel', false);
+	const [hasDisabled, setHasDisabled] = useRemembered('hasDisabled', false);
+	const [asLinks, setAsLinks] = useRemembered('asLinks', false);
 
 	const tabs = pages.slice(0, Number(count)).map((page, i) => ({ ...page, id: `tab-${i}`, icon: icons[i], name: i === 1 && isLongLabel ? longWords : page.name }));
 	// The last tab, unless it's the one chosen

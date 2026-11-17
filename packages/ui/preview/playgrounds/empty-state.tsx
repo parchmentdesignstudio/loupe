@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, EmptyState } from '../../src/index.js';
-import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const descriptions = {
 	none: undefined,
@@ -11,28 +10,31 @@ const descriptions = {
 } as const;
 type Description = keyof typeof descriptions;
 const titles = ['No briefs yet', 'No matches', 'Nothing here', 'No projects yet', 'No files'];
+const actionCounts = ['none', 'one', 'two'] as const;
+const actionLabels = ['short', 'long'] as const;
+const widths = ['narrow', 'wide'] as const;
 
 export function EmptyStatePlayground() {
-	const [title, setTitle] = useState('No briefs yet');
-	const [description, setDescription] = useState<Description>('short');
-	const [hasIcon, setHasIcon] = useState(true);
-	const [icon, setIcon] = useState<IconName>('note-text-badge-plus');
-	const [actions, setActions] = useState<'none' | 'one' | 'two'>('one');
-	const [action, setAction] = useState<'short' | 'long'>('short');
-	const [width, setWidth] = useState<'narrow' | 'wide'>('wide');
+	const [title, setTitle] = useRemembered('title', 'No briefs yet');
+	const [description, setDescription] = useRemembered('description', 'short', Object.keys(descriptions) as Description[]);
+	const [hasIcon, setHasIcon] = useRemembered('hasIcon', true);
+	const [icon, setIcon] = useRemembered<IconName>('icon', 'note-text-badge-plus', (name) => solidIcons().includes(name));
+	const [actions, setActions] = useRemembered('actions', 'one', actionCounts);
+	const [action, setAction] = useRemembered('action', 'short', actionLabels);
+	const [width, setWidth] = useRemembered('width', 'wide', widths);
 	const shuffle = () => {
 		setTitle(Math.random() < 0.15 ? longWords : pick(titles));
 		setDescription(pick(Object.keys(descriptions) as Description[]));
 		setHasIcon(Math.random() < 0.7);
 		setIcon(pick(solidIcons()));
-		setActions(pick(['none', 'one', 'two'] as const));
+		setActions(pick(actionCounts));
 		setAction(Math.random() < 0.2 ? 'long' : 'short');
-		setWidth(pick(['narrow', 'wide'] as const));
+		setWidth(pick(widths));
 	};
 	return (
 		<Playground
 			onRandom={shuffle}
-			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
+			preview={<Choice label="Width" options={widths} value={width} onChange={setWidth} />}
 			controls={
 				<>
 					<ControlGroup label="Content">
@@ -40,8 +42,8 @@ export function EmptyStatePlayground() {
 						<Choice label="Description" options={Object.keys(descriptions) as Description[]} value={description} onChange={setDescription} />
 						<SwitchControl label="Icon" value={hasIcon} onChange={setHasIcon} />
 						{hasIcon && <IconPicker label="Icon name" value={icon} onChange={setIcon} />}
-						<Choice label="Actions" options={['none', 'one', 'two'] as const} value={actions} onChange={setActions} />
-						{actions !== 'none' && <Choice label="Action label" options={['short', 'long'] as const} value={action} onChange={setAction} />}
+						<Choice label="Actions" options={actionCounts} value={actions} onChange={setActions} />
+						{actions !== 'none' && <Choice label="Action label" options={actionLabels} value={action} onChange={setAction} />}
 					</ControlGroup>
 				</>
 			}

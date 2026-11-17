@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Pagination, Status, type StatusTone } from '../../src/index.js';
-import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 
 const tones = ['neutral', 'info', 'success', 'warning', 'danger'] as const satisfies readonly StatusTone[];
+const variants = ['dot', 'badge'] as const;
+const widths = ['narrow', 'wide'] as const;
 const samples: [StatusTone, string][] = [
 	['info', 'Call arranged'],
 	['success', 'Qualified'],
@@ -13,12 +15,12 @@ const samples: [StatusTone, string][] = [
 ];
 
 export function StatusPlayground() {
-	const [tone, setTone] = useState<StatusTone>('info');
-	const [variant, setVariant] = useState<'dot' | 'badge'>('dot');
-	const [label, setLabel] = useState('Call arranged');
-	const [detail, setDetail] = useState('25 Sept');
-	const [isOverdue, setOverdue] = useState(false);
-	const [width, setWidth] = useState<'narrow' | 'wide'>('wide');
+	const [tone, setTone] = useRemembered<StatusTone>('tone', 'info', tones);
+	const [variant, setVariant] = useRemembered('variant', 'dot', variants);
+	const [label, setLabel] = useRemembered('label', 'Call arranged');
+	const [detail, setDetail] = useRemembered('detail', '25 Sept');
+	const [isOverdue, setOverdue] = useRemembered('isOverdue', false);
+	const [width, setWidth] = useRemembered('width', 'wide', widths);
 	const shuffle = () => {
 		const [nextTone, nextLabel] = pick(samples);
 		setTone(nextTone);
@@ -26,12 +28,12 @@ export function StatusPlayground() {
 		setVariant(Math.random() < 0.3 ? 'badge' : 'dot');
 		setDetail(pick(['', '25 Sept', '4 calls', 'Tomorrow, 10am']));
 		setOverdue(Math.random() < 0.3);
-		setWidth(pick(['narrow', 'wide'] as const));
+		setWidth(pick(widths));
 	};
 	return (
 		<Playground
 			onRandom={shuffle}
-			preview={<Choice label="Room" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
+			preview={<Choice label="Room" options={widths} value={width} onChange={setWidth} />}
 			controls={
 				<>
 					<ControlGroup label="Content">
@@ -40,7 +42,7 @@ export function StatusPlayground() {
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Tone" options={tones} value={tone} onChange={setTone} />
-						<Choice label="Variant" options={['dot', 'badge'] as const} value={variant} onChange={setVariant} />
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						<SwitchControl label="Detail overdue" value={isOverdue} onChange={setOverdue} />
@@ -58,9 +60,9 @@ export function StatusPlayground() {
 }
 
 export function PaginationPlayground() {
-	const [count, setCount] = useState(8);
-	const [page, setPage] = useState(1);
-	const [siblings, setSiblings] = useState(1);
+	const [count, setCount] = useRemembered('count', 8, (stored) => stored >= 1 && stored <= 999);
+	const [page, setPage] = useRemembered('page', 1, (stored) => stored >= 1 && stored <= count);
+	const [siblings, setSiblings] = useRemembered('siblings', 1, (stored) => stored >= 0 && stored <= 3);
 	const shuffle = () => {
 		const next = pick([1, 3, 7, 8, 20, 120]);
 		setCount(next);

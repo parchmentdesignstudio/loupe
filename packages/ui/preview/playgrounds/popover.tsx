@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Popover, TextField } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { type Align, type Length, type Side, aligns, bodyOf, lengths, placementOf, sides } from './overlay.js';
 
 const headings = ['none', 'short', 'long'] as const;
@@ -9,19 +9,19 @@ const widthClass = { auto: undefined, narrow: 'w-56', wide: 'w-96' };
 const titles = ['Share link', 'Filters', 'Rename', 'Invite people', 'Details'];
 
 export function PopoverPlayground() {
-	const [side, setSide] = useState<Side>('bottom');
-	const [align, setAlign] = useState<Align>('centre');
-	const [showArrow, setShowArrow] = useState(false);
-	const [width, setWidth] = useState<(typeof widths)[number]>('narrow');
-	const [heading, setHeading] = useState<(typeof headings)[number]>('short');
-	const [title, setTitle] = useState('Share link');
-	const [body, setBody] = useState<Length>('short');
-	const [hasField, setHasField] = useState(false);
-	const [hasActions, setHasActions] = useState(false);
-	const [hasClose, setHasClose] = useState(false);
-	const [keepOpen, setKeepOpen] = useState(false);
-	const [isOpen, setOpen] = useState(false);
-	const [trigger, setTrigger] = useState('Share');
+	const [side, setSide] = useRemembered<Side>('side', 'bottom', sides);
+	const [align, setAlign] = useRemembered<Align>('align', 'centre', aligns);
+	const [showArrow, setShowArrow] = useRemembered('showArrow', false);
+	const [width, setWidth] = useRemembered('width', 'narrow', widths);
+	const [heading, setHeading] = useRemembered('heading', 'short', headings);
+	const [title, setTitle] = useRemembered('title', 'Share link');
+	const [body, setBody] = useRemembered<Length>('body', 'short', lengths);
+	const [hasField, setHasField] = useRemembered('hasField', false);
+	const [hasActions, setHasActions] = useRemembered('hasActions', false);
+	const [hasClose, setHasClose] = useRemembered('hasClose', false);
+	const [keepOpen, setKeepOpen] = useRemembered('keepOpen', false);
+	const [isOpen, setOpen] = useState(keepOpen);
+	const [trigger, setTrigger] = useRemembered('trigger', 'Share');
 	const shuffle = () => {
 		setSide(pick(sides));
 		setAlign(pick(aligns));

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { type DateValue, parseDate, toCalendarDateTime } from '@internationalized/date';
 import type { DateRange } from 'react-aria-components';
 import { DatePicker, DateRangePicker } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 import { InLocale, type LocaleName, limits, locales, now, weekends } from './dates.js';
 
 const kinds = ['single', 'range'] as const;
@@ -11,10 +11,7 @@ const values = ['empty', 'today', 'across months', 'far off'] as const;
 const lengths = ['none', 'short', 'long'] as const;
 const months = ['auto', '1', '2'] as const;
 const widths = { narrow: 'w-40', medium: 'w-64', wide: 'w-full max-w-sm' } as const;
-type Kind = (typeof kinds)[number];
-type Granularity = (typeof granularities)[number];
 type Value = (typeof values)[number];
-type Length = (typeof lengths)[number];
 type Width = keyof typeof widths;
 
 const labels = { single: 'Launch date', range: 'Away from the studio' };
@@ -27,21 +24,21 @@ const rangeFor = (value: Value): { start: DateValue; end: DateValue } | null => 
 };
 
 export function DatePickerPlayground() {
-	const [kind, setKind] = useState<Kind>('single');
-	const [granularity, setGranularity] = useState<Granularity>('day');
-	const [content, setContent] = useState<Value>('empty');
-	const [range, setRange] = useState(() => rangeFor('empty'));
-	const [locale, setLocale] = useState<LocaleName>('page');
-	const [visible, setVisible] = useState<(typeof months)[number]>('auto');
-	const [label, setLabel] = useState<Length>('short');
-	const [description, setDescription] = useState<Length>('short');
-	const [width, setWidth] = useState<Width>('medium');
-	const [hasLimits, setLimits] = useState(false);
-	const [hasWeekends, setWeekends] = useState(false);
-	const [isInvalid, setInvalid] = useState(false);
-	const [isRequired, setRequired] = useState(false);
-	const [isReadOnly, setReadOnly] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
+	const [kind, setKind] = useRemembered('kind', 'single', kinds);
+	const [granularity, setGranularity] = useRemembered('granularity', 'day', granularities);
+	const [content, setContent] = useRemembered('content', 'empty', values);
+	const [range, setRange] = useState(() => rangeFor(content));
+	const [locale, setLocale] = useRemembered('locale', 'page', Object.keys(locales) as LocaleName[]);
+	const [visible, setVisible] = useRemembered('visible', 'auto', months);
+	const [label, setLabel] = useRemembered('label', 'short', lengths);
+	const [description, setDescription] = useRemembered('description', 'short', lengths);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [hasLimits, setLimits] = useRemembered('hasLimits', false);
+	const [hasWeekends, setWeekends] = useRemembered('hasWeekends', false);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [isRequired, setRequired] = useRemembered('isRequired', false);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const fill = (next: Value) => {
 		setContent(next);
 		setRange(rangeFor(next));

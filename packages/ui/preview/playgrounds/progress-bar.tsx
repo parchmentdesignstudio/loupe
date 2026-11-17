@@ -1,23 +1,23 @@
 import { useEffect, useState } from 'react';
 import { Button, Meter, ProgressBar, ProgressCircle } from '../../src/index.js';
-import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const kinds = ['bar', 'circle', 'meter'] as const;
 const labels = ['none', 'short', 'long'] as const;
 const values = ['percent', 'custom'] as const;
 const widths = { narrow: 'w-32', medium: 'w-64', wide: 'w-full max-w-md' } as const;
-type Kind = (typeof kinds)[number];
 type Width = keyof typeof widths;
+const sizes = ['medium', 'large'] as const;
 
 export function ProgressBarPlayground() {
-	const [kind, setKind] = useState<Kind>('bar');
-	const [label, setLabel] = useState<(typeof labels)[number]>('short');
-	const [value, setValue] = useState(45);
-	const [isIndeterminate, setIndeterminate] = useState(false);
-	const [isRunning, setRunning] = useState(false);
-	const [valueText, setValueText] = useState<(typeof values)[number]>('percent');
-	const [size, setSize] = useState<'medium' | 'large'>('medium');
-	const [width, setWidth] = useState<Width>('medium');
+	const [kind, setKind] = useRemembered('kind', 'bar', kinds);
+	const [label, setLabel] = useRemembered('label', 'short', labels);
+	const [value, setValue] = useRemembered('value', 45, (stored) => stored >= 0 && stored <= 100);
+	const [isIndeterminate, setIndeterminate] = useRemembered('isIndeterminate', false);
+	const [isRunning, setRunning] = useRemembered('isRunning', false);
+	const [valueText, setValueText] = useRemembered('valueText', 'percent', values);
+	const [size, setSize] = useRemembered('size', 'medium', sizes);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
 	const isMeter = kind === 'meter';
 	const isCircle = kind === 'circle';
 	// Running, it counts up and starts again, to watch the fill move
@@ -25,14 +25,14 @@ export function ProgressBarPlayground() {
 		if (!isRunning) return;
 		const timer = setInterval(() => setValue((current) => (current >= 100 ? 0 : Math.min(100, current + 7))), 300);
 		return () => clearInterval(timer);
-	}, [isRunning]);
+	}, [isRunning, setValue]);
 	const shuffle = () => {
 		setKind(pick(kinds));
 		setLabel(pick(labels));
 		setValue(Math.round(Math.random() * 100));
 		setIndeterminate(Math.random() < 0.3);
 		setValueText(pick(values));
-		setSize(pick(['medium', 'large'] as const));
+		setSize(pick(sizes));
 		setWidth(pick(Object.keys(widths) as Width[]));
 	};
 	const name = isMeter ? 'Storage' : 'Uploading artwork';
@@ -51,7 +51,7 @@ export function ProgressBarPlayground() {
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Kind" options={kinds} value={kind} onChange={setKind} />
-						{isCircle && <Choice label="Size" options={['medium', 'large'] as const} value={size} onChange={setSize} />}
+						{isCircle && <Choice label="Size" options={sizes} value={size} onChange={setSize} />}
 					</ControlGroup>
 					<ControlGroup label="State">
 						<NumberControl label="Value" value={value} onChange={setValue} minValue={0} maxValue={100} />

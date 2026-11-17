@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Modal, TextField } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { type Length, bodyOf, lengths } from './overlay.js';
 
 const sizes = ['small', 'medium', 'large'] as const;
@@ -10,16 +9,16 @@ const titles = ['Rename project', 'Share link', 'Delete project', 'Invite people
 
 // A modal covers the controls, so there's no keep-open switch here. With every way out turned off, a Done button stays
 export function DialogPlayground() {
-	const [size, setSize] = useState<(typeof sizes)[number]>('medium');
-	const [heading, setHeading] = useState<(typeof headings)[number]>('short');
-	const [title, setTitle] = useState('Rename project');
-	const [body, setBody] = useState<Length>('short');
-	const [hasField, setHasField] = useState(false);
-	const [actions, setActions] = useState<(typeof actionSets)[number]>('two');
-	const [hasClose, setHasClose] = useState(true);
-	const [isDismissable, setDismissable] = useState(true);
-	const [escapeCloses, setEscapeCloses] = useState(true);
-	const [trigger, setTrigger] = useState('Open dialog');
+	const [size, setSize] = useRemembered('size', 'medium', sizes);
+	const [heading, setHeading] = useRemembered('heading', 'short', headings);
+	const [title, setTitle] = useRemembered('title', 'Rename project');
+	const [body, setBody] = useRemembered<Length>('body', 'short', lengths);
+	const [hasField, setHasField] = useRemembered('hasField', false);
+	const [actions, setActions] = useRemembered('actions', 'two', actionSets);
+	const [hasClose, setHasClose] = useRemembered('hasClose', true);
+	const [isDismissable, setDismissable] = useRemembered('isDismissable', true);
+	const [escapeCloses, setEscapeCloses] = useRemembered('escapeCloses', true);
+	const [trigger, setTrigger] = useRemembered('trigger', 'Open dialog');
 	const isTrapped = !hasClose && actions === 'none' && !isDismissable && !escapeCloses;
 	const shuffle = () => {
 		setSize(pick(sizes));

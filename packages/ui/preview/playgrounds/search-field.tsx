@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { SearchField } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const values = ['empty', 'short', 'long'] as const;
 const widths = { narrow: 'w-40', medium: 'w-64', wide: 'w-full max-w-sm' } as const;
-type Length = (typeof lengths)[number];
 type Value = (typeof values)[number];
 type Width = keyof typeof widths;
+const errorLengths = ['short', 'long'] as const;
 
 const labels = { none: undefined, short: 'Typeface', long: longWords };
 const descriptions = { none: undefined, short: 'By name or foundry', long: `${longWords}, and then a second sentence to push it onto another line` };
@@ -16,17 +16,17 @@ const errors = { short: 'Type at least two letters', long: `${longWords}, as an 
 const contents = { empty: '', short: 'Grotesk', long: 'A grotesque with a single-storey g, ink traps, and a family of at least nine weights' };
 
 export function SearchFieldPlayground() {
-	const [label, setLabel] = useState<Length>('none');
-	const [description, setDescription] = useState<Length>('none');
-	const [placeholder, setPlaceholder] = useState<Length>('short');
-	const [content, setContent] = useState<Value>('empty');
-	const [search, setSearch] = useState('');
+	const [label, setLabel] = useRemembered('label', 'none', lengths);
+	const [description, setDescription] = useRemembered('description', 'none', lengths);
+	const [placeholder, setPlaceholder] = useRemembered('placeholder', 'short', lengths);
+	const [content, setContent] = useRemembered('content', 'empty', values);
+	const [search, setSearch] = useState(contents[content]);
 	const [submitted, setSubmitted] = useState<string>();
-	const [width, setWidth] = useState<Width>('medium');
-	const [isInvalid, setInvalid] = useState(false);
-	const [error, setError] = useState<'short' | 'long'>('short');
-	const [isReadOnly, setReadOnly] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [error, setError] = useRemembered('error', 'short', errorLengths);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const fill = (next: Value) => {
 		setContent(next);
 		setSearch(contents[next]);
@@ -38,7 +38,7 @@ export function SearchFieldPlayground() {
 		fill(pick(values));
 		setWidth(pick(Object.keys(widths) as Width[]));
 		setInvalid(Math.random() < 0.3);
-		setError(pick(['short', 'long'] as const));
+		setError(pick(errorLengths));
 	};
 	return (
 		<Playground
@@ -55,7 +55,7 @@ export function SearchFieldPlayground() {
 					<ControlGroup label="State">
 						<Choice label="Value" options={values} value={content} onChange={fill} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
-						{isInvalid && <Choice label="Error" options={['short', 'long'] as const} value={error} onChange={setError} />}
+						{isInvalid && <Choice label="Error" options={errorLengths} value={error} onChange={setError} />}
 						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 					</ControlGroup>

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Collection, type Selection, type SortDescriptor } from 'react-aria-components';
 import { Cell, Column, EmptyState, MenuItem, MenuSeparator, Row, RowActions, Table, TableBody, TableHeader, TableLoadMoreItem } from '../../src/index.js';
-import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const firsts = ['Ada', 'Grace', 'Alan', 'Katherine', 'Tim', 'Margaret', 'Linus', 'Barbara', 'Dennis', 'Radia', 'Ken', 'Frances', 'Donald', 'Hedy', 'Edsger', 'Joan'];
 const lasts = ['Lovelace', 'Hopper', 'Turing', 'Johnson', 'Berners-Lee', 'Hamilton', 'Torvalds', 'Liskov', 'Ritchie', 'Perlman', 'Thompson', 'Allen', 'Knuth', 'Lamarr', 'Dijkstra', 'Clarke'];
@@ -39,18 +39,19 @@ const textColumns = [
 const money = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
 const selections = ['none', 'single', 'multiple'] as const;
 const actionsOn = ['none', 'action', 'link'] as const;
+const densities = ['comfortable', 'compact'] as const;
 
 export function TablePlayground() {
-	const [count, setCount] = useState(8);
-	const [columnCount, setColumnCount] = useState(3);
-	const [selectionMode, setSelectionMode] = useState<(typeof selections)[number]>('multiple');
-	const [density, setDensity] = useState<'comfortable' | 'compact'>('comfortable');
-	const [rowsDo, setRowsDo] = useState<(typeof actionsOn)[number]>('none');
-	const [isSortable, setSortable] = useState(true);
-	const [hasNumbers, setNumbers] = useState(true);
-	const [hasMenu, setMenu] = useState(true);
-	const [isLong, setLong] = useState(false);
-	const [isFixed, setFixed] = useState(false);
+	const [count, setCount] = useRemembered('count', 8, (stored) => stored >= 0 && stored <= 500);
+	const [columnCount, setColumnCount] = useRemembered('columnCount', 3, (stored) => stored >= 1 && stored <= textColumns.length + 1);
+	const [selectionMode, setSelectionMode] = useRemembered('selectionMode', 'multiple', selections);
+	const [density, setDensity] = useRemembered('density', 'comfortable', densities);
+	const [rowsDo, setRowsDo] = useRemembered('rowsDo', 'none', actionsOn);
+	const [isSortable, setSortable] = useRemembered('isSortable', true);
+	const [hasNumbers, setNumbers] = useRemembered('hasNumbers', true);
+	const [hasMenu, setMenu] = useRemembered('hasMenu', true);
+	const [isLong, setLong] = useRemembered('isLong', false);
+	const [isFixed, setFixed] = useRemembered('isFixed', false);
 	const [selected, setSelected] = useState<Selection>(new Set(['person-1']));
 	const [sort, setSort] = useState<SortDescriptor>({ column: 'name', direction: 'ascending' });
 	const [last, setLast] = useState('');
@@ -68,7 +69,7 @@ export function TablePlayground() {
 		setCount(pick([0, 3, 8, 8, 24, 200]));
 		setColumnCount(2 + Math.floor(Math.random() * 5));
 		setSelectionMode(pick(selections));
-		setDensity(pick(['comfortable', 'compact'] as const));
+		setDensity(pick(densities));
 		setRowsDo(pick(actionsOn));
 		setSortable(Math.random() < 0.7);
 		setNumbers(Math.random() < 0.6);
@@ -92,7 +93,7 @@ export function TablePlayground() {
 						<SwitchControl label="Long names" value={isLong} onChange={setLong} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Density" options={['comfortable', 'compact'] as const} value={density} onChange={setDensity} />
+						<Choice label="Density" options={densities} value={density} onChange={setDensity} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />

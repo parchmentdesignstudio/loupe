@@ -3,11 +3,15 @@ import type { Selection } from 'react-aria-components';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, GridList, GridListHeader, GridListItem, GridListSection } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const counts = { none: 0, few: 3, many: 12 } as const;
 type Count = keyof typeof counts;
 const selections = ['none', 'single', 'multiple'] as const;
+const layouts = ['stack', 'grid'] as const;
+const behaviours = ['toggle', 'replace'] as const;
+const texts = ['short', 'long'] as const;
+const widths = ['narrow', 'wide'] as const;
 
 const projects: { name: string; detail: string; icon: IconName }[] = [
 	{ name: 'Parchment', detail: 'Studio site', icon: 'house' },
@@ -25,31 +29,31 @@ const projects: { name: string; detail: string; icon: IconName }[] = [
 ];
 
 export function GridListPlayground() {
-	const [layout, setLayout] = useState<'stack' | 'grid'>('stack');
-	const [selectionMode, setSelectionMode] = useState<(typeof selections)[number]>('single');
-	const [behaviour, setBehaviour] = useState<'toggle' | 'replace'>('toggle');
-	const [count, setCount] = useState<Count>('few');
-	const [text, setText] = useState<'short' | 'long'>('short');
-	const [width, setWidth] = useState<'narrow' | 'wide'>('narrow');
-	const [hasDetail, setDetail] = useState(true);
-	const [hasIcon, setIcon] = useState(true);
-	const [hasAction, setAction] = useState(false);
-	const [hasSections, setSections] = useState(false);
-	const [hasDisabled, setDisabled] = useState(false);
-	const [isTruncated, setTruncated] = useState(false);
-	const [disallowEmpty, setDisallowEmpty] = useState(false);
+	const [layout, setLayout] = useRemembered('layout', 'stack', layouts);
+	const [selectionMode, setSelectionMode] = useRemembered('selectionMode', 'single', selections);
+	const [behaviour, setBehaviour] = useRemembered('behaviour', 'toggle', behaviours);
+	const [count, setCount] = useRemembered('count', 'few', Object.keys(counts) as Count[]);
+	const [text, setText] = useRemembered('text', 'short', texts);
+	const [width, setWidth] = useRemembered('width', 'narrow', widths);
+	const [hasDetail, setDetail] = useRemembered('hasDetail', true);
+	const [hasIcon, setIcon] = useRemembered('hasIcon', true);
+	const [hasAction, setAction] = useRemembered('hasAction', false);
+	const [hasSections, setSections] = useRemembered('hasSections', false);
+	const [hasDisabled, setDisabled] = useRemembered('hasDisabled', false);
+	const [isTruncated, setTruncated] = useRemembered('isTruncated', false);
+	const [disallowEmpty, setDisallowEmpty] = useRemembered('disallowEmpty', false);
 	const [selected, setSelected] = useState<Selection>(new Set(['item-0']));
 	const isGrid = layout === 'grid';
 	const items = projects.slice(0, counts[count]).map((project, index) => ({ ...project, id: `item-${index}`, name: text === 'long' && index % 2 === 0 ? `${project.name}: ${longWords.toLowerCase()}` : project.name }));
 	const half = Math.ceil(items.length / 2);
 	const groups = hasSections ? [{ name: 'This month', items: items.slice(0, half) }, { name: 'Earlier', items: items.slice(half) }].filter((group) => group.items.length > 0) : [];
 	const shuffle = () => {
-		setLayout(pick(['stack', 'grid'] as const));
+		setLayout(pick(layouts));
 		setSelectionMode(pick(selections));
 		setBehaviour(Math.random() < 0.7 ? 'toggle' : 'replace');
 		setCount(Math.random() < 0.1 ? 'none' : pick(['few', 'many'] as const));
 		setText(Math.random() < 0.3 ? 'long' : 'short');
-		setWidth(pick(['narrow', 'wide'] as const));
+		setWidth(pick(widths));
 		setDetail(Math.random() < 0.7);
 		setIcon(Math.random() < 0.7);
 		setAction(Math.random() < 0.4);
@@ -83,12 +87,12 @@ export function GridListPlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
-			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
+			preview={<Choice label="Width" options={widths} value={width} onChange={setWidth} />}
 			controls={
 				<>
 					<ControlGroup label="Content">
 						<Choice label="Items" options={Object.keys(counts) as Count[]} value={count} onChange={setCount} />
-						<Choice label="Name" options={['short', 'long'] as const} value={text} onChange={setText} />
+						<Choice label="Name" options={texts} value={text} onChange={setText} />
 						<SwitchControl label="Truncate" value={isTruncated} onChange={setTruncated} />
 						<SwitchControl label="Detail" value={hasDetail} onChange={setDetail} />
 						<SwitchControl label={isGrid ? 'Preview' : 'Icon'} value={hasIcon} onChange={setIcon} />
@@ -96,11 +100,11 @@ export function GridListPlayground() {
 						<SwitchControl label="Sections" value={hasSections} onChange={setSections} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Layout" options={['stack', 'grid'] as const} value={layout} onChange={setLayout} />
+						<Choice label="Layout" options={layouts} value={layout} onChange={setLayout} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						<Choice label="Selection" options={selections} value={selectionMode} onChange={setSelectionMode} />
-						{selectionMode !== 'none' && <Choice label="Selection behaviour" options={['toggle', 'replace'] as const} value={behaviour} onChange={setBehaviour} />}
+						{selectionMode !== 'none' && <Choice label="Selection behaviour" options={behaviours} value={behaviour} onChange={setBehaviour} />}
 						<SwitchControl label="Keep one chosen" value={disallowEmpty} onChange={setDisallowEmpty} />
 					</ControlGroup>
 					<ControlGroup label="State">

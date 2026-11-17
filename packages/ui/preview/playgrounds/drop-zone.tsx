@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, DropZone, FileList, FileListItem, FileTrigger, isFileDropItem } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { type Accepts, accepts } from './files.js';
 
 export interface Upload {
@@ -47,6 +47,8 @@ const seeds = {
 		),
 } satisfies Record<string, () => Upload[]>;
 type Seed = keyof typeof seeds;
+const variants = ['dashed', 'quiet'] as const;
+const widths = ['narrow', 'wide'] as const;
 
 const reasons = ['The connection dropped', 'It’s over the 20 MB limit', 'The server didn’t answer in time, so nothing was saved'];
 
@@ -54,7 +56,7 @@ const reasons = ['The connection dropped', 'It’s over the 20 MB limit', 'The s
  * Uploads that pretend: each ticks up at its own pace, and with failures on, about one in three stops partway with an
  * error, then goes through when retried
  */
-export function useUploads(initial: Upload[] = [], { failures = true }: { failures?: boolean } = {}) {
+export function useUploads(initial: Upload[] | (() => Upload[]) = [], { failures = true }: { failures?: boolean } = {}) {
 	const [uploads, setUploads] = useState<Upload[]>(initial);
 	const isRunning = uploads.some((upload) => upload.status === 'uploading');
 	useEffect(() => {
@@ -90,16 +92,16 @@ export function useUploads(initial: Upload[] = [], { failures = true }: { failur
 }
 
 export function DropZonePlayground() {
-	const [variant, setVariant] = useState<'dashed' | 'quiet'>('dashed');
-	const [label, setLabel] = useState('Drop an SVG or a large PNG');
-	const [hasTrigger, setTrigger] = useState(true);
-	const [accepted, setAccepted] = useState<Accepts>('images');
-	const [isMultiple, setMultiple] = useState(true);
-	const [isDisabled, setDisabled] = useState(false);
-	const [width, setWidth] = useState<'narrow' | 'wide'>('wide');
-	const [seed, setSeed] = useState<Seed>('none');
-	const [failures, setFailures] = useState(true);
-	const { uploads, add, set, uploadAll, retry, remove } = useUploads([], { failures });
+	const [variant, setVariant] = useRemembered('variant', 'dashed', variants);
+	const [label, setLabel] = useRemembered('label', 'Drop an SVG or a large PNG');
+	const [hasTrigger, setTrigger] = useRemembered('hasTrigger', true);
+	const [accepted, setAccepted] = useRemembered('accepted', 'images', Object.keys(accepts) as Accepts[]);
+	const [isMultiple, setMultiple] = useRemembered('isMultiple', true);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [width, setWidth] = useRemembered('width', 'wide', widths);
+	const [seed, setSeed] = useRemembered('seed', 'none', Object.keys(seeds) as Seed[]);
+	const [failures, setFailures] = useRemembered('failures', true);
+	const { uploads, add, set, uploadAll, retry, remove } = useUploads(seeds[seed], { failures });
 	const isQuiet = variant === 'quiet';
 	const types = accepts[accepted];
 	const take = (files: File[]) => add(isMultiple ? files : files.slice(0, 1), !isMultiple);
@@ -113,7 +115,7 @@ export function DropZonePlayground() {
 		setTrigger(Math.random() < 0.7);
 		setAccepted(pick(Object.keys(accepts) as Accepts[]));
 		setMultiple(Math.random() < 0.6);
-		setWidth(pick(['narrow', 'wide'] as const));
+		setWidth(pick(widths));
 		const next = pick(Object.keys(seeds) as Seed[]);
 		setSeed(next);
 		// Some still listed, some mid-upload, some done or failed
@@ -131,7 +133,7 @@ export function DropZonePlayground() {
 		<Playground
 			onRandom={shuffle}
 			box="items-start"
-			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
+			preview={<Choice label="Width" options={widths} value={width} onChange={setWidth} />}
 			controls={
 				<>
 					<ControlGroup label="Content">
@@ -140,7 +142,7 @@ export function DropZonePlayground() {
 						<Choice label="Files shown" options={Object.keys(seeds) as Seed[]} value={seed} onChange={choose} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Variant" options={['dashed', 'quiet'] as const} value={variant} onChange={setVariant} />
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
 					</ControlGroup>
 					<ControlGroup label="Behaviour">
 						<Choice label="Accepts" options={Object.keys(accepts) as Accepts[]} value={accepted} onChange={setAccepted} />

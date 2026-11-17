@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type Color, parseColor } from 'react-aria-components';
 import { Button, ColorSwatchPicker, ColorSwatchPickerItem } from '../../src/index.js';
-import { Choice, ControlGroup, ControlRow, NumberControl, Playground, SwitchControl, pick } from '../playground.js';
+import { Choice, ControlGroup, ControlRow, NumberControl, Playground, SwitchControl, pick, useRemembered } from '../playground.js';
 import { extremes, randomColour } from './colour.js';
 
 const palettes = {
@@ -16,6 +16,7 @@ const sizes = { small: 'size-6', medium: undefined, large: 'size-12' } as const;
 type Size = keyof typeof sizes;
 const widths = { narrow: 'max-w-40', medium: 'max-w-sm', wide: 'max-w-none' } as const;
 type Width = keyof typeof widths;
+const layouts = ['grid', 'stack'] as const;
 
 const randomSet = (count: number) => Array.from({ length: count }, () => randomColour().toString('hexa'));
 
@@ -38,14 +39,14 @@ function coloursFor(palette: Palette, count: number, random: string[]) {
 }
 
 export function ColorSwatchPickerPlayground() {
-	const [palette, setPalette] = useState<Palette>('parchment');
-	const [count, setCount] = useState(6);
+	const [palette, setPalette] = useRemembered('palette', 'parchment', paletteNames);
+	const [count, setCount] = useRemembered('count', 6, (stored) => stored >= 0 && stored <= 60);
 	const [random, setRandom] = useState(() => randomSet(40));
-	const [size, setSize] = useState<Size>('medium');
-	const [width, setWidth] = useState<Width>('wide');
-	const [layout, setLayout] = useState<'grid' | 'stack'>('grid');
+	const [size, setSize] = useRemembered('size', 'medium', Object.keys(sizes) as Size[]);
+	const [width, setWidth] = useRemembered('width', 'wide', Object.keys(widths) as Width[]);
+	const [layout, setLayout] = useRemembered('layout', 'grid', layouts);
 	const [value, setValue] = useState<Color | null>(() => parseColor('#c76024'));
-	const [disableSome, setDisableSome] = useState(false);
+	const [disableSome, setDisableSome] = useRemembered('disableSome', false);
 	// Nothing chosen needs the picker uncontrolled, as its value can’t be null, so it’s remounted to clear it
 	const [round, setRound] = useState(0);
 	const colours = coloursFor(palette, count, random);
@@ -85,7 +86,7 @@ export function ColorSwatchPickerPlayground() {
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Swatch size" options={Object.keys(sizes) as Size[]} value={size} onChange={setSize} />
-						<Choice label="Layout" options={['grid', 'stack'] as const} value={layout} onChange={setLayout} />
+						<Choice label="Layout" options={layouts} value={layout} onChange={setLayout} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						<SwitchControl label="Every third disabled" value={disableSome} onChange={setDisableSome} />

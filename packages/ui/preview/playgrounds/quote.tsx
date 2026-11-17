@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Prose, Quote } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, pick, useRemembered } from '../playground.js';
 import { photo } from './avatar.js';
 
 const words = {
@@ -8,6 +7,8 @@ const words = {
 	long: 'We came in asking for a new logo, and left with a way of talking about ourselves that the whole team uses without thinking. The brief changed twice, the deadline didn’t, and somehow every conversation still felt unhurried. I’ve recommended them to three people since, and I’d hire them again tomorrow.',
 } as const;
 type Length = keyof typeof words;
+const variants = ['quote', 'testimonial'] as const;
+const widths = ['narrow', 'wide'] as const;
 
 const people = [
 	{ cite: 'Mara Lindqvist', detail: 'Founder, Halden Studio' },
@@ -17,25 +18,25 @@ const people = [
 ];
 
 export function QuotePlayground() {
-	const [variant, setVariant] = useState<'quote' | 'testimonial'>('quote');
-	const [length, setLength] = useState<Length>('short');
-	const [cite, setCite] = useState('Mara Lindqvist');
-	const [detail, setDetail] = useState('Founder, Halden Studio');
-	const [hasAvatar, setHasAvatar] = useState(true);
-	const [width, setWidth] = useState<'narrow' | 'wide'>('wide');
+	const [variant, setVariant] = useRemembered('variant', 'quote', variants);
+	const [length, setLength] = useRemembered('length', 'short', Object.keys(words) as Length[]);
+	const [cite, setCite] = useRemembered('cite', 'Mara Lindqvist');
+	const [detail, setDetail] = useRemembered('detail', 'Founder, Halden Studio');
+	const [hasAvatar, setHasAvatar] = useRemembered('hasAvatar', true);
+	const [width, setWidth] = useRemembered('width', 'wide', widths);
 	const shuffle = () => {
 		const person = pick(people);
-		setVariant(pick(['quote', 'testimonial'] as const));
+		setVariant(pick(variants));
 		setLength(Math.random() < 0.3 ? 'long' : 'short');
 		setCite(person.cite);
 		setDetail(Math.random() < 0.2 ? '' : person.detail);
 		setHasAvatar(Math.random() < 0.7);
-		setWidth(pick(['narrow', 'wide'] as const));
+		setWidth(pick(widths));
 	};
 	return (
 		<Playground
 			onRandom={shuffle}
-			preview={<Choice label="Width" options={['narrow', 'wide'] as const} value={width} onChange={setWidth} />}
+			preview={<Choice label="Width" options={widths} value={width} onChange={setWidth} />}
 			controls={
 				<>
 					<ControlGroup label="Content">
@@ -44,7 +45,7 @@ export function QuotePlayground() {
 						<TextControl label="Detail" value={detail} onChange={setDetail} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
-						<Choice label="Variant" options={['quote', 'testimonial'] as const} value={variant} onChange={setVariant} />
+						<Choice label="Variant" options={variants} value={variant} onChange={setVariant} />
 						{variant === 'testimonial' && <SwitchControl label="Avatar" value={hasAvatar} onChange={setHasAvatar} />}
 					</ControlGroup>
 				</>

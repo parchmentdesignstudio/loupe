@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import type { Key } from 'react-aria-components';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Header, ListBoxItem, ListBoxSection, Select } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, solidIcons } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const pool = ['Brand identity', 'Website', 'Design system', 'Illustration', 'Typography', 'Signage', 'Packaging', 'Motion', 'Photography', 'Copywriting'];
 const headings = ['Popular', 'Recently used', 'Studio', 'Print', 'Digital', 'Everything else'];
@@ -28,21 +27,22 @@ const chunk = <T,>(list: T[]) => {
 };
 
 export function SelectPlayground() {
-	const [label, setLabel] = useState(labels[0]);
-	const [placeholder, setPlaceholder] = useState(placeholders[0]);
-	const [description, setDescription] = useState('We’ll tailor the proposal to it');
-	const [errorMessage, setErrorMessage] = useState('Choose a service');
-	const [width, setWidth] = useState<keyof typeof widths>('medium');
-	const [count, setCount] = useState<(typeof counts)[number]>('5');
-	const [length, setLength] = useState<Length>('short');
-	const [hasSections, setSections] = useState(false);
-	const [hasIcons, setIcons] = useState(false);
+	const [label, setLabel] = useRemembered('label', labels[0]);
+	const [placeholder, setPlaceholder] = useRemembered('placeholder', placeholders[0]);
+	const [description, setDescription] = useRemembered('description', 'We’ll tailor the proposal to it');
+	const [errorMessage, setErrorMessage] = useRemembered('errorMessage', 'Choose a service');
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as (keyof typeof widths)[]);
+	const [count, setCount] = useRemembered('count', '5', counts);
+	const [length, setLength] = useRemembered('length', 'short', lengths);
+	const [hasSections, setSections] = useRemembered('hasSections', false);
+	const [hasIcons, setIcons] = useRemembered('hasIcons', false);
 	const [iconSet, setIconSet] = useState<IconName[]>(icons);
-	const [selectedKey, setSelectedKey] = useState<Key | null>(null);
-	const [hasDisabledOption, setDisabledOption] = useState(false);
-	const [isInvalid, setInvalid] = useState(false);
-	const [isRequired, setRequired] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
+	// The option's id, or '' for nothing chosen, as null would read as nothing stored
+	const [selectedKey, setSelectedKey] = useRemembered('selectedKey', '');
+	const [hasDisabledOption, setDisabledOption] = useRemembered('hasDisabledOption', false);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [isRequired, setRequired] = useRemembered('isRequired', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const total = count === 'none' ? 0 : Number(count);
 	const items = Array.from({ length: total }, (_, i) => ({ id: `option-${i}`, name: optionName(i, length), icon: iconSet[i % iconSet.length] }));
 	const renderItem = (item: (typeof items)[number]) => (
@@ -61,7 +61,7 @@ export function SelectPlayground() {
 		setSections(Math.random() < 0.4);
 		setIcons(Math.random() < 0.4);
 		setIconSet(icons.map(() => pick(solidIcons())));
-		setSelectedKey(Math.random() < 0.4 ? null : `option-${Math.floor(Math.random() * Number(nextCount))}`);
+		setSelectedKey(Math.random() < 0.4 ? '' : `option-${Math.floor(Math.random() * Number(nextCount))}`);
 		setDisabledOption(Math.random() < 0.3);
 		setInvalid(Math.random() < 0.25);
 		setDisabled(Math.random() < 0.1);
@@ -84,7 +84,7 @@ export function SelectPlayground() {
 						<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
 					</ControlGroup>
 					<ControlGroup label="State">
-						<SwitchControl label="Nothing chosen" value={selectedKey == null} onChange={(none) => setSelectedKey(none ? null : 'option-0')} />
+						<SwitchControl label="Nothing chosen" value={!selectedKey} onChange={(none) => setSelectedKey(none ? '' : 'option-0')} />
 						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />
@@ -99,8 +99,8 @@ export function SelectPlayground() {
 				placeholder={placeholder}
 				description={description || undefined}
 				errorMessage={errorMessage}
-				selectedKey={selectedKey}
-				onSelectionChange={setSelectedKey}
+				selectedKey={selectedKey || null}
+				onSelectionChange={(key) => setSelectedKey(key == null ? '' : String(key))}
 				disabledKeys={hasDisabledOption && total ? [`option-${Math.min(2, total - 1)}`] : undefined}
 				isInvalid={isInvalid}
 				isRequired={isRequired}

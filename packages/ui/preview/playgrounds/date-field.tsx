@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { type DateValue, now as nowIn, getLocalTimeZone, parseDate, parseTime, toCalendarDateTime } from '@internationalized/date';
 import type { TimeValue } from 'react-aria-components';
 import { DateField, TimeField } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 import { InLocale, type LocaleName, limits, locales, now } from './dates.js';
 
 const kinds = ['date', 'date and time', 'time'] as const;
@@ -12,7 +12,6 @@ const clocks = ['locale', '12', '24'] as const;
 const widths = { narrow: 'w-36', medium: 'w-56', wide: 'w-full max-w-sm' } as const;
 type Kind = (typeof kinds)[number];
 type Value = (typeof values)[number];
-type Length = (typeof lengths)[number];
 type Width = keyof typeof widths;
 
 const labels = { date: 'Deadline', 'date and time': 'Call booked for', time: 'Opens at' };
@@ -27,20 +26,20 @@ const dateFor = (value: Value, kind: Kind): DateValue | null => {
 const timeFor = (value: Value): TimeValue | null => (value === 'empty' ? null : value === 'today' ? nowIn(getLocalTimeZone()) : value === 'past' ? parseTime('07:05') : parseTime('23:59'));
 
 export function DateFieldPlayground() {
-	const [kind, setKind] = useState<Kind>('date');
-	const [content, setContent] = useState<Value>('today');
-	const [date, setDate] = useState<DateValue | null>(() => dateFor('today', 'date'));
-	const [time, setTime] = useState<TimeValue | null>(() => timeFor('today'));
-	const [locale, setLocale] = useState<LocaleName>('page');
-	const [clock, setClock] = useState<(typeof clocks)[number]>('locale');
-	const [label, setLabel] = useState<Length>('short');
-	const [description, setDescription] = useState<Length>('short');
-	const [width, setWidth] = useState<Width>('medium');
-	const [hasLimits, setLimits] = useState(false);
-	const [isInvalid, setInvalid] = useState(false);
-	const [isRequired, setRequired] = useState(false);
-	const [isReadOnly, setReadOnly] = useState(false);
-	const [isDisabled, setDisabled] = useState(false);
+	const [kind, setKind] = useRemembered('kind', 'date', kinds);
+	const [content, setContent] = useRemembered('content', 'today', values);
+	const [date, setDate] = useState<DateValue | null>(() => dateFor(content, kind));
+	const [time, setTime] = useState<TimeValue | null>(() => timeFor(content));
+	const [locale, setLocale] = useRemembered('locale', 'page', Object.keys(locales) as LocaleName[]);
+	const [clock, setClock] = useRemembered('clock', 'locale', clocks);
+	const [label, setLabel] = useRemembered('label', 'short', lengths);
+	const [description, setDescription] = useRemembered('description', 'short', lengths);
+	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
+	const [hasLimits, setLimits] = useRemembered('hasLimits', false);
+	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
+	const [isRequired, setRequired] = useRemembered('isRequired', false);
+	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const fill = (next: Value, as: Kind = kind) => {
 		setContent(next);
 		setDate(dateFor(next, as));

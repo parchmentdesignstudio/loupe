@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { Button, NavigationTree, NavigationTreeHeader, NavigationTreeItem, NavigationTreeItemContent, NavigationTreeSection } from '../../src/index.js';
-import { Choice, ControlGroup, ControlRow, Playground, SwitchControl, longWords, pick } from '../playground.js';
+import { Choice, ControlGroup, ControlRow, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const sectionNames = ['Guides', 'Components', 'Foundations', 'Resources'];
 const pageNames = ['Overview', 'Getting started', 'Installation', 'Buttons', 'Forms', 'Colour', 'Typography', 'Icons', 'Layout', 'Spacing', 'Motion', 'Accessibility', 'Writing', 'Releases', 'Roadmap', 'Support'];
@@ -80,15 +80,15 @@ const widthClass = { narrow: 'w-44', column: 'w-60', wide: 'w-96' };
 
 // The router keeps each click inside the playground, moving the current page rather than leaving the preview
 export function NavigationTreePlayground() {
-	const [sections, setSections] = useState<TreeShape['sections']>('2');
-	const [items, setItems] = useState<TreeShape['items']>('5');
-	const [depth, setDepth] = useState<TreeShape['depth']>('2');
-	const [isLong, setLong] = useState(false);
-	const [parentsLink, setParentsLink] = useState(true);
-	const [hasHeaders, setHeaders] = useState(true);
-	const [hasDisabled, setHasDisabled] = useState(false);
-	const [width, setWidth] = useState<(typeof widths)[number]>('column');
-	const [opened, setOpened] = useState<(typeof openings)[number]>('first');
+	const [sections, setSections] = useRemembered('sections', '2', sectionCounts);
+	const [items, setItems] = useRemembered('items', '5', itemCounts);
+	const [depth, setDepth] = useRemembered('depth', '2', depths);
+	const [isLong, setLong] = useRemembered('isLong', false);
+	const [parentsLink, setParentsLink] = useRemembered('parentsLink', true);
+	const [hasHeaders, setHeaders] = useRemembered('hasHeaders', true);
+	const [hasDisabled, setHasDisabled] = useRemembered('hasDisabled', false);
+	const [width, setWidth] = useRemembered('width', 'column', widths);
+	const [opened, setOpened] = useRemembered('opened', 'first', openings);
 	const [route, setRoute] = useState<string | null>('#s0-1');
 
 	const tree = buildTree({ sections, items, depth, isLong, parentsLink });

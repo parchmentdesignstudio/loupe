@@ -1,4 +1,4 @@
-import { type ReactNode, type Ref, createContext, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { type ReactNode, type Ref, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { type IconName, type IconVariant, iconNames, matchesIcon } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Button, ComboBox, ListBoxItem, NumberField, Select, Switch, TextField, ToggleButton, ToggleButtonGroup } from '../src/index.js';
@@ -22,39 +22,33 @@ export const grounds = {
 	pine: () => surface(hex('Pine'), hex('Chalk')),
 } as const;
 export type Ground = keyof typeof grounds;
-
-// Which group a control's in, so two controls with one label in different groups are remembered apart
-const Group = createContext('');
+const groundNames = Object.keys(grounds) as Ground[];
 
 /**
- * A control's value, remembered for the page it's on, so a reload or a visit later shows what was last picked. Put
- * back before the page paints, and only when it's still a value the control takes. Storage can be unavailable, such
- * as in a private window, and then the control starts as the playground has it
+ * State that's remembered for the page it's on, so a reload or a visit later shows what was last set, by a control or
+ * by Random. It's read as the playground first renders, whichever controls are showing. A name has to be unique on its
+ * page, and Playground has `ground`. `takes`, the options or a test, turns away a stored value the playground no longer
+ * takes, such as an option since removed. For strings, numbers and booleans. Storage can be unavailable, such as in a
+ * private window, and then it starts as `initial`
  */
-function useRemembered<T extends string | number | boolean>(label: string, value: T, onChange: (value: T) => void, takes: (stored: unknown) => boolean) {
-	const group = useContext(Group);
-	const [key] = useState(() => `loupe:${location.hash}:${group}:${label}`);
-	const isRestored = useRef(false);
-	const isFirst = useRef(true);
-	// Once, when the control first shows, as the playground's setters are new on each render
-	useLayoutEffect(() => {
-		if (isRestored.current) return;
-		isRestored.current = true;
+export function useRemembered<T>(name: string, initial: T, takes?: readonly T[] | ((stored: T) => boolean)) {
+	const [key] = useState(() => `loupe:${location.hash}:${name}`);
+	const [value, setValue] = useState(() => {
 		try {
 			const stored: unknown = JSON.parse(localStorage.getItem(key) ?? 'null');
-			if (stored !== null && stored !== value && takes(stored)) onChange(stored as T);
+			if (typeof stored === typeof initial && (typeof takes === 'function' ? takes(stored as T) : (takes?.includes(stored as T) ?? true))) return stored as T;
 		} catch {}
-	}, [key, value, onChange, takes]);
-	// Whatever sets it, the control or Random, but not the value it starts with, which would write over what's stored
+		return initial;
+	});
+	// Kept only while it differs from where the playground starts it, so a value left alone follows the playground if that
+	// changes
 	useEffect(() => {
-		if (isFirst.current) {
-			isFirst.current = false;
-			return;
-		}
 		try {
-			localStorage.setItem(key, JSON.stringify(value));
+			if (value === initial) localStorage.removeItem(key);
+			else localStorage.setItem(key, JSON.stringify(value));
 		} catch {}
-	}, [key, value]);
+	}, [key, value, initial]);
+	return [value, setValue] as const;
 }
 
 // What the page's playground builds, as JSX, for the Component section at the top of its page
@@ -90,7 +84,7 @@ export function ControlGroup({ label, children }: { label: string; children: Rea
 	return (
 		<section aria-label={label} className="flex flex-col pt-8 first:pt-0">
 			<h3 className="border-b border-bleed/8 pb-2 text-label font-medium text-muted">{label}</h3>
-			<Group value={label}>{children}</Group>
+			{children}
 		</section>
 	);
 }
@@ -115,7 +109,6 @@ export function Choice<T extends string>({
 	onChange: (value: T) => void;
 	isDisabled?: boolean;
 }) {
-	useRemembered(label, value, onChange, (stored) => options.includes(stored as T));
 	const name = (option: T) => labels?.[option] ?? capitalise(option);
 	const row = useRef<HTMLDivElement>(null);
 	const group = useRef<HTMLDivElement>(null);
@@ -167,7 +160,6 @@ export function Choice<T extends string>({
 }
 
 export function TextControl({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-	useRemembered(label, value, onChange, (stored) => typeof stored === 'string');
 	return (
 		<ControlRow label={label}>
 			<TextField aria-label={label} value={value} onChange={onChange} className="w-56" />
@@ -176,7 +168,6 @@ export function TextControl({ label, value, onChange }: { label: string; value: 
 }
 
 export function NumberControl({ label, value, onChange, minValue, maxValue, step }: { label: string; value: number; onChange: (value: number) => void; minValue?: number; maxValue?: number; step?: number }) {
-	useRemembered(label, value, onChange, (stored) => typeof stored === 'number' && (minValue == null || stored >= minValue) && (maxValue == null || stored <= maxValue));
 	return (
 		<ControlRow label={label}>
 			<NumberField aria-label={label} value={value} onChange={onChange} minValue={minValue} maxValue={maxValue} step={step} className="w-32" />
@@ -185,7 +176,6 @@ export function NumberControl({ label, value, onChange, minValue, maxValue, step
 }
 
 export function SwitchControl({ label, value, onChange }: { label: string; value: boolean; onChange: (value: boolean) => void }) {
-	useRemembered(label, value, onChange, (stored) => typeof stored === 'boolean');
 	return (
 		<ControlRow label={label}>
 			<Switch aria-label={label} isSelected={value} onChange={onChange} />
@@ -196,7 +186,6 @@ export function SwitchControl({ label, value, onChange }: { label: string; value
 /** Every 16px icon in a set, to type into and filter, by its name or what it's for */
 export function IconPicker({ label, value, onChange, variant = 'solid' }: { label: string; value: IconName; onChange: (name: IconName) => void; variant?: IconVariant }) {
 	const items = iconNames({ variant, size: 16 }).map((name) => ({ id: name }));
-	useRemembered(label, value, onChange, (stored) => items.some((item) => item.id === stored));
 	return (
 		<ControlRow label={label}>
 			<ComboBox aria-label={label} defaultItems={items} defaultFilter={matchesIcon} selectedKey={value} onSelectionChange={(key) => key && onChange(key as IconName)} className="w-56">
@@ -219,7 +208,7 @@ export const solidIcons = () => iconNames({ variant: 'solid', size: 16 });
  * component's own controls in groups, and Copy code for it as JSX, or as `code` has it where the JSX would show the preview's own values, then the ground and anything else that only changes the preview. `box` adds classes to the box, such as `items-start` for something tall
  */
 export function Playground({ children, controls, preview, onRandom, box, code: written }: { children: ReactNode; controls: ReactNode; preview?: ReactNode; onRandom?: () => void; box?: string; code?: string }) {
-	const [ground, setGround] = useState<Ground>('page');
+	const [ground, setGround] = useRemembered('ground', 'page', groundNames);
 	const [isCopied, setCopied] = useState(false);
 	const code = written ?? codeOf(children);
 	useEffect(() => setBuilt(code), [code]);
@@ -247,7 +236,7 @@ export function Playground({ children, controls, preview, onRandom, box, code: w
 			<div className="flex flex-col">
 				{controls}
 				<ControlGroup label="Preview">
-					<Choice label="Ground" options={Object.keys(grounds) as Ground[]} value={ground} onChange={setGround} />
+					<Choice label="Ground" options={groundNames} value={ground} onChange={setGround} />
 					{preview}
 				</ControlGroup>
 			</div>

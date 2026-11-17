@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Avatar, AvatarGroup, type AvatarShape, type AvatarSize, type AvatarStatus } from '../../src/index.js';
-import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, pick } from '../playground.js';
+import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, pick, useRemembered } from '../playground.js';
 import doris from '../assets/doris.jpg';
 
 // Bundled rather than fetched so the preview works offline: Doris, a real photo cropped to her head, and a logo for an
@@ -19,30 +18,32 @@ export const names = {
 	CJK: '王小明',
 } as const;
 type NameKind = keyof typeof names;
+const kinds = Object.keys(names) as NameKind[];
 
 export const people = ['Sam Smith', 'Alex Lee', 'Jo Bloggs', 'Ana Silva', 'Kai Chen', 'Lin Wu', 'Priya Patel', 'Tom Hughes', 'Ola Nowak', 'Femi Ade', 'Rosa Díaz', 'Yuki Sato', 'Ben Cole', 'Ivy Tran', 'Noor Ali', 'Max Weber', 'Eva Lind', 'Raj Rao', 'Zoe Hart', 'Leo Park'];
 
 const sizes = ['20', '24', '32', '48', '64'] as const;
 const images = ['off', 'on', 'broken'] as const;
 const statuses = ['none', 'online', 'away', 'busy'] as const;
+const shapes = ['circle', 'square'] as const satisfies readonly AvatarShape[];
 
 export function AvatarPlayground() {
-	const [kind, setKind] = useState<NameKind>('person');
-	const [name, setName] = useState<string>(names.person);
-	const [image, setImage] = useState<(typeof images)[number]>('off');
-		const [size, setSize] = useState<(typeof sizes)[number]>('48');
-	const [shape, setShape] = useState<AvatarShape>('circle');
-	const [status, setStatus] = useState<(typeof statuses)[number]>('none');
-	const [isGroup, setGroup] = useState(false);
-	const [count, setCount] = useState(6);
-	const [max, setMax] = useState(4);
+	const [kind, setKind] = useRemembered('kind', 'person', kinds);
+	const [name, setName] = useRemembered<string>('name', names.person);
+	const [image, setImage] = useRemembered('image', 'off', images);
+	const [size, setSize] = useRemembered('size', '48', sizes);
+	const [shape, setShape] = useRemembered<AvatarShape>('shape', 'circle', shapes);
+	const [status, setStatus] = useRemembered('status', 'none', statuses);
+	const [isGroup, setGroup] = useRemembered('isGroup', false);
+	const [count, setCount] = useRemembered('count', 6, (stored) => stored >= 1 && stored <= people.length);
+	const [max, setMax] = useRemembered('max', 4, (stored) => stored >= 0 && stored <= 20);
 	const chooseKind = (next: NameKind) => {
 		setKind(next);
 		setName(names[next]);
 	};
 	const src = image === 'on' ? (shape === 'square' ? logo : photo) : image === 'broken' ? broken : undefined;
 	const shuffle = () => {
-		chooseKind(pick(Object.keys(names) as NameKind[]));
+		chooseKind(pick(kinds));
 		setImage(pick(images));
 		setSize(pick(sizes));
 		setShape(Math.random() < 0.3 ? 'square' : 'circle');
@@ -68,13 +69,13 @@ export function AvatarPlayground() {
 			controls={
 				<>
 					<ControlGroup label="Content">
-						<Choice label="Name" options={Object.keys(names) as NameKind[]} value={kind} onChange={chooseKind} />
+						<Choice label="Name" options={kinds} value={kind} onChange={chooseKind} />
 						<TextControl label="Name, as typed" value={name} onChange={setName} />
 						<Choice label="Image" options={images} value={image} onChange={setImage} />
 					</ControlGroup>
 					<ControlGroup label="Appearance">
 						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
-						<Choice label="Shape" options={['circle', 'square'] as const} value={shape} onChange={setShape} />
+						<Choice label="Shape" options={shapes} value={shape} onChange={setShape} />
 					</ControlGroup>
 					<ControlGroup label="State">
 						<Choice label="Status" options={statuses} value={status} onChange={setStatus} />

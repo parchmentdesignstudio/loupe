@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type ColorChannel, type ColorSpace, parseColor } from 'react-aria-components';
 import { ColorArea, ColorSlider } from '../../src/index.js';
-import { Choice, ControlGroup, ControlRow, Playground, SwitchControl, pick } from '../playground.js';
+import { Choice, ControlGroup, ControlRow, Playground, SwitchControl, pick, useRemembered } from '../playground.js';
 import { ColourControl, channels, randomColour, spaces, spaceLabels } from './colour.js';
 
 const sizes = { small: 'w-32', medium: 'w-56', large: 'w-80' } as const;
@@ -9,13 +9,13 @@ type Size = keyof typeof sizes;
 
 // The colour is kept in the area's own space, so a grey or black keeps its hue rather than snapping to red
 export function ColorAreaPlayground() {
-	const [space, setSpace] = useState<ColorSpace>('hsb');
-	const [x, setXChannel] = useState<ColorChannel>('saturation');
-	const [y, setYChannel] = useState<ColorChannel>('brightness');
-	const [color, setColor] = useState(() => parseColor('#c76024').toFormat('hsb'));
-	const [size, setSize] = useState<Size>('medium');
-	const [hasSlider, setSlider] = useState(true);
-	const [isDisabled, setDisabled] = useState(false);
+	const [space, setSpace] = useRemembered<ColorSpace>('space', 'hsb', spaces);
+	const [x, setXChannel] = useRemembered<ColorChannel>('x', channels[space][1], channels[space]);
+	const [y, setYChannel] = useRemembered<ColorChannel>('y', channels[space][2], channels[space]);
+	const [color, setColor] = useState(() => parseColor('#c76024').toFormat(space));
+	const [size, setSize] = useRemembered('size', 'medium', Object.keys(sizes) as Size[]);
+	const [hasSlider, setSlider] = useRemembered('hasSlider', true);
+	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const others = channels[space].filter((channel) => channel !== x && channel !== y);
 	const setChannels = (nextSpace: ColorSpace, nextX: ColorChannel, nextY: ColorChannel) => {
 		setSpace(nextSpace);
