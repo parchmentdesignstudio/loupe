@@ -16,6 +16,7 @@ import {
 import { Description, FieldError, type FieldTextProps, type FieldVariant, Label, type Size } from './Field.js';
 import { numberField } from './NumberField.js';
 import { formatOklch, fromOklch, type Oklch, parseAnyColor } from './parseAnyColor.js';
+import { Swatch, swatch } from './Swatch.js';
 import { textFieldInput } from './TextField.js';
 import { composeClassName } from './tv.js';
 
@@ -44,9 +45,9 @@ export interface ColorFieldProps extends Omit<AriaColorFieldProps, 'onChange' | 
 /**
  * A colour, which takes any CSS colour pasted or typed into it, such as oklch(), rgb(), a name or hex, and shows it as
  * oklch once it's committed, on Enter, on leaving the field or straight away when pasted. It keeps a colour outside sRGB
- * exactly, though React Aria's Color, and so a picker's area and slider, hold the nearest sRGB. Its opacity sits beside
- * it, so a pasted colour with an alpha sets it, and one without keeps it. Given a channel, it types that one channel as a
- * number
+ * exactly, though React Aria's Color, and so a picker's area and slider, hold the nearest sRGB. A swatch of it sits
+ * before the text, as a picker's does, and its opacity after, so a pasted colour with an alpha sets it, and one without
+ * keeps it. Given a channel, it types that one channel as a number
  */
 export function ColorField(props: ColorFieldProps) {
 	return props.channel ? <ChannelField {...props} /> : <AnyColorField {...props} />;
@@ -150,6 +151,8 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 
 	// Without its own opacity, the text carries it
 	const shown = !color || !exact ? '' : format === 'hex' ? color.toString(!hasOpacity && alpha < 1 ? 'hexa' : 'hex') : formatOklch(exact, hasOpacity ? 1 : alpha);
+	// The colour exactly, with its opacity, as the swatch shows it and a form submits it
+	const css = color && exact ? formatOklch(exact, alpha) : null;
 
 	// React Aria stops a key here unless it's let through, so only Escape over an edit stays, to undo it rather than close a popover
 	const keyDown = (event: KeyboardEvent) => {
@@ -172,9 +175,12 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 		commit(text);
 	};
 
-	const opacity = numberField({ variant, size }).input({
-		className: ['flex-none pl-2 text-right', size === 'small' ? 'w-14 pr-(--field-small-padding-x)' : 'w-16 pr-(--field-padding-x)'],
-	});
+	// The field's padding at its end, which the opacity takes or, without one, the text
+	const end = size === 'small' ? 'pr-(--field-small-padding-x)' : 'pr-(--field-padding-x)';
+	// Its number starts as far past the divider as the colour's text ends before it, so the divider sits evenly between them
+	const opacity = ['flex-none pl-2', size === 'small' ? 'w-14' : 'w-16', end];
+	// The swatch sits as far in from the edge as from the top, and as far again from the text, as a picker's does
+	const inset = size === 'small' ? 'pl-1.5' : 'pl-2';
 
 	return (
 		<AriaTextField
@@ -199,10 +205,13 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 				return (
 					<>
 						{label && <Label>{label}</Label>}
-						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: 'pr-0' })}>
+						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: ['pr-0', inset] })}>
+							{/* Empty but for its edge until there's a colour */}
+							{css ? <Swatch color={css} className="size-4 rounded-sm" /> : <span className={swatch({ className: 'size-4 rounded-sm' })} />}
 							{/* The name is the TextField's, for React Aria to find a form's errors by. The hidden input below submits
 							    the colour with its opacity, so the text, without it, isn't submitted beside it */}
-							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: 'truncate' })} />
+							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: ['truncate', inset, hasOpacity ? 'pr-2' : end] })} />
+							{hasOpacity && <span className="h-4 shrink-0 border-l border-bleed/8" />}
 							{hasOpacity && (
 								<AriaNumberField
 									aria-label="Opacity"
@@ -218,11 +227,11 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 									isReadOnly={props.isReadOnly}
 									className="contents"
 								>
-									<Input className={opacity} />
+									<Input className={slots.input({ className: opacity })} />
 								</AriaNumberField>
 							)}
 						</Group>
-						{name && <input type="hidden" name={name} form={form} disabled={isDisabled} value={color && exact ? (format === 'hex' ? color.toString('hexa') : formatOklch(exact, alpha)) : ''} />}
+						{name && <input type="hidden" name={name} form={form} disabled={isDisabled} value={color && css ? (format === 'hex' ? color.toString('hexa') : css) : ''} />}
 						{description && <Description>{description}</Description>}
 						<FieldError>{errorMessage}</FieldError>
 					</>

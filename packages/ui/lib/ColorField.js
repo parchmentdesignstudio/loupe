@@ -4,14 +4,15 @@ import { ColorField as AriaColorField, ColorFieldContext, Group, Input, NumberFi
 import { Description, FieldError, Label } from './Field.js';
 import { numberField } from './NumberField.js';
 import { formatOklch, fromOklch, parseAnyColor } from './parseAnyColor.js';
+import { Swatch, swatch } from './Swatch.js';
 import { textFieldInput } from './TextField.js';
 import { composeClassName } from './tv.js';
 /**
  * A colour, which takes any CSS colour pasted or typed into it, such as oklch(), rgb(), a name or hex, and shows it as
  * oklch once it's committed, on Enter, on leaving the field or straight away when pasted. It keeps a colour outside sRGB
- * exactly, though React Aria's Color, and so a picker's area and slider, hold the nearest sRGB. Its opacity sits beside
- * it, so a pasted colour with an alpha sets it, and one without keeps it. Given a channel, it types that one channel as a
- * number
+ * exactly, though React Aria's Color, and so a picker's area and slider, hold the nearest sRGB. A swatch of it sits
+ * before the text, as a picker's does, and its opacity after, so a pasted colour with an alpha sets it, and one without
+ * keeps it. Given a channel, it types that one channel as a number
  */
 export function ColorField(props) {
     return props.channel ? _jsx(ChannelField, { ...props }) : _jsx(AnyColorField, { ...props });
@@ -84,6 +85,8 @@ function AnyColorField({ ref: givenRef, ...given }) {
     });
     // Without its own opacity, the text carries it
     const shown = !color || !exact ? '' : format === 'hex' ? color.toString(!hasOpacity && alpha < 1 ? 'hexa' : 'hex') : formatOklch(exact, hasOpacity ? 1 : alpha);
+    // The colour exactly, with its opacity, as the swatch shows it and a form submits it
+    const css = color && exact ? formatOklch(exact, alpha) : null;
     // React Aria stops a key here unless it's let through, so only Escape over an edit stays, to undo it rather than close a popover
     const keyDown = (event) => {
         if (event.key === 'Enter')
@@ -108,9 +111,12 @@ function AnyColorField({ ref: givenRef, ...given }) {
         event.preventDefault();
         commit(text);
     };
-    const opacity = numberField({ variant, size }).input({
-        className: ['flex-none pl-2 text-right', size === 'small' ? 'w-14 pr-(--field-small-padding-x)' : 'w-16 pr-(--field-padding-x)'],
-    });
+    // The field's padding at its end, which the opacity takes or, without one, the text
+    const end = size === 'small' ? 'pr-(--field-small-padding-x)' : 'pr-(--field-padding-x)';
+    // Its number starts as far past the divider as the colour's text ends before it, so the divider sits evenly between them
+    const opacity = ['flex-none pl-2', size === 'small' ? 'w-14' : 'w-16', end];
+    // The swatch sits as far in from the edge as from the top, and as far again from the text, as a picker's does
+    const inset = size === 'small' ? 'pl-1.5' : 'pl-2';
     return (_jsx(AriaTextField, { ...rest, ref: ref, name: name, form: form, value: draft ?? shown, onChange: (text) => {
             if (!isResetting.current)
                 setDraft(text);
@@ -119,10 +125,10 @@ function AnyColorField({ ref: givenRef, ...given }) {
             onBlur?.(event);
         }, onKeyDown: keyDown, className: composeClassName(className, 'flex flex-col gap-1.5'), children: ({ isInvalid, isDisabled }) => {
             const slots = numberField({ variant, size, isInvalid, isDisabled });
-            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Group, { isDisabled: isDisabled, isInvalid: isInvalid, className: (state) => slots.group({ ...state, className: 'pr-0' }), children: [_jsx(Input, { ref: input, name: name ? '' : undefined, placeholder: placeholder, spellCheck: false, autoComplete: "off", onPaste: onPaste, className: slots.input({ className: 'truncate' }) }), hasOpacity && (_jsx(AriaNumberField, { "aria-label": "Opacity", value: color ? color.getChannelValue('alpha') : Number.NaN, onChange: (next) => {
+            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Group, { isDisabled: isDisabled, isInvalid: isInvalid, className: (state) => slots.group({ ...state, className: ['pr-0', inset] }), children: [css ? _jsx(Swatch, { color: css, className: "size-4 rounded-sm" }) : _jsx("span", { className: swatch({ className: 'size-4 rounded-sm' }) }), _jsx(Input, { ref: input, name: name ? '' : undefined, placeholder: placeholder, spellCheck: false, autoComplete: "off", onPaste: onPaste, className: slots.input({ className: ['truncate', inset, hasOpacity ? 'pr-2' : end] }) }), hasOpacity && _jsx("span", { className: "h-4 shrink-0 border-l border-bleed/8" }), hasOpacity && (_jsx(AriaNumberField, { "aria-label": "Opacity", value: color ? color.getChannelValue('alpha') : Number.NaN, onChange: (next) => {
                                     if (!isResetting.current && color && !Number.isNaN(next))
                                         set(color.withChannelValue('alpha', next), exact);
-                                }, minValue: 0, maxValue: 1, step: 0.01, formatOptions: { style: 'percent' }, isDisabled: isDisabled || !color, isReadOnly: props.isReadOnly, className: "contents", children: _jsx(Input, { className: opacity }) }))] }), name && _jsx("input", { type: "hidden", name: name, form: form, disabled: isDisabled, value: color && exact ? (format === 'hex' ? color.toString('hexa') : formatOklch(exact, alpha)) : '' }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
+                                }, minValue: 0, maxValue: 1, step: 0.01, formatOptions: { style: 'percent' }, isDisabled: isDisabled || !color, isReadOnly: props.isReadOnly, className: "contents", children: _jsx(Input, { className: slots.input({ className: opacity }) }) }))] }), name && _jsx("input", { type: "hidden", name: name, form: form, disabled: isDisabled, value: color && css ? (format === 'hex' ? color.toString('hexa') : css) : '' }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
         } }));
 }
 function toEntry(value) {
