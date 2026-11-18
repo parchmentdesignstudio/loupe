@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
 import { type Color, Form, parseColor } from 'react-aria-components';
@@ -158,6 +158,55 @@ describe('ColorField', () => {
 		await user.clear(opacity);
 		await user.type(opacity, '40{Enter}');
 		expect(onChange.mock.lastCall?.[0].toString('hexa')).toBe('#1F2F3166');
+	});
+
+	it('arrows on from the end of the colour into its opacity, and back from the start of the opacity', async () => {
+		const user = userEvent.setup();
+		render(<ColorField label="Background" defaultValue="#1f2f3180" />);
+		const field = screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement;
+		const opacity = screen.getByRole('textbox', { name: 'Opacity' }) as HTMLInputElement;
+		await user.click(field);
+		field.setSelectionRange(field.value.length, field.value.length);
+		await user.keyboard('{ArrowRight}');
+		expect(document.activeElement).toBe(opacity);
+		expect(opacity.selectionStart).toBe(0);
+		await user.keyboard('{ArrowLeft}');
+		expect(document.activeElement).toBe(field);
+		expect(field.selectionStart).toBe(field.value.length);
+	});
+
+	it('keeps an arrow in the colour with Shift, over a selection, held down, or while an input method composes', async () => {
+		const user = userEvent.setup();
+		render(<ColorField label="Background" defaultValue="#1f2f3180" />);
+		const field = screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement;
+		const end = field.value.length;
+		await user.click(field);
+		field.setSelectionRange(end, end);
+		await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+		expect(document.activeElement).toBe(field);
+		field.setSelectionRange(0, end);
+		await user.keyboard('{ArrowRight}');
+		expect(document.activeElement).toBe(field);
+		field.setSelectionRange(end - 1, end - 1);
+		await user.keyboard('{ArrowRight>3/}');
+		expect(document.activeElement).toBe(field);
+		field.setSelectionRange(end, end);
+		fireEvent.keyDown(field, { key: 'ArrowRight', isComposing: true });
+		expect(document.activeElement).toBe(field);
+	});
+
+	it('keeps an arrow in the colour right to left, where the opacity sits to the left', async () => {
+		const user = userEvent.setup();
+		render(
+			<div dir="rtl">
+				<ColorField label="Background" defaultValue="#1f2f3180" />
+			</div>,
+		);
+		const field = screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement;
+		await user.click(field);
+		field.setSelectionRange(field.value.length, field.value.length);
+		await user.keyboard('{ArrowRight}');
+		expect(document.activeElement).toBe(field);
 	});
 
 	it('makes a colour typed without an alpha opaque when the text is the only place its opacity shows', async () => {

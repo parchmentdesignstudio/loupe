@@ -27,6 +27,7 @@ function AnyColorField({ ref: givenRef, ...given }) {
     const [props, ref] = useContextProps(given, givenRef, ColorFieldContext);
     const { label, description, errorMessage, placeholder, hasOpacity = true, format = 'oklch', variant, size = 'medium', value, defaultValue, onChange, name, form, validate, onBlur, onKeyDown, className, children: _children, channel: _channel, colorSpace: _colorSpace, isWheelDisabled: _isWheelDisabled, slot: _slot, ...rest } = props;
     const input = useRef(null);
+    const opacityInput = useRef(null);
     const [own, setOwn] = useState(() => toEntry(defaultValue));
     const entry = value === undefined ? own : toEntry(value);
     const color = entry.color;
@@ -133,11 +134,29 @@ function AnyColorField({ ref: givenRef, ...given }) {
             onBlur?.(event);
         }, onKeyDown: keyDown, className: composeClassName(className, 'flex flex-col gap-1.5'), children: ({ isInvalid, isDisabled }) => {
             const slots = numberField({ variant, size, isInvalid, isDisabled });
-            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Group, { isDisabled: isDisabled, isInvalid: isInvalid, className: (state) => slots.group({ ...state, className: ['pr-0 pl-(--inset)', inset] }), children: [_jsx(Swatch, { color: css ?? undefined, size: "field" }), _jsx(Input, { ref: input, name: name ? '' : undefined, placeholder: placeholder, spellCheck: false, autoComplete: "off", onPaste: onPaste, className: slots.input({ className: ['truncate', behind, hasOpacity ? 'pr-2' : end] }) }), hasOpacity && _jsx("span", { className: "h-4 shrink-0 border-l border-bleed/8" }), hasOpacity && (_jsx(AriaNumberField, { "aria-label": "Opacity", value: color ? color.getChannelValue('alpha') : Number.NaN, onChange: (next) => {
+            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Group, { isDisabled: isDisabled, isInvalid: isInvalid, className: (state) => slots.group({ ...state, className: ['pr-0 pl-(--inset)', inset] }), children: [_jsx(Swatch, { color: css ?? undefined, size: "field" }), _jsx(Input, { ref: input, name: name ? '' : undefined, placeholder: placeholder, spellCheck: false, autoComplete: "off", onPaste: onPaste, onKeyDown: (event) => cross(event, opacityInput.current, 'ArrowRight'), className: slots.input({ className: ['truncate', behind, hasOpacity ? 'pr-2' : end] }) }), hasOpacity && _jsx("span", { className: "h-4 shrink-0 border-l border-bleed/8" }), hasOpacity && (_jsx(AriaNumberField, { "aria-label": "Opacity", value: color ? color.getChannelValue('alpha') : Number.NaN, onChange: (next) => {
                                     if (!isResetting.current && color && !Number.isNaN(next))
                                         set(color.withChannelValue('alpha', next), exact);
-                                }, minValue: 0, maxValue: 1, step: 0.01, formatOptions: percent, isDisabled: isDisabled || !color, isReadOnly: props.isReadOnly, className: "contents", children: _jsxs("span", { className: "relative flex-none", children: [_jsx("span", { "aria-hidden": true, className: slots.input({ className: ['invisible block whitespace-pre', opacity] }), children: widest }), _jsx(Input, { className: slots.input({ className: ['absolute inset-0 size-full', opacity] }) })] }) }))] }), name && _jsx("input", { type: "hidden", name: name, form: form, disabled: isDisabled, value: color && css ? (format === 'hex' ? color.toString('hexa') : css) : '' }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
+                                }, minValue: 0, maxValue: 1, step: 0.01, formatOptions: percent, isDisabled: isDisabled || !color, isReadOnly: props.isReadOnly, className: "contents", children: _jsxs("span", { className: "relative flex-none", children: [_jsx("span", { "aria-hidden": true, className: slots.input({ className: ['invisible block whitespace-pre', opacity] }), children: widest }), _jsx(Input, { ref: opacityInput, onKeyDown: (event) => cross(event, input.current, 'ArrowLeft'), className: slots.input({ className: ['absolute inset-0 size-full', opacity] }) })] }) }))] }), name && _jsx("input", { type: "hidden", name: name, form: form, disabled: isDisabled, value: color && css ? (format === 'hex' ? color.toString('hexa') : css) : '' }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
         } }));
+}
+// Right from the end of the colour goes on into its opacity, and Left from the start of the opacity back, as between a
+// date's parts, since the two read as one field. Only from a caret at that very end, so a selection collapses first,
+// and not with a modifier, which moves by word or selects, or as a held key repeats, so holding it to reach the end
+// stops there. Nor while an input method composes, which moves through its choices with them, or right to left, where
+// the opacity sits to the left. On the inputs themselves, after React Aria's own handlers, as a NumberField's are shortcuts
+function cross(event, to, key) {
+    const from = event.currentTarget;
+    if (event.key !== key || event.defaultPrevented || event.repeat || event.nativeEvent.isComposing || event.shiftKey || event.altKey || event.metaKey || event.ctrlKey)
+        return;
+    const end = key === 'ArrowRight' ? from.value.length : 0;
+    if (!to || to.disabled || from.selectionStart !== end || from.selectionEnd !== end || getComputedStyle(from).direction === 'rtl')
+        return;
+    event.preventDefault();
+    event.stopPropagation();
+    to.focus();
+    const caret = key === 'ArrowRight' ? 0 : to.value.length;
+    to.setSelectionRange(caret, caret);
 }
 function toEntry(value) {
     if (value == null)

@@ -1,4 +1,4 @@
-import { type ClipboardEvent, type Ref, useEffect, useMemo, useRef, useState } from 'react';
+import { type ClipboardEvent, type KeyboardEvent as ReactKeyboardEvent, type Ref, useEffect, useMemo, useRef, useState } from 'react';
 import {
 	ColorField as AriaColorField,
 	ColorFieldContext,
@@ -97,6 +97,7 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 		...rest
 	} = props;
 	const input = useRef<HTMLInputElement>(null);
+	const opacityInput = useRef<HTMLInputElement>(null);
 	const [own, setOwn] = useState<Entry>(() => toEntry(defaultValue));
 	const entry = value === undefined ? own : toEntry(value);
 	const color = entry.color;
@@ -219,7 +220,7 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 							<Swatch color={css ?? undefined} size="field" />
 							{/* The name is the TextField's, for React Aria to find a form's errors by. The hidden input below submits
 							    the colour with its opacity, so the text, without it, isn't submitted beside it */}
-							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: ['truncate', behind, hasOpacity ? 'pr-2' : end] })} />
+							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} onKeyDown={(event) => cross(event, opacityInput.current, 'ArrowRight')} className={slots.input({ className: ['truncate', behind, hasOpacity ? 'pr-2' : end] })} />
 							{hasOpacity && <span className="h-4 shrink-0 border-l border-bleed/8" />}
 							{hasOpacity && (
 								<AriaNumberField
@@ -241,7 +242,7 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 										<span aria-hidden className={slots.input({ className: ['invisible block whitespace-pre', opacity] })}>
 											{widest}
 										</span>
-										<Input className={slots.input({ className: ['absolute inset-0 size-full', opacity] })} />
+										<Input ref={opacityInput} onKeyDown={(event) => cross(event, input.current, 'ArrowLeft')} className={slots.input({ className: ['absolute inset-0 size-full', opacity] })} />
 									</span>
 								</AriaNumberField>
 							)}
@@ -254,6 +255,23 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 			}}
 		</AriaTextField>
 	);
+}
+
+// Right from the end of the colour goes on into its opacity, and Left from the start of the opacity back, as between a
+// date's parts, since the two read as one field. Only from a caret at that very end, so a selection collapses first,
+// and not with a modifier, which moves by word or selects, or as a held key repeats, so holding it to reach the end
+// stops there. Nor while an input method composes, which moves through its choices with them, or right to left, where
+// the opacity sits to the left. On the inputs themselves, after React Aria's own handlers, as a NumberField's are shortcuts
+function cross(event: ReactKeyboardEvent<HTMLInputElement>, to: HTMLInputElement | null, key: 'ArrowLeft' | 'ArrowRight') {
+	const from = event.currentTarget;
+	if (event.key !== key || event.defaultPrevented || event.repeat || event.nativeEvent.isComposing || event.shiftKey || event.altKey || event.metaKey || event.ctrlKey) return;
+	const end = key === 'ArrowRight' ? from.value.length : 0;
+	if (!to || to.disabled || from.selectionStart !== end || from.selectionEnd !== end || getComputedStyle(from).direction === 'rtl') return;
+	event.preventDefault();
+	event.stopPropagation();
+	to.focus();
+	const caret = key === 'ArrowRight' ? 0 : to.value.length;
+	to.setSelectionRange(caret, caret);
 }
 
 interface Entry {
