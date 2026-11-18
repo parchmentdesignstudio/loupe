@@ -177,7 +177,8 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 
 	// The field's padding at its end, which the opacity takes or, without one, the text
 	const end = size === 'small' ? 'pr-(--field-small-padding-x)' : 'pr-(--field-padding-x)';
-	const opacity = ['flex-none pl-2 text-right', size === 'small' ? 'w-14' : 'w-16', end];
+	// The divider sits 8px from the opacity's number, as it does from the text
+	const opacity = ['pl-2 text-right', end];
 	// The swatch sits as far in from the edge as from the top, and as far again from the text, as a picker's does
 	const inset = size === 'small' ? 'pl-1.5' : 'pl-2';
 
@@ -225,7 +226,16 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 									isReadOnly={props.isReadOnly}
 									className="contents"
 								>
-									<Input className={slots.input({ className: opacity })} />
+									{({ state }) => (
+										// As wide as its number, from a hidden copy of it that the input covers, so the divider moves with it. Empty, it
+										// keeps the room 100% takes
+										<span className="relative flex-none">
+											<span aria-hidden className={slots.input({ className: ['invisible block whitespace-pre', opacity] })}>
+												{state.inputValue || '100%'}
+											</span>
+											<Input className={slots.input({ className: ['absolute inset-0 size-full', opacity] })} />
+										</span>
+									)}
 								</AriaNumberField>
 							)}
 						</Group>
