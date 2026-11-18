@@ -24,8 +24,8 @@ export interface ColorFieldProps extends Omit<AriaColorFieldProps, 'onChange' | 
 /**
  * A colour, which takes any CSS colour pasted or typed into it, such as oklch(), rgb(), a name or hex, and shows it as
  * oklch once it's committed, on Enter, on leaving the field or straight away when pasted. It keeps a colour outside sRGB
- * exactly, though React Aria's Color, and so a picker's area and slider, hold the nearest sRGB. Its opacity sits beside
- * it, so a pasted colour with an alpha sets it, and one without keeps it. Given a channel, it types that one channel as a
- * number
+ * exactly, though React Aria's Color, and so a picker's area and slider, hold the nearest sRGB. A swatch of it sits
+ * before the text, as a picker's does, and its opacity after, so a pasted colour with an alpha sets it, and one without
+ * keeps it. Given a channel, it types that one channel as a number
  */
 export declare function ColorField(props: ColorFieldProps): import("react").JSX.Element;
