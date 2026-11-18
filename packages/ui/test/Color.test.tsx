@@ -38,6 +38,11 @@ describe('ColorSwatch', () => {
 		expect(large).toContain('size-8');
 		expect(field).toContain('size-4');
 	});
+
+	it('gives its colour to the lighter line inside its edge, as Swatch does', () => {
+		render(<ColorSwatch color="#1f2f31" />);
+		expect(screen.getByRole('img').style.getPropertyValue('--swatch-color')).toBe('rgba(31, 47, 49, 1)');
+	});
 });
 
 describe('ColorSwatchPicker', () => {

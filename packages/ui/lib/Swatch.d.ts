@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from 'react';
+import type { CSSProperties, HTMLAttributes } from 'react';
 export declare const swatch: import("tailwind-variants").TVReturnType<{
     size: {
         small: string;
@@ -6,11 +6,11 @@ export declare const swatch: import("tailwind-variants").TVReturnType<{
         medium: string;
         large: string;
     };
-}, undefined, "inline-block shrink-0 bg-center align-middle inset-ring inset-ring-bleed/12 forced-colors:inset-ring-[CanvasText]", undefined, undefined, undefined>;
+}, undefined, string[], undefined, undefined, undefined>;
 /** A checkerboard for a see-through colour to go over, as a background image */
 export declare const checkerboard = "repeating-conic-gradient(color-mix(in oklab, var(--color-ink) 12%, var(--color-paper)) 0 25%, var(--color-paper) 0 50%)";
-/** A colour laid over the checkerboard, which shows through where it's see-through */
-export declare const swatchBackground: (color: string) => string;
+/** A colour laid over the checkerboard, which shows through where it's see-through, and given to the inner line */
+export declare const swatchStyle: (color: string) => CSSProperties;
 export interface SwatchProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'color'> {
     /** Any CSS colour, including a token, as var(--color-primary), or light-dark(). Without one it's an empty frame, as a field's is before there's a colour */
     color?: string;

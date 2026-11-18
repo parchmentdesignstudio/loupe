@@ -3510,6 +3510,10 @@
     outline-color: color-mix(in oklab,var(--color-black) 10%,transparent);
   }
 
+  .outline-\[color\:var\(--swatch-inner\,transparent\)\] {
+    outline-color: var(--swatch-inner, transparent);
+  }
+
   .outline-danger {
     outline-color: var(--color-danger);
   }
@@ -4020,6 +4024,10 @@
 
   .\[--status\:var\(--tone-warning\,var\(--color-yellow-76\)\)\] {
     --status: var(--tone-warning, var(--color-yellow-76));
+  }
+
+  .\[--swatch-inner\:light-dark\(color-mix\(in_oklab\,var\(--swatch-color\)\,white_20\%\)\,color-mix\(in_oklab\,var\(--swatch-color\)\,white_32\%\)\)\] {
+    --swatch-inner: color-mix(in oklab,var(--swatch-color),white 20%);
   }
 
   .\[--table-fill\:var\(--table-flush-fill\,var\(--color-panel\)\)\] {

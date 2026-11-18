@@ -1,5 +1,5 @@
 import { ColorSwatch as AriaColorSwatch, type ColorSwatchProps as AriaColorSwatchProps, composeRenderProps } from 'react-aria-components';
-import { type SwatchProps, swatch, swatchBackground } from './Swatch.js';
+import { type SwatchProps, swatch, swatchStyle } from './Swatch.js';
 
 export interface ColorSwatchProps extends AriaColorSwatchProps {
 	/** As Swatch's, large unless set */
@@ -17,7 +17,7 @@ export function ColorSwatch({ size, ...props }: ColorSwatchProps) {
 		<AriaColorSwatch
 			{...props}
 			className={composeRenderProps(props.className, (className) => swatch({ size, className }))}
-			style={composeRenderProps(props.style, (style, { color }) => ({ backgroundImage: swatchBackground(color.toString('css')), ...style }))}
+			style={composeRenderProps(props.style, (style, { color }) => ({ ...swatchStyle(color.toString('css')), ...style }))}
 		/>
 	);
 }
