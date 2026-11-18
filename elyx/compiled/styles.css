@@ -635,6 +635,7 @@
     --grid-list-item-padding-y: calc(var(--spacing) * 1.5);
     --swatch-radius: var(--radius-lg);
     --swatch-medium-radius: var(--radius-md);
+    --swatch-field-radius: var(--radius-sm);
     --swatch-small-radius: 3px;
     --table-radius: var(--radius-lg);
     --table-column-font-weight: 500;
@@ -2056,6 +2057,10 @@
 
   .rounded-\(--sheet-radius\) {
     border-radius: var(--sheet-radius);
+  }
+
+  .rounded-\(--swatch-field-radius\) {
+    border-radius: var(--swatch-field-radius);
   }
 
   .rounded-\(--swatch-medium-radius\) {

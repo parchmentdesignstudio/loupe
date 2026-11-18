@@ -2,6 +2,7 @@ import type { HTMLAttributes } from 'react';
 export declare const swatch: import("tailwind-variants").TVReturnType<{
     size: {
         small: string;
+        field: string;
         medium: string;
         large: string;
     };
@@ -11,10 +12,10 @@ export declare const checkerboard = "repeating-conic-gradient(color-mix(in oklab
 /** A colour laid over the checkerboard, which shows through where it's see-through */
 export declare const swatchBackground: (color: string) => string;
 export interface SwatchProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'color'> {
-    /** Any CSS colour, including a token, as var(--color-primary), or light-dark() */
-    color: string;
-    /** Small sits in a line of text, medium in a list, and large on its own */
-    size?: 'small' | 'medium' | 'large';
+    /** Any CSS colour, including a token, as var(--color-primary), or light-dark(). Without one it's an empty frame, as a field's is before there's a colour */
+    color?: string;
+    /** Small sits in a line of text, field before a field's value, medium in a list, and large on its own */
+    size?: 'small' | 'field' | 'medium' | 'large';
     /** What a screen reader hears, such as Marigold. Without it the swatch is hidden from them, as beside its name */
     label?: string;
 }

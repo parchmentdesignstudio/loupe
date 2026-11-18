@@ -21,15 +21,22 @@ describe('Swatch', () => {
 		expect(screen.getByRole('img', { name: 'Marigold' }).getAttribute('aria-hidden')).toBeNull();
 	});
 
-	it('comes in three sizes, large unless set', () => {
+	it('comes in four sizes, large unless set', () => {
 		const { container } = render(
 			<>
 				<Swatch color="red" />
 				<Swatch color="red" size="small" />
+				<Swatch color="red" size="field" />
 			</>,
 		);
-		const [large, small] = [...container.children].map((swatch) => swatch.className.split(' '));
+		const [large, small, field] = [...container.children].map((swatch) => swatch.className.split(' '));
 		expect(large).toContain('size-8');
 		expect(small).toContain('size-3');
+		expect(field).toContain('size-4');
+	});
+
+	it('is an empty frame without a colour', () => {
+		const { container } = render(<Swatch size="field" />);
+		expect((container.firstElementChild as HTMLElement).style.backgroundImage).toBe('');
 	});
 });
