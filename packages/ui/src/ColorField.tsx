@@ -186,7 +186,11 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 	const { locale } = useLocale();
 	const widest = useMemo(() => new Intl.NumberFormat(locale, percent).format(1), [locale]);
 	// The swatch sits as far in from the edge as from the top, and as far again from the text, as a picker's does
-	const inset = size === 'small' ? 'pl-1.5' : 'pl-2';
+	const inset = size === 'small' ? '[--inset:--spacing(1.5)]' : '[--inset:--spacing(2)]';
+	// The gap after the swatch is an indent, not padding, so a long colour scrolled along as it's typed fades out behind
+	// the swatch rather than being cut off short of it. The caret rarely sits in the fade, as a browser brings one that
+	// goes out of view back well inside
+	const behind = 'pl-0 indent-(--inset) [mask-image:linear-gradient(to_right,transparent,black_var(--inset))]';
 
 	return (
 		<AriaTextField
@@ -211,11 +215,11 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 				return (
 					<>
 						{label && <Label>{label}</Label>}
-						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: ['pr-0', inset] })}>
+						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: ['pr-0 pl-(--inset)', inset] })}>
 							<Swatch color={css ?? undefined} size="field" />
 							{/* The name is the TextField's, for React Aria to find a form's errors by. The hidden input below submits
 							    the colour with its opacity, so the text, without it, isn't submitted beside it */}
-							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: ['truncate', inset, hasOpacity ? 'pr-2' : end] })} />
+							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: ['truncate', behind, hasOpacity ? 'pr-2' : end] })} />
 							{hasOpacity && <span className="h-4 shrink-0 border-l border-bleed/8" />}
 							{hasOpacity && (
 								<AriaNumberField

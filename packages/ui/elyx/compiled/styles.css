@@ -2475,6 +2475,12 @@
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
+  .\[mask-image\:linear-gradient\(to_right\,transparent\,black_var\(--inset\)\)\] {
+    -webkit-mask-image: linear-gradient(to right,transparent,black var(--inset));
+    -webkit-mask-image: linear-gradient(to right,transparent,black var(--inset));
+    mask-image: linear-gradient(to right,transparent,black var(--inset));
+  }
+
   .bg-size-\[100\%_100\%\,4px_4px\] {
     background-size: 100% 100%, 4px 4px;
   }
@@ -2887,6 +2893,14 @@
     padding-left: var(--field-small-padding-x);
   }
 
+  .pl-\(--inset\) {
+    padding-left: var(--inset);
+  }
+
+  .pl-0 {
+    padding-left: 0;
+  }
+
   .pl-1\.5 {
     padding-left: calc(var(--spacing) * 1.5);
   }
@@ -2921,6 +2935,10 @@
 
   .text-start {
     text-align: start;
+  }
+
+  .indent-\(--inset\) {
+    text-indent: var(--inset);
   }
 
   .align-middle {
@@ -3906,6 +3924,14 @@
 
   .\[--inner\:light-dark\(color-mix\(in_oklab\,var\(--fill\)\,white_20\%\)\,color-mix\(in_oklab\,var\(--fill\)\,white_32\%\)\)\] {
     --inner: color-mix(in oklab,var(--fill),white 20%);
+  }
+
+  .\[--inset\:--spacing\(1\.5\)\] {
+    --inset: calc(var(--spacing) * 1.5);
+  }
+
+  .\[--inset\:--spacing\(2\)\] {
+    --inset: calc(var(--spacing) * 2);
   }
 
   .\[--inset\:var\(--toggle-button-group-inset\)\] {
