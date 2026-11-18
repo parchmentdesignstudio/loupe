@@ -39,4 +39,16 @@ describe('Swatch', () => {
 		const { container } = render(<Swatch size="field" />);
 		expect((container.firstElementChild as HTMLElement).style.backgroundImage).toBe('');
 	});
+
+	it('gives its colour to the lighter line inside its edge, which an empty frame goes without', () => {
+		const { container } = render(
+			<>
+				<Swatch color="var(--color-primary)" />
+				<Swatch />
+			</>,
+		);
+		const [coloured, empty] = [...container.children] as HTMLElement[];
+		expect(coloured.style.getPropertyValue('--swatch-color')).toBe('var(--color-primary)');
+		expect(empty.style.getPropertyValue('--swatch-color')).toBe('');
+	});
 });
