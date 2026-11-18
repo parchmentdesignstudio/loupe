@@ -1,4 +1,4 @@
-import { type ClipboardEvent, type Ref, useEffect, useRef, useState } from 'react';
+import { type ClipboardEvent, type Ref, useEffect, useMemo, useRef, useState } from 'react';
 import {
 	ColorField as AriaColorField,
 	ColorFieldContext,
@@ -12,6 +12,7 @@ import {
 	TextField as AriaTextField,
 	type TextFieldProps as AriaTextFieldProps,
 	useContextProps,
+	useLocale,
 } from 'react-aria-components';
 import { Description, FieldError, type FieldTextProps, type FieldVariant, Label, type Size } from './Field.js';
 import { numberField } from './NumberField.js';
@@ -63,6 +64,9 @@ function ChannelField({ label, description, errorMessage, placeholder, hasOpacit
 		</AriaColorField>
 	);
 }
+
+// The opacity's format, which its box is sized to at 100%, the widest it gets
+const percent: Intl.NumberFormatOptions = { style: 'percent' };
 
 function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 	// Inside a ColorPicker, its colour and setter arrive through React Aria's context, as they do for its own field
@@ -177,8 +181,10 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 
 	// The field's padding at its end, which the opacity takes or, without one, the text
 	const end = size === 'small' ? 'pr-(--field-small-padding-x)' : 'pr-(--field-padding-x)';
-	// The divider sits 8px from the opacity's number, as it does from the text
+	// The divider sits 8px from the opacity at its widest, as it does from the text
 	const opacity = ['pl-2 text-right', end];
+	const { locale } = useLocale();
+	const widest = useMemo(() => new Intl.NumberFormat(locale, percent).format(1), [locale]);
 	// The swatch sits as far in from the edge as from the top, and as far again from the text, as a picker's does
 	const inset = size === 'small' ? 'pl-1.5' : 'pl-2';
 
@@ -221,21 +227,18 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 									minValue={0}
 									maxValue={1}
 									step={0.01}
-									formatOptions={{ style: 'percent' }}
+									formatOptions={percent}
 									isDisabled={isDisabled || !color}
 									isReadOnly={props.isReadOnly}
 									className="contents"
 								>
-									{({ state }) => (
-										// As wide as its number, from a hidden copy of it that the input covers, so the divider moves with it. Empty, it
-										// keeps the room 100% takes
-										<span className="relative flex-none">
-											<span aria-hidden className={slots.input({ className: ['invisible block whitespace-pre', opacity] })}>
-												{state.inputValue || '100%'}
-											</span>
-											<Input className={slots.input({ className: ['absolute inset-0 size-full', opacity] })} />
+									{/* Always as wide as 100%, from a hidden copy the input covers, so the divider stays put whatever the opacity */}
+									<span className="relative flex-none">
+										<span aria-hidden className={slots.input({ className: ['invisible block whitespace-pre', opacity] })}>
+											{widest}
 										</span>
-									)}
+										<Input className={slots.input({ className: ['absolute inset-0 size-full', opacity] })} />
+									</span>
 								</AriaNumberField>
 							)}
 						</Group>
