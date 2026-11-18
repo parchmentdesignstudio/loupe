@@ -177,8 +177,7 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 
 	// The field's padding at its end, which the opacity takes or, without one, the text
 	const end = size === 'small' ? 'pr-(--field-small-padding-x)' : 'pr-(--field-padding-x)';
-	// Its number starts as far past the divider as the colour's text ends before it, so the divider sits evenly between them
-	const opacity = ['flex-none pl-2', size === 'small' ? 'w-14' : 'w-16', end];
+	const opacity = ['flex-none pl-2 text-right', size === 'small' ? 'w-14' : 'w-16', end];
 	// The swatch sits as far in from the edge as from the top, and as far again from the text, as a picker's does
 	const inset = size === 'small' ? 'pl-1.5' : 'pl-2';
 
