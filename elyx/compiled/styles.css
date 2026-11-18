@@ -2918,6 +2918,10 @@
     text-align: left;
   }
 
+  .text-right {
+    text-align: right;
+  }
+
   .text-start {
     text-align: start;
   }
