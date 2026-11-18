@@ -16,7 +16,7 @@ import {
 import { Description, FieldError, type FieldTextProps, type FieldVariant, Label, type Size } from './Field.js';
 import { numberField } from './NumberField.js';
 import { formatOklch, fromOklch, type Oklch, parseAnyColor } from './parseAnyColor.js';
-import { Swatch, swatch } from './Swatch.js';
+import { Swatch } from './Swatch.js';
 import { textFieldInput } from './TextField.js';
 import { composeClassName } from './tv.js';
 
@@ -205,8 +205,7 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 					<>
 						{label && <Label>{label}</Label>}
 						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: ['pr-0', inset] })}>
-							{/* Empty but for its edge until there's a colour */}
-							{css ? <Swatch color={css} className="size-4 rounded-sm" /> : <span className={swatch({ className: 'size-4 rounded-sm' })} />}
+							<Swatch color={css ?? undefined} size="field" />
 							{/* The name is the TextField's, for React Aria to find a form's errors by. The hidden input below submits
 							    the colour with its opacity, so the text, without it, isn't submitted beside it */}
 							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} className={slots.input({ className: ['truncate', inset, hasOpacity ? 'pr-2' : end] })} />

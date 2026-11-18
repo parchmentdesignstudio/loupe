@@ -26,6 +26,18 @@ describe('ColorSwatch', () => {
 		expect(ink.getAttribute('aria-label')).toBeTruthy();
 		expect(clear.getAttribute('aria-label')).toBe('transparent');
 	});
+
+	it('takes Swatch’s sizes, large unless set', () => {
+		render(
+			<>
+				<ColorSwatch color="#1f2f31" />
+				<ColorSwatch color="#1f2f31" size="field" />
+			</>,
+		);
+		const [large, field] = screen.getAllByRole('img').map((swatch) => swatch.className.split(' '));
+		expect(large).toContain('size-8');
+		expect(field).toContain('size-4');
+	});
 });
 
 describe('ColorSwatchPicker', () => {

@@ -407,6 +407,8 @@
 		--swatch-radius: var(--radius-lg);
 		/* A medium swatch's corners */
 		--swatch-medium-radius: var(--radius-md);
+		/* A field swatch's corners, before a field's value */
+		--swatch-field-radius: var(--radius-sm);
 		/* A small swatch's corners, which keep it a square at 12px */
 		--swatch-small-radius: 3px;
 

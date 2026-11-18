@@ -4,7 +4,7 @@ import { ColorField as AriaColorField, ColorFieldContext, Group, Input, NumberFi
 import { Description, FieldError, Label } from './Field.js';
 import { numberField } from './NumberField.js';
 import { formatOklch, fromOklch, parseAnyColor } from './parseAnyColor.js';
-import { Swatch, swatch } from './Swatch.js';
+import { Swatch } from './Swatch.js';
 import { textFieldInput } from './TextField.js';
 import { composeClassName } from './tv.js';
 /**
@@ -124,7 +124,7 @@ function AnyColorField({ ref: givenRef, ...given }) {
             onBlur?.(event);
         }, onKeyDown: keyDown, className: composeClassName(className, 'flex flex-col gap-1.5'), children: ({ isInvalid, isDisabled }) => {
             const slots = numberField({ variant, size, isInvalid, isDisabled });
-            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Group, { isDisabled: isDisabled, isInvalid: isInvalid, className: (state) => slots.group({ ...state, className: ['pr-0', inset] }), children: [css ? _jsx(Swatch, { color: css, className: "size-4 rounded-sm" }) : _jsx("span", { className: swatch({ className: 'size-4 rounded-sm' }) }), _jsx(Input, { ref: input, name: name ? '' : undefined, placeholder: placeholder, spellCheck: false, autoComplete: "off", onPaste: onPaste, className: slots.input({ className: ['truncate', inset, hasOpacity ? 'pr-2' : end] }) }), hasOpacity && _jsx("span", { className: "h-4 shrink-0 border-l border-bleed/8" }), hasOpacity && (_jsx(AriaNumberField, { "aria-label": "Opacity", value: color ? color.getChannelValue('alpha') : Number.NaN, onChange: (next) => {
+            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Group, { isDisabled: isDisabled, isInvalid: isInvalid, className: (state) => slots.group({ ...state, className: ['pr-0', inset] }), children: [_jsx(Swatch, { color: css ?? undefined, size: "field" }), _jsx(Input, { ref: input, name: name ? '' : undefined, placeholder: placeholder, spellCheck: false, autoComplete: "off", onPaste: onPaste, className: slots.input({ className: ['truncate', inset, hasOpacity ? 'pr-2' : end] }) }), hasOpacity && _jsx("span", { className: "h-4 shrink-0 border-l border-bleed/8" }), hasOpacity && (_jsx(AriaNumberField, { "aria-label": "Opacity", value: color ? color.getChannelValue('alpha') : Number.NaN, onChange: (next) => {
                                     if (!isResetting.current && color && !Number.isNaN(next))
                                         set(color.withChannelValue('alpha', next), exact);
                                 }, minValue: 0, maxValue: 1, step: 0.01, formatOptions: { style: 'percent' }, isDisabled: isDisabled || !color, isReadOnly: props.isReadOnly, className: "contents", children: _jsx(Input, { className: slots.input({ className: opacity }) }) }))] }), name && _jsx("input", { type: "hidden", name: name, form: form, disabled: isDisabled, value: color && css ? (format === 'hex' ? color.toString('hexa') : css) : '' }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));

@@ -7,6 +7,7 @@ export const swatch = tv({
     variants: {
         size: {
             small: 'size-3 rounded-(--swatch-small-radius) bg-size-[100%_100%,4px_4px]',
+            field: 'size-4 rounded-(--swatch-field-radius) bg-size-[100%_100%,4px_4px]',
             medium: 'size-5 rounded-(--swatch-medium-radius) bg-size-[100%_100%,6px_6px]',
             large: 'size-8 rounded-(--swatch-radius) bg-size-[100%_100%,8px_8px]',
         },
@@ -19,5 +20,5 @@ export const checkerboard = 'repeating-conic-gradient(color-mix(in oklab, var(--
 export const swatchBackground = (color) => `linear-gradient(${color}, ${color}), ${checkerboard}`;
 /** A colour shown as a square, from any CSS colour or token. ColorSwatch is the one for a colour React Aria picks */
 export function Swatch({ color, size, label, className, style, ...props }) {
-    return _jsx("span", { ...props, ...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true }), className: swatch({ size, className }), style: { backgroundImage: swatchBackground(color), ...style } });
+    return _jsx("span", { ...props, ...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true }), className: swatch({ size, className }), style: { backgroundImage: color && swatchBackground(color), ...style } });
 }

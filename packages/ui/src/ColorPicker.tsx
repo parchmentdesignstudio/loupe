@@ -42,7 +42,7 @@ export function ColorPicker({ label, 'aria-label': ariaLabel = 'Colour', childre
 							// The swatch sits as far in from the edge as from the top, so it reads as part of the field
 							className={(state) => selectTrigger({ ...state, className: 'pl-2' })}
 						>
-							<ColorSwatch className="size-4 rounded-sm" />
+							<ColorSwatch size="field" />
 							<span id={valueId} className="min-w-0 flex-1 truncate tabular-nums">
 								{color.toString('hex')}
 							</span>

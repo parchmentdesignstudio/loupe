@@ -821,10 +821,10 @@ const groups: Group[] = [
 				exports: ['Swatch'],
 				stories: [
 					{
-						name: 'Three sizes',
+						name: 'Four sizes',
 						render: () => (
 							<div className="flex items-end gap-4">
-								{(['small', 'medium', 'large'] as const).map((size) => (
+								{(['small', 'field', 'medium', 'large'] as const).map((size) => (
 									<Swatch key={size} color="var(--color-primary)" size={size} label={`Marigold, ${size}`} />
 								))}
 							</div>
@@ -850,6 +850,15 @@ const groups: Group[] = [
 								Buttons lead with marigold <Swatch color="var(--color-primary)" size="small" /> and a selection tints with olive at 24%{' '}
 								<Swatch color="color-mix(in oklab, var(--color-olive-91) 24%, transparent)" size="small" />, over the checkerboard.
 							</p>
+						),
+					},
+					{
+						name: 'Empty, before there’s a colour',
+						render: () => (
+							<div className="flex items-center gap-4">
+								<Swatch size="field" label="No colour yet" />
+								<Swatch color="var(--color-primary)" size="field" label="Marigold" />
+							</div>
 						),
 					},
 				],
