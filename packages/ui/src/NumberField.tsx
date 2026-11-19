@@ -6,7 +6,7 @@ import { composeClassName, tv } from './tv.js';
 // Sized like a text field, with its steppers inside as the combo box has its button
 export const numberField = tv({
 	slots: {
-		group: ['flex items-center rounded-(--field-radius) pr-1 outline-offset-0 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight]', readOnly],
+		group: ['flex items-center rounded-(--field-radius) pe-1 outline-offset-0 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight]', readOnly],
 		input: 'min-w-0 flex-1 bg-transparent text-control text-(color:--field-text,var(--color-ink)) tabular-nums outline-none placeholder:text-(color:--field-placeholder,var(--color-muted))',
 		stepper: 'flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[disabled]:text-bleed/24 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
 	},
@@ -18,8 +18,8 @@ export const numberField = tv({
 		},
 		// As a text field's: 32px, or 28px when small
 		size: {
-			medium: { input: 'py-(--field-padding-y) pl-(--field-padding-x)' },
-			small: { input: 'py-(--field-small-padding-y) pl-(--field-small-padding-x)', stepper: 'p-0.5' },
+			medium: { input: 'py-(--field-padding-y) ps-(--field-padding-x)' },
+			small: { input: 'py-(--field-small-padding-y) ps-(--field-small-padding-x)', stepper: 'p-0.5' },
 		},
 		isFocusWithin: {
 			false: { group: 'outline-0' },
