@@ -180,18 +180,24 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 		commit(text);
 	};
 
-	// The field's padding at its end, which the opacity takes or, without one, the text
-	const end = size === 'small' ? 'pr-(--field-small-padding-x)' : 'pr-(--field-padding-x)';
-	// The divider sits 8px from the opacity at its widest, as it does from the text
-	const opacity = ['pl-2 text-right', end];
+	// The divider sits 8px from the opacity at its widest, as it does from the colour, and the opacity keeps the field's
+	// padding at its end
+	const opacity = ['ps-2 text-end', size === 'small' ? 'pe-(--field-small-padding-x)' : 'pe-(--field-padding-x)'];
 	const { locale } = useLocale();
 	const widest = useMemo(() => new Intl.NumberFormat(locale, percent).format(1), [locale]);
-	// The swatch sits as far in from the edge as from the top, and as far again from the text, as a picker's does
+	// The swatch sits as far in from the edge as from the top, and as far again from the colour, as a picker's does
 	const inset = size === 'small' ? '[--inset:--spacing(1.5)]' : '[--inset:--spacing(2)]';
-	// The gap after the swatch is an indent, not padding, so a long colour scrolled along as it's typed fades out behind
-	// the swatch rather than being cut off short of it. The caret rarely sits in the fade, as a browser brings one that
-	// goes out of view back well inside
-	const behind = 'pl-0 indent-(--inset) [mask-image:linear-gradient(to_right,transparent,black_var(--inset))]';
+	// The colour keeps 8px from the divider or, without an opacity, the field's padding from its end
+	const far = hasOpacity ? '[--far:--spacing(2)]' : size === 'small' ? '[--far:var(--field-small-padding-x)]' : '[--far:var(--field-padding-x)]';
+	// The colour's written left to right whichever way the field runs, as CSS is. Right to left it's set to the right, by
+	// the swatch, so its gaps swap sides. The one where it starts is an indent, not padding, so a long colour scrolled
+	// along as it's typed fades out there rather than being cut off short of it. The caret rarely sits in the fade, as a
+	// browser brings one that goes out of view back well inside
+	const behind = [
+		far,
+		'[--lead:var(--inset)] [--trail:var(--far)] rtl:[--lead:var(--far)] rtl:[--trail:var(--inset)] rtl:text-right',
+		'ps-0 indent-(--lead) pe-(--trail) [mask-image:linear-gradient(to_right,transparent,black_var(--lead))]',
+	];
 
 	return (
 		<AriaTextField
@@ -216,12 +222,12 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 				return (
 					<>
 						{label && <Label>{label}</Label>}
-						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: ['pr-0 pl-(--inset)', inset] })}>
+						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: ['pe-0 ps-(--inset)', inset] })}>
 							<Swatch color={css ?? undefined} size="field" />
 							{/* The name is the TextField's, for React Aria to find a form's errors by. The hidden input below submits
 							    the colour with its opacity, so the text, without it, isn't submitted beside it */}
-							<Input ref={input} name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} onKeyDown={(event) => cross(event, opacityInput.current, 'ArrowRight')} className={slots.input({ className: ['truncate', behind, hasOpacity ? 'pr-2' : end] })} />
-							{hasOpacity && <span className="h-4 shrink-0 border-l border-bleed/8" />}
+							<Input ref={input} dir="ltr" name={name ? '' : undefined} placeholder={placeholder} spellCheck={false} autoComplete="off" onPaste={onPaste} onKeyDown={(event) => cross(event, opacityInput.current, 'end')} className={slots.input({ className: ['truncate', behind] })} />
+							{hasOpacity && <span className="h-4 shrink-0 border-s border-bleed/8" />}
 							{hasOpacity && (
 								<AriaNumberField
 									aria-label="Opacity"
@@ -242,7 +248,7 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 										<span aria-hidden className={slots.input({ className: ['invisible block whitespace-pre', opacity] })}>
 											{widest}
 										</span>
-										<Input ref={opacityInput} onKeyDown={(event) => cross(event, input.current, 'ArrowLeft')} className={slots.input({ className: ['absolute inset-0 size-full', opacity] })} />
+										<Input ref={opacityInput} onKeyDown={(event) => cross(event, input.current, 'start')} className={slots.input({ className: ['absolute inset-0 size-full', opacity] })} />
 									</span>
 								</AriaNumberField>
 							)}
@@ -257,21 +263,31 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 	);
 }
 
-// Right from the end of the colour goes on into its opacity, and Left from the start of the opacity back, as between a
-// date's parts, since the two read as one field. Only from a caret at that very end, so a selection collapses first,
-// and not with a modifier, which moves by word or selects, or as a held key repeats, so holding it to reach the end
-// stops there. Nor while an input method composes, which moves through its choices with them, or right to left, where
-// the opacity sits to the left. On the inputs themselves, after React Aria's own handlers, as a NumberField's are shortcuts
-function cross(event: ReactKeyboardEvent<HTMLInputElement>, to: HTMLInputElement | null, key: 'ArrowLeft' | 'ArrowRight') {
+// An arrow at the very edge of the colour toward its opacity goes on into it, and back again from the opacity's edge
+// toward the colour, as between a date's parts, since the two read as one field. Only from a caret at that edge, so a
+// selection collapses first, and not with a modifier, which moves by word or selects, or as a held key repeats, so
+// holding it to reach the edge stops there. Nor while an input method composes, which moves through its choices with
+// them. On the inputs themselves, after React Aria's own handlers, as a NumberField's are shortcuts
+function cross(event: ReactKeyboardEvent<HTMLInputElement>, to: HTMLInputElement | null, toward: 'start' | 'end') {
 	const from = event.currentTarget;
-	if (event.key !== key || event.defaultPrevented || event.repeat || event.nativeEvent.isComposing || event.shiftKey || event.altKey || event.metaKey || event.ctrlKey) return;
-	const end = key === 'ArrowRight' ? from.value.length : 0;
-	if (!to || to.disabled || from.selectionStart !== end || from.selectionEnd !== end || getComputedStyle(from).direction === 'rtl') return;
+	const right = event.key === 'ArrowRight';
+	if ((!right && event.key !== 'ArrowLeft') || event.defaultPrevented || event.repeat || event.nativeEvent.isComposing || event.shiftKey || event.altKey || event.metaKey || event.ctrlKey) return;
+	// Which side that is follows the way the field runs, read from around the input, as the colour itself is always left
+	// to right
+	const toRight = (toward === 'end') !== (getComputedStyle(from.parentElement ?? from).direction === 'rtl');
+	const at = edge(from, right);
+	if (right !== toRight || !to || to.disabled || from.selectionStart !== at || from.selectionEnd !== at) return;
 	event.preventDefault();
 	event.stopPropagation();
 	to.focus();
-	const caret = key === 'ArrowRight' ? 0 : to.value.length;
+	const caret = edge(to, !right);
 	to.setSelectionRange(caret, caret);
+}
+
+// The caret at an input's right edge, or its left. Right to left, an arrow takes its start as the right edge and its end
+// as the left, even when its digits show left to right, as an opacity's do
+function edge(input: HTMLInputElement, right: boolean) {
+	return right === (getComputedStyle(input).direction === 'rtl') ? 0 : input.value.length;
 }
 
 interface Entry {
