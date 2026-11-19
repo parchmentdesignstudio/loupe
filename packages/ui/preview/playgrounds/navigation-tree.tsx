@@ -52,23 +52,24 @@ function deepest(page: Page): Page {
 	return page.children.length ? deepest(page.children[0]) : page;
 }
 
-function PageItem({ page }: { page: Page }) {
+function PageItem({ page, focused }: { page: Page; focused?: string }) {
 	return (
-		<NavigationTreeItem id={page.id} href={page.href} textValue={page.name}>
+		<NavigationTreeItem id={page.id} href={page.href} textValue={page.name} data-show-focus={page.id === focused || undefined}>
 			<NavigationTreeItemContent>{page.name}</NavigationTreeItemContent>
 			{page.children.map((child) => (
-				<PageItem key={child.id} page={child} />
+				<PageItem key={child.id} page={child} focused={focused} />
 			))}
 		</NavigationTreeItem>
 	);
 }
 
-export function TreeSections({ sections, hasHeaders }: { sections: ReturnType<typeof buildTree>; hasHeaders: boolean }) {
+// focused is the page that shows its focus ring, for the Focused switch
+export function TreeSections({ sections, hasHeaders, focused }: { sections: ReturnType<typeof buildTree>; hasHeaders: boolean; focused?: string }) {
 	return sections.map((section) => (
 		<NavigationTreeSection key={section.id} id={section.id}>
 			{hasHeaders && <NavigationTreeHeader>{section.name}</NavigationTreeHeader>}
 			{section.pages.map((page) => (
-				<PageItem key={page.id} page={page} />
+				<PageItem key={page.id} page={page} focused={focused} />
 			))}
 		</NavigationTreeSection>
 	));
@@ -89,6 +90,7 @@ export function NavigationTreePlayground() {
 	const [hasDisabled, setHasDisabled] = useRemembered('hasDisabled', false);
 	const [width, setWidth] = useRemembered('width', 'column', widths);
 	const [opened, setOpened] = useRemembered('opened', 'first', openings);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [route, setRoute] = useState<string | null>('#s0-1');
 
 	const tree = buildTree({ sections, items, depth, isLong, parentsLink });
@@ -129,6 +131,7 @@ export function NavigationTreePlayground() {
 						<SwitchControl label="Parents are links" value={parentsLink} onChange={setParentsLink} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						{depth !== '1' && <Choice label="Open at start" options={openings} value={opened} onChange={setOpened} />}
 						<SwitchControl label="A disabled page" value={hasDisabled} onChange={setHasDisabled} />
 						<ControlRow label="Current page">
@@ -156,7 +159,7 @@ export function NavigationTreePlayground() {
 					disabledKeys={disabledKeys}
 					className={widthClass[width]}
 				>
-					<TreeSections sections={tree} hasHeaders={hasHeaders} />
+					<TreeSections sections={tree} hasHeaders={hasHeaders} focused={isFocused ? tree[0]?.pages[0]?.id : undefined} />
 				</NavigationTree>
 			</RouterProvider>
 		</Playground>

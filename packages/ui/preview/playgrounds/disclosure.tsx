@@ -39,6 +39,7 @@ export function DisclosurePlayground() {
 	const [isLongPanel, setLongPanel] = useRemembered('isLongPanel', false);
 	const [disabled, setDisabled] = useRemembered('disabled', 'none', disablings);
 	const [width, setWidth] = useRemembered('width', 'wide', widths);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const isGroup = layout === 'group';
 
 	const items = questions.slice(0, isGroup ? Number(count) : 1).map((question, i) => ({
@@ -98,6 +99,7 @@ export function DisclosurePlayground() {
 						{isGroup && <SwitchControl label="Several open at once" value={allowsMultiple} onChange={setAllowsMultiple} />}
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Open at start" options={openings} value={opened} onChange={setOpened} />
 						<Choice label="Disabled" options={disablings} value={disabled} onChange={setDisabled} />
 					</ControlGroup>
@@ -109,14 +111,14 @@ export function DisclosurePlayground() {
 					<DisclosureGroup key={key} size={size} allowsMultipleExpanded={allowsMultiple} defaultExpandedKeys={expandedKeys} isDisabled={disabled === 'all'}>
 						{items.map((item, i) => (
 							// The second one, so a disabled disclosure sits between two that work
-							<Disclosure key={item.id} id={item.id} isDisabled={disabled === 'one' && i === Math.min(1, items.length - 1)}>
+							<Disclosure key={item.id} id={item.id} data-show-focus={(isFocused && i === 0) || undefined} isDisabled={disabled === 'one' && i === Math.min(1, items.length - 1)}>
 								<DisclosureHeader>{item.title}</DisclosureHeader>
 								{panel(item.answer)}
 							</Disclosure>
 						))}
 					</DisclosureGroup>
 				) : (
-					<Disclosure key={key} size={size} defaultExpanded={opened !== 'none'} isDisabled={disabled !== 'none'}>
+					<Disclosure key={key} size={size} data-show-focus={isFocused || undefined} defaultExpanded={opened !== 'none'} isDisabled={disabled !== 'none'}>
 						<DisclosureHeader>{items[0].title}</DisclosureHeader>
 						{panel(items[0].answer)}
 					</Disclosure>

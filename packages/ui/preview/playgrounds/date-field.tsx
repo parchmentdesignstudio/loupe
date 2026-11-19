@@ -40,6 +40,7 @@ export function DateFieldPlayground() {
 	const [isRequired, setRequired] = useRemembered('isRequired', false);
 	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const fill = (next: Value, as: Kind = kind) => {
 		setContent(next);
 		setDate(dateFor(next, as));
@@ -76,6 +77,7 @@ export function DateFieldPlayground() {
 		isReadOnly,
 		isDisabled,
 		className: widths[width],
+		'data-show-focus': isFocused || undefined,
 	};
 	return (
 		<Playground
@@ -94,6 +96,7 @@ export function DateFieldPlayground() {
 						<SwitchControl label="A month either side of today" value={hasLimits} onChange={setLimits} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Value" options={values} value={content} onChange={(next) => fill(next)} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />

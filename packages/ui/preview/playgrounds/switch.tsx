@@ -12,6 +12,7 @@ export function SwitchPlayground() {
 	const [hasLabel, setHasLabel] = useRemembered('hasLabel', true);
 	const [shape, setShape] = useRemembered('shape', 'rounded', shapes);
 	const [count, setCount] = useRemembered('count', '1', counts);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	// The first switch apart from the rest, as it's the one On sets and the only one remembered
 	const [isOn, setOn] = useRemembered('isOn', true);
 	const [others, setOthers] = useState([false, true, false, false, true, false, false]);
@@ -45,6 +46,7 @@ export function SwitchPlayground() {
 						<Choice label="Shape" options={shapes} value={shape} onChange={setShape} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="On" value={isOn} onChange={setOn} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />
@@ -62,6 +64,7 @@ export function SwitchPlayground() {
 						isDisabled={isDisabled}
 						isReadOnly={isReadOnly}
 						aria-label={hasLabel ? undefined : textFor(i)}
+						data-show-focus={isFocused || undefined}
 					>
 						{hasLabel ? textFor(i) : undefined}
 					</Switch>

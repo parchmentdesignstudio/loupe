@@ -23,6 +23,7 @@ export function ButtonPlayground() {
 	const [label, setLabel] = useRemembered('label', 'New project');
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const [isPending, setPending] = useRemembered('isPending', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const isIconOnly = content === 'icon';
 	const hasStart = !isIconOnly && (place === 'start' || place === 'both');
 	const hasEnd = !isIconOnly && (place === 'end' || place === 'both');
@@ -57,6 +58,7 @@ export function ButtonPlayground() {
 						<Choice label="Shape" options={shapes} value={shape} onChange={setShape} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 						<SwitchControl label="Pending" value={isPending} onChange={setPending} />
 					</ControlGroup>
@@ -72,6 +74,7 @@ export function ButtonPlayground() {
 				aria-label={isIconOnly ? label : undefined}
 				isDisabled={isDisabled}
 				isPending={isPending}
+				data-show-focus={isFocused || undefined}
 			>
 				{isIconOnly ? icon(startIcon) : label}
 			</Button>

@@ -29,6 +29,7 @@ export function ColorFieldPlayground() {
 	const [isRequired, setRequired] = useRemembered('isRequired', false);
 	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const isChannel = mode === 'channel';
 	const color = isEmpty ? null : last;
 	const update = (next: Color | null) => {
@@ -74,6 +75,7 @@ export function ColorFieldPlayground() {
 						{isChannel && <Choice label="Channel" options={channels[space]} value={channel} onChange={setChannel} />}
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<ColourControl value={last} onChange={update} />
 						<SwitchControl label="Empty" value={isEmpty} onChange={setEmpty} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
@@ -102,6 +104,7 @@ export function ColorFieldPlayground() {
 				isReadOnly={isReadOnly}
 				isDisabled={isDisabled}
 				className={widths[width]}
+				data-show-focus={isFocused || undefined}
 			/>
 		</Playground>
 	);

@@ -21,6 +21,7 @@ export function RadioGroupPlayground() {
 	const [orientation, setOrientation] = useRemembered('orientation', 'vertical', orientations);
 	const [count, setCount] = useRemembered('count', '5', counts);
 	const [length, setLength] = useRemembered('length', 'short', lengths);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	// The option's value, or '' for nothing chosen, as null would read as nothing stored
 	const [value, setValue] = useRemembered('value', 'option-1');
 	const [hasDisabledOption, setDisabledOption] = useRemembered('hasDisabledOption', false);
@@ -57,6 +58,7 @@ export function RadioGroupPlayground() {
 						<Choice label="Orientation" options={orientations} value={orientation} onChange={setOrientation} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
 						<SwitchControl label="Nothing chosen" value={!value} onChange={(none) => setValue(none ? '' : 'option-0')} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
@@ -82,7 +84,7 @@ export function RadioGroupPlayground() {
 				className="w-full max-w-sm"
 			>
 				{Array.from({ length: total }, (_, i) => (
-					<Radio key={i} value={`option-${i}`} isDisabled={hasDisabledOption && i === Math.min(2, total - 1)}>
+					<Radio key={i} value={`option-${i}`} data-show-focus={(isFocused && i === 0) || undefined} isDisabled={hasDisabledOption && i === Math.min(2, total - 1)}>
 						{optionName(i, length)}
 					</Radio>
 				))}

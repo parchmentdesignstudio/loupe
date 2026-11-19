@@ -16,6 +16,7 @@ export function LinkPlayground() {
 	const [destination, setDestination] = useRemembered('destination', 'page', destinations);
 	const [isCurrent, setCurrent] = useRemembered('isCurrent', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [followed, setFollowed] = useState<string | null>(null);
 
 	const linkProps = {
@@ -23,6 +24,7 @@ export function LinkPlayground() {
 		target: destination === 'elsewhere' ? '_blank' : undefined,
 		'aria-current': isCurrent ? ('page' as const) : undefined,
 		isDisabled,
+		'data-show-focus': isFocused || undefined,
 	};
 
 	const shuffle = () => {
@@ -47,6 +49,7 @@ export function LinkPlayground() {
 						<Choice label="Goes to" options={destinations} value={destination} onChange={setDestination} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="Current page" value={isCurrent} onChange={setCurrent} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 					</ControlGroup>

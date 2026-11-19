@@ -27,6 +27,7 @@ export function SearchFieldPlayground() {
 	const [error, setError] = useRemembered('error', 'short', errorLengths);
 	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const fill = (next: Value) => {
 		setContent(next);
 		setSearch(contents[next]);
@@ -53,6 +54,7 @@ export function SearchFieldPlayground() {
 						<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Value" options={values} value={content} onChange={fill} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						{isInvalid && <Choice label="Error" options={errorLengths} value={error} onChange={setError} />}
@@ -76,6 +78,7 @@ export function SearchFieldPlayground() {
 				isReadOnly={isReadOnly}
 				isDisabled={isDisabled}
 				className={widths[width]}
+				data-show-focus={isFocused || undefined}
 			/>
 			{submitted !== undefined && <p className="font-mono text-label">Searched for “{submitted}”</p>}
 		</Playground>

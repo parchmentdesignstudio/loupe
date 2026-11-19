@@ -36,6 +36,7 @@ export function TabsPlayground() {
 	const [isLongPanel, setLongPanel] = useRemembered('isLongPanel', false);
 	const [hasDisabled, setHasDisabled] = useRemembered('hasDisabled', false);
 	const [asLinks, setAsLinks] = useRemembered('asLinks', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 
 	const tabs = pages.slice(0, Number(count)).map((page, i) => ({ ...page, id: `tab-${i}`, icon: icons[i], name: i === 1 && isLongLabel ? longWords : page.name }));
 	// The last tab, unless it's the one chosen
@@ -75,6 +76,7 @@ export function TabsPlayground() {
 						<SwitchControl label="Tabs are links" value={asLinks} onChange={setAsLinks} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="A disabled tab" value={hasDisabled} onChange={setHasDisabled} />
 					</ControlGroup>
 				</>
@@ -84,7 +86,7 @@ export function TabsPlayground() {
 				<Tabs orientation={orientation} selectedKey={selectedKey} onSelectionChange={setSelected} disabledKeys={disabledKeys} className="w-full">
 					<TabList aria-label="Project">
 						{tabs.map((tab) => (
-							<Tab key={tab.id} id={tab.id} href={asLinks ? `#${tab.id}` : undefined}>
+							<Tab key={tab.id} id={tab.id} data-show-focus={(isFocused && tab.id === tabs[0].id) || undefined} href={asLinks ? `#${tab.id}` : undefined}>
 								{hasIcons && <Icon name={tab.icon} />}
 								{tab.name}
 							</Tab>

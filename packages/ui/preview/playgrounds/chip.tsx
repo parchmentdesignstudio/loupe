@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Chip, ChipGroup } from '../../src/index.js';
-import { Choice, ControlGroup, ControlRow, IconPicker, NumberControl, Playground, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
+import { Choice, ControlGroup, ControlRow, IconPicker, NumberControl, Playground, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const replies = ['A new website', 'Rework my site', 'Not sure yet', 'Book a call', 'Show me examples', 'How much?', 'Later', 'Tell me more', 'Yes', 'No thanks'];
 const lengths = ['short', 'mixed', 'long'] as const;
@@ -27,6 +27,7 @@ export function ChipPlayground() {
 	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
 	const [size, setSize] = useRemembered('size', 'large', sizes);
 	const [disabled, setDisabled] = useRemembered('disabled', 'none', disabling);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [pressed, setPressed] = useState<string>();
 	const names = solidIcons();
 	const shuffle = () => {
@@ -42,7 +43,7 @@ export function ChipPlayground() {
 	const chips = Array.from({ length: count }, (_, index) => {
 		const label = labelFor(index, length, first);
 		return (
-			<Chip key={index} size={size} onPress={() => setPressed(label)} isDisabled={disabled === 'all' || (disabled === 'one' && index === 1)}>
+			<Chip key={index} size={size} data-show-focus={(isFocused && index === 0) || undefined} onPress={() => setPressed(label)} isDisabled={disabled === 'all' || (disabled === 'one' && index === 1)}>
 				{place === 'start' && <Icon name={icon} />}
 				{label}
 				{place === 'end' && <Icon name={icon} />}
@@ -73,6 +74,7 @@ export function ChipPlayground() {
 						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Disabled" options={disabling} value={disabled} onChange={setDisabled} />
 					</ControlGroup>
 				</>

@@ -24,6 +24,7 @@ export function ToolbarPlayground() {
 	const [hasTools, setTools] = useRemembered('hasTools', true);
 	const [hasSeparators, setSeparators] = useRemembered('hasSeparators', true);
 	const [hasDisabled, setDisabled] = useRemembered('hasDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [icons, setIcons] = useState<IconName[]>(starters);
 	const isIcons = content === 'icons';
 	const label = (index: number) => (text === 'long' && index === 1 ? longWords : sampleWords[index % sampleWords.length]);
@@ -60,6 +61,7 @@ export function ToolbarPlayground() {
 						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="A disabled button" value={hasDisabled} onChange={setDisabled} />
 					</ControlGroup>
 				</>
@@ -96,6 +98,7 @@ export function ToolbarPlayground() {
 							aria-label={isIcons ? label(index) : undefined}
 							start={content === 'both' ? <Icon name={name} /> : undefined}
 							isDisabled={hasDisabled && index === 1}
+							data-show-focus={(isFocused && index === 0) || undefined}
 						>
 							{isIcons ? <Icon name={name} /> : label(index)}
 						</Button>

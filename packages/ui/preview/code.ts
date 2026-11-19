@@ -22,8 +22,8 @@ const isDefault = (component: string, prop: string, value: unknown) => {
 };
 
 function attribute(component: string, prop: string, value: unknown, depth: number): string | undefined {
-	// data-source is the inspector's, added to every element in development
-	if (prop === 'data-source' || value === undefined || value === null || value === false || typeof value === 'function') return;
+	// data-source is the inspector's, added to every element in development, and data-show-focus the Focused switch's
+	if (prop === 'data-source' || prop === 'data-show-focus' || value === undefined || value === null || value === false || typeof value === 'function') return;
 	if (isDefault(component, prop, value)) return;
 	if (value === true) return prop;
 	if (typeof value === 'string') return `${prop}=${JSON.stringify(value)}`;

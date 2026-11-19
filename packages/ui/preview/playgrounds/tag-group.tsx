@@ -29,6 +29,7 @@ export function TagGroupPlayground() {
 	const [hasDescription, setDescription] = useRemembered('hasDescription', false);
 	const [hasError, setError] = useRemembered('hasError', false);
 	const [hasDisabled, setDisabled] = useRemembered('hasDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const reset = (nextCount: Count, nextText: 'short' | 'long') => {
 		setCount(nextCount);
 		setText(nextText);
@@ -65,6 +66,7 @@ export function TagGroupPlayground() {
 						<SwitchControl label="Removable" value={isRemovable} onChange={setRemovable} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="A disabled tag" value={hasDisabled} onChange={setDisabled} />
 					</ControlGroup>
 				</>
@@ -85,7 +87,7 @@ export function TagGroupPlayground() {
 				className={width === 'narrow' ? 'w-full max-w-xs' : 'w-full'}
 			>
 				{(item) => (
-					<Tag textValue={item.id}>
+					<Tag textValue={item.id} data-show-focus={(isFocused && item.id === tags[0]) || undefined}>
 						{hasIcons && <Icon name={icon} className="size-3 shrink-0" />}
 						{item.id}
 					</Tag>

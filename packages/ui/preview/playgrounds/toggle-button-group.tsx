@@ -34,6 +34,7 @@ export function ToggleButtonGroupPlayground() {
 	const [allowsEmpty, setAllowsEmpty] = useRemembered('allowsEmpty', false);
 	const [hasDisabledButton, setDisabledButton] = useRemembered('hasDisabledButton', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const total = Number(count);
 	const isSingle = selectionMode === 'single';
 	const textFor = (index: number) => (length === 'long' || (length === 'mixed' && index === 1) ? longWords : words[index]);
@@ -78,6 +79,7 @@ export function ToggleButtonGroupPlayground() {
 						{!isSingle && <SwitchControl label="Can choose none" value={allowsEmpty} onChange={setAllowsEmpty} />}
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="A disabled button" value={hasDisabledButton} onChange={setDisabledButton} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 					</ControlGroup>
@@ -100,7 +102,7 @@ export function ToggleButtonGroupPlayground() {
 				className="max-w-full"
 			>
 				{Array.from({ length: total }, (_, i) => (
-					<ToggleButton key={i} id={`button-${i}`} isDisabled={hasDisabledButton && i === total - 1} aria-label={content === 'icon' ? textFor(i) : undefined}>
+					<ToggleButton key={i} id={`button-${i}`} data-show-focus={(isFocused && i === 0) || undefined} isDisabled={hasDisabledButton && i === total - 1} aria-label={content === 'icon' ? textFor(i) : undefined}>
 						{content !== 'text' && <Icon name={iconSet[i]} />}
 						{content !== 'icon' && textFor(i)}
 					</ToggleButton>

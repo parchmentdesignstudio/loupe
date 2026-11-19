@@ -47,6 +47,7 @@ export function ColorSwatchPickerPlayground() {
 	const [layout, setLayout] = useRemembered('layout', 'grid', layouts);
 	const [value, setValue] = useState<Color | null>(() => parseColor('#c76024'));
 	const [disableSome, setDisableSome] = useRemembered('disableSome', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	// Nothing chosen needs the picker uncontrolled, as its value can’t be null, so it’s remounted to clear it
 	const [round, setRound] = useState(0);
 	const colours = coloursFor(palette, count, random);
@@ -89,6 +90,7 @@ export function ColorSwatchPickerPlayground() {
 						<Choice label="Layout" options={layouts} value={layout} onChange={setLayout} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="Every third disabled" value={disableSome} onChange={setDisableSome} />
 						<ControlRow label="Chosen">
 							<div className="flex items-center gap-2">
@@ -114,7 +116,7 @@ export function ColorSwatchPickerPlayground() {
 					className={[widths[width], layout === 'stack' && 'flex-col'].filter(Boolean).join(' ')}
 				>
 					{colours.map((color, index) => (
-						<ColorSwatchPickerItem key={index} color={color} className={sizes[size]} isDisabled={disableSome && index % 3 === 2} />
+						<ColorSwatchPickerItem key={index} color={color} className={sizes[size]} isDisabled={disableSome && index % 3 === 2} data-show-focus={(isFocused && index === 0) || undefined} />
 					))}
 				</ColorSwatchPicker>
 			)}
