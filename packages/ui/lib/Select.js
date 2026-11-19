@@ -9,7 +9,7 @@ import { composeClassName, focusRing, tv } from './tv.js';
 // focus only. The chevron sits 8px in, as a circle button's icon does
 export const selectTrigger = tv({
     extend: focusRing,
-    base: 'flex w-full cursor-default items-center gap-2 rounded-(--field-radius) text-left text-control font-medium text-(color:--field-text,var(--color-ink)) outline-offset-0 [-webkit-tap-highlight-color:transparent]',
+    base: 'flex w-full cursor-default items-center gap-2 rounded-(--field-radius) text-left text-control font-medium text-(color:--field-text,var(--color-ink)) [-webkit-tap-highlight-color:transparent]',
     variants: {
         // As a text field's, before the states so theirs win
         variant: {

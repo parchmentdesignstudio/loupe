@@ -6,7 +6,7 @@ import { composeClassName, tv } from './tv.js';
 // 20px line make it 32px tall. Chrome ignores an input's line if it's no taller than the text, so a 16px line, an
 // icon's, would make it 37px on a touch screen. A field shows its focus however it was focused
 export const textFieldInput = tv({
-	base: ['w-full rounded-(--field-radius) text-control text-(color:--field-text,var(--color-ink)) outline-offset-0 outline-(color:--field-focus-ring,var(--color-ink)) placeholder:text-(color:--field-placeholder,var(--color-muted)) forced-colors:outline-[Highlight]', readOnly],
+	base: ['w-full rounded-(--field-radius) text-control text-(color:--field-text,var(--color-ink)) outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) placeholder:text-(color:--field-placeholder,var(--color-muted)) forced-colors:outline-[Highlight]', readOnly],
 	variants: {
 		// Before the states, so invalid's ring and disabled's fill win over them
 		variant: {
