@@ -24,7 +24,7 @@ export declare const chip: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 export interface ChipProps extends AriaButtonProps {
     /** Small is 20px tall and medium 24px, for a value in a table or a line of text. Large, 32px, is a reply to tap */
     size?: 'small' | 'medium' | 'large';

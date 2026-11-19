@@ -37,7 +37,7 @@ export declare const button: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 export interface ButtonProps extends AriaButtonProps, Pick<VariantProps<typeof button>, 'variant' | 'shape' | 'size'> {
     /** An icon before the label, on the left in a left-to-right language */
     start?: ReactNode;

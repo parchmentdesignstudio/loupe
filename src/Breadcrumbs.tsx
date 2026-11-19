@@ -22,7 +22,7 @@ export const breadcrumb = tv({
 
 const crumbLink = tv({
 	extend: focusRing,
-	base: 'min-w-0 truncate rounded-sm transition-colors duration-150 ease-out motion-reduce:transition-none',
+	base: 'min-w-0 truncate rounded-sm transition-colors duration-150 ease-out motion-reduce:transition-none in-data-[show-focus]:outline-2',
 	variants: {
 		isHovered: {
 			true: 'text-(color:--breadcrumbs-current-text,var(--color-ink))',

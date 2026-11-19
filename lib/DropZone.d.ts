@@ -24,7 +24,7 @@ export declare const dropZone: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 export interface DropZoneProps extends AriaDropZoneProps {
     /** Dashed, a box that says it takes files, or quiet, for a panel or canvas that shows it's taking them only as they're dragged over */
     variant?: 'dashed' | 'quiet';

@@ -31,6 +31,6 @@ export declare const tag: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 /** A tag with its text as children. In a group with onRemove, it ends with a button to remove it */
 export declare function Tag(props: TagProps): import("react").JSX.Element;

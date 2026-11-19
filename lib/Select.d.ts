@@ -16,7 +16,7 @@ export declare const selectTrigger: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "flex w-full cursor-default items-center gap-2 rounded-(--field-radius) text-left text-control font-medium text-(color:--field-text,var(--color-ink)) [-webkit-tap-highlight-color:transparent]", {
+}, undefined, "flex w-full cursor-default items-center gap-2 rounded-(--field-radius) text-left text-control font-medium text-(color:--field-text,var(--color-ink)) [-webkit-tap-highlight-color:transparent] in-data-[show-focus]:outline-2", {
     isFocusVisible: {
         false: string;
         true: string;
@@ -26,7 +26,7 @@ export declare const selectTrigger: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 export interface SelectProps<T extends object> extends Omit<AriaSelectProps<T>, 'children'>, FieldTextProps {
     items?: Iterable<T>;
     /** ListBoxItems, or a function that makes one from each of items */

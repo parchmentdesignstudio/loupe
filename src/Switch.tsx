@@ -5,7 +5,7 @@ import { focusRing, tv } from './tv.js';
 const toggle = tv({
 	slots: {
 		// Its height is the handle's 16px and 2px of padding each side, so it centres on the label's first line at 20px
-		track: 'relative my-[calc((1lh-1.25rem)/2)] flex w-9 shrink-0 items-center p-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none',
+		track: 'relative my-[calc((1lh-1.25rem)/2)] flex w-9 shrink-0 items-center p-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none [[data-show-focus]>&]:outline-2',
 		// It stretches by its width rather than a scale, so its corners stay round, and it moves and stretches on a spring.
 		// The colour changes without one, as a colour can't overshoot
 		// Each sits in the 10px the handle leaves at one end, so the handle covers whichever isn't true. Positioned, the handle
