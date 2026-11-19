@@ -2168,11 +2168,6 @@
     border-bottom-width: 1px;
   }
 
-  .border-l {
-    border-left-style: var(--tw-border-style);
-    border-left-width: 1px;
-  }
-
   .border-dashed {
     --tw-border-style: dashed;
     border-style: dashed;
@@ -2475,10 +2470,10 @@
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
-  .\[mask-image\:linear-gradient\(to_right\,transparent\,black_var\(--inset\)\)\] {
-    -webkit-mask-image: linear-gradient(to right,transparent,black var(--inset));
-    -webkit-mask-image: linear-gradient(to right,transparent,black var(--inset));
-    mask-image: linear-gradient(to right,transparent,black var(--inset));
+  .\[mask-image\:linear-gradient\(to_right\,transparent\,black_var\(--lead\)\)\] {
+    -webkit-mask-image: linear-gradient(to right,transparent,black var(--lead));
+    -webkit-mask-image: linear-gradient(to right,transparent,black var(--lead));
+    mask-image: linear-gradient(to right,transparent,black var(--lead));
   }
 
   .bg-size-\[100\%_100\%\,4px_4px\] {
@@ -2805,6 +2800,18 @@
     padding-inline-start: var(--field-small-padding-x);
   }
 
+  .ps-\(--inset\) {
+    padding-inline-start: var(--inset);
+  }
+
+  .ps-0 {
+    padding-inline-start: 0;
+  }
+
+  .ps-2 {
+    padding-inline-start: calc(var(--spacing) * 2);
+  }
+
   .ps-4 {
     padding-inline-start: calc(var(--spacing) * 4);
   }
@@ -2815,6 +2822,22 @@
 
   .pe-\(--alert-padding\) {
     padding-inline-end: var(--alert-padding);
+  }
+
+  .pe-\(--field-padding-x\) {
+    padding-inline-end: var(--field-padding-x);
+  }
+
+  .pe-\(--field-small-padding-x\) {
+    padding-inline-end: var(--field-small-padding-x);
+  }
+
+  .pe-\(--trail\) {
+    padding-inline-end: var(--trail);
+  }
+
+  .pe-0 {
+    padding-inline-end: 0;
   }
 
   .pe-1 {
@@ -2843,14 +2866,6 @@
 
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
-  }
-
-  .pr-\(--field-padding-x\) {
-    padding-right: var(--field-padding-x);
-  }
-
-  .pr-\(--field-small-padding-x\) {
-    padding-right: var(--field-small-padding-x);
   }
 
   .pr-0 {
@@ -2901,14 +2916,6 @@
     padding-left: var(--field-small-padding-x);
   }
 
-  .pl-\(--inset\) {
-    padding-left: var(--inset);
-  }
-
-  .pl-0 {
-    padding-left: 0;
-  }
-
   .pl-1\.5 {
     padding-left: calc(var(--spacing) * 1.5);
   }
@@ -2937,16 +2944,12 @@
     text-align: left;
   }
 
-  .text-right {
-    text-align: right;
-  }
-
   .text-start {
     text-align: start;
   }
 
-  .indent-\(--inset\) {
-    text-indent: var(--inset);
+  .indent-\(--lead\) {
+    text-indent: var(--lead);
   }
 
   .align-middle {
@@ -3898,6 +3901,18 @@
     --edge: var(--chosen-edge);
   }
 
+  .\[--far\:--spacing\(2\)\] {
+    --far: calc(var(--spacing) * 2);
+  }
+
+  .\[--far\:var\(--field-padding-x\)\] {
+    --far: var(--field-padding-x);
+  }
+
+  .\[--far\:var\(--field-small-padding-x\)\] {
+    --far: var(--field-small-padding-x);
+  }
+
   .\[--fill\:var\(--button-danger-fill\,var\(--color-red-50\)\)\] {
     --fill: var(--button-danger-fill, var(--color-red-50));
   }
@@ -3948,6 +3963,10 @@
 
   .\[--inset\:var\(--toggle-button-group-inset\)\] {
     --inset: var(--toggle-button-group-inset);
+  }
+
+  .\[--lead\:var\(--inset\)\] {
+    --lead: var(--inset);
   }
 
   .\[--rim\:oklch\(from_var\(--fill\)_calc\(l\*0\.84\)_c_calc\(h-16\)\)\] {
@@ -4044,6 +4063,10 @@
 
   .\[--table-fill\:var\(--table-raised-fill\,var\(--color-raised\)\)\] {
     --table-fill: var(--table-raised-fill, var(--color-raised));
+  }
+
+  .\[--trail\:var\(--far\)\] {
+    --trail: var(--far);
   }
 
   .\[--underline\:var\(--link-hover-underline\,var\(--color-ink\)\)\] {
@@ -4868,6 +4891,18 @@
 
   .rtl\:rotate-180:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     rotate: 180deg;
+  }
+
+  .rtl\:text-right:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    text-align: right;
+  }
+
+  .rtl\:\[--lead\:var\(--far\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    --lead: var(--far);
+  }
+
+  .rtl\:\[--trail\:var\(--inset\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    --trail: var(--inset);
   }
 
   @media (forced-colors: active) {

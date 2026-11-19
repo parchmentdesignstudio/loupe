@@ -195,7 +195,16 @@ describe('ColorField', () => {
 		expect(document.activeElement).toBe(field);
 	});
 
-	it('keeps an arrow in the colour right to left, where the opacity sits to the left', async () => {
+	it('writes the colour left to right, as CSS is, whichever way the page runs', () => {
+		render(
+			<div dir="rtl">
+				<ColorField label="Background" defaultValue="#1f2f3180" />
+			</div>,
+		);
+		expect(screen.getByRole('textbox', { name: 'Background' }).getAttribute('dir')).toBe('ltr');
+	});
+
+	it('arrows the other way right to left, where the opacity sits to the left', async () => {
 		const user = userEvent.setup();
 		render(
 			<div dir="rtl">
@@ -203,10 +212,23 @@ describe('ColorField', () => {
 			</div>,
 		);
 		const field = screen.getByRole('textbox', { name: 'Background' }) as HTMLInputElement;
+		const opacity = screen.getByRole('textbox', { name: 'Opacity' }) as HTMLInputElement;
 		await user.click(field);
 		field.setSelectionRange(field.value.length, field.value.length);
 		await user.keyboard('{ArrowRight}');
 		expect(document.activeElement).toBe(field);
+		field.setSelectionRange(0, 0);
+		await user.keyboard('{ArrowLeft}');
+		expect(document.activeElement).toBe(opacity);
+		// The opacity runs right to left, so its start is on the right, by the colour, though its digits show left to right
+		expect(opacity.selectionStart).toBe(0);
+		opacity.setSelectionRange(opacity.value.length, opacity.value.length);
+		await user.keyboard('{ArrowRight}');
+		expect(document.activeElement).toBe(opacity);
+		opacity.setSelectionRange(0, 0);
+		await user.keyboard('{ArrowRight}');
+		expect(document.activeElement).toBe(field);
+		expect(field.selectionStart).toBe(0);
 	});
 
 	it('makes a colour typed without an alpha opaque when the text is the only place its opacity shows', async () => {
