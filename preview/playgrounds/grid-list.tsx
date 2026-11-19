@@ -42,6 +42,7 @@ export function GridListPlayground() {
 	const [hasDisabled, setDisabled] = useRemembered('hasDisabled', false);
 	const [isTruncated, setTruncated] = useRemembered('isTruncated', false);
 	const [disallowEmpty, setDisallowEmpty] = useRemembered('disallowEmpty', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [selected, setSelected] = useState<Selection>(new Set(['item-0']));
 	const isGrid = layout === 'grid';
 	const items = projects.slice(0, counts[count]).map((project, index) => ({ ...project, id: `item-${index}`, name: text === 'long' && index % 2 === 0 ? `${project.name}: ${longWords.toLowerCase()}` : project.name }));
@@ -63,7 +64,7 @@ export function GridListPlayground() {
 	};
 	const truncate = isTruncated ? 'truncate' : '';
 	const item = (project: (typeof items)[number]) => (
-		<GridListItem key={project.id} id={project.id} textValue={project.name}>
+		<GridListItem key={project.id} id={project.id} textValue={project.name} data-show-focus={(isFocused && project.id === items[0]?.id) || undefined}>
 			{hasIcon &&
 				(isGrid ? (
 					<span aria-hidden="true" className="flex aspect-square items-center justify-center rounded-md bg-bleed/4 text-muted">
@@ -108,6 +109,7 @@ export function GridListPlayground() {
 						<SwitchControl label="Keep one chosen" value={disallowEmpty} onChange={setDisallowEmpty} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="A disabled item" value={hasDisabled} onChange={setDisabled} />
 					</ControlGroup>
 				</>

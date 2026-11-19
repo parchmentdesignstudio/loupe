@@ -39,6 +39,7 @@ export function DatePickerPlayground() {
 	const [isRequired, setRequired] = useRemembered('isRequired', false);
 	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const fill = (next: Value) => {
 		setContent(next);
 		setRange(rangeFor(next));
@@ -75,6 +76,7 @@ export function DatePickerPlayground() {
 		isReadOnly,
 		isDisabled,
 		className: widths[width],
+		'data-show-focus': isFocused || undefined,
 	};
 	return (
 		<Playground
@@ -98,6 +100,7 @@ export function DatePickerPlayground() {
 						<SwitchControl label="Weekends unavailable" value={hasWeekends} onChange={setWeekends} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Value" options={values} value={content} onChange={fill} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						<SwitchControl label="Required" value={isRequired} onChange={setRequired} />

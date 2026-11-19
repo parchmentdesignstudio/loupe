@@ -101,6 +101,7 @@ export function DropZonePlayground() {
 	const [width, setWidth] = useRemembered('width', 'wide', widths);
 	const [seed, setSeed] = useRemembered('seed', 'none', Object.keys(seeds) as Seed[]);
 	const [failures, setFailures] = useRemembered('failures', true);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const { uploads, add, set, uploadAll, retry, remove } = useUploads(seeds[seed], { failures });
 	const isQuiet = variant === 'quiet';
 	const types = accepts[accepted];
@@ -150,6 +151,7 @@ export function DropZonePlayground() {
 						<SwitchControl label="Some uploads fail" value={failures} onChange={setFailures} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 					</ControlGroup>
 				</>
@@ -164,6 +166,7 @@ export function DropZonePlayground() {
 					acceptedFileTypes={types && [...types]}
 					onDrop={async (event) => take(await Promise.all(event.items.filter(isFileDropItem).map((item) => item.getFile())))}
 					className={['w-full', isQuiet && 'flex min-h-40 flex-col items-center justify-center gap-2 p-6 text-center'].filter(Boolean).join(' ')}
+					data-show-focus={isFocused || undefined}
 				>
 					{isQuiet && <p className="font-medium">{label}</p>}
 					{hasTrigger && (

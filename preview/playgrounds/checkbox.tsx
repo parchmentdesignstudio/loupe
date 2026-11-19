@@ -32,6 +32,7 @@ export function CheckboxPlayground() {
 	const [isRequired, setRequired] = useRemembered('isRequired', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const isGroup = mode === 'group';
 	const total = count === 'none' ? 0 : Number(count);
 	const shuffle = () => {
@@ -70,6 +71,7 @@ export function CheckboxPlayground() {
 						<Choice label="Mode" options={modes} value={mode} onChange={setMode} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						{isGroup ? (
 							<>
 								<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
@@ -100,7 +102,7 @@ export function CheckboxPlayground() {
 						isReadOnly={isReadOnly}
 					>
 						{Array.from({ length: total }, (_, i) => (
-							<Checkbox key={i} value={`option-${i}`} isDisabled={hasDisabledOption && i === Math.min(2, total - 1)}>
+							<Checkbox key={i} value={`option-${i}`} data-show-focus={(isFocused && i === 0) || undefined} isDisabled={hasDisabledOption && i === Math.min(2, total - 1)}>
 								{optionName(i, length)}
 							</Checkbox>
 						))}
@@ -114,6 +116,7 @@ export function CheckboxPlayground() {
 						isDisabled={isDisabled}
 						isReadOnly={isReadOnly}
 						aria-label={single ? undefined : 'Checkbox'}
+						data-show-focus={isFocused || undefined}
 					>
 						{single}
 					</Checkbox>

@@ -25,6 +25,7 @@ export function ColorSliderPlayground() {
 	const [label, setLabel] = useRemembered('label', '');
 	const [hasSwatch, setSwatch] = useRemembered('hasSwatch', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const setColourSpace = (next: ColorSpace) => {
 		setSpace(next);
 		if (!channelsWithAlpha(next).includes(channel)) setChannel(channels[next][0]);
@@ -61,6 +62,7 @@ export function ColorSliderPlayground() {
 						<Choice label="Channel" options={channelsWithAlpha(space)} value={channel} onChange={setChannel} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<ColourControl value={color} onChange={(next) => setColor(next.toFormat(space))} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 					</ControlGroup>
@@ -77,6 +79,7 @@ export function ColorSliderPlayground() {
 					onChange={setColor}
 					isDisabled={isDisabled}
 					className={lengths[orientation][length]}
+					data-show-focus={isFocused || undefined}
 				/>
 				{hasSwatch && <ColorSwatch color={color} />}
 			</div>

@@ -36,6 +36,7 @@ export function SelectPlayground() {
 	const [length, setLength] = useRemembered('length', 'short', lengths);
 	const [hasSections, setSections] = useRemembered('hasSections', false);
 	const [hasIcons, setIcons] = useRemembered('hasIcons', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [iconSet, setIconSet] = useState<IconName[]>(icons);
 	// The option's id, or '' for nothing chosen, as null would read as nothing stored
 	const [selectedKey, setSelectedKey] = useRemembered('selectedKey', '');
@@ -84,6 +85,7 @@ export function SelectPlayground() {
 						<SwitchControl label="Icons" value={hasIcons} onChange={setIcons} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="Nothing chosen" value={!selectedKey} onChange={(none) => setSelectedKey(none ? '' : 'option-0')} />
 						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
@@ -106,6 +108,7 @@ export function SelectPlayground() {
 				isRequired={isRequired}
 				isDisabled={isDisabled}
 				className={widths[width]}
+				data-show-focus={isFocused || undefined}
 			>
 				{hasSections
 					? chunk(items).map((group, i) => (

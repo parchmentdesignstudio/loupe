@@ -23,6 +23,7 @@ export function BreadcrumbsPlayground() {
 	const [hasLimit, setLimit] = useRemembered('hasLimit', false);
 	const [maxVisible, setMaxVisible] = useRemembered('maxVisible', 3, (stored) => stored >= 2 && stored <= 8);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const shuffle = () => {
 		setCount(pick(['two', 'four', 'eight'] as const));
 		setText(Math.random() < 0.3 ? 'long' : 'short');
@@ -49,6 +50,7 @@ export function BreadcrumbsPlayground() {
 						{hasLimit && <NumberControl label="Most to show" value={maxVisible} onChange={setMaxVisible} minValue={2} maxValue={8} />}
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 					</ControlGroup>
 				</>
@@ -58,7 +60,7 @@ export function BreadcrumbsPlayground() {
 			<div className={`w-full rounded-md p-2 outline outline-dashed outline-bleed/16 ${widths[width]}`}>
 				<Breadcrumbs maxVisible={hasLimit ? maxVisible : undefined} isDisabled={isDisabled}>
 					{trail.map((crumb, index) => (
-						<Breadcrumb key={index} href={crumb.href}>
+						<Breadcrumb key={index} href={crumb.href} data-show-focus={(isFocused && index === 0) || undefined}>
 							{crumb.name}
 						</Breadcrumb>
 					))}

@@ -183,6 +183,18 @@ export function SwitchControl({ label, value, onChange }: { label: string; value
 	);
 }
 
+/**
+ * Shows the focus ring of what's in it, through data-show-focus, for a component that keeps its props off its own
+ * element, as a ColorPicker and a Composer do. It's there either way, so turning it on doesn't remount what's in it
+ */
+export function ShowFocus({ when, children }: { when: boolean; children: ReactNode }) {
+	return (
+		<div data-show-focus={when || undefined} className="contents">
+			{children}
+		</div>
+	);
+}
+
 /** Every 16px icon in a set, to type into and filter, by its name or what it's for */
 export function IconPicker({ label, value, onChange, variant = 'solid' }: { label: string; value: IconName; onChange: (name: IconName) => void; variant?: IconVariant }) {
 	const items = iconNames({ variant, size: 16 }).map((name) => ({ id: name }));

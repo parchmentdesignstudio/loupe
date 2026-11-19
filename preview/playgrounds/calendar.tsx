@@ -28,6 +28,7 @@ export function CalendarPlayground() {
 	const [isInvalid, setInvalid] = useRemembered('isInvalid', false);
 	const [isReadOnly, setReadOnly] = useRemembered('isReadOnly', false);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const fill = (next: Value) => {
 		setContent(next);
 		setRange(rangeFor(next));
@@ -56,6 +57,7 @@ export function CalendarPlayground() {
 		errorMessage: 'The studio is closed then',
 		isReadOnly,
 		isDisabled,
+		'data-show-focus': isFocused || undefined,
 	};
 	return (
 		<Playground
@@ -73,6 +75,7 @@ export function CalendarPlayground() {
 						<SwitchControl label="Weekends unavailable" value={hasWeekends} onChange={setWeekends} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Value" options={values} value={content} onChange={fill} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						<SwitchControl label="Read-only" value={isReadOnly} onChange={setReadOnly} />

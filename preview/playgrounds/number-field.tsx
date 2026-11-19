@@ -43,6 +43,7 @@ export function NumberFieldPlayground() {
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const [variant, setVariant] = useRemembered<FieldVariant>('variant', 'raised', variants);
 	const [size, setSize] = useRemembered<Size>('size', 'medium', sizes);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const preset = formats[format];
 	const fill = (next: Value, from: Format = format) => {
 		setContent(next);
@@ -85,6 +86,7 @@ export function NumberFieldPlayground() {
 						<Choice label="Size" options={sizes} value={size} onChange={setSize} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Value" options={values} value={content} onChange={(next) => fill(next)} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						{isInvalid && <Choice label="Error" options={errorLengths} value={error} onChange={setError} />}
@@ -115,6 +117,7 @@ export function NumberFieldPlayground() {
 				variant={variant}
 				size={size}
 				className={widths[width]}
+				data-show-focus={isFocused || undefined}
 			/>
 		</Playground>
 	);

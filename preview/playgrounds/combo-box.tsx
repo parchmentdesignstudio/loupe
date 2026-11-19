@@ -39,6 +39,7 @@ export function ComboBoxPlayground() {
 	const [menuTrigger, setMenuTrigger] = useRemembered('menuTrigger', 'input', triggers);
 	const [hasSections, setSections] = useRemembered('hasSections', false);
 	const [hasIcons, setIcons] = useRemembered('hasIcons', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [iconSet, setIconSet] = useState<IconName[]>(icons);
 	// The option's id, or '' for nothing chosen, as null would read as nothing stored
 	const [selectedKey, setSelectedKey] = useRemembered('selectedKey', '');
@@ -95,6 +96,7 @@ export function ComboBoxPlayground() {
 						<SwitchControl label="Any text allowed" value={allowsCustomValue} onChange={setCustomValue} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="Nothing chosen" value={!selectedKey} onChange={(none) => setSelectedKey(none ? '' : 'option-0')} />
 						<SwitchControl label="A disabled option" value={hasDisabledOption} onChange={setDisabledOption} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
@@ -122,6 +124,7 @@ export function ComboBoxPlayground() {
 				isDisabled={isDisabled}
 				isReadOnly={isReadOnly}
 				className={widths[width]}
+				data-show-focus={isFocused || undefined}
 			>
 				{hasSections
 					? chunk(items).map((group, i) => (

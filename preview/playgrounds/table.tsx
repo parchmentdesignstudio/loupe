@@ -52,6 +52,7 @@ export function TablePlayground() {
 	const [hasMenu, setMenu] = useRemembered('hasMenu', true);
 	const [isLong, setLong] = useRemembered('isLong', false);
 	const [isFixed, setFixed] = useRemembered('isFixed', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [selected, setSelected] = useState<Selection>(new Set(['person-1']));
 	const [sort, setSort] = useState<SortDescriptor>({ column: 'name', direction: 'ascending' });
 	const [last, setLast] = useState('');
@@ -100,6 +101,9 @@ export function TablePlayground() {
 						<Choice label="Pressing a row" options={actionsOn} value={rowsDo} onChange={setRowsDo} />
 						<SwitchControl label="Sortable" value={isSortable} onChange={setSortable} />
 					</ControlGroup>
+					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
+					</ControlGroup>
 				</>
 			}
 		>
@@ -135,9 +139,9 @@ export function TablePlayground() {
 							</Column>
 						)}
 					</TableHeader>
-					<TableBody items={rows} dependencies={[columnCount, hasNumbers, hasMenu, rowsDo]} renderEmptyState={() => <EmptyState title="No members yet">Invite someone and they’ll show up here</EmptyState>}>
+					<TableBody items={rows} dependencies={[columnCount, hasNumbers, hasMenu, rowsDo, isFocused]} renderEmptyState={() => <EmptyState title="No members yet">Invite someone and they’ll show up here</EmptyState>}>
 						{(person) => (
-							<Row href={rowsDo === 'link' ? `#/ui/table?person=${person.id}` : undefined}>
+							<Row href={rowsDo === 'link' ? `#/ui/table?person=${person.id}` : undefined} data-show-focus={(isFocused && person.id === rows[0]?.id) || undefined}>
 								<Cell>
 									<span className="min-w-0 truncate font-medium">{person.name}</span>
 								</Cell>

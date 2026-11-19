@@ -22,6 +22,7 @@ export function FileTriggerPlayground() {
 	const [camera, setCamera] = useRemembered('camera', 'none', cameras);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const [seed, setSeed] = useRemembered('seed', 'none', Object.keys(seeds) as Seed[]);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [names, setNames] = useState<string[]>(() => [...seeds[seed]]);
 	const choose = (next: Seed) => {
 		setSeed(next);
@@ -60,6 +61,7 @@ export function FileTriggerPlayground() {
 						<Choice label="Camera" options={cameras} value={camera} onChange={setCamera} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Chosen" options={Object.keys(seeds) as Seed[]} value={seed} onChange={choose} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 					</ControlGroup>
@@ -73,7 +75,7 @@ export function FileTriggerPlayground() {
 				defaultCamera={camera === 'none' ? undefined : camera}
 				onSelect={(files) => setNames([...(files ?? [])].map((file) => file.webkitRelativePath || file.name))}
 			>
-				<Button variant={variant} size={size} start={hasIcon ? <Icon name={icon} /> : undefined} isDisabled={isDisabled}>
+				<Button variant={variant} size={size} start={hasIcon ? <Icon name={icon} /> : undefined} isDisabled={isDisabled} data-show-focus={isFocused || undefined}>
 					{label}
 				</Button>
 			</FileTrigger>

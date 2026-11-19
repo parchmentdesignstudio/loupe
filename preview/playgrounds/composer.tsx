@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { Composer } from '../../src/index.js';
-import { Choice, ControlGroup, IconPicker, Playground, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
+import { Choice, ControlGroup, IconPicker, Playground, ShowFocus, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
 const widths = { narrow: 'w-56', medium: 'w-80', wide: 'w-full max-w-lg' } as const;
@@ -20,6 +20,7 @@ export function ComposerPlayground() {
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const [sent, setSent] = useState<string[]>([]);
 	const [message, setMessage] = useRemembered('message', '');
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const shuffle = () => {
 		setPlaceholder(pick(lengths));
 		setSubmitIcon(pick(solidIcons()));
@@ -40,25 +41,28 @@ export function ComposerPlayground() {
 						<TextControl label="Send button, read out" value={submitLabel} onChange={setSubmitLabel} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<SwitchControl label="Disabled" value={isDisabled} onChange={setDisabled} />
 					</ControlGroup>
 				</>
 			}
 		>
-			<Composer
-				aria-label="Your message"
-				placeholder={placeholders[placeholder]}
-				submitLabel={submitLabel}
-				submitIcon={<Icon name={submitIcon} />}
-				value={message}
-				onChange={setMessage}
-				onSubmit={(next) => {
-					setSent((list) => [...list, next]);
-					setMessage('');
-				}}
-				isDisabled={isDisabled}
-				className={widths[width]}
-			/>
+			<ShowFocus when={isFocused}>
+				<Composer
+					aria-label="Your message"
+					placeholder={placeholders[placeholder]}
+					submitLabel={submitLabel}
+					submitIcon={<Icon name={submitIcon} />}
+					value={message}
+					onChange={setMessage}
+					onSubmit={(next) => {
+						setSent((list) => [...list, next]);
+						setMessage('');
+					}}
+					isDisabled={isDisabled}
+					className={widths[width]}
+				/>
+			</ShowFocus>
 			{sent.length > 0 && <p className={`font-mono text-label ${widths[width]}`}>Sent: {sent.join(', ')}</p>}
 		</Playground>
 	);

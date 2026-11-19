@@ -35,6 +35,7 @@ export function TextFieldPlayground() {
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
 	const [variant, setVariant] = useRemembered<FieldVariant>('variant', 'raised', variants);
 	const [size, setSize] = useRemembered<Size>('size', 'medium', sizes);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const shuffle = () => {
 		setLabel(pick(lengths));
 		setDescription(pick(lengths));
@@ -64,6 +65,7 @@ export function TextFieldPlayground() {
 						{multiline && <NumberControl label="Rows" value={rows} onChange={setRows} minValue={1} maxValue={12} />}
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<Choice label="Value" options={values} value={value} onChange={setValue} />
 						<SwitchControl label="Invalid" value={isInvalid} onChange={setInvalid} />
 						{isInvalid && <Choice label="Error" options={errorLengths} value={error} onChange={setError} />}
@@ -91,6 +93,7 @@ export function TextFieldPlayground() {
 				variant={variant}
 				size={size}
 				className={widths[width]}
+				data-show-focus={isFocused || undefined}
 			/>
 		</Playground>
 	);

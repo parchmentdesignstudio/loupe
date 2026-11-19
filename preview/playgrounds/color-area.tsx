@@ -16,6 +16,7 @@ export function ColorAreaPlayground() {
 	const [size, setSize] = useRemembered('size', 'medium', Object.keys(sizes) as Size[]);
 	const [hasSlider, setSlider] = useRemembered('hasSlider', true);
 	const [isDisabled, setDisabled] = useRemembered('isDisabled', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const others = channels[space].filter((channel) => channel !== x && channel !== y);
 	const setChannels = (nextSpace: ColorSpace, nextX: ColorChannel, nextY: ColorChannel) => {
 		setSpace(nextSpace);
@@ -52,6 +53,7 @@ export function ColorAreaPlayground() {
 						<Choice label="Up" options={channels[space]} value={y} onChange={(channel) => setAxis('y', channel)} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<ColourControl value={color} onChange={(next) => setColor(next.toFormat(space))} />
 						<ControlRow label="Value">
 							<span className="text-control text-ink tabular-nums">{color.toString('css')}</span>
@@ -62,7 +64,7 @@ export function ColorAreaPlayground() {
 			}
 		>
 			<div className={['flex flex-col gap-3', sizes[size]].join(' ')}>
-				<ColorArea aria-label="Colour" colorSpace={space} xChannel={x} yChannel={y} value={color} onChange={setColor} isDisabled={isDisabled} />
+				<ColorArea aria-label="Colour" colorSpace={space} xChannel={x} yChannel={y} value={color} onChange={setColor} isDisabled={isDisabled} data-show-focus={isFocused || undefined} />
 				{hasSlider && others[0] && <ColorSlider colorSpace={space} channel={others[0]} value={color} onChange={setColor} isDisabled={isDisabled} />}
 			</div>
 		</Playground>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { parseColor } from 'react-aria-components';
 import { ColorArea, ColorField, ColorPicker, ColorSlider, ColorSwatchPicker, ColorSwatchPickerItem } from '../../src/index.js';
-import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
+import { Choice, ControlGroup, Playground, ShowFocus, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { ColourControl, extremes, randomColour } from './colour.js';
 
 const insides = ['standard', 'opacity', 'channels', 'swatches'] as const;
@@ -52,6 +52,7 @@ export function ColorPickerPlayground() {
 	const [contents, setContents] = useRemembered('contents', 'standard', insides);
 	const [width, setWidth] = useRemembered('width', 'medium', Object.keys(widths) as Width[]);
 	const [isPaired, setPaired] = useRemembered('isPaired', false);
+	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const shuffle = () => {
 		setColor(randomColour());
 		setLabel(pick(['Theme', 'Background', 'Accent', longWords]));
@@ -60,9 +61,11 @@ export function ColorPickerPlayground() {
 		setWidth(pick(Object.keys(widths) as Width[]));
 	};
 	const picker = (
-		<ColorPicker label={hasLabel ? label : undefined} aria-label={hasLabel ? undefined : label} value={color} onChange={setColor} className={widths[width]}>
-			{contents === 'standard' ? undefined : <Inside contents={contents} />}
-		</ColorPicker>
+		<ShowFocus when={isFocused}>
+			<ColorPicker label={hasLabel ? label : undefined} aria-label={hasLabel ? undefined : label} value={color} onChange={setColor} className={widths[width]}>
+				{contents === 'standard' ? undefined : <Inside contents={contents} />}
+			</ColorPicker>
+		</ShowFocus>
 	);
 	return (
 		<Playground
@@ -81,6 +84,7 @@ export function ColorPickerPlayground() {
 						<Choice label="Inside" options={insides} value={contents} onChange={setContents} />
 					</ControlGroup>
 					<ControlGroup label="State">
+						<SwitchControl label="Focused" value={isFocused} onChange={setFocused} />
 						<ColourControl value={color} onChange={setColor} />
 					</ControlGroup>
 				</>
