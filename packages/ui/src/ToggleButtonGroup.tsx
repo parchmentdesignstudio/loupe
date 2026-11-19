@@ -49,17 +49,24 @@ export const toggleButtonGroup = tv({
 });
 
 // The divider sits in the middle of the gap before each button but the first. It goes from beside the chosen button
-// and the pressed one, as the fill marks those edges already, and from beside the hovered one where hovering fills it
+// and the pressed one, as the fill marks those edges already, from beside the hovered one where hovering fills it, and
+// from beside the focused one, where it would stand between the button and its ring
 const divider = [
 	'before:pointer-events-none before:absolute before:inset-y-1 before:left-[calc(var(--gap)/-2-0.5px)] before:w-px before:rounded-full before:bg-(--divider) before:opacity-0 before:transition-opacity before:duration-150 motion-reduce:before:transition-none',
 	'group-data-[orientation=vertical]/toggle:before:inset-x-3 group-data-[orientation=vertical]/toggle:before:inset-y-auto group-data-[orientation=vertical]/toggle:before:top-[calc(var(--gap)/-2-0.5px)] group-data-[orientation=vertical]/toggle:before:h-px group-data-[orientation=vertical]/toggle:before:w-auto',
 	'group-data-[divided]/toggle:not-first:before:opacity-100',
 	'data-[selected]:before:opacity-0! data-[pressed]:before:opacity-0! [[data-selected]+&]:before:opacity-0! [[data-pressed]+&]:before:opacity-0!',
+	'data-[focus-visible]:before:opacity-0! [[data-focus-visible]+&]:before:opacity-0!',
 ];
+
+// In a group, the ring 2px out crosses into the next button, whose fill would cover that side of it, so it's drawn on
+// a layer above the buttons. Raising the button itself would also raise the fill that slides into it, over the labels
+// it passes
+const ringAbove = 'outline-0 after:pointer-events-none after:absolute after:inset-0 after:z-1 after:rounded-[inherit] after:outline-offset-2 after:outline-ink forced-colors:after:outline-[Highlight]';
 
 export const toggleButton = tv({
 	extend: focusRing,
-	base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control font-(--toggle-button-group-font-weight) text-muted [&>svg]:my-[calc((1lh-1rem)/2)] outline-offset-0 transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
+	base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control font-(--toggle-button-group-font-weight) text-muted [&>svg]:my-[calc((1lh-1rem)/2)] transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
 	variants: {
 		isSelected: {
 			true: 'text-ink',
@@ -97,6 +104,8 @@ export const toggleButton = tv({
 		{ variant: 'raised', isSelected: false, isHovered: true, class: 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_4%,transparent),var(--color-panel))]' },
 		{ hasIndicator: false, isInGroup: true, class: 'data-[hovered]:before:opacity-0! [[data-hovered]+&]:before:opacity-0!' },
 		{ isInGroup: true, class: divider },
+		{ isInGroup: true, class: ringAbove },
+		{ isInGroup: true, isFocusVisible: true, class: 'after:outline-2' },
 	],
 });
 
