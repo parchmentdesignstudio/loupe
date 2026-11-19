@@ -19,7 +19,7 @@ export declare const link: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 export type { LinkProps };
 /** A link to another page, or a place on this one. aria-current="page" marks the page you’re on */
 export declare function Link(props: LinkProps): import("react").JSX.Element;

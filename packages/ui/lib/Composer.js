@@ -5,7 +5,7 @@ import { Button } from './Button.js';
 import { tv } from './tv.js';
 const composer = tv({
     slots: {
-        group: 'flex items-end gap-2 rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) py-2 pr-3.5 pl-(--field-padding-x) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight]',
+        group: 'flex items-end gap-2 rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) py-2 pr-3.5 pl-(--field-padding-x) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2',
         // One line to begin with, growing with what's written up to about six, then it scrolls
         input: 'max-h-40 min-w-0 flex-1 resize-none bg-transparent py-2 text-control leading-6 text-(color:--field-text,var(--color-ink)) outline-none field-sizing-content placeholder:text-(color:--field-placeholder,var(--color-muted))',
         // Centres the send button on the line of text. It sits further in than the box's radius, so it takes the smallest

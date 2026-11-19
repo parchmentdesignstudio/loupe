@@ -4231,6 +4231,11 @@
     border-color: var(--color-ink);
   }
 
+  .group-data-\[show-focus\]\/row\:shadow-\[inset_0_2px_var\(--color-ink\)\,inset_0_-2px_var\(--color-ink\)\]:is(:where(.group\/row)[data-show-focus] *) {
+    --tw-shadow: inset 0 2px var(--tw-shadow-color, var(--color-ink)), inset 0 -2px var(--tw-shadow-color, var(--color-ink));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
   .group-data-\[size\=small\]\/toggle\:px-2:is(:where(.group\/toggle)[data-size="small"] *) {
     padding-inline: calc(var(--spacing) * 2);
   }
@@ -4649,6 +4654,16 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
+  .group-data-\[show-focus\]\/row\:first\:rounded-s-sm:is(:where(.group\/row)[data-show-focus] *):first-child {
+    border-start-start-radius: var(--radius-sm);
+    border-end-start-radius: var(--radius-sm);
+  }
+
+  .group-data-\[show-focus\]\/row\:first\:shadow-\[inset_0_2px_var\(--color-ink\)\,inset_0_-2px_var\(--color-ink\)\,inset_2px_0_var\(--color-ink\)\]:is(:where(.group\/row)[data-show-focus] *):first-child {
+    --tw-shadow: inset 0 2px var(--tw-shadow-color, var(--color-ink)), inset 0 -2px var(--tw-shadow-color, var(--color-ink)), inset 2px 0 var(--tw-shadow-color, var(--color-ink));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
   .last\:pr-4:last-child {
     padding-right: calc(var(--spacing) * 4);
   }
@@ -4663,7 +4678,17 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
-  .group-data-\[focus-visible\]\/row\:only\:shadow-\[inset_0_0_0_2px_var\(--color-ink\)\]:is(:where(.group\/row)[data-focus-visible] *):only-child {
+  .group-data-\[show-focus\]\/row\:last\:rounded-e-sm:is(:where(.group\/row)[data-show-focus] *):last-child {
+    border-start-end-radius: var(--radius-sm);
+    border-end-end-radius: var(--radius-sm);
+  }
+
+  .group-data-\[show-focus\]\/row\:last\:shadow-\[inset_0_2px_var\(--color-ink\)\,inset_0_-2px_var\(--color-ink\)\,inset_-2px_0_var\(--color-ink\)\]:is(:where(.group\/row)[data-show-focus] *):last-child {
+    --tw-shadow: inset 0 2px var(--tw-shadow-color, var(--color-ink)), inset 0 -2px var(--tw-shadow-color, var(--color-ink)), inset -2px 0 var(--tw-shadow-color, var(--color-ink));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .group-data-\[focus-visible\]\/row\:only\:shadow-\[inset_0_0_0_2px_var\(--color-ink\)\]:is(:where(.group\/row)[data-focus-visible] *):only-child, .group-data-\[show-focus\]\/row\:only\:shadow-\[inset_0_0_0_2px_var\(--color-ink\)\]:is(:where(.group\/row)[data-show-focus] *):only-child {
     --tw-shadow: inset 0 0 0 2px var(--tw-shadow-color, var(--color-ink));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
@@ -4698,6 +4723,18 @@
 
   :where([data-density="compact"]) .in-data-\[density\=compact\]\:py-1\.5 {
     padding-block: calc(var(--spacing) * 1.5);
+  }
+
+  :where([data-show-focus]) .in-data-\[show-focus\]\:scale-125 {
+    --tw-scale-x: 125%;
+    --tw-scale-y: 125%;
+    --tw-scale-z: 125%;
+    scale: var(--tw-scale-x) var(--tw-scale-y);
+  }
+
+  :where([data-show-focus]) .in-data-\[show-focus\]\:outline-2 {
+    outline-style: var(--tw-outline-style);
+    outline-width: 2px;
   }
 
   :where(.prose) .in-\[\.prose\]\:-ms-4 {
@@ -4775,6 +4812,31 @@
   .data-\[pressed\]\:before\:opacity-0\![data-pressed]:before, .data-\[selected\]\:before\:opacity-0\![data-selected]:before {
     content: var(--tw-content);
     opacity: 0 !important;
+  }
+
+  .data-\[show-focus\]\:outline-0[data-show-focus] {
+    outline-style: var(--tw-outline-style);
+    outline-width: 0;
+  }
+
+  .data-\[show-focus\]\:outline-2[data-show-focus] {
+    outline-style: var(--tw-outline-style);
+    outline-width: 2px;
+  }
+
+  .data-\[show-focus\]\:-outline-offset-8[data-show-focus] {
+    outline-offset: calc(8px * -1);
+  }
+
+  .data-\[show-focus\]\:before\:opacity-0\![data-show-focus]:before {
+    content: var(--tw-content);
+    opacity: 0 !important;
+  }
+
+  .data-\[show-focus\]\:after\:outline-2[data-show-focus]:after {
+    content: var(--tw-content);
+    outline-style: var(--tw-outline-style);
+    outline-width: 2px;
   }
 
   .data-\[stack-index\=0\]\:bg-\(--sheet-backdrop\,var\(--color-scrim\)\)[data-stack-index="0"] {
@@ -5302,6 +5364,21 @@
   [data-pressed] + .\[\[data-pressed\]\+\&\]\:before\:opacity-0\!:before, [data-selected] + .\[\[data-selected\]\+\&\]\:before\:opacity-0\!:before {
     content: var(--tw-content);
     opacity: 0 !important;
+  }
+
+  [data-show-focus] [tabindex="0"] > .\[\[data-show-focus\]_\[tabindex\=\"0\"\]\>\&\]\:outline-2 {
+    outline-style: var(--tw-outline-style);
+    outline-width: 2px;
+  }
+
+  [data-show-focus] + .\[\[data-show-focus\]\+\&\]\:before\:opacity-0\!:before {
+    content: var(--tw-content);
+    opacity: 0 !important;
+  }
+
+  [data-show-focus] > .\[\[data-show-focus\]\>\&\]\:outline-2 {
+    outline-style: var(--tw-outline-style);
+    outline-width: 2px;
   }
 
   td:first-child .\[td\:first-child_\&\]\:rounded-s-\(--calendar-day-radius\) {

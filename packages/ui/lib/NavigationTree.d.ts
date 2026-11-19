@@ -23,7 +23,7 @@ export declare const navigationTreeLink: import("tailwind-variants").TVReturnTyp
     isDisabled: {
         true: string;
     };
-}, undefined, "flex cursor-default items-center gap-2 rounded-(--navigation-tree-item-radius) px-(--navigation-tree-item-padding-x) py-(--navigation-tree-item-padding-y) text-control font-(--navigation-tree-item-font-weight) text-(color:--navigation-tree-item-text,var(--color-ink))", {
+}, undefined, "flex cursor-default items-center gap-2 rounded-(--navigation-tree-item-radius) px-(--navigation-tree-item-padding-x) py-(--navigation-tree-item-padding-y) text-control font-(--navigation-tree-item-font-weight) text-(color:--navigation-tree-item-text,var(--color-ink)) in-data-[show-focus]:outline-2", {
     isFocusVisible: {
         false: string;
         true: string;
@@ -33,7 +33,7 @@ export declare const navigationTreeLink: import("tailwind-variants").TVReturnTyp
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 /**
  * An item’s text, with the link React Aria gives each item laid over its row, so the text can sit beside the triangle that
  * opens it. The triangle is a button of its own, over the link rather than in it, so a screen reader can open and close it.

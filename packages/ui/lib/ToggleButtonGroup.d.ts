@@ -48,7 +48,7 @@ export declare const toggleButton: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 export interface ToggleButtonGroupProps extends AriaToggleButtonGroupProps {
     /** 32px tall, or 28px when small, like a button */
     size?: Size;

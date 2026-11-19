@@ -34,7 +34,7 @@ export declare const gridListItem: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>;
 export interface GridListProps<T> extends AriaGridListProps<T> {
     /** Stack lays the items out as rows, and grid as tiles that wrap. Give the list a className to set its own columns */
     layout?: Layout;

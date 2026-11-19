@@ -44,12 +44,12 @@ const divider = [
     'group-data-[orientation=vertical]/toggle:before:inset-x-3 group-data-[orientation=vertical]/toggle:before:inset-y-auto group-data-[orientation=vertical]/toggle:before:top-[calc(var(--gap)/-2-0.5px)] group-data-[orientation=vertical]/toggle:before:h-px group-data-[orientation=vertical]/toggle:before:w-auto',
     'group-data-[divided]/toggle:not-first:before:opacity-100',
     'data-[selected]:before:opacity-0! data-[pressed]:before:opacity-0! [[data-selected]+&]:before:opacity-0! [[data-pressed]+&]:before:opacity-0!',
-    'data-[focus-visible]:before:opacity-0! [[data-focus-visible]+&]:before:opacity-0!',
+    'data-[focus-visible]:before:opacity-0! [[data-focus-visible]+&]:before:opacity-0! data-[show-focus]:before:opacity-0! [[data-show-focus]+&]:before:opacity-0!',
 ];
 // In a group, the ring 2px out crosses into the next button, whose fill would cover that side of it, so it's drawn on
 // a layer above the buttons. Raising the button itself would also raise the fill that slides into it, over the labels
 // it passes
-const ringAbove = 'outline-0 after:pointer-events-none after:absolute after:inset-0 after:z-1 after:rounded-[inherit] after:outline-offset-2 after:outline-ink forced-colors:after:outline-[Highlight]';
+const ringAbove = 'outline-0 data-[show-focus]:outline-0 after:pointer-events-none after:absolute after:inset-0 after:z-1 after:rounded-[inherit] after:outline-offset-2 after:outline-ink forced-colors:after:outline-[Highlight] data-[show-focus]:after:outline-2';
 export const toggleButton = tv({
     extend: focusRing,
     base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control font-(--toggle-button-group-font-weight) text-muted [&>svg]:my-[calc((1lh-1rem)/2)] transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',

@@ -38,7 +38,7 @@ export declare const tableColumn: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>>;
 export declare const tableRow: import("tailwind-variants").TVReturnType<{
     isHovered: {
         true: string;
@@ -72,7 +72,7 @@ export declare const tableCell: import("tailwind-variants").TVReturnType<{}, und
         false: string;
         true: string;
     };
-}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight]", undefined, undefined, undefined>>>;
+}, undefined, "outline-offset-2 outline-ink forced-colors:outline-[Highlight] data-[show-focus]:outline-2", undefined, undefined, undefined>>>;
 export interface TableProps extends Omit<AriaTableProps, 'className'> {
     /** Compact rows are 32px, as tall as a control, for dense data. Comfortable rows are 40px */
     density?: Density;

@@ -7,7 +7,7 @@ import { composeClassName, focusRing, tv } from './tv.js';
 const SizeContext = createContext('medium');
 const trigger = tv({
     extend: focusRing,
-    base: 'flex w-full cursor-default items-center justify-between gap-4 rounded-sm text-left font-(--disclosure-header-font-weight) text-ink',
+    base: 'flex w-full cursor-default items-center justify-between gap-4 rounded-sm text-left font-(--disclosure-header-font-weight) text-ink in-data-[show-focus]:outline-2',
     variants: {
         size: {
             medium: 'py-(--disclosure-header-padding-y) text-base',

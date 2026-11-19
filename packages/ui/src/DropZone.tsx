@@ -43,6 +43,7 @@ export const dropZone = tv({
 		{ variant: 'dashed', isDropTarget: true, class: 'border-solid border-(color:--drop-zone-target,var(--color-ink)) bg-bleed/4 text-(color:--drop-zone-target,var(--color-ink))' },
 		// A quiet zone fills its panel, so its rings sit inside the edges rather than outside, where they'd be cut off
 		{ variant: 'quiet', isFocusVisible: true, class: '-outline-offset-8' },
+		{ variant: 'quiet', class: 'data-[show-focus]:-outline-offset-8' },
 		{ variant: 'quiet', isDropTarget: true, class: 'outline-2 -outline-offset-8 outline-dashed' },
 	],
 	defaultVariants: {
