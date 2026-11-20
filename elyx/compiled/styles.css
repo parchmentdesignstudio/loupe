@@ -89,6 +89,7 @@
     --radius-md: .375rem;
     --radius-lg: .5rem;
     --radius-xl: .75rem;
+    --radius-2xl: 1rem;
     --radius-3xl: 1.5rem;
     --ease-in: cubic-bezier(.4, 0, 1, 1);
     --ease-out: cubic-bezier(0, 0, .2, 1);
@@ -663,6 +664,12 @@
     --aside-afterthought-rule-width: 1px;
     --quote-font-family: var(--font-serif);
     --quote-font-size: 1.5rem;
+    --message-radius: var(--radius-2xl);
+    --message-padding-x: calc(var(--spacing) * 4);
+    --message-padding-top: calc(var(--spacing) * 1.25);
+    --message-padding-bottom: calc(var(--spacing) * 1.75);
+    --message-list-gap: calc(var(--spacing) * 6);
+    --suggestions-gap: calc(var(--spacing) * 2);
     --option-radius: var(--radius-sm);
     --option-selected-font-weight: 500;
     --option-list-padding: var(--spacing);
@@ -1575,6 +1582,10 @@
     max-width: 36ch;
   }
 
+  .max-w-\[85\%\] {
+    max-width: 85%;
+  }
+
   .max-w-\[max\(var\(--trigger-width\)\,20rem\)\] {
     max-width: max(var(--trigger-width), 20rem);
   }
@@ -1627,6 +1638,10 @@
     flex-shrink: 99;
   }
 
+  .basis-full {
+    flex-basis: 100%;
+  }
+
   .border-collapse {
     border-collapse: collapse;
   }
@@ -1655,6 +1670,10 @@
 
   .origin-\[center_150px\] {
     transform-origin: 50% 150px;
+  }
+
+  .origin-bottom-right {
+    transform-origin: 100% 100%;
   }
 
   .-translate-x-1\/2 {
@@ -1872,8 +1891,16 @@
     gap: var(--gap);
   }
 
+  .gap-\(--message-list-gap\) {
+    gap: var(--message-list-gap);
+  }
+
   .gap-\(--pagination-gap\) {
     gap: var(--pagination-gap);
+  }
+
+  .gap-\(--suggestions-gap\) {
+    gap: var(--suggestions-gap);
   }
 
   .gap-\(--tab-list-gap\) {
@@ -1924,6 +1951,10 @@
     gap: round(.307692em, 1px);
   }
 
+  .gap-x-2 {
+    column-gap: calc(var(--spacing) * 2);
+  }
+
   .gap-x-3 {
     column-gap: calc(var(--spacing) * 3);
   }
@@ -1954,6 +1985,10 @@
 
   .self-center {
     align-self: center;
+  }
+
+  .self-end {
+    align-self: flex-end;
   }
 
   .justify-self-start {
@@ -2060,6 +2095,10 @@
 
   .rounded-\(--keyboard-radius\) {
     border-radius: var(--keyboard-radius);
+  }
+
+  .rounded-\(--message-radius\) {
+    border-radius: var(--message-radius);
   }
 
   .rounded-\(--modal-radius\) {
@@ -2296,6 +2335,10 @@
 
   .bg-\(--keyboard-fill\,var\(--color-raised\)\) {
     background-color: var(--keyboard-fill, var(--color-raised));
+  }
+
+  .bg-\(--message-fill\,var\(--color-highlight\)\) {
+    background-color: var(--message-fill, var(--color-highlight));
   }
 
   .bg-\(--modal-backdrop\,color-mix\(in_oklab\,var\(--color-ground\)_88\%\,transparent\)\) {
@@ -2664,6 +2707,10 @@
     padding-inline: var(--keyboard-padding-x);
   }
 
+  .px-\(--message-padding-x\) {
+    padding-inline: var(--message-padding-x);
+  }
+
   .px-\(--navigation-tree-item-padding-x\) {
     padding-inline: var(--navigation-tree-item-padding-x);
   }
@@ -2820,6 +2867,10 @@
     padding-block: calc(var(--spacing) * 2);
   }
 
+  .py-2\.5 {
+    padding-block: calc(var(--spacing) * 2.5);
+  }
+
   .py-3 {
     padding-block: calc(var(--spacing) * 3);
   }
@@ -2888,6 +2939,10 @@
     padding-inline-end: calc(var(--spacing) * 2);
   }
 
+  .pt-\(--message-padding-top\) {
+    padding-top: var(--message-padding-top);
+  }
+
   .pt-0 {
     padding-top: 0;
   }
@@ -2934,6 +2989,10 @@
 
   .pb-\(--disclosure-panel-padding-bottom\) {
     padding-bottom: var(--disclosure-panel-padding-bottom);
+  }
+
+  .pb-\(--message-padding-bottom\) {
+    padding-bottom: var(--message-padding-bottom);
   }
 
   .pb-0\.5 {
@@ -3189,6 +3248,10 @@
     white-space: pre;
   }
 
+  .whitespace-pre-line {
+    white-space: pre-line;
+  }
+
   .text-\(--alert-icon\) {
     color: var(--alert-icon);
   }
@@ -3394,6 +3457,10 @@
 
   .opacity-48 {
     opacity: .48;
+  }
+
+  .opacity-50 {
+    opacity: .5;
   }
 
   .opacity-100 {
@@ -3650,6 +3717,18 @@
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
+  .transition-\[opacity\,translate\,scale\] {
+    transition-property: opacity, translate, scale;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
+  .transition-\[opacity\,translate\] {
+    transition-property: opacity, translate;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
   .transition-\[rotate\,opacity\] {
     transition-property: rotate, opacity;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
@@ -3722,6 +3801,10 @@
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
+  .delay-75 {
+    transition-delay: 75ms;
+  }
+
   .delay-300 {
     transition-delay: .3s;
   }
@@ -3774,6 +3857,11 @@
   .ease-out {
     --tw-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
+  }
+
+  .ease-spring {
+    --tw-ease: var(--ease-spring);
+    transition-timing-function: var(--ease-spring);
   }
 
   .will-change-transform {
@@ -4214,6 +4302,10 @@
     transition-timing-function: var(--ease-out);
   }
 
+  :is(.\*\:\[animation-fill-mode\:backwards\] > *) {
+    animation-fill-mode: backwards;
+  }
+
   .not-first\:mt-1\.5:not(:first-child) {
     margin-top: calc(var(--spacing) * 1.5);
   }
@@ -4272,6 +4364,11 @@
 
   .group-data-expanded\/drawer\:overflow-auto:is(:where(.group\/drawer)[data-expanded] *) {
     overflow: auto;
+  }
+
+  .group-data-hovered\/suggestion\:translate-x-0\.5:is(:where(.group\/suggestion)[data-hovered] *) {
+    --tw-translate-x: calc(var(--spacing) * .5);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
   }
 
   .group-data-\[disabled\]\/toggle\:bg-bleed\/12:is(:where(.group\/toggle)[data-disabled] *) {
@@ -4844,6 +4941,10 @@
     margin-top: auto;
   }
 
+  .data-hovered\:text-ink[data-hovered] {
+    color: var(--color-ink);
+  }
+
   .data-\[density\=compact\]\:scroll-pt-7[data-density="compact"] {
     scroll-padding-top: calc(var(--spacing) * 7);
   }
@@ -4935,6 +5036,28 @@
 
   .data-\[stack-index\=0\]\:bg-\(--drawer-backdrop\,var\(--color-scrim\)\)[data-stack-index="0"] {
     background-color: var(--drawer-backdrop, var(--color-scrim));
+  }
+
+  :is(.\*\:nth-2\:\[animation-delay\:40ms\] > *):nth-child(2) {
+    animation-delay: 40ms;
+  }
+
+  :is(.\*\:nth-3\:\[animation-delay\:80ms\] > *):nth-child(3) {
+    animation-delay: 80ms;
+  }
+
+  :is(.\*\:nth-4\:\[animation-delay\:120ms\] > *):nth-child(4) {
+    animation-delay: .12s;
+  }
+
+  :is(.\*\:nth-5\:\[animation-delay\:160ms\] > *):nth-child(5) {
+    animation-delay: .16s;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.\*\:motion-safe\:animate-fade-in > *) {
+      animation: var(--animate-fade-in);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -5051,6 +5174,10 @@
     }
   }
 
+  .rtl\:origin-bottom-left:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    transform-origin: 0 100%;
+  }
+
   .rtl\:-translate-x-full:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     --tw-translate-x: -100%;
     translate: var(--tw-translate-x) var(--tw-translate-y);
@@ -5089,6 +5216,34 @@
 
   .rtl\:\[--trail\:var\(--inset\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     --trail: var(--inset);
+  }
+
+  .rtl\:group-data-hovered\/suggestion\:-translate-x-0\.5:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *):is(:where(.group\/suggestion)[data-hovered] *) {
+    --tw-translate-x: calc(var(--spacing) * -.5);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
+  @starting-style {
+    .starting\:translate-y-1 {
+      --tw-translate-y: var(--spacing);
+      translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
+
+    .starting\:translate-y-2 {
+      --tw-translate-y: calc(var(--spacing) * 2);
+      translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
+
+    .starting\:scale-96 {
+      --tw-scale-x: 96%;
+      --tw-scale-y: 96%;
+      --tw-scale-z: 96%;
+      scale: var(--tw-scale-x) var(--tw-scale-y);
+    }
+
+    .starting\:opacity-0 {
+      opacity: 0;
+    }
   }
 
   @media (forced-colors: active) {
@@ -5432,6 +5587,10 @@
 
   .\[\&\>kbd\]\:shrink-0 > kbd {
     flex-shrink: 0;
+  }
+
+  .\[\&\>span\]\:w-full > span {
+    width: 100%;
   }
 
   .\[\&\>svg\]\:my-\[calc\(\(1lh-1rem\)\/2\)\] > svg {

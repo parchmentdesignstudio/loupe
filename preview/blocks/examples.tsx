@@ -22,6 +22,11 @@ import {
 	Column,
 	ComboBox,
 	Composer,
+	Message,
+	MessageList,
+	Suggestion,
+	Suggestions,
+	TextEffect,
 	DateField,
 	DatePicker,
 	Dialog,
@@ -184,6 +189,23 @@ export const examples: Record<string, () => ReactNode> = {
 		</ComboBox>
 	),
 	Composer: () => <Composer aria-label="Your message" submitIcon={<Icon name="arrow-up" />} onSubmit={() => {}} className="w-56" />,
+	Message: () => (
+		<MessageList aria-label="Conversation" className="w-56">
+			<Message from="user">What can I make with leeks?</Message>
+			<Message from="assistant">A leek and potato soup, in about 40 minutes</Message>
+		</MessageList>
+	),
+	Suggestions: () => (
+		<Suggestions aria-label="Suggested questions" className="w-56">
+			<Suggestion>What’s in season now?</Suggestion>
+			<Suggestion>Plan a week of lunches</Suggestion>
+		</Suggestions>
+	),
+	'Text effect': () => (
+		<TextEffect variant="ray" loop className="text-title">
+			Thinking
+		</TextEffect>
+	),
 	'Date field': () => <DateField label="Deadline" defaultValue={day} />,
 	'Date picker': () => <DatePicker label="Launch date" defaultValue={day} />,
 	'Drop zone': () => (
