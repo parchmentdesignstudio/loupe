@@ -72,7 +72,8 @@ export function Card({ fill = 'raised', media, title, description, actions, href
 					{media}
 				</div>
 			)}
-			<div className="flex flex-1 flex-col gap-0.5 px-2">
+			{/* First, with no image area over it, it takes 4px more at the top, to match the 12px under the card's buttons */}
+			<div className="flex flex-1 flex-col gap-0.5 px-2 first:pt-1">
 				<h3 className="text-control font-medium text-ink">
 					{href ? (
 						// The title is the link, so the card reads as one link named by its title, and its text can still be selected
