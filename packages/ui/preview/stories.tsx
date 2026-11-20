@@ -64,6 +64,8 @@ import { ColorSwatchPickerPlayground } from './playgrounds/color-swatch-picker.j
 import { ComboBoxPlayground } from './playgrounds/combo-box.js';
 import { ComposerPlayground } from './playgrounds/composer.js';
 import { TextEffectPlayground, Thinking } from './playgrounds/text-effect.js';
+import { MessagePlayground } from './playgrounds/message.js';
+import { SuggestionsPlayground } from './playgrounds/suggestions.js';
 import { DialogPlayground } from './playgrounds/dialog.js';
 import { DisclosurePlayground } from './playgrounds/disclosure.js';
 import { DropZonePlayground, FileStates } from './playgrounds/drop-zone.js';
@@ -613,7 +615,23 @@ const groups: Group[] = [
 				description: 'A message field with its send button',
 				exports: ['Composer'],
 				stories: [
-					{ name: 'Build one', render: ComposerPlayground },{ name: 'Sending', render: Sending }],
+					{ name: 'Build one', render: ComposerPlayground },
+					{ name: 'Sending', render: Sending },
+				],
+			},
+			{
+				id: 'message',
+				name: 'Message',
+				description: 'One message in a conversation. A person’s sits in a tinted bubble at the end of the row, and a reply is plain text across it. In a MessageList, a screen reader reads each out as it arrives',
+				exports: ['Message', 'MessageList'],
+				stories: [{ name: 'Build one', render: MessagePlayground }],
+			},
+			{
+				id: 'suggestions',
+				name: 'Suggestions',
+				description: 'Questions to press: raised starters for what to ask first, or plain follow-ups after a reply. Each fades in after the last, and a ray crosses a question as it changes',
+				exports: ['Suggestions', 'Suggestion'],
+				stories: [{ name: 'Build one', render: SuggestionsPlayground }],
 			},
 		],
 	},
@@ -1134,10 +1152,11 @@ const groups: Group[] = [
 const regrouped: Record<string, string[]> = {
 	Foundations: ['Colour', 'Prose', 'Text effect', 'Typography'],
 	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
-	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Composer', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
+	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
 	Data: ['Avatar', 'Code', 'Grid list', 'Swatch', 'Table', 'Tag group'],
 	Feedback: ['Alert', 'Empty state', 'Progress bar', 'Status', 'Toast'],
 	Writing: ['Aside', 'Quote'],
+	Conversation: ['Composer', 'Message', 'Suggestions'],
 	Overlays: ['Dialog', 'Menu', 'Popover', 'Preview trigger', 'Drawer', 'Tooltip'],
 	Navigation: ['Breadcrumbs', 'Disclosure', 'Link', 'Navigation', 'Navigation tree', 'Pagination', 'Tabs'],
 };

@@ -623,6 +623,38 @@
 		/* The size */
 		--quote-font-size: 1.5rem;
 
+		/* Message */
+
+		/* Shape */
+
+		/* A person's bubble's corners */
+		--message-radius: var(--radius-2xl);
+
+		/* Space */
+
+		/* The padding beside a bubble's text */
+		--message-padding-x: --spacing(4);
+		/* The padding above a bubble's text, a touch less than below, as the line's room for capitals sits above it */
+		--message-padding-top: --spacing(1.25);
+		/* The padding below it */
+		--message-padding-bottom: --spacing(1.75);
+		/* The space between messages */
+		--message-list-gap: --spacing(6);
+
+		/* Colour */
+
+		@media not all {
+			/* A person's bubble */
+			--message-fill: var(--color-highlight);
+		}
+
+		/* Suggestions */
+
+		/* Space */
+
+		/* The space between starter rows */
+		--suggestions-gap: --spacing(2);
+
 		/* Options: each choice in a menu, a select or a combo box, shared so they change together */
 
 		/* Shape */
