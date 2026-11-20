@@ -1,4 +1,6 @@
-import { Avatar, AvatarGroup, type AvatarShape, type AvatarSize, type AvatarStatus } from '../../src/index.js';
+import type { ReactElement } from 'react';
+import { Icon } from '@parchment/icons/react';
+import { Avatar, AvatarGroup, type AvatarBadgeTone, type AvatarShape, type AvatarSize, type AvatarStatus } from '../../src/index.js';
 import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, pick, useRemembered } from '../playground.js';
 import doris from '../assets/doris.jpg';
 import { marks } from '../logo.js';
@@ -28,6 +30,23 @@ const sizes = ['20', '24', '32', '48', '64'] as const;
 const images = ['off', 'on', 'broken'] as const;
 const statuses = ['none', 'online', 'away', 'busy'] as const;
 const shapes = ['circle', 'square'] as const satisfies readonly AvatarShape[];
+// What someone did, as a badge's icon and what it reads out
+const badges = {
+	none: undefined,
+	comment: { icon: 'bubble-left', label: 'commented' },
+	approved: { icon: 'checkmark', label: 'approved' },
+	editing: { icon: 'pencil-tip', label: 'editing' },
+} as const;
+type BadgeKind = keyof typeof badges;
+const badgeKinds = Object.keys(badges) as BadgeKind[];
+const tones = ['info', 'neutral', 'success', 'warning', 'danger'] as const satisfies readonly AvatarBadgeTone[];
+
+// A status or a badge, never both, as the props an avatar takes for its corner
+function corner(status: (typeof statuses)[number], badge: BadgeKind, tone: AvatarBadgeTone): { status?: AvatarStatus } | { badge: ReactElement; badgeLabel: string; badgeTone: AvatarBadgeTone } {
+	const chosen = badges[badge];
+	if (chosen) return { badge: <Icon name={chosen.icon} />, badgeLabel: chosen.label, badgeTone: tone };
+	return status === 'none' ? {} : { status: status as AvatarStatus };
+}
 
 export function AvatarPlayground() {
 	const [kind, setKind] = useRemembered('kind', 'person', kinds);
@@ -35,7 +54,18 @@ export function AvatarPlayground() {
 	const [image, setImage] = useRemembered('image', 'off', images);
 	const [size, setSize] = useRemembered('size', '48', sizes);
 	const [shape, setShape] = useRemembered<AvatarShape>('shape', 'circle', shapes);
-	const [status, setStatus] = useRemembered('status', 'none', statuses);
+	const [status, setStatusValue] = useRemembered('status', 'none', statuses);
+	const [badge, setBadgeValue] = useRemembered<BadgeKind>('badge', 'none', badgeKinds);
+	const [tone, setTone] = useRemembered<AvatarBadgeTone>('tone', 'info', tones);
+	// A status and a badge share the corner, so choosing one clears the other
+	const setStatus = (next: (typeof statuses)[number]) => {
+		setStatusValue(next);
+		if (next !== 'none') setBadgeValue('none');
+	};
+	const setBadge = (next: BadgeKind) => {
+		setBadgeValue(next);
+		if (next !== 'none') setStatusValue('none');
+	};
 	const [isGroup, setGroup] = useRemembered('isGroup', false);
 	const [count, setCount] = useRemembered('count', 6, (stored) => stored >= 1 && stored <= people.length);
 	const [max, setMax] = useRemembered('max', 4, (stored) => stored >= 0 && stored <= 20);
@@ -53,7 +83,9 @@ export function AvatarPlayground() {
 		setImage(pick(images));
 		setSize(pick(sizes));
 		setShape(next === 'organisation' ? 'square' : 'circle');
-		setStatus(pick(statuses));
+		if (Math.random() < 0.5) setStatus(pick(statuses));
+		else setBadge(pick(badgeKinds));
+		setTone(pick(tones));
 		setGroup(Math.random() < 0.4);
 		setCount(1 + Math.floor(Math.random() * 20));
 		setMax(Math.floor(Math.random() * 8));
@@ -85,6 +117,8 @@ export function AvatarPlayground() {
 					</ControlGroup>
 					<ControlGroup label="State">
 						<Choice label="Status" options={statuses} value={status} onChange={setStatus} />
+						<Choice label="Badge" options={badgeKinds} value={badge} onChange={setBadge} />
+						{badge !== 'none' && <Choice label="Badge tone" options={tones} value={tone} onChange={setTone} />}
 					</ControlGroup>
 				</>
 			}
@@ -92,11 +126,11 @@ export function AvatarPlayground() {
 			{isGroup ? (
 				<AvatarGroup size={Number(size) as AvatarSize} shape={shape} maxVisible={max || undefined}>
 					{[name, ...people.filter((person) => person !== name)].slice(0, count).map((person, index) => (
-						<Avatar key={person} name={person} src={index === 0 ? src : undefined} status={index === 0 && status !== 'none' ? (status as AvatarStatus) : undefined} />
+						<Avatar key={person} name={person} src={index === 0 ? src : undefined} {...(index === 0 ? corner(status, badge, tone) : {})} />
 					))}
 				</AvatarGroup>
 			) : (
-				<Avatar name={name} src={src} size={Number(size) as AvatarSize} shape={shape} status={status === 'none' ? undefined : status} />
+				<Avatar name={name} src={src} size={Number(size) as AvatarSize} shape={shape} {...corner(status, badge, tone)} />
 			)}
 		</Playground>
 	);
