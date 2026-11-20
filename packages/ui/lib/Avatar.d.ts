@@ -1,4 +1,4 @@
-import { type HTMLAttributes, type ReactNode } from 'react';
+import { type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 export declare const avatar: import("tailwind-variants").TVReturnType<{
     size: {
         '20': {
@@ -42,6 +42,33 @@ export declare const avatar: import("tailwind-variants").TVReturnType<{
             dot: string;
         };
     };
+    badgeTone: {
+        neutral: {
+            base: string[];
+            dot: string;
+        };
+        info: {
+            base: string[];
+            dot: string;
+        };
+        success: {
+            base: string[];
+            dot: string;
+        };
+        warning: {
+            base: string[];
+            dot: string;
+        };
+        danger: {
+            base: string[];
+            dot: string;
+        };
+    };
+    hasIcon: {
+        true: {
+            base: string;
+        };
+    };
     isCount: {
         false: string;
         true: string;
@@ -60,6 +87,7 @@ export declare const avatar: import("tailwind-variants").TVReturnType<{
 export type AvatarSize = 20 | 24 | 32 | 48 | 64;
 export type AvatarShape = 'circle' | 'square';
 export type AvatarStatus = 'online' | 'away' | 'busy';
+export type AvatarBadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 /** The tint a name always gets, the same on every visit, as a CSS variable from the palette */
 export declare function avatarTint(name: string): string;
 /**
@@ -69,7 +97,7 @@ export declare function avatarTint(name: string): string;
 export declare function initials(name: string, { max }?: {
     max?: 1 | 2;
 }): string;
-export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
+interface AvatarBaseProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
     /** Whose avatar it is. It names the avatar for screen readers, and gives the initials and the tint behind them */
     name: string;
     /** A photo or logo. The initials show until it loads, and stay if it fails */
@@ -78,13 +106,29 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'chil
     size?: AvatarSize;
     /** A circle for a person, a square for an organisation or project */
     shape?: AvatarShape;
+}
+interface AvatarStatusProps {
     /** A dot on the edge, read out after the name */
     status?: AvatarStatus;
     /** The status as read out, in place of “online”, “away” or “busy” */
     statusLabel?: string;
+    badge?: never;
+    badgeLabel?: never;
+    badgeTone?: never;
 }
+interface AvatarBadgeProps {
+    /** An icon in a badge on the edge, as for what someone did. At 20 and 24 there's no room for it, so the badge is a dot */
+    badge: ReactElement;
+    /** What the badge means, read out after the name, as “commented” */
+    badgeLabel: string;
+    /** The badge's colour, blue unless it's given another */
+    badgeTone?: AvatarBadgeTone;
+    status?: never;
+    statusLabel?: never;
+}
+export type AvatarProps = AvatarBaseProps & (AvatarStatusProps | AvatarBadgeProps);
 /** A person, as a round photo, or an organisation or project, as a square one, with their initials on a tint until the photo loads or if there isn’t one */
-export declare function Avatar({ name, src, size, shape, status, statusLabel, className, style, ...props }: AvatarProps): import("react").JSX.Element;
+export declare function Avatar({ name, src, size, shape, status, statusLabel, badge, badgeLabel, badgeTone, className, style, ...props }: AvatarProps): import("react").JSX.Element;
 export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
     /** Avatars, in the order they overlap */
     children: ReactNode;
@@ -106,3 +150,4 @@ export declare const avatarGroup: import("tailwind-variants").TVReturnType<{
  * count's fill is a tint of --avatar-ring, so set it to what the group sits on off the panel. It's named for screen readers by the people in it, as in “Sam Smith, Alex Lee and 3 others”, or by an aria-label
  */
 export declare function AvatarGroup({ children, maxVisible, size, shape, className, ...props }: AvatarGroupProps): import("react").JSX.Element;
+export {};

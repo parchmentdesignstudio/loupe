@@ -1,6 +1,6 @@
 // oxlint-disable jsx-a11y/prefer-tag-over-role -- an avatar is a picture built from a tint and initials, so a span with
 // role img, and a group of them isn't a form's fieldset
-import { Children, type CSSProperties, type HTMLAttributes, type ReactNode, createContext, isValidElement, useContext, useState } from 'react';
+import { Children, type CSSProperties, type HTMLAttributes, type ReactElement, type ReactNode, createContext, isValidElement, useContext, useState } from 'react';
 import { tv } from './tv.js';
 
 // The dot's centre, as the dot slot places it, with the gap around it see-through
@@ -41,19 +41,19 @@ export const avatar = tv({
 		// Its centre sits on the face's edge at 45°, a corner's radius times 1 - 1/√2 in from each side, so it hugs a
 		// circle and a square's rounded corner alike
 		dot: [
-			// Lifted, so in a group it stays over the next avatar
-			'absolute z-1 size-(--avatar-dot) rounded-full',
+			// Lifted, so in a group it stays over the next avatar. A badge's icon sits in its middle
+			'absolute z-1 flex size-(--avatar-dot) items-center justify-center rounded-full *:size-(--avatar-badge-icon)',
 			'end-[calc(var(--avatar-radius)*0.2929-var(--avatar-dot)/2)] bottom-[calc(var(--avatar-radius)*0.2929-var(--avatar-dot)/2)]',
-			'forced-colors:bg-[CanvasText]',
+			'forced-colors:bg-[CanvasText] forced-colors:text-[Canvas]',
 		],
 	},
 	variants: {
 		size: {
 			'20': { base: '[--avatar-dot:6px] [--avatar-radius:var(--radius-sm)] [--avatar-size:1.25rem]', face: 'text-[length:0.625rem] leading-none' },
 			'24': { base: '[--avatar-dot:8px] [--avatar-radius:var(--radius-md)] [--avatar-size:1.5rem]', face: 'text-[length:0.625rem] leading-none' },
-			'32': { base: '[--avatar-dot:10px] [--avatar-radius:var(--radius-lg)] [--avatar-size:2rem]', face: 'text-label leading-none' },
-			'48': { base: '[--avatar-dot:12px] [--avatar-radius:var(--radius-xl)] [--avatar-size:3rem]', face: 'text-[length:1.125rem] leading-none' },
-			'64': { base: '[--avatar-dot:16px] [--avatar-radius:1rem] [--avatar-size:4rem]', face: 'text-[length:1.5rem] leading-none' },
+			'32': { base: '[--avatar-badge:16px] [--avatar-badge-icon:10px] [--avatar-dot:10px] [--avatar-radius:var(--radius-lg)] [--avatar-size:2rem]', face: 'text-label leading-none' },
+			'48': { base: '[--avatar-badge:20px] [--avatar-badge-icon:12px] [--avatar-dot:12px] [--avatar-radius:var(--radius-xl)] [--avatar-size:3rem]', face: 'text-[length:1.125rem] leading-none' },
+			'64': { base: '[--avatar-badge:24px] [--avatar-badge-icon:16px] [--avatar-dot:16px] [--avatar-radius:1rem] [--avatar-size:4rem]', face: 'text-[length:1.5rem] leading-none' },
 		},
 		shape: {
 			circle: { base: '[--avatar-radius:calc(var(--avatar-size)/2)]' },
@@ -64,6 +64,19 @@ export const avatar = tv({
 			online: { base: dotMask, dot: 'bg-(--tone-success,var(--color-green-68))' },
 			away: { base: dotMask, dot: 'bg-(--tone-warning,var(--color-yellow-76))' },
 			busy: { base: dotMask, dot: 'bg-(--tone-danger,var(--color-red-67))' },
+		},
+		// A badge's colour, from the same tones as a status. Its icon is white on blue and red, and pine on the lighter
+		// three, so it passes 3:1 on each in the light and the dark alike
+		badgeTone: {
+			neutral: { base: dotMask, dot: 'bg-(--tone-neutral,var(--color-sand-66)) text-(--color-pine-20)' },
+			info: { base: dotMask, dot: 'bg-(--tone-info,var(--color-blue-56)) text-(--color-white)' },
+			success: { base: dotMask, dot: 'bg-(--tone-success,var(--color-green-68)) text-(--color-pine-20)' },
+			warning: { base: dotMask, dot: 'bg-(--tone-warning,var(--color-yellow-76)) text-(--color-pine-20)' },
+			danger: { base: dotMask, dot: 'bg-(--tone-danger,var(--color-red-67)) text-(--color-white)' },
+		},
+		// A badge with an icon is a dot grown to fit it, so its place and its gap follow from --avatar-dot as a status's do
+		hasIcon: {
+			true: { base: '[--avatar-dot:var(--avatar-badge)]' },
 		},
 		// The tint is a light step from the palette. In the light it's lifted to one lightness and softened, so every hue
 		// is as pale as the next, under a dark shade of its own hue, and in the dark the two swap, so the initials pass
@@ -85,6 +98,7 @@ export const avatar = tv({
 export type AvatarSize = 20 | 24 | 32 | 48 | 64;
 export type AvatarShape = 'circle' | 'square';
 export type AvatarStatus = 'online' | 'away' | 'busy';
+export type AvatarBadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
 // Soft, light steps from the palette, a few calm hues rather than the whole wheel
 const tints = ['--color-olive-91', '--color-teal-88', '--color-sky-85', '--color-violet-82', '--color-orange-89', '--color-red-87', '--color-yellow-91'];
@@ -124,7 +138,7 @@ const statusLabels: Record<AvatarStatus, string> = { online: 'online', away: 'aw
 
 const GroupContext = createContext<{ size?: AvatarSize; shape?: AvatarShape } | null>(null);
 
-export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
+interface AvatarBaseProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
 	/** Whose avatar it is. It names the avatar for screen readers, and gives the initials and the tint behind them */
 	name: string;
 	/** A photo or logo. The initials show until it loads, and stay if it fails */
@@ -133,22 +147,45 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'chil
 	size?: AvatarSize;
 	/** A circle for a person, a square for an organisation or project */
 	shape?: AvatarShape;
+}
+
+// A status and a badge sit in the same place, so an avatar takes one or the other
+interface AvatarStatusProps {
 	/** A dot on the edge, read out after the name */
 	status?: AvatarStatus;
 	/** The status as read out, in place of “online”, “away” or “busy” */
 	statusLabel?: string;
+	badge?: never;
+	badgeLabel?: never;
+	badgeTone?: never;
 }
 
+interface AvatarBadgeProps {
+	/** An icon in a badge on the edge, as for what someone did. At 20 and 24 there's no room for it, so the badge is a dot */
+	badge: ReactElement;
+	/** What the badge means, read out after the name, as “commented” */
+	badgeLabel: string;
+	/** The badge's colour, blue unless it's given another */
+	badgeTone?: AvatarBadgeTone;
+	status?: never;
+	statusLabel?: never;
+}
+
+export type AvatarProps = AvatarBaseProps & (AvatarStatusProps | AvatarBadgeProps);
+
 /** A person, as a round photo, or an organisation or project, as a square one, with their initials on a tint until the photo loads or if there isn’t one */
-export function Avatar({ name, src, size, shape, status, statusLabel, className, style, ...props }: AvatarProps) {
+export function Avatar({ name, src, size, shape, status, statusLabel, badge, badgeLabel, badgeTone = 'info', className, style, ...props }: AvatarProps) {
 	const group = useContext(GroupContext);
 	const [loaded, setLoaded] = useState<string>();
 	const [failed, setFailed] = useState<string>();
 	const resolvedSize = size ?? group?.size ?? 32;
-	const styles = avatar({ size: `${resolvedSize}`, shape: shape ?? group?.shape, status, isLoaded: src != null && loaded === src, isCount: false });
-	const label = status ? `${name}, ${statusLabel ?? statusLabels[status]}` : name;
+	const hasIcon = badge != null && resolvedSize >= 32;
+	const styles = avatar({ size: `${resolvedSize}`, shape: shape ?? group?.shape, status, badgeTone: badge == null ? undefined : badgeTone, hasIcon, isLoaded: src != null && loaded === src, isCount: false });
+	const label = status ? `${name}, ${statusLabel ?? statusLabels[status]}` : badge == null ? name : `${name}, ${badgeLabel}`;
+	// Marked so a group cuts the dot's gap from the avatar after it, at a badge's size when it's one
+	const hasDot = status != null || badge != null;
 	return (
-		<span role="img" aria-label={label} data-status={status} {...props} className={styles.base({ className })} style={{ '--tint': avatarTint(name), ...style } as CSSProperties}>
+		<span role="img" aria-label={label} data-status={hasDot ? (hasIcon ? 'badge' : 'dot') : undefined} {...props} className={styles.base({ className })} style={{ '--tint': avatarTint(name), ...style } as CSSProperties}>
 			<span className={styles.face()}>
 				<span aria-hidden="true">{initials(name, { max: resolvedSize === 20 ? 1 : 2 })}</span>
 				{src && failed !== src && (
@@ -166,7 +203,11 @@ export function Avatar({ name, src, size, shape, status, statusLabel, className,
 					/>
 				)}
 			</span>
-			{status && <span className={styles.dot()} />}
+			{hasDot && (
+				<span aria-hidden="true" className={styles.dot()}>
+					{hasIcon && badge}
+				</span>
+			)}
 		</span>
 	);
 }
@@ -190,7 +231,8 @@ export const avatarGroup = tv({
 		'inline-flex items-center align-top *:not-first:-ms-[calc(var(--avatar-size)/6)]',
 		// The avatar after one with a status has that dot's gap cut from it too, where the dot hangs over it
 		'[&>[data-status]+*]:[--avatar-under-dot-at:calc(var(--avatar-size)/6-var(--avatar-radius)*0.2929)] rtl:[&>[data-status]+*]:[--avatar-under-dot-at:calc(100%-var(--avatar-size)/6+var(--avatar-radius)*0.2929)]',
-		'[&>[data-status]+*]:[--avatar-under-dot-mask:radial-gradient(circle_at_var(--avatar-under-dot-at)_calc(100%-var(--avatar-radius)*0.2929),transparent_calc(var(--avatar-dot)/2+var(--avatar-gap)),#000_calc(var(--avatar-dot)/2+var(--avatar-gap)+0.5px))]',
+		'[&>[data-status=badge]+*]:[--avatar-under-dot:var(--avatar-badge)]',
+		'[&>[data-status]+*]:[--avatar-under-dot-mask:radial-gradient(circle_at_var(--avatar-under-dot-at)_calc(100%-var(--avatar-radius)*0.2929),transparent_calc(var(--avatar-under-dot,var(--avatar-dot))/2+var(--avatar-gap)),#000_calc(var(--avatar-under-dot,var(--avatar-dot))/2+var(--avatar-gap)+0.5px))]',
 	],
 	variants: {
 		shape: {

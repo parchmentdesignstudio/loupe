@@ -74,6 +74,16 @@ describe('Avatar', () => {
 		rerender(<Avatar name="Sam Smith" src="/sam.jpg" />);
 		expect(avatar.querySelector('img')).not.toBeNull();
 	});
+
+	it('reads a badge after the name, and drops its icon where there is no room for it', () => {
+		const { rerender } = render(<Avatar name="Sam Smith" badge={<svg data-testid="icon" />} badgeLabel="commented" />);
+		expect(screen.getByRole('img', { name: 'Sam Smith, commented' })).toBeTruthy();
+		expect(screen.getByTestId('icon')).toBeTruthy();
+
+		rerender(<Avatar name="Sam Smith" size={24} badge={<svg data-testid="icon" />} badgeLabel="commented" />);
+		expect(screen.getByRole('img', { name: 'Sam Smith, commented' })).toBeTruthy();
+		expect(screen.queryByTestId('icon')).toBeNull();
+	});
 });
 
 describe('AvatarGroup', () => {
@@ -123,6 +133,7 @@ describe('AvatarGroup', () => {
 			<div>
 				<Avatar name="Sam Smith" src="/sam.jpg" status="online" />
 				<Avatar name="Parchment" shape="square" size={48} />
+				<Avatar name="Doris Hart" size={48} badge={<svg />} badgeLabel="commented" badgeTone="success" />
 				<AvatarGroup maxVisible={3} size={24}>
 					{people.map((name) => (
 						<Avatar key={name} name={name} />
