@@ -90,7 +90,6 @@
     --radius-lg: .5rem;
     --radius-xl: .75rem;
     --radius-2xl: 1rem;
-    --radius-3xl: 1.5rem;
     --ease-in: cubic-bezier(.4, 0, 1, 1);
     --ease-out: cubic-bezier(0, 0, .2, 1);
     --ease-in-out: cubic-bezier(.4, 0, .2, 1);
@@ -681,7 +680,7 @@
     --modal-shadow: var(--shadow-overlay-color);
     --popover-radius: var(--radius-lg);
     --popover-shadow: var(--shadow-overlay-color);
-    --drawer-radius: var(--radius-3xl);
+    --drawer-radius: var(--radius-xl);
     --drawer-push-width: calc(var(--spacing) * 80);
     --drawer-shadow: var(--shadow-overlay-color);
     --tooltip-radius: var(--radius-lg);
@@ -1422,8 +1421,8 @@
     height: calc(var(--spacing) * .5);
   }
 
-  .h-1 {
-    height: var(--spacing);
+  .h-1\.5 {
+    height: calc(var(--spacing) * 1.5);
   }
 
   .h-2 {
@@ -1500,6 +1499,10 @@
 
   .w-2\/5 {
     width: 40%;
+  }
+
+  .w-3 {
+    width: calc(var(--spacing) * 3);
   }
 
   .w-5 {

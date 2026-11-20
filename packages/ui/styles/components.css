@@ -746,7 +746,7 @@
 		/* Shape */
 
 		/* The corners */
-		--drawer-radius: var(--radius-3xl);
+		--drawer-radius: var(--radius-xl);
 		/* How wide it is when it pushes the page aside */
 		--drawer-push-width: --spacing(80);
 
