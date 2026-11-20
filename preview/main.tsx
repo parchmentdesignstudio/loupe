@@ -13,8 +13,8 @@ import {
 	NavigationTree,
 	NavigationTreeItem,
 	NavigationTreeItemContent,
-	Sheet,
-	SheetTrigger,
+	Drawer,
+	DrawerTrigger,
 	Tooltip,
 	TooltipTrigger,
 } from '../src/index.js';
@@ -150,7 +150,7 @@ function More() {
 // On phones, the library's name and version, with search and the components
 function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void }) {
 	const [isOpen, setOpen] = useState(false);
-	// Choosing a page closes the sheet, to show it
+	// Choosing a page closes the drawer, to show it
 	const [shown, setShown] = useState(current);
 	if (shown !== current) {
 		setShown(current);
@@ -166,19 +166,19 @@ function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void
 			</div>
 			<div className="-mr-1.5 flex items-center gap-1">
 				<SearchButton onPress={onSearch} />
-				<SheetTrigger isOpen={isOpen} onOpenChange={setOpen}>
+				<DrawerTrigger isOpen={isOpen} onOpenChange={setOpen}>
 					<Button variant="ghost" shape="full" size="small" aria-label="Components">
 						<More />
 					</Button>
-					<Sheet position="end" aria-label="Components">
+					<Drawer position="end" aria-label="Components">
 						<div className="flex flex-col gap-6">
 							<Tree current={current} />
 							<div className="flex flex-col gap-6 px-3">
 								<SettingsPanels />
 							</div>
 						</div>
-					</Sheet>
-				</SheetTrigger>
+					</Drawer>
+				</DrawerTrigger>
 			</div>
 		</header>
 	);

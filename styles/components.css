@@ -642,7 +642,7 @@
 
 		/* Space */
 
-		/* The padding round what a dialog holds, which its actions' footer runs flush to. A sheet's too */
+		/* The padding round what a dialog holds, which its actions' footer runs flush to. A drawer's too */
 		--dialog-padding: --spacing(6);
 		/* The same for a dialog in a popover */
 		--dialog-popover-padding: --spacing(4);
@@ -696,26 +696,26 @@
 		/* The shadow's colour under it */
 		--popover-shadow: var(--shadow-overlay-color);
 
-		/* Sheet */
+		/* Drawer */
 
 		/* Shape */
 
 		/* The corners */
-		--sheet-radius: var(--radius-3xl);
+		--drawer-radius: var(--radius-3xl);
 
 		/* Colour */
 
 		@media not all {
 			/* The fill */
-			--sheet-fill: var(--color-overlay);
-			/* What covers the page behind the first sheet */
-			--sheet-backdrop: var(--color-scrim);
+			--drawer-fill: var(--color-overlay);
+			/* What covers the page behind the first drawer */
+			--drawer-backdrop: var(--color-scrim);
 		}
 
 		/* Shadow */
 
 		/* The shadow's colour under it */
-		--sheet-shadow: var(--shadow-overlay-color);
+		--drawer-shadow: var(--shadow-overlay-color);
 
 		/* Tooltip */
 

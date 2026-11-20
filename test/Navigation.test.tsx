@@ -37,12 +37,12 @@ describe('Navigation', () => {
 		expect(within(navigation).getByRole('link', { name: 'Chip' })).toBeTruthy();
 	});
 
-	it('opens the same links in a sheet from its button, for phones', async () => {
+	it('opens the same links in a drawer from its button, for phones', async () => {
 		const user = userEvent.setup();
 		render(<Components />);
 		await user.click(screen.getByRole('button', { name: 'Components' }));
-		const sheet = screen.getByRole('dialog', { name: 'Components' });
-		expect(within(sheet).getByRole('link', { name: 'Chip' })).toBeTruthy();
+		const drawer = screen.getByRole('dialog', { name: 'Components' });
+		expect(within(drawer).getByRole('link', { name: 'Chip' })).toBeTruthy();
 	});
 
 	it('leaves its button out for the page to open it from its own, and closes on a link', async () => {
@@ -51,8 +51,8 @@ describe('Navigation', () => {
 		render(<PageWithItsOwnButton onOpenChange={onOpenChange} />);
 		expect(screen.queryByRole('button', { name: 'Components' })).toBeNull();
 		await user.click(screen.getByRole('button', { name: 'Open the menu' }));
-		const sheet = screen.getByRole('dialog', { name: 'Components' });
-		await user.click(within(sheet).getByRole('link', { name: 'Chip' }));
+		const drawer = screen.getByRole('dialog', { name: 'Components' });
+		await user.click(within(drawer).getByRole('link', { name: 'Chip' }));
 		expect(onOpenChange).toHaveBeenLastCalledWith(false);
 	});
 

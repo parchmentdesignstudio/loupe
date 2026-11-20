@@ -1,4 +1,4 @@
-import { Button, DialogActions, DialogClose, DialogHeading, Sheet, SheetTrigger, TextField } from '../../src/index.js';
+import { Button, DialogActions, DialogClose, DialogHeading, Drawer, DrawerTrigger, TextField } from '../../src/index.js';
 import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { type Length, bodyOf, lengths } from './overlay.js';
 
@@ -7,11 +7,11 @@ const headings = ['none', 'short', 'long'] as const;
 const snaps = ['none', 'two', 'three'] as const;
 const titles = ['Rename project', 'Share link', 'Filters', 'Invite people', 'Settings'];
 
-// Snap points are how much of the sheet shows, so the last one is all of it
+// Snap points are how much of the drawer shows, so the last one is all of it
 const snapPointsOf = { none: undefined, two: ['50%', '100%'], three: ['25%', '60%', '100%'] };
 
-// A sheet covers the controls, so there's no keep-open switch. Stopping dismissal with no buttons left keeps a Done button
-export function SheetPlayground() {
+// A drawer covers the controls, so there's no keep-open switch. Stopping dismissal with no buttons left keeps a Done button
+export function DrawerPlayground() {
 	const [position, setPosition] = useRemembered('position', 'bottom', positions);
 	const [heading, setHeading] = useRemembered('heading', 'short', headings);
 	const [title, setTitle] = useRemembered('title', 'Rename project');
@@ -21,7 +21,7 @@ export function SheetPlayground() {
 	const [hasClose, setHasClose] = useRemembered('hasClose', true);
 	const [snap, setSnap] = useRemembered('snap', 'none', snaps);
 	const [preventDismissal, setPreventDismissal] = useRemembered('preventDismissal', false);
-	const [trigger, setTrigger] = useRemembered('trigger', 'Open sheet');
+	const [trigger, setTrigger] = useRemembered('trigger', 'Open drawer');
 	const isTrapped = preventDismissal && !hasClose && !hasActions;
 	const shuffle = () => {
 		setPosition(pick(positions));
@@ -60,9 +60,9 @@ export function SheetPlayground() {
 				</>
 			}
 		>
-			<SheetTrigger>
-				<Button variant="secondary">{trigger || 'Open sheet'}</Button>
-				<Sheet position={position} snapPoints={snapPointsOf[snap]} preventDismissal={preventDismissal} aria-label={heading === 'none' ? title || 'Sheet' : undefined}>
+			<DrawerTrigger>
+				<Button variant="secondary">{trigger || 'Open drawer'}</Button>
+				<Drawer position={position} snapPoints={snapPointsOf[snap]} preventDismissal={preventDismissal} aria-label={heading === 'none' ? title || 'Drawer' : undefined}>
 					{heading !== 'none' && <DialogHeading>{heading === 'long' ? longWords : title}</DialogHeading>}
 					{hasClose && <DialogClose />}
 					{bodyOf(body).map((text, index) => (
@@ -81,8 +81,8 @@ export function SheetPlayground() {
 							<Button slot="close">{hasActions ? 'Save' : 'Done'}</Button>
 						</DialogActions>
 					)}
-				</Sheet>
-			</SheetTrigger>
+				</Drawer>
+			</DrawerTrigger>
 		</Playground>
 	);
 }

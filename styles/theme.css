@@ -136,7 +136,7 @@
 	/* What raised turns on hover. In the light, a see-through dark linen, so it suits the ground or a panel under it
 	   rather than one of them. In the dark, a step lighter than raised, as each layer there is lighter than the last */
 	--color-surface: light-dark(color-mix(in oklab, var(--color-linen-18) 4%, transparent), var(--color-pine-29));
-	/* Popovers, menus, dialogs, sheets and floating toolbars. In the dark it's a control's fill, and its edges and shadow lift it */
+	/* Popovers, menus, dialogs, drawers and floating toolbars. In the dark it's a control's fill, and its edges and shadow lift it */
 	--color-overlay: light-dark(var(--color-white), var(--color-pine-24));
 	/* Ink as a surface, such as a toast or a tooltip, with paper text */
 	--color-inverse: var(--color-ink);
@@ -148,7 +148,7 @@
 	/* A pink tint that marks each chosen where several can be, and the text on it, a darker pink in the light so it reads on white */
 	--color-chosen-tint: light-dark(color-mix(in oklab, var(--color-pink-56) 12%, transparent), color-mix(in oklab, var(--color-pink-70) 18%, transparent));
 	--color-on-chosen-tint: light-dark(var(--color-pink-56), var(--color-pink-70));
-	/* Behind a sheet */
+	/* Behind a drawer */
 	--color-scrim: light-dark(color-mix(in oklab, var(--color-pine-26) 32%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 
 	/* Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
@@ -251,7 +251,7 @@
 	/* Most things round to 8px. A corner inside a rounded container is the container's less the space between them,
 	   so the two curves stay parallel: an option or menu item 4px into its 8px popover rounds to 4px, a toggle 2px
 	   into its 8px track rounds to 6px, as a checkbox does, and a toolbar holding 8px buttons 4px in rounds to 12px.
-	   The focus ring around a link or tab rounds to 4px too, and dialogs and sheets to 24px */
+	   The focus ring around a link or tab rounds to 4px too, and dialogs and drawers to 24px */
 	--radius-sm: 0.25rem;
 	--radius-md: 0.375rem;
 	--radius-lg: 0.5rem;
@@ -320,15 +320,15 @@
 	}
 }
 
-/* A sheet’s backdrop fades as it swipes, and a sheet with another on top steps back. React Aria
+/* A drawer’s backdrop fades as it swipes, and a drawer with another on top steps back. React Aria
    plays these by name, so no utility uses them and they sit outside @theme */
-@keyframes sheet-backdrop {
+@keyframes drawer-backdrop {
 	from {
 		opacity: 0;
 	}
 }
 
-@keyframes sheet-scale-back {
+@keyframes drawer-scale-back {
 	to {
 		transform: translateZ(-120px);
 	}
