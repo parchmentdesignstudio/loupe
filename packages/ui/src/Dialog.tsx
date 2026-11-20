@@ -27,7 +27,7 @@ export interface DialogActionsProps {
 
 export function DialogActions({ children }: DialogActionsProps) {
 	// The negative margins undo the padding of the dialog or drawer it's in
-	return <div className="-mx-(--dialog-padding) mt-(--dialog-padding) -mb-(--dialog-padding) flex flex-wrap justify-end gap-2 bg-(--dialog-actions-fill,var(--color-panel)) shadow-[inset_0_.5px_var(--color-scrim)] px-(--dialog-padding) py-4">{children}</div>;
+	return <div data-dialog-actions className="-mx-(--dialog-padding) mt-(--dialog-padding) -mb-(--dialog-padding) flex flex-wrap justify-end gap-2 bg-(--dialog-actions-fill,var(--color-panel)) shadow-[inset_0_.5px_var(--color-scrim)] px-(--dialog-padding) py-4">{children}</div>;
 }
 
 export interface DialogCloseProps {
