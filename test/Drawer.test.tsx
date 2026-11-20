@@ -41,6 +41,7 @@ function Chat({ wide = true }: { wide?: boolean }) {
 				<Drawer mode="push" aria-label="Chat">
 					<DialogHeading>Chat</DialogHeading>
 					<TextField label="Message" />
+					<Button variant="secondary">Attach</Button>
 				</Drawer>
 			</DrawerTrigger>
 			<p>{wide ? 'Wide' : 'Narrow'}</p>
@@ -83,6 +84,15 @@ describe('Drawer that pushes', () => {
 		await user.keyboard('{Escape}');
 		expect(button.getAttribute('aria-expanded')).toBe('false');
 		expect(document.activeElement).toBe(button);
+	});
+
+	it('stays open when a button inside it is pressed', async () => {
+		const user = userEvent.setup();
+		render(<Chat />);
+		const button = screen.getByRole('button', { name: 'Chat' });
+		await user.click(button);
+		await user.click(screen.getByRole('button', { name: 'Attach' }));
+		expect(button.getAttribute('aria-expanded')).toBe('true');
 	});
 
 	it('closes from its button too', async () => {
