@@ -1,0 +1,155 @@
+import { type CSSProperties, useLayoutEffect, useRef, useState } from 'react';
+import { tv } from './tv.js';
+
+// The ray: a band of light that splits into colours as it crosses text, as light through a prism, wiping what the text
+// said for what it says now. Where its light is, the text blurs, more towards its middle, which three blurred copies
+// of the text carry, each shown in a band around the ray. The text's own colour stays on either side of it, as the
+// text's fill is clear rather than its colour, so currentColor in the gradient is still the text's
+
+// In pixels a millisecond, so it crosses at the same pace whatever the text's length
+const PACE = 0.35;
+// Half the ray's width, its slant, and how far the blur trails behind it
+const RAY = 40;
+const SLANT = (105 * Math.PI) / 180;
+const TRAIL = 56;
+// The pause before it crosses again, when it loops
+const REST = 400;
+
+// The colours, written out so each token's read can be found
+const light = [
+	'linear-gradient(105deg, currentColor calc(var(--ray) - 40px)',
+	'var(--text-effect-ray-1,light-dark(var(--color-red-67),var(--color-red-81))) calc(var(--ray) - 24px)',
+	'var(--text-effect-ray-2,light-dark(var(--color-orange-72),var(--color-orange-89))) calc(var(--ray) - 10px)',
+	'var(--text-effect-ray-3,light-dark(var(--color-green-68),var(--color-green-89))) calc(var(--ray) + 6px)',
+	'var(--text-effect-ray-4,light-dark(var(--color-sky-69),var(--color-sky-85))) calc(var(--ray) + 18px)',
+	'var(--text-effect-ray-5,light-dark(var(--color-pink-70),var(--color-pink-87))) calc(var(--ray) + 28px)',
+	'currentColor calc(var(--ray) + 40px))',
+].join(', ');
+const painted: CSSProperties = { backgroundImage: light, backgroundClip: 'text', WebkitTextFillColor: 'transparent' };
+
+// What's new shows behind the ray, what it replaces ahead of it, and the sharp text fades out around the ray, where the
+// blurred copies take over. Each copy is padded 8px for its blur, so its ray is 8px further in
+const mask = (image: string): CSSProperties => ({ maskImage: image, WebkitMaskImage: image });
+const masks = {
+	now: mask('linear-gradient(90deg, #000 calc(var(--ray-x) - 8px), transparent calc(var(--ray-x) + 2px))'),
+	old: mask('linear-gradient(90deg, transparent calc(var(--ray-x) - 8px), #000 calc(var(--ray-x) + 2px))'),
+	sharp: mask('linear-gradient(90deg, #000 calc(var(--ray-x) - 56px), transparent calc(var(--ray-x) - 40px), transparent calc(var(--ray-x) + 14px), #000 calc(var(--ray-x) + 20px))'),
+};
+const blurs = [
+	{ blur: '0.5px', ...mask('linear-gradient(90deg, transparent calc(var(--blur-x) - 56px), #000 calc(var(--blur-x) - 40px), transparent calc(var(--blur-x) - 24px), transparent calc(var(--blur-x) + 8px), #000 calc(var(--blur-x) + 14px), transparent calc(var(--blur-x) + 20px))') },
+	{ blur: '1px', ...mask('linear-gradient(90deg, transparent calc(var(--blur-x) - 40px), #000 calc(var(--blur-x) - 24px), transparent calc(var(--blur-x) - 8px), transparent calc(var(--blur-x) + 2px), #000 calc(var(--blur-x) + 8px), transparent calc(var(--blur-x) + 14px))') },
+	{ blur: '2px', ...mask('linear-gradient(90deg, transparent calc(var(--blur-x) - 24px), #000 calc(var(--blur-x) - 8px), #000 calc(var(--blur-x) + 2px), transparent calc(var(--blur-x) + 8px))') },
+];
+
+const textEffect = tv({
+	slots: {
+		root: 'relative inline-grid max-w-full min-w-0 align-bottom',
+		line: 'grid min-w-0 [grid-area:1/1]',
+		// As wide as its text, to measure, and on one line, cut short where there isn't room
+		layer: 'max-w-full justify-self-start truncate [grid-area:1/1]',
+		copies: 'pointer-events-none absolute -inset-2 grid [--blur-x:calc(var(--ray-x)_+_8px)]',
+		copy: 'grid p-2 [grid-area:1/1]',
+	},
+});
+const slots = textEffect();
+
+export interface TextEffectProps {
+	/** The effect. Ray crosses the text as it changes, wiping what it said for what it says now */
+	variant?: 'ray';
+	/** The text, on one line, cut short where there isn't room. Each time it changes, the effect plays */
+	children: string;
+	/** Plays the effect over and over while it's true, such as while something is being worked on */
+	loop?: boolean;
+	/** How fast the ray crosses, in pixels a millisecond */
+	pace?: number;
+	className?: string;
+}
+
+const reducesMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * Text that changes with an effect, such as a ray of light that crosses it. With reduced motion, the text just changes
+ */
+export function TextEffect({ children, loop = false, pace = PACE, className }: TextEffectProps) {
+	const root = useRef<HTMLSpanElement>(null);
+	// What the text said, while the ray wipes it away, or null between crossings
+	const [old, setOld] = useState<string | null>(null);
+	const [shown, setShown] = useState(children);
+	if (children !== shown) {
+		setShown(children);
+		if (!reducesMotion()) setOld(old ?? shown);
+	}
+	// Looping, it crosses the text it already shows
+	const [rest, setRest] = useState(0);
+	if (loop && old === null && rest === 0 && !reducesMotion()) {
+		setRest(1);
+		setOld(children);
+	} else if (!loop && old === null && rest !== 0) setRest(0);
+
+	useLayoutEffect(() => {
+		const element = root.current;
+		if (old === null || !element) return;
+		const line = element.firstElementChild as HTMLElement;
+		const width = Math.max(0, ...[...line.children].map((layer) => (layer as HTMLElement).offsetWidth));
+		const height = line.offsetHeight;
+		const from = -RAY;
+		const to = width + TRAIL;
+		const duration = (to - from) / pace;
+		// The gradient runs at a slant, so the ray's middle along it is further than along the text
+		const aim = (x: number) => {
+			element.style.setProperty('--ray', `${(x * Math.sin(SLANT) + (height / 2) * Math.abs(Math.cos(SLANT))).toFixed(1)}px`);
+			element.style.setProperty('--ray-x', `${x.toFixed(1)}px`);
+		};
+		aim(from);
+		// Timed from its first frame, so in a hidden tab it waits to be seen
+		let start = -1;
+		let frame = requestAnimationFrame(function step(now) {
+			if (start < 0) start = now;
+			const progress = (now - start) / duration;
+			if (progress >= 1) {
+				setOld(null);
+				return;
+			}
+			aim(from + (to - from) * progress);
+			frame = requestAnimationFrame(step);
+		});
+		return () => cancelAnimationFrame(frame);
+	}, [old, pace]);
+
+	// Between loops it rests off the end of the text
+	useLayoutEffect(() => {
+		if (old !== null || rest === 0 || !loop) return;
+		const timer = setTimeout(() => setRest(0), REST);
+		return () => clearTimeout(timer);
+	}, [old, rest, loop]);
+
+	const isCrossing = old !== null;
+	return (
+		<span ref={root} className={slots.root({ className })}>
+			<span className={slots.line()} style={isCrossing ? masks.sharp : undefined}>
+				<span className={slots.layer()} style={isCrossing ? { ...painted, ...masks.now } : undefined}>
+					{children}
+				</span>
+				{isCrossing && (
+					<span aria-hidden className={slots.layer()} style={{ ...painted, ...masks.old }}>
+						{old}
+					</span>
+				)}
+			</span>
+			{isCrossing && (
+				<span aria-hidden className={slots.copies()}>
+					{blurs.map(({ blur, ...image }) => (
+						<span key={blur} className={slots.copy()} style={{ ...image, filter: `blur(${blur})` }}>
+							<span className={slots.layer()} style={{ ...painted, ...masks.now }}>
+								{children}
+							</span>
+							<span className={slots.layer()} style={{ ...painted, ...masks.old }}>
+								{old}
+							</span>
+						</span>
+					))}
+				</span>
+			)}
+		</span>
+	);
+}

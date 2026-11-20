@@ -54,6 +54,7 @@ export { Switch } from './Switch.js';
 export { Cell, Column, Row, RowActions, Table, TableBody, TableHeader, TableLoadMoreItem, table, tableCell, tableColumn, tableRow } from './Table.js';
 export { Tab, TabList, TabPanel, Tabs } from './Tabs.js';
 export { Tag, TagGroup, tag } from './TagGroup.js';
+export { TextEffect } from './TextEffect.js';
 export { TextField, textFieldInput } from './TextField.js';
 export { Toast, ToastQueue, ToastRegion } from './Toast.js';
 export { ToggleButton, ToggleButtonGroup, toggleButton, toggleButtonGroup } from './ToggleButtonGroup.js';
