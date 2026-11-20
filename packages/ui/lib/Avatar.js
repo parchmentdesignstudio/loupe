@@ -14,21 +14,28 @@ export const avatar = tv({
     slots: {
         // In a line of text it hangs from the line's top, so a 20px one fills a 20px line exactly where middle would push
         // the line a pixel or two taller. --avatar-edge is an outline button's edge, so a pale tint keeps its shape on the
-        // panel as a button does. --avatar-gap is the gap cut around a status dot and between avatars in a group
+        // ground as a button's does. --avatar-gap is the gap cut around a status dot and between avatars in a group
         base: 'relative inline-flex shrink-0 align-top [--avatar-gap:2px] [--avatar-edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_8%,transparent))]',
         face: [
-            'relative flex size-(--avatar-size) items-center justify-center overflow-hidden rounded-(--avatar-radius) bg-(color:--avatar-fill) font-(--avatar-font-weight) text-(color:--avatar-text) shadow-[inset_0_0_0_1px_var(--avatar-edge)] select-none',
+            'relative flex size-(--avatar-size) items-center justify-center overflow-hidden rounded-(--avatar-radius) bg-(color:--avatar-fill) font-(--avatar-font-weight) text-(color:--avatar-text) select-none',
+            // The edge is a see-through border with the fill clipped inside it, so like a button's it darkens whatever the
+            // avatar sits on rather than the tint, and a cut gap takes it along
+            'border border-(color:--avatar-edge) bg-clip-padding',
             // Gaps are cut from the face rather than drawn as rings in the colour behind it, so they show whatever it sits on.
-            // Each mask is see-through where it cuts, and they meet as one: its own dot, the next avatar over it, and the dot
-            // of the one before, which hangs over it
-            '[mask-composite:intersect] [mask-image:var(--avatar-dot-mask,linear-gradient(#000,#000)),var(--avatar-overlap-mask,linear-gradient(#000,#000)),var(--avatar-under-dot-mask,linear-gradient(#000,#000))]',
-            'forced-colors:border forced-colors:border-[CanvasText]',
+            // Its own dot's gap and the gap for the dot of the avatar before it, which hangs over it, are kept where they
+            // aren't cut. Below them, the next avatar's outline, grown by the gap, is built from up to four shapes and cut
+            // from the whole: a circle for a circle, and for a square its band, its straight edge and its two corners
+            '[mask-image:var(--avatar-dot-mask,linear-gradient(#000,#000)),var(--avatar-under-dot-mask,linear-gradient(#000,#000)),linear-gradient(#000,#000),var(--avatar-cut-1,linear-gradient(#0000,#0000)),var(--avatar-cut-2,linear-gradient(#0000,#0000)),var(--avatar-cut-3,linear-gradient(#0000,#0000)),var(--avatar-cut-4,linear-gradient(#0000,#0000))]',
+            '[mask-composite:intersect,intersect,subtract,add,add,add,add] mask-no-repeat',
+            // The straight edge runs between the corners, so its layer is shortened to fit between them
+            '[mask-size:100%_100%,100%_100%,100%_100%,100%_100%,var(--avatar-cut-2-size,100%_100%),100%_100%,100%_100%]',
+            '[mask-position:0_0,0_0,0_0,0_0,var(--avatar-cut-2-at,0_0),0_0,0_0]',
+            'forced-colors:border-[CanvasText]',
         ],
         // Over the initials, and see-through until it loads, so a slow or broken image never shows a broken icon or shifts anything
         image: [
-            'absolute inset-0 size-full rounded-[inherit] object-cover opacity-0 transition-opacity duration-150 ease-out motion-reduce:transition-none',
-            // An image's edge, so a pale photo keeps its shape: black at 10% in the light, white in the dark, never a tint
-            'outline-1 -outline-offset-1 outline-[color:light-dark(color-mix(in_oklab,var(--color-black)_10%,transparent),color-mix(in_oklab,var(--color-white)_10%,transparent))]',
+            // Inside the edge, which keeps a pale photo's shape as it keeps a tint's
+            'absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-150 ease-out motion-reduce:transition-none',
         ],
         // Its centre sits on the face's edge at 45°, a corner's radius times 1 - 1/√2 in from each side, so it hugs a
         // circle and a square's rounded corner alike
@@ -124,8 +131,8 @@ export function Avatar({ name, src, size, shape, status, statusLabel, className,
                         }, onLoad: () => setLoaded(src), onError: () => setFailed(src), className: styles.image() }, src))] }), status && _jsx("span", { className: styles.dot() })] }));
 }
 // Each overlaps the one before by a sixth of its size, which keeps both initials clear of the gap. Every one but the
-// last has the next one's shape cut from it, a gap wider: a circle round the next circle, or a straight edge before
-// the next square. The size is read from each avatar itself
+// last has the next one's outline cut from it, a gap wider, as the face's mask builds it. The size is read from each
+// avatar itself
 export const avatarGroup = tv({
     base: [
         'inline-flex items-center align-top *:not-first:-ms-[calc(var(--avatar-size)/6)]',
@@ -137,11 +144,17 @@ export const avatarGroup = tv({
         shape: {
             circle: [
                 '*:not-last:[--avatar-overlap-at:calc(100%+var(--avatar-size)/3)] rtl:*:not-last:[--avatar-overlap-at:calc(var(--avatar-size)/-3)]',
-                '*:not-last:[--avatar-overlap-mask:radial-gradient(circle_at_var(--avatar-overlap-at)_50%,transparent_calc(var(--avatar-size)/2+var(--avatar-gap)),#000_calc(var(--avatar-size)/2+var(--avatar-gap)+0.5px))]',
+                '*:not-last:[--avatar-cut-1:radial-gradient(circle_at_var(--avatar-overlap-at)_50%,#000_calc(var(--avatar-size)/2+var(--avatar-gap)),#0000_calc(var(--avatar-size)/2+var(--avatar-gap)+0.5px))]',
             ],
+            // The next square starts a sixth of the size in from this one's end. --avatar-corner-at is its corners' centres
+            // across, and the edge's layer runs between their centres down
             square: [
-                '*:not-last:[--avatar-overlap-to:to_right] rtl:*:not-last:[--avatar-overlap-to:to_left]',
-                '*:not-last:[--avatar-overlap-mask:linear-gradient(var(--avatar-overlap-to),#000_calc(100%-var(--avatar-size)/6-var(--avatar-gap)),transparent_0)]',
+                '*:not-last:[--avatar-overlap-to:to_right] *:not-last:[--avatar-corner-at:calc(100%-var(--avatar-size)/6+var(--avatar-radius))]',
+                'rtl:*:not-last:[--avatar-overlap-to:to_left] rtl:*:not-last:[--avatar-corner-at:calc(var(--avatar-size)/6-var(--avatar-radius))]',
+                '*:not-last:[--avatar-cut-1:linear-gradient(var(--avatar-overlap-to),#0000_calc(100%-var(--avatar-size)/6+var(--avatar-radius)),#000_0)]',
+                '*:not-last:[--avatar-cut-2:linear-gradient(var(--avatar-overlap-to),#0000_calc(100%-var(--avatar-size)/6-var(--avatar-gap)),#000_0)] *:not-last:[--avatar-cut-2-size:100%_calc(100%-var(--avatar-radius)*2)] *:not-last:[--avatar-cut-2-at:0_var(--avatar-radius)]',
+                '*:not-last:[--avatar-cut-3:radial-gradient(circle_at_var(--avatar-corner-at)_var(--avatar-radius),#000_calc(var(--avatar-radius)+var(--avatar-gap)),#0000_calc(var(--avatar-radius)+var(--avatar-gap)+0.5px))]',
+                '*:not-last:[--avatar-cut-4:radial-gradient(circle_at_var(--avatar-corner-at)_calc(100%-var(--avatar-radius)),#000_calc(var(--avatar-radius)+var(--avatar-gap)),#0000_calc(var(--avatar-radius)+var(--avatar-gap)+0.5px))]',
             ],
         },
     },
