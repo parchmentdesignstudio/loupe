@@ -16,9 +16,14 @@ export interface DrawerProps extends Omit<SheetOverlayProps, 'children'> {
     mode?: 'overlay' | 'push';
     /** The window width a pushing drawer pushes from. Below it, it's an overlay */
     pushFrom?: keyof typeof breakpoints;
+    /**
+     * How the page beside a pushing drawer rewraps. Once, the drawer slides over it and it rewraps a single time, which
+     * suits text. Continuous, it's squeezed as the drawer opens, rewrapping all the way, which suits a page of little text
+     */
+    reflow?: 'once' | 'continuous';
 }
 /**
  * A panel that slides in from an edge of the screen, opened by the Button beside it in a DrawerTrigger. Over the page,
  * it swipes back out. Pushing the page aside, the Button closes it again, as does Escape
  */
-export declare function Drawer({ mode, pushFrom, ...props }: DrawerProps): import("react").JSX.Element;
+export declare function Drawer({ mode, pushFrom, reflow, ...props }: DrawerProps): import("react").JSX.Element;
