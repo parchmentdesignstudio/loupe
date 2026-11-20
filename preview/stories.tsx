@@ -63,6 +63,7 @@ import { ColorSliderPlayground } from './playgrounds/color-slider.js';
 import { ColorSwatchPickerPlayground } from './playgrounds/color-swatch-picker.js';
 import { ComboBoxPlayground } from './playgrounds/combo-box.js';
 import { ComposerPlayground } from './playgrounds/composer.js';
+import { TextEffectPlayground, Thinking } from './playgrounds/text-effect.js';
 import { DialogPlayground } from './playgrounds/dialog.js';
 import { DisclosurePlayground } from './playgrounds/disclosure.js';
 import { DropZonePlayground, FileStates } from './playgrounds/drop-zone.js';
@@ -450,6 +451,16 @@ const groups: Group[] = [
 					{ name: 'Sand, for the cream ground', render: () => <Greys name="sand" />, ground: 'scheme-light bg-ground text-ink' },
 					{ name: 'Grey, for white', render: () => <Greys name="grey" />, ground: 'scheme-light bg-white text-ink outline-1 -outline-offset-1 outline-bleed/8 [--bleed:var(--panel-bleed)]' },
 					{ name: 'Worked out for the roles', render: Derived },
+				],
+			},
+			{
+				id: 'text-effect',
+				name: 'Text effect',
+				description: 'Text that changes with an effect. Ray crosses it as a band of light split into colours, wiping what it said for what it says now, and loops while something is being worked on. With reduced motion, the text just changes',
+				exports: ['TextEffect'],
+				stories: [
+					{ name: 'Build one', render: TextEffectPlayground },
+					{ name: 'While it thinks', render: Thinking },
 				],
 			},
 			{
@@ -1121,7 +1132,7 @@ const groups: Group[] = [
 // Grouped by what you're building rather than by kind of control, so a form's pieces are all in one place. The groups
 // go in the order you'd build in, and each one's pages A to Z
 const regrouped: Record<string, string[]> = {
-	Foundations: ['Colour', 'Prose', 'Typography'],
+	Foundations: ['Colour', 'Prose', 'Text effect', 'Typography'],
 	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
 	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Composer', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
 	Data: ['Avatar', 'Code', 'Grid list', 'Swatch', 'Table', 'Tag group'],

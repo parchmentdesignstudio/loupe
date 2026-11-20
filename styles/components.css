@@ -13,6 +13,19 @@
    as Shape, Type, Space, Colour, Shadow and Motion, in that order, and the line above each token says what it changes */
 @layer base {
 	:root {
+		/* TextEffect */
+
+		/* Colour */
+
+		@media not all {
+			/* The ray's colours, from its leading edge to its trailing one. Either side of them is the text's own colour */
+			--text-effect-ray-1: light-dark(var(--color-red-67), var(--color-red-81));
+			--text-effect-ray-2: light-dark(var(--color-orange-72), var(--color-orange-89));
+			--text-effect-ray-3: light-dark(var(--color-green-68), var(--color-green-89));
+			--text-effect-ray-4: light-dark(var(--color-sky-69), var(--color-sky-85));
+			--text-effect-ray-5: light-dark(var(--color-pink-70), var(--color-pink-87));
+		}
+
 		/* Button */
 
 		/* Shape */
