@@ -1,16 +1,18 @@
 import { Avatar, AvatarGroup, type AvatarShape, type AvatarSize, type AvatarStatus } from '../../src/index.js';
 import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, TextControl, pick, useRemembered } from '../playground.js';
 import doris from '../assets/doris.jpg';
+import { marks } from '../logo.js';
 
-// Bundled rather than fetched so the preview works offline: Doris, a real photo cropped to her head, and a logo for an
-// organisation. Everyone else shows their initials
+// Bundled rather than fetched so the preview works offline: Doris, a real photo cropped to her head, and Parchment's
+// mark as its app icon has it, chalk with an apricot curl on pine. Everyone else shows their initials
 export const photo = doris;
-export const logo = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#0c2920"/><path d="M20 44V20h14a8 8 0 0 1 0 16H26" fill="none" stroke="#f5c03c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>')}`;
+export const logo = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" fill="#0c2920"/><g transform="translate(5.4 5.4) scale(.55)"><path d="${marks[24].curl}" fill="#f68543"/><path d="${marks[24].page}" fill="#fcfafa"/></g></svg>`)}`;
 // A path that's never there, to see the initials stay put when an image fails
 const broken = '/no-such-photo.jpg';
 
 export const names = {
-	person: 'Sam Smith',
+	person: 'Doris Hart',
+	organisation: 'Parchment',
 	long: 'Maria Fernanda de los Ángeles García-Villalobos',
 	single: 'Cher',
 	emoji: '🦊 Fox',
@@ -37,16 +39,20 @@ export function AvatarPlayground() {
 	const [isGroup, setGroup] = useRemembered('isGroup', false);
 	const [count, setCount] = useRemembered('count', 6, (stored) => stored >= 1 && stored <= people.length);
 	const [max, setMax] = useRemembered('max', 4, (stored) => stored >= 0 && stored <= 20);
+	// An organisation is square, so picking one squares it, and picking a person after it rounds it again
 	const chooseKind = (next: NameKind) => {
+		if (next === 'organisation' || kind === 'organisation') setShape(next === 'organisation' ? 'square' : 'circle');
 		setKind(next);
 		setName(names[next]);
 	};
-	const src = image === 'on' ? (shape === 'square' ? logo : photo) : image === 'broken' ? broken : undefined;
+	const src = image === 'on' ? (kind === 'organisation' ? logo : photo) : image === 'broken' ? broken : undefined;
 	const shuffle = () => {
-		chooseKind(pick(kinds));
+		const next = pick(kinds);
+		setKind(next);
+		setName(names[next]);
 		setImage(pick(images));
 		setSize(pick(sizes));
-		setShape(Math.random() < 0.3 ? 'square' : 'circle');
+		setShape(next === 'organisation' ? 'square' : 'circle');
 		setStatus(pick(statuses));
 		setGroup(Math.random() < 0.4);
 		setCount(1 + Math.floor(Math.random() * 20));

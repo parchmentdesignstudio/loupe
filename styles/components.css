@@ -381,8 +381,8 @@
 
 		/* Type */
 
-		/* The initials' weight */
-		--avatar-font-weight: 500;
+		/* The initials' weight, bold as a page's title */
+		--avatar-font-weight: 700;
 
 		/* Code */
 

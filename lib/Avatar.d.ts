@@ -30,12 +30,15 @@ export declare const avatar: import("tailwind-variants").TVReturnType<{
     };
     status: {
         online: {
+            base: string[];
             dot: string;
         };
         away: {
+            base: string[];
             dot: string;
         };
         busy: {
+            base: string[];
             dot: string;
         };
     };
@@ -46,11 +49,6 @@ export declare const avatar: import("tailwind-variants").TVReturnType<{
     isLoaded: {
         true: {
             image: string;
-        };
-    };
-    isGrouped: {
-        true: {
-            face: string;
         };
     };
 }, {
@@ -97,10 +95,14 @@ export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, '
     /** Every avatar's shape */
     shape?: AvatarShape;
 }
-export declare const avatarGroup: import("tailwind-variants").TVReturnType<{}, undefined, "inline-flex items-center align-top *:not-first:-ms-[calc(var(--avatar-size)/6)]", undefined, undefined, undefined>;
+export declare const avatarGroup: import("tailwind-variants").TVReturnType<{
+    shape: {
+        circle: string[];
+        square: string[];
+    };
+}, undefined, string[], undefined, undefined, undefined>;
 /**
- * Avatars overlapping in a row, each parted from the next by a ring in the colour of what it sits on: set
- * --avatar-ring to that colour off the panel. It's named for screen readers by the people in it, as in “Sam Smith,
- * Alex Lee and 3 others”, or by an aria-label
+ * Avatars overlapping in a row, each parted from the next by a gap cut from it, so they sit on any colour. The
+ * count's fill is a tint of --avatar-ring, so set it to what the group sits on off the panel. It's named for screen readers by the people in it, as in “Sam Smith, Alex Lee and 3 others”, or by an aria-label
  */
 export declare function AvatarGroup({ children, maxVisible, size, shape, className, ...props }: AvatarGroupProps): import("react").JSX.Element;
