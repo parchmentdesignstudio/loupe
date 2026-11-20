@@ -26,7 +26,7 @@ import {
 	RowActions,
 	MenuSeparator,
 	SearchField,
-	Sheet,
+	Drawer,
 	Status,
 	type StatusTone,
 	SubmenuTrigger,
@@ -405,9 +405,9 @@ function StatusCell({ lead }: { lead: Lead }) {
 	);
 }
 
-function LeadSheet({ lead, onClose }: { lead?: Lead; onClose: () => void }) {
+function LeadDrawer({ lead, onClose }: { lead?: Lead; onClose: () => void }) {
 	return (
-		<Sheet isOpen={lead != null} onOpenChange={(isOpen) => !isOpen && onClose()} position="right">
+		<Drawer isOpen={lead != null} onOpenChange={(isOpen) => !isOpen && onClose()} position="right">
 			{lead && (
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-2">
@@ -439,7 +439,7 @@ function LeadSheet({ lead, onClose }: { lead?: Lead; onClose: () => void }) {
 					</div>
 				</div>
 			)}
-		</Sheet>
+		</Drawer>
 	);
 }
 
@@ -606,7 +606,7 @@ export function LeadsScreen() {
 					))}
 				</Tabs>
 			</div>
-			<LeadSheet lead={opened} onClose={() => setOpened(undefined)} />
+			<LeadDrawer lead={opened} onClose={() => setOpened(undefined)} />
 		</div>
 	);
 }

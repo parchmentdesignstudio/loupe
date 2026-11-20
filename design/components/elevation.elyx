@@ -245,7 +245,7 @@ export floating = frame {
 }
 
 export overlay = frame {
-  caption: "Popovers and menus. Dialogs and sheets round to radius-3xl",
+  caption: "Popovers and menus. Dialogs and drawers round to radius-3xl",
   left: 1040px,
   top: 0px,
   width: 160px,

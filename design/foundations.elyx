@@ -703,7 +703,7 @@ lengthsSpecimen = frame {
         }
 
         cornerUse {
-          contents: "24px: dialogs and sheets"
+          contents: "24px: dialogs and drawers"
         }
       }
     }

@@ -7,8 +7,8 @@ import { TreeSections, buildTree, depths, itemCounts, parentIds, sectionCounts }
 const heights = ['short', 'tall'] as const;
 const heightClass = { short: 'h-72', tall: 'h-[36rem]' };
 
-// Navigation is a column from md up and a button that opens a sheet below it, by the window's width rather than the
-// box's, so narrow the window to see the sheet. Its height is the screen's, so here it fills a frame instead
+// Navigation is a column from md up and a button that opens a drawer below it, by the window's width rather than the
+// box's, so narrow the window to see the drawer. Its height is the screen's, so here it fills a frame instead
 export function NavigationPlayground() {
 	const [label, setLabel] = useRemembered('label', 'Pages');
 	const [hasTitle, setTitle] = useRemembered('hasTitle', true);

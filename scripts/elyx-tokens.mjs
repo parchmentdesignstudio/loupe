@@ -38,7 +38,7 @@ const levels = {
   button: { fill: 'raised', corners: 'radius-lg', caption: 'Buttons, raised with a 1px edge' },
   'button-lifted': { fill: 'raised', corners: 'radius-lg', caption: 'A button hovered, lifted a little' },
   floating: { fill: 'overlay', corners: 'radius-xl', caption: 'Floating toolbars' },
-  overlay: { fill: 'overlay', corners: 'radius-lg', caption: 'Popovers and menus. Dialogs and sheets round to radius-3xl' },
+  overlay: { fill: 'overlay', corners: 'radius-lg', caption: 'Popovers and menus. Dialogs and drawers round to radius-3xl' },
   handle: { fill: 'knob', corners: 'radius-3xl', caption: 'A switch or slider handle, lifted off its well' },
   invalid: { fill: 'raised', corners: 'radius-lg', caption: 'A field whose value is wrong' },
 }

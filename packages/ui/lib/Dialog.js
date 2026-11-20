@@ -15,7 +15,7 @@ export function DialogHeading(props) {
     return _jsx(Heading, { slot: "title", ...props, className: heading({ className: props.className }) });
 }
 export function DialogActions({ children }) {
-    // The negative margins undo the padding of the dialog or sheet it's in
+    // The negative margins undo the padding of the dialog or drawer it's in
     return _jsx("div", { className: "-mx-(--dialog-padding) mt-(--dialog-padding) -mb-(--dialog-padding) flex flex-wrap justify-end gap-2 bg-(--dialog-actions-fill,var(--color-panel)) shadow-[inset_0_.5px_var(--color-scrim)] px-(--dialog-padding) py-4", children: children });
 }
 /** A close button for a dialog's corner */

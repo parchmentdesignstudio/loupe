@@ -34,7 +34,7 @@ export dark-colors = tokens : base.colors {
   // What raised turns on hover. In the light, a see-through dark linen, so it suits the ground or a panel under it
   // rather than one of them. In the dark, a step lighter than raised, as each layer there is lighter than the last
   surface: base.colors.pine-29,
-  // Popovers, menus, dialogs, sheets and floating toolbars. In the dark it's a control's fill, and its edges and shadow lift it
+  // Popovers, menus, dialogs, drawers and floating toolbars. In the dark it's a control's fill, and its edges and shadow lift it
   overlay: base.colors.pine-24,
   // Ink as a surface, such as a toast or a tooltip, with paper text
   inverse: ink,
@@ -46,7 +46,7 @@ export dark-colors = tokens : base.colors {
   // A pink tint that marks each chosen where several can be, and the text on it, a darker pink in the light so it reads on white
   chosen-tint: opacity(base.colors.pink-70, 18%),
   on-chosen-tint: base.colors.pink-70,
-  // Behind a sheet
+  // Behind a drawer
   scrim: opacity(base.colors.black, 48%),
   // Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
   // and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one

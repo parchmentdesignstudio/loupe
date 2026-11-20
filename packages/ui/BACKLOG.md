@@ -77,7 +77,7 @@ Enough to work with for now (Steve, 10 November). One gap came up while moving t
 - **ToggleButtonGroup and Switch:** a `label` for the group and a `description` for the switch, as the fields have
 - **TooltipTrigger:** a shorter default delay than React Aria’s 1.5s. A disabled button shows no tooltip
 - **A warning colour:** favicon’s warnings use `text-danger`
-- **Sheet:** control over how fast it opens and closes, which the browser’s smooth scroll sets today
+- **Drawer:** control over how fast it opens and closes, which the browser’s smooth scroll sets today
 
 ## Questions for Steve
 

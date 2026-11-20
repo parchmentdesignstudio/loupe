@@ -121,13 +121,13 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `DropZone` | Somewhere to drop files, or paste them: dashed, or quiet for a panel or canvas, which shows an outline only while files are over it |
 | `FileTrigger` | Opens the file picker from the button inside it |
 | `Modal`, `Dialog`, `DialogTrigger` | A dialog over the page, with `DialogHeading`, `DialogActions` and `DialogClose` |
-| `Sheet`, `SheetTrigger` | A panel that slides in from an edge of the screen, and swipes back out |
+| `Drawer`, `DrawerTrigger` | A panel that slides in from an edge of the screen, and swipes back out |
 | `Popover` | A dialog beside what opened it |
 | `Menu`, `MenuTrigger` | Actions in a list that opens, with `MenuItem`, `MenuSection` and `MenuSeparator` |
 | `Tooltip`, `TooltipTrigger` | A short label for a control, on hover and keyboard focus |
 | `Alert` | Something to know about a page or part of it, in Status’s tones: an alert tinted to draw the eye, or a quieter notice in the flow, with a title, actions and a dismiss button if it needs them. It isn’t announced: give one that appears later `role="alert"` or `role="status"` |
 | `ToastQueue`, `ToastRegion`, `Toast` | Short messages at the bottom of the screen, such as an export finishing, that close themselves after 5 seconds. An app adds them to one queue, which one region shows. React Aria’s toasts are still unstable, so these may change |
-| `Navigation` | A page’s navigation: a column beside the page on wider screens, and a sheet behind a button on phones |
+| `Navigation` | A page’s navigation: a column beside the page on wider screens, and a drawer behind a button on phones |
 | `Link` | A link to another page, or a place on this one |
 | `NavigationTree` | Links to the pages of a site or tool, in sections, with the current page marked, through `NavigationTreeSection`, `NavigationTreeHeader`, `NavigationTreeItem` and `NavigationTreeItemContent` |
 | `Disclosure`, `DisclosureGroup` | A heading that shows or hides what’s under it, through `DisclosureHeader` and `DisclosurePanel`: medium for questions and answers, small for navigation or a title over its description |
@@ -137,11 +137,11 @@ Fields share a `Label`, `Description` and `FieldError`, and each takes `label`, 
 
 `FileTrigger` and `isFileDropItem` are React Aria’s own, passed through as they are. Wrap a `Button` in `FileTrigger` to open the file picker, and pick the files out of a `DropZone`’s drop with `isFileDropItem`.
 
-Buttons, chips and fields have no set height. Control text sits on a 20px line, and the padding adds to it: 6px above and below makes a button, field, option or tab 32px tall, and 4px makes a small button 28px. An icon in a button or toggle sits on the line, as text does, so the padding is the same whether a control holds text, an icon or both. Text sits 12px in from the sides, or 10px on a small button, and an icon at the end, such as a select’s chevron, sits 8px in, as a circle button’s does. A select is a button, so its text is medium, as a button’s is. Corners are 8px, except on modals and sheets, and on things round by nature, such as circle buttons, radios and switches.
+Buttons, chips and fields have no set height. Control text sits on a 20px line, and the padding adds to it: 6px above and below makes a button, field, option or tab 32px tall, and 4px makes a small button 28px. An icon in a button or toggle sits on the line, as text does, so the padding is the same whether a control holds text, an icon or both. Text sits 12px in from the sides, or 10px on a small button, and an icon at the end, such as a select’s chevron, sits 8px in, as a circle button’s does. A select is a button, so its text is medium, as a button’s is. Corners are 8px, except on modals and drawers, and on things round by nature, such as circle buttons, radios and switches.
 
 What the library is still missing is in `packages/ui/BACKLOG.md`, found by building the device and favicon tools with it.
 
-A dialog or sheet with a field puts focus in the first one: give it `autoFocus`, as React Aria’s own examples do. Lint allows `autoFocus` on the package’s components, but not on plain HTML elements.
+A dialog or drawer with a field puts focus in the first one: give it `autoFocus`, as React Aria’s own examples do. Lint allows `autoFocus` on the package’s components, but not on plain HTML elements.
 
 ### Where the styles live
 
@@ -172,10 +172,10 @@ The palette also has nine hues, `red`, `orange`, `yellow`, `green`, `teal`, `sky
 | `ground` | The page |
 | `panel` | An area on the page, such as a tool’s side panel |
 | `raised` | A control’s fill, such as a button’s, a field’s or a checkbox’s, which turns `surface` on hover |
-| `overlay` | Popovers, menus, dialogs, sheets and floating toolbars |
+| `overlay` | Popovers, menus, dialogs, drawers and floating toolbars |
 | `inverse` | Ink as a surface, such as a toast or a tooltip, with paper text |
 | `knob` | A switch’s handle when it’s off, and a slider’s thumb, so they stay lighter than their track |
-| `scrim` | Behind a sheet |
+| `scrim` | Behind a drawer |
 
 The layers go from the page up: ground, panel, raised and overlay. In the light, panel, raised and overlay are all white, and shadows part them. In the dark, each is lighter than the one below.
 
@@ -185,7 +185,7 @@ Hover, pressed and current states, and the lines between things, use `bleed` at 
 |---|---|
 | `shadow-raised` | Buttons, chips and fields |
 | `shadow-floating` | Floating toolbars |
-| `shadow-overlay` | Popovers, menus, dialogs and sheets |
+| `shadow-overlay` | Popovers, menus, dialogs and drawers |
 | `shadow-invalid` | A field whose value is wrong, in place of its shadow |
 
 The raised, floating and overlay shadows are each a 1px edge and a stack of soft drops, deeper and darker at each level. They have colours of their own, so they stay dark in the dark.

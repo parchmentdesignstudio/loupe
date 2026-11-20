@@ -1,22 +1,22 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { Button, DialogHeading, Sheet, SheetTrigger, TextField } from '../src/index.js';
+import { Button, DialogHeading, Drawer, DrawerTrigger, TextField } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
 
 function Rename() {
 	return (
-		<SheetTrigger>
+		<DrawerTrigger>
 			<Button>Rename project</Button>
-			<Sheet>
+			<Drawer>
 				<DialogHeading>Rename project</DialogHeading>
 				<TextField label="Name" defaultValue="Loupe" autoFocus />
-			</Sheet>
-		</SheetTrigger>
+			</Drawer>
+		</DrawerTrigger>
 	);
 }
 
-describe('Sheet', () => {
+describe('Drawer', () => {
 	it('opens from its button as a dialog named by its heading, with focus in its first field', async () => {
 		const user = userEvent.setup();
 		render(<Rename />);

@@ -7,7 +7,7 @@ export lengths = tokens {
   // Most things round to 8px. A corner inside a rounded container is the container's less the space between them,
   // so the two curves stay parallel: an option or menu item 4px into its 8px popover rounds to 4px, a toggle 2px
   // into its 8px track rounds to 6px, as a checkbox does, and a toolbar holding 8px buttons 4px in rounds to 12px.
-  // The focus ring around a link or tab rounds to 4px too, and dialogs and sheets to 24px
+  // The focus ring around a link or tab rounds to 4px too, and dialogs and drawers to 24px
   radius-sm: 4,
   radius-md: 6,
   radius-lg: 8,

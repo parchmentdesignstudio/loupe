@@ -314,7 +314,7 @@ export const examples: Record<string, () => ReactNode> = {
 			<Link href="#">Doris</Link>
 		</div>
 	),
-	Sheet: () => (
+	Drawer: () => (
 		<div className="flex h-28 w-48 flex-col justify-end overflow-hidden rounded-lg bg-bleed/8">
 			<div className={popover({ className: 'rounded-b-none px-4 pt-2 pb-4' })}>
 				<div className="mx-auto mb-3 h-1 w-8 rounded-full bg-bleed/16" />

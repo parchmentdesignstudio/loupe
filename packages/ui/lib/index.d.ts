@@ -47,7 +47,7 @@ export { Radio, RadioGroup, type RadioGroupProps, type RadioProps } from './Radi
 export { SearchField, type SearchFieldProps } from './SearchField.js';
 export { Select, selectTrigger, type SelectProps } from './Select.js';
 export { Separator, type SeparatorProps } from './Separator.js';
-export { Sheet, SheetTrigger, type SheetProps } from './Sheet.js';
+export { Drawer, DrawerTrigger, type DrawerProps } from './Drawer.js';
 export { Slider, type SliderProps } from './Slider.js';
 export { Status, status, type StatusProps, type StatusTone } from './Status.js';
 export { Switch, type SwitchProps } from './Switch.js';

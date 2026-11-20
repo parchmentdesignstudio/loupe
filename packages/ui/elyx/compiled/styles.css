@@ -674,8 +674,8 @@
     --modal-shadow: var(--shadow-overlay-color);
     --popover-radius: var(--radius-lg);
     --popover-shadow: var(--shadow-overlay-color);
-    --sheet-radius: var(--radius-3xl);
-    --sheet-shadow: var(--shadow-overlay-color);
+    --drawer-radius: var(--radius-3xl);
+    --drawer-shadow: var(--shadow-overlay-color);
     --tooltip-radius: var(--radius-lg);
     --tooltip-padding-x: calc(var(--spacing) * 2.5);
     --tooltip-padding-y: calc(var(--spacing) * 1.5);
@@ -2011,6 +2011,10 @@
     border-radius: var(--drop-zone-radius);
   }
 
+  .rounded-\(--drawer-radius\) {
+    border-radius: var(--drawer-radius);
+  }
+
   .rounded-\(--empty-state-icon-radius\) {
     border-radius: var(--empty-state-icon-radius);
   }
@@ -2045,10 +2049,6 @@
 
   .rounded-\(--popover-radius\) {
     border-radius: var(--popover-radius);
-  }
-
-  .rounded-\(--sheet-radius\) {
-    border-radius: var(--sheet-radius);
   }
 
   .rounded-\(--swatch-field-radius\) {
@@ -2246,6 +2246,10 @@
     background-color: var(--empty-state-icon-fill, var(--color-raised));
   }
 
+  .bg-\(--drawer-fill\,var\(--color-overlay\)\) {
+    background-color: var(--drawer-fill, var(--color-overlay));
+  }
+
   .bg-\(--field-fill\,var\(--color-raised\)\) {
     background-color: var(--field-fill, var(--color-raised));
   }
@@ -2276,10 +2280,6 @@
 
   .bg-\(--radio-fill\,var\(--color-raised\)\) {
     background-color: var(--radio-fill, var(--color-raised));
-  }
-
-  .bg-\(--sheet-fill\,var\(--color-overlay\)\) {
-    background-color: var(--sheet-fill, var(--color-overlay));
   }
 
   .bg-\(--slider-fill\,var\(--color-ink\)\) {
@@ -3989,12 +3989,12 @@
     --shadow-overlay-color: var(--modal-shadow);
   }
 
-  .\[--shadow-overlay-color\:var\(--popover-shadow\)\] {
-    --shadow-overlay-color: var(--popover-shadow);
+  .\[--shadow-overlay-color\:var\(--drawer-shadow\)\] {
+    --shadow-overlay-color: var(--drawer-shadow);
   }
 
-  .\[--shadow-overlay-color\:var\(--sheet-shadow\)\] {
-    --shadow-overlay-color: var(--sheet-shadow);
+  .\[--shadow-overlay-color\:var\(--popover-shadow\)\] {
+    --shadow-overlay-color: var(--popover-shadow);
   }
 
   .\[--shadow-overlay-color\:var\(--toast-shadow\)\] {
@@ -4180,7 +4180,7 @@
     color: var(--color-muted);
   }
 
-  .group-data-expanded\/sheet\:overflow-auto:is(:where(.group\/sheet)[data-expanded] *) {
+  .group-data-expanded\/drawer\:overflow-auto:is(:where(.group\/drawer)[data-expanded] *) {
     overflow: auto;
   }
 
@@ -4839,8 +4839,8 @@
     outline-width: 2px;
   }
 
-  .data-\[stack-index\=0\]\:bg-\(--sheet-backdrop\,var\(--color-scrim\)\)[data-stack-index="0"] {
-    background-color: var(--sheet-backdrop, var(--color-scrim));
+  .data-\[stack-index\=0\]\:bg-\(--drawer-backdrop\,var\(--color-scrim\)\)[data-stack-index="0"] {
+    background-color: var(--drawer-backdrop, var(--color-scrim));
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -5392,13 +5392,13 @@
   }
 
 
-@keyframes sheet-backdrop {
+@keyframes drawer-backdrop {
   from {
     opacity: 0;
   }
 }
 
-@keyframes sheet-scale-back {
+@keyframes drawer-scale-back {
   to {
     transform: translateZ(-120px);
   }

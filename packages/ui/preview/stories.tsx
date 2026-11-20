@@ -85,7 +85,7 @@ import { PaginationPlayground, PaginationUnderTable, StatusPlayground } from './
 import { RadioGroupPlayground } from './playgrounds/radio-group.js';
 import { SearchFieldPlayground } from './playgrounds/search-field.js';
 import { SelectPlayground } from './playgrounds/select.js';
-import { SheetPlayground } from './playgrounds/sheet.js';
+import { DrawerPlayground } from './playgrounds/drawer.js';
 import { SliderPlayground } from './playgrounds/slider.js';
 import { SwitchPlayground } from './playgrounds/switch.js';
 import { EmptyTable, LoadingMoreTable, TablePlayground } from './playgrounds/table.js';
@@ -968,12 +968,12 @@ const groups: Group[] = [
 				],
 			},
 			{
-				id: 'sheet',
-				name: 'Sheet',
+				id: 'drawer',
+				name: 'Drawer',
 				description: 'A panel that slides in from an edge of the screen, and swipes back out',
-				exports: ['SheetTrigger', 'Sheet'],
+				exports: ['DrawerTrigger', 'Drawer'],
 				stories: [
-					{ name: 'Build one', render: SheetPlayground },
+					{ name: 'Build one', render: DrawerPlayground },
 				],
 			},
 			{
@@ -1054,8 +1054,8 @@ const groups: Group[] = [
 			{
 				id: 'navigation',
 				name: 'Navigation',
-				description: 'A page’s navigation: a column beside the page on wider screens, and a sheet behind a button on phones. This sidebar is one, so narrow the window to see its sheet',
-				summary: 'A page’s navigation, a sidebar on wide screens and a sheet on phones',
+				description: 'A page’s navigation: a column beside the page on wider screens, and a drawer behind a button on phones. This sidebar is one, so narrow the window to see its drawer',
+				summary: 'A page’s navigation, a sidebar on wide screens and a drawer on phones',
 				exports: ['Navigation'],
 				stories: [
 					{ name: 'Build one', render: NavigationPlayground },],
@@ -1127,7 +1127,7 @@ const regrouped: Record<string, string[]> = {
 	Data: ['Avatar', 'Code', 'Grid list', 'Swatch', 'Table', 'Tag group'],
 	Feedback: ['Alert', 'Empty state', 'Progress bar', 'Status', 'Toast'],
 	Writing: ['Aside', 'Quote'],
-	Overlays: ['Dialog', 'Menu', 'Popover', 'Preview trigger', 'Sheet', 'Tooltip'],
+	Overlays: ['Dialog', 'Menu', 'Popover', 'Preview trigger', 'Drawer', 'Tooltip'],
 	Navigation: ['Breadcrumbs', 'Disclosure', 'Link', 'Navigation', 'Navigation tree', 'Pagination', 'Tabs'],
 };
 const entries = new Map(groups.flatMap((group) => group.components).map((entry) => [entry.name, entry]));
