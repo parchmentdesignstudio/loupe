@@ -57,3 +57,15 @@ describe('Composer', () => {
 		await expectAccessible(container);
 	});
 });
+
+describe('Composer’s extras', () => {
+	it('shows context above the text, describes itself, keeps to its length and says Send on a phone', async () => {
+		render(<Composer aria-label="Your message" description="Enter sends" maxLength={5} context={<span>Leek soup</span>} submitIcon={<svg aria-hidden="true" />} onSubmit={() => {}} />);
+		const field = screen.getByRole('textbox', { name: 'Your message' }) as HTMLTextAreaElement;
+		expect(screen.getByText('Leek soup')).toBeTruthy();
+		expect(field).toHaveProperty('maxLength', 5);
+		expect(field.getAttribute('enterkeyhint')).toBe('send');
+		const described = field.getAttribute('aria-describedby') ?? '';
+		expect(document.getElementById(described)?.textContent).toBe('Enter sends');
+	});
+});

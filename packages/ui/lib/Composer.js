@@ -1,12 +1,14 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { Form, Group, TextArea, TextField as AriaTextField } from 'react-aria-components';
+import { Form, Group, Text, TextArea, TextField as AriaTextField } from 'react-aria-components';
 import { Button } from './Button.js';
 import { tv } from './tv.js';
 const composer = tv({
     slots: {
-        group: 'flex items-end gap-2 rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) py-2 pr-3.5 pl-(--field-padding-x) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2',
+        // Context, when there is any, takes a row of its own above the text
+        group: 'flex flex-wrap items-end gap-x-2 rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) py-2 pr-3.5 pl-(--field-padding-x) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2',
         // One line to begin with, growing with what's written up to about six, then it scrolls
+        context: 'flex basis-full flex-wrap gap-1 pt-1.5',
         input: 'max-h-40 min-w-0 flex-1 resize-none bg-transparent py-2 text-control leading-6 text-(color:--field-text,var(--color-ink)) outline-none field-sizing-content placeholder:text-(color:--field-placeholder,var(--color-muted))',
         // Centres the send button on the line of text. It sits further in than the box's radius, so it takes the smallest
         // corner rather than a concentric one, which would be square
@@ -30,7 +32,7 @@ function sendOnEnter(event) {
     event.currentTarget.form?.requestSubmit();
 }
 /** A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line, and an empty message can't be sent */
-export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, isDisabled = false, className }) {
+export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, context, description, maxLength, isDisabled = false, className }) {
     const [draft, setDraft] = useState(defaultValue);
     const message = value ?? draft;
     const empty = message.trim() === '';
@@ -48,5 +50,5 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
         if (value === undefined)
             setDraft('');
     };
-    return (_jsx(Form, { onSubmit: send, className: className, children: _jsx(AriaTextField, { "aria-label": label, value: message, onChange: change, isDisabled: isDisabled, children: _jsxs(Group, { className: (state) => slots.group(state), children: [_jsx(TextArea, { rows: 1, placeholder: placeholder, onKeyDown: sendOnEnter, className: slots.input() }), _jsx(Button, { type: "submit", "aria-label": submitLabel, size: "small", isDisabled: isDisabled || empty, className: slots.send(), children: submitIcon })] }) }) }));
+    return (_jsx(Form, { onSubmit: send, className: className, children: _jsxs(AriaTextField, { "aria-label": label, value: message, onChange: change, maxLength: maxLength, isDisabled: isDisabled, children: [_jsxs(Group, { className: (state) => slots.group(state), children: [context && _jsx("div", { className: slots.context(), children: context }), _jsx(TextArea, { rows: 1, placeholder: placeholder, enterKeyHint: "send", onKeyDown: sendOnEnter, className: slots.input() }), _jsx(Button, { type: "submit", "aria-label": submitLabel, size: "small", isDisabled: isDisabled || empty, className: slots.send(), children: submitIcon })] }), description && (_jsx(Text, { slot: "description", className: "sr-only", children: description }))] }) }));
 }
