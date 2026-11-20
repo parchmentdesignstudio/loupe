@@ -15,7 +15,7 @@ const slider = tv({
 	},
 	variants: {
 		orientation: {
-			horizontal: { track: 'h-5 w-full', rail: 'inset-x-0 top-1/2 h-1 -translate-y-1/2' },
+			horizontal: { track: 'h-5 w-full', rail: 'inset-x-0 top-1/2 h-1.5 -translate-y-1/2' },
 			vertical: { base: 'items-center', track: 'w-5 flex-1', rail: 'inset-y-0 left-1/2 w-1 -translate-x-1/2' },
 		},
 		isDisabled: {
@@ -29,7 +29,7 @@ const slider = tv({
 // React Aria sets the thumb's left and a translate of -50% both ways, so top-1/2 is all it takes to centre it on the rail
 const thumb = tv({
 	extend: focusRing,
-	base: 'size-5 rounded-full bg-(--slider-thumb,var(--color-knob)) shadow-handle',
+	base: 'w-3 h-5 rounded-sm bg-(--slider-thumb,var(--color-knob)) shadow-handle',
 	variants: {
 		isDisabled: {
 			true: 'bg-bleed/24 shadow-none',
