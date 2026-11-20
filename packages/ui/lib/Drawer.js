@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useContext, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Dialog, OverlayTriggerStateContext, Sheet, SheetBackdrop, SheetContent, SheetOverlay } from 'react-aria-components';
+import { Overlay } from 'react-aria';
 import { composeClassName, tv } from './tv.js';
 export { SheetTrigger as DrawerTrigger } from 'react-aria-components';
 // A drawer is React Aria's Sheet, which moves by scrolling. The backdrop’s fade and the step back of a drawer under
@@ -103,6 +104,7 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
     // What slides is the aside, or with reflow once the panel. With reduced motion there's no slide to wait for
     const aside = useRef(null);
     const sheet = useRef(null);
+    const [container, setContainer] = useState(null);
     const [isMounted, setMounted] = useState(isOpen);
     if (isOpen && !isMounted)
         setMounted(true);
@@ -143,5 +145,8 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
         element.addEventListener('keydown', onKeyDown);
         return () => element.removeEventListener('keydown', onKeyDown);
     }, []);
-    return (_jsx("aside", { ref: aside, inert: !isOpen, "aria-label": label, onTransitionEnd: (event) => event.target === (reflow === 'once' ? sheet.current : event.currentTarget) && !isOpen && setMounted(false), className: slots.aside({ className: typeof className === 'string' ? className : undefined }), children: _jsx("div", { className: slots.panel(), children: _jsx("div", { ref: sheet, className: slots.sheet(), children: isMounted && (_jsx(OverlayTriggerStateContext.Provider, { value: { isOpen, setOpen, open: () => setOpen(true), close: () => setOpen(false), toggle: () => setOpen(!isOpen), point: null, setPoint: () => { } }, children: _jsx(Dialog, { "aria-label": label, className: slots.content(), children: children }) })) }) }) }));
+    return (_jsx("aside", { ref: aside, inert: !isOpen, "aria-label": label, onTransitionEnd: (event) => event.target === (reflow === 'once' ? sheet.current : event.currentTarget) && !isOpen && setMounted(false), className: slots.aside({ className: typeof className === 'string' ? className : undefined }), children: _jsx("div", { className: slots.panel(), children: _jsx("div", { ref: (element) => {
+                    sheet.current = element;
+                    setContainer(element);
+                }, className: slots.sheet(), children: isMounted && container && (_jsx(Overlay, { portalContainer: container, disableFocusManagement: true, children: _jsx(OverlayTriggerStateContext.Provider, { value: { isOpen, setOpen, open: () => setOpen(true), close: () => setOpen(false), toggle: () => setOpen(!isOpen), point: null, setPoint: () => { } }, children: _jsx(Dialog, { "aria-label": label, className: slots.content(), children: children }) }) })) }) }) }));
 }

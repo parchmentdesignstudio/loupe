@@ -1,5 +1,6 @@
 import { useContext, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Dialog, type DialogProps, OverlayTriggerStateContext, Sheet, SheetBackdrop, SheetContent, SheetOverlay, type SheetOverlayProps } from 'react-aria-components';
+import { Overlay } from 'react-aria';
 import { composeClassName, tv } from './tv.js';
 
 export { SheetTrigger as DrawerTrigger } from 'react-aria-components';
@@ -140,6 +141,7 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
 	// What slides is the aside, or with reflow once the panel. With reduced motion there's no slide to wait for
 	const aside = useRef<HTMLElement>(null);
 	const sheet = useRef<HTMLDivElement>(null);
+	const [container, setContainer] = useState<HTMLDivElement | null>(null);
 	const [isMounted, setMounted] = useState(isOpen);
 	if (isOpen && !isMounted) setMounted(true);
 	const opener = useRef<Element | null>(null);
@@ -184,13 +186,24 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
 			className={slots.aside({ className: typeof className === 'string' ? className : undefined })}
 		>
 			<div className={slots.panel()}>
-				<div ref={sheet} className={slots.sheet()}>
-					{isMounted && (
-						<OverlayTriggerStateContext.Provider value={{ isOpen, setOpen, open: () => setOpen(true), close: () => setOpen(false), toggle: () => setOpen(!isOpen), point: null, setPoint: () => {} }}>
-							<Dialog aria-label={label} className={slots.content()}>
-								{children}
-							</Dialog>
-						</OverlayTriggerStateContext.Provider>
+				<div
+					ref={(element) => {
+						sheet.current = element;
+						setContainer(element);
+					}}
+					className={slots.sheet()}
+				>
+					{/* In a DrawerTrigger, every button inside would also toggle the drawer, as the trigger's press handling reaches
+					    down to them. An Overlay stops it there, as it does for React Aria's own overlays. Its focus handling is
+					    left off, as a pushing drawer doesn't keep focus in */}
+					{isMounted && container && (
+						<Overlay portalContainer={container} disableFocusManagement>
+							<OverlayTriggerStateContext.Provider value={{ isOpen, setOpen, open: () => setOpen(true), close: () => setOpen(false), toggle: () => setOpen(!isOpen), point: null, setPoint: () => {} }}>
+								<Dialog aria-label={label} className={slots.content()}>
+									{children}
+								</Dialog>
+							</OverlayTriggerStateContext.Provider>
+						</Overlay>
 					)}
 				</div>
 			</div>
