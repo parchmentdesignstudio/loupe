@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
-import { Composer } from '../../src/index.js';
+import { Chip, Composer } from '../../src/index.js';
 import { Choice, ControlGroup, IconPicker, Playground, ShowFocus, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
@@ -21,11 +21,13 @@ export function ComposerPlayground() {
 	const [sent, setSent] = useState<string[]>([]);
 	const [message, setMessage] = useRemembered('message', '');
 	const [isFocused, setFocused] = useRemembered('isFocused', false);
+	const [hasContext, setContext] = useRemembered('hasContext', false);
 	const shuffle = () => {
 		setPlaceholder(pick(lengths));
 		setSubmitIcon(pick(solidIcons()));
 		setWidth(pick(Object.keys(widths) as Width[]));
 		setMessage(drafts[pick(lengths)]);
+		setContext(Math.random() < 0.4);
 	};
 	return (
 		<Playground
@@ -37,6 +39,7 @@ export function ComposerPlayground() {
 					<ControlGroup label="Content">
 						<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
 						<Choice label="Draft" options={lengths} value={(Object.keys(drafts) as Length[]).find((key) => drafts[key] === message) ?? 'short'} onChange={(next) => setMessage(drafts[next])} />
+						<SwitchControl label="Context" value={hasContext} onChange={setContext} />
 						<IconPicker label="Send icon" value={submitIcon} onChange={setSubmitIcon} />
 						<TextControl label="Send button, read out" value={submitLabel} onChange={setSubmitLabel} />
 					</ControlGroup>
@@ -53,6 +56,14 @@ export function ComposerPlayground() {
 					placeholder={placeholders[placeholder]}
 					submitLabel={submitLabel}
 					submitIcon={<Icon name={submitIcon} />}
+					context={
+						hasContext ? (
+							<Chip size="small" onPress={() => setContext(false)}>
+								Leek and potato soup
+							</Chip>
+						) : undefined
+					}
+					description="Enter sends, Shift-Enter starts a new line"
 					value={message}
 					onChange={setMessage}
 					onSubmit={(next) => {
