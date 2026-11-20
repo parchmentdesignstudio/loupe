@@ -35,3 +35,13 @@ These are SVGs inside the components, standing in for icons. Once each is in the
 | `gearshape` | Settings | Nothing |
 | `trash` | Delete, in a row's menu | Nothing |
 | `arrow-up-arrow-down` | Sort | A chevron (`arrow-down-arrow-up` is in the solid set) |
+
+## To redraw
+
+### Chevrons, centred by one rule
+
+Line 16's left and right chevrons sit 1px towards their point, so they look centred. Line 24, solid 16, and every up and down chevron sit on the geometric centre instead.
+
+- Pick one rule and draw every chevron to it in Sketch. A triangle's centroid moves a 16px chevron 1px. A circle around it moves it 2px, as the open side is the circle's diameter. Either way, it should pass the squint test.
+- Use the same rule at both sizes and in both styles, with left and right as exact mirrors, and up and down as well.
+- Judge up and down beside text, in a row, as they often sit beside a label and need to line up with its baseline.
