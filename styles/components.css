@@ -702,6 +702,8 @@
 
 		/* The corners */
 		--drawer-radius: var(--radius-3xl);
+		/* How wide it is when it pushes the page aside */
+		--drawer-push-width: --spacing(80);
 
 		/* Colour */
 
