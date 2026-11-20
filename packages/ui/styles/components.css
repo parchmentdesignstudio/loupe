@@ -712,6 +712,8 @@
 			--drawer-fill: var(--color-overlay);
 			/* What covers the page behind the first drawer */
 			--drawer-backdrop: var(--color-scrim);
+			/* The fill when it pushes the page aside, which it slides over */
+			--drawer-push-fill: var(--color-ground);
 		}
 
 		/* Shadow */

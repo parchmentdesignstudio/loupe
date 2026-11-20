@@ -23,18 +23,28 @@ const drawer = tv({
         },
     },
 });
-// A pushing drawer opens its width from 0, which moves the page beside it over. What it holds keeps its full width
-// and is held to the drawer's outer edge, so it slides in with that edge rather than reflowing as it opens
+// A pushing drawer takes room in the page's row, at its start or end. What it holds keeps its full width, so it never
+// rewraps itself. With reflow continuous, its width opens from 0, which moves the page over as it goes, and what it
+// holds is pinned to its outer edge, so it slides in with that edge. With reflow once, its room is taken all at once and
+// the panel slides over the page on its own, so the page rewraps a single time: the room is taken once the panel has
+// slid in, under it, and given back as it starts to slide out. The panel's box is clipped, so as it slides it never
+// sticks out past the page
+const ease = 'duration-300 ease-[cubic-bezier(.32,.72,0,1)] motion-reduce:transition-none';
 const pushDrawer = tv({
     slots: {
-        aside: 'flex h-full shrink-0 overflow-hidden border-bleed/8 transition-[width] duration-300 ease-[cubic-bezier(.32,.72,0,1)] motion-reduce:transition-none',
-        inner: 'h-full w-(--drawer-push-width) shrink-0',
+        aside: 'relative h-full shrink-0',
+        panel: 'h-full w-(--drawer-push-width) overflow-hidden',
+        sheet: 'h-full border-bleed/8 bg-(--drawer-push-fill,var(--color-ground)) [--bleed:var(--ground-bleed)]',
         content: 'relative box-border flex h-full flex-col overflow-auto p-(--dialog-padding) outline-0 [&>:has(+[data-dialog-actions])]:mb-(--dialog-padding) *:data-dialog-actions:mt-auto',
     },
     variants: {
+        reflow: {
+            continuous: { aside: `flex overflow-hidden transition-[width] ${ease}`, panel: 'shrink-0' },
+            once: { aside: 'transition-[width] duration-0 motion-reduce:delay-0', panel: 'pointer-events-none absolute inset-y-0', sheet: `pointer-events-auto transition-[translate] ${ease}` },
+        },
         position: {
-            start: { aside: 'justify-end' },
-            end: { aside: 'justify-start' },
+            start: { sheet: 'border-e' },
+            end: { sheet: 'border-s' },
         },
         isOpen: {
             true: { aside: 'w-(--drawer-push-width)' },
@@ -42,8 +52,13 @@ const pushDrawer = tv({
         },
     },
     compoundVariants: [
-        { position: 'start', isOpen: true, class: { aside: 'border-e' } },
-        { position: 'end', isOpen: true, class: { aside: 'border-s' } },
+        { reflow: 'continuous', position: 'start', class: { aside: 'justify-end' } },
+        { reflow: 'continuous', position: 'end', class: { aside: 'justify-start' } },
+        { reflow: 'once', position: 'start', class: { panel: 'start-0' } },
+        { reflow: 'once', position: 'end', class: { panel: 'end-0' } },
+        { reflow: 'once', isOpen: true, class: { aside: 'delay-300' } },
+        { reflow: 'once', position: 'start', isOpen: false, class: { sheet: '-translate-x-full rtl:translate-x-full' } },
+        { reflow: 'once', position: 'end', isOpen: false, class: { sheet: 'translate-x-full rtl:-translate-x-full' } },
     ],
 });
 // Tailwind's breakpoints, which a pushing drawer becomes an overlay below
@@ -57,17 +72,17 @@ const useMatches = (query) => useSyncExternalStore((onChange) => {
  * A panel that slides in from an edge of the screen, opened by the Button beside it in a DrawerTrigger. Over the page,
  * it swipes back out. Pushing the page aside, the Button closes it again, as does Escape
  */
-export function Drawer({ mode = 'overlay', pushFrom = 'md', ...props }) {
+export function Drawer({ mode = 'overlay', pushFrom = 'md', reflow, ...props }) {
     const isWide = useMatches(`(min-width: ${breakpoints[pushFrom]})`);
     if (mode === 'push' && isWide)
-        return _jsx(PushDrawer, { ...props });
+        return _jsx(PushDrawer, { ...props, reflow: reflow });
     return _jsx(OverlayDrawer, { ...props, position: mode === 'push' ? (props.position === 'start' || props.position === 'left' ? 'start' : 'end') : props.position });
 }
 function OverlayDrawer({ children, 'aria-label': label, ...props }) {
     const slots = drawer();
     return (_jsxs(SheetOverlay, { ...props, className: composeClassName(props.className, 'group/drawer z-50'), children: [_jsx(SheetBackdrop, { className: slots.backdrop(), swipeAnimation: "drawer-backdrop", swipeAnimationRange: props.snapPoints ? { start: props.snapPoints.length - 1 } : undefined }), _jsx(Sheet, { overscrollPadding: true, stackAnimation: "drawer-scale-back", className: ({ position }) => drawer({ position }).panel(), children: _jsx(SheetContent, { "aria-label": label, className: slots.content(), children: children }) })] }));
 }
-function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultOpen = false, onOpenChange, position = 'end', className }) {
+function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultOpen = false, onOpenChange, position = 'end', reflow = 'once', className }) {
     // In a DrawerTrigger, it shares the trigger's open state, so its Button toggles it and is marked expanded. Otherwise
     // it's open as isOpen says, or as it was last left
     const trigger = useContext(OverlayTriggerStateContext);
@@ -83,10 +98,11 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
             trigger.setOpen(next);
     };
     const side = position === 'start' || position === 'left' ? 'start' : 'end';
-    const slots = pushDrawer({ position: side, isOpen });
+    const slots = pushDrawer({ position: side, isOpen, reflow });
     // What it holds stays until it has slid shut, then goes, so the dialog in it takes focus afresh each time it opens.
-    // With reduced motion there's no slide to wait for
+    // What slides is the aside, or with reflow once the panel. With reduced motion there's no slide to wait for
     const aside = useRef(null);
+    const sheet = useRef(null);
     const [isMounted, setMounted] = useState(isOpen);
     if (isOpen && !isMounted)
         setMounted(true);
@@ -102,10 +118,13 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
         // Focus goes back to what opened it, before inert would drop it on the page
         if (element.contains(document.activeElement) && opener.current instanceof HTMLElement)
             opener.current.focus();
-        const { transitionProperty, transitionDuration } = getComputedStyle(element);
+        const slider = reflow === 'once' ? sheet.current : element;
+        if (!slider)
+            return setMounted(false);
+        const { transitionProperty, transitionDuration } = getComputedStyle(slider);
         if (transitionProperty === 'none' || !transitionDuration || transitionDuration === '0s')
             setMounted(false);
-    }, [isOpen]);
+    }, [isOpen, reflow]);
     // Escape closes it from anywhere inside. It's listened for on the aside, as the dialog takes no key handlers
     const close = useRef(() => setOpen(false));
     useLayoutEffect(() => {
@@ -124,5 +143,5 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
         element.addEventListener('keydown', onKeyDown);
         return () => element.removeEventListener('keydown', onKeyDown);
     }, []);
-    return (_jsx("aside", { ref: aside, inert: !isOpen, "aria-label": label, onTransitionEnd: (event) => event.target === event.currentTarget && !isOpen && setMounted(false), className: slots.aside({ className: typeof className === 'string' ? className : undefined }), children: _jsx("div", { className: slots.inner(), children: isMounted && (_jsx(OverlayTriggerStateContext.Provider, { value: { isOpen, setOpen, open: () => setOpen(true), close: () => setOpen(false), toggle: () => setOpen(!isOpen), point: null, setPoint: () => { } }, children: _jsx(Dialog, { "aria-label": label, className: slots.content(), children: children }) })) }) }));
+    return (_jsx("aside", { ref: aside, inert: !isOpen, "aria-label": label, onTransitionEnd: (event) => event.target === (reflow === 'once' ? sheet.current : event.currentTarget) && !isOpen && setMounted(false), className: slots.aside({ className: typeof className === 'string' ? className : undefined }), children: _jsx("div", { className: slots.panel(), children: _jsx("div", { ref: sheet, className: slots.sheet(), children: isMounted && (_jsx(OverlayTriggerStateContext.Provider, { value: { isOpen, setOpen, open: () => setOpen(true), close: () => setOpen(false), toggle: () => setOpen(!isOpen), point: null, setPoint: () => { } }, children: _jsx(Dialog, { "aria-label": label, className: slots.content(), children: children }) })) }) }) }));
 }

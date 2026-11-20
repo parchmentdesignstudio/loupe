@@ -1657,11 +1657,21 @@
   .translate-x-\[calc\(2rem-100\%\)\] {
     --tw-translate-x: calc(2rem - 100%);
     translate: var(--tw-translate-x) var(--tw-translate-y);
+  .-translate-x-full {
+    --tw-translate-x: -100%;
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
   }
 
   .-translate-y-1\/2 {
     --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
+  .translate-x-full {
+    --tw-translate-x: 100%;
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
   }
 
   .scale-0 {
@@ -2256,10 +2266,6 @@
     background-color: var(--dialog-actions-fill, var(--color-panel));
   }
 
-  .bg-\(--empty-state-icon-fill\,var\(--color-raised\)\) {
-    background-color: var(--empty-state-icon-fill, var(--color-raised));
-  }
-
   .bg-\(--drawer-fill\,var\(--color-overlay\)\) {
     background-color: var(--drawer-fill, var(--color-overlay));
   }
@@ -2267,6 +2273,14 @@
   .bg-\(--field-fill\,var\(--color-raised\)\) {
     background-color: var(--field-fill, var(--color-raised));
   }
+  .bg-\(--drawer-push-fill\,var\(--color-ground\)\) {
+    background-color: var(--drawer-push-fill, var(--color-ground));
+  }
+
+  .bg-\(--empty-state-icon-fill\,var\(--color-raised\)\) {
+    background-color: var(--empty-state-icon-fill, var(--color-raised));
+  }
+
 
   .bg-\(--keyboard-fill\,var\(--color-raised\)\) {
     background-color: var(--keyboard-fill, var(--color-raised));
@@ -3656,6 +3670,12 @@
   .transition-\[width\] {
     transition-property: width;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  .transition-\[translate\] {
+    transition-property: translate;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
@@ -3680,6 +3700,15 @@
   .duration-100 {
     --tw-duration: .1s;
     transition-duration: .1s;
+  .delay-300 {
+    transition-delay: .3s;
+  }
+
+  .duration-0 {
+    --tw-duration: 0s;
+    transition-duration: 0s;
+  }
+
   }
 
   .duration-150 {
@@ -3868,6 +3897,10 @@
   .\[--bleed\:var\(--inverse-bleed\)\] {
     --bleed: var(--inverse-bleed);
   }
+  .\[--bleed\:var\(--ground-bleed\)\] {
+    --bleed: var(--ground-bleed);
+  }
+
 
   .\[--bleed\:var\(--overlay-bleed\)\] {
     --bleed: var(--overlay-bleed);
@@ -4911,6 +4944,10 @@
     .motion-reduce\:\[animation-duration\:3s\] {
       animation-duration: 3s;
     }
+    .motion-reduce\:delay-0 {
+      transition-delay: 0s;
+    }
+
 
     :is(.motion-reduce\:\*\:transition-opacity > *) {
       transition-property: opacity;
@@ -4984,11 +5021,21 @@
   .rtl\:translate-x-\[calc\(100\%-2rem\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     --tw-translate-x: calc(100% - 2rem);
     translate: var(--tw-translate-x) var(--tw-translate-y);
+  .rtl\:-translate-x-full:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    --tw-translate-x: -100%;
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
   }
 
   .rtl\:-scale-x-100:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     --tw-scale-x: calc(100% * -1);
     scale: var(--tw-scale-x) var(--tw-scale-y);
+  .rtl\:translate-x-full:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    --tw-translate-x: 100%;
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
   }
 
   .rtl\:rotate-90:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {

@@ -7,6 +7,7 @@ const modes = ['overlay', 'push'] as const;
 const positions = ['bottom', 'top', 'start', 'end', 'center'] as const;
 const sides = ['start', 'end'] as const;
 const pushFroms = ['md', 'lg', 'xl'] as const;
+const reflows = ['once', 'continuous'] as const;
 const headings = ['none', 'short', 'long'] as const;
 const snaps = ['none', 'two', 'three'] as const;
 const titles = ['Rename project', 'Share link', 'Filters', 'Invite people', 'Settings'];
@@ -21,6 +22,7 @@ export function DrawerPlayground() {
 	const [position, setPosition] = useRemembered('position', 'bottom', positions);
 	const [side, setSide] = useRemembered('side', 'end', sides);
 	const [pushFrom, setPushFrom] = useRemembered('pushFrom', 'md', pushFroms);
+	const [reflow, setReflow] = useRemembered('reflow', 'once', reflows);
 	const [heading, setHeading] = useRemembered('heading', 'short', headings);
 	const [title, setTitle] = useRemembered('title', 'Rename project');
 	const [body, setBody] = useRemembered<Length>('body', 'short', lengths);
@@ -36,6 +38,7 @@ export function DrawerPlayground() {
 		setMode(pick(modes));
 		setPosition(pick(positions));
 		setSide(pick(sides));
+		setReflow(pick(reflows));
 		setHeading(pick(headings));
 		setTitle(pick(titles));
 		setBody(pick(lengths));
@@ -52,6 +55,7 @@ export function DrawerPlayground() {
 			mode={isPush ? 'push' : undefined}
 			position={isPush ? side : position}
 			pushFrom={isPush ? pushFrom : undefined}
+			reflow={isPush ? reflow : undefined}
 			snapPoints={isPush ? undefined : snapPointsOf[snap]}
 			preventDismissal={!isPush && preventDismissal}
 			aria-label={heading === 'none' ? title || 'Drawer' : undefined}
@@ -98,6 +102,7 @@ export function DrawerPlayground() {
 							<>
 								<Choice label="Position" options={sides} value={side} onChange={setSide} />
 								<Choice label="Push from" options={pushFroms} value={pushFrom} onChange={setPushFrom} />
+								<Choice label="Reflow" options={reflows} value={reflow} onChange={setReflow} />
 							</>
 						) : (
 							<>
