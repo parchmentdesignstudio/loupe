@@ -195,10 +195,13 @@ export function Article() {
 	);
 }
 
+// A rule at the foot of each of prose's lines, so a space that's off the beat shows as text off its rule
+const rhythm = { backgroundImage: 'repeating-linear-gradient(to bottom, transparent 0 calc(var(--prose-line) - 1px), color-mix(in oklab, var(--color-accent) 40%, transparent) calc(var(--prose-line) - 1px) var(--prose-line))' };
+
 /** Plain HTML as Prose sets it, as many elements as a page of writing is likely to use */
-export function Writing() {
+export function Writing({ showRhythm = false }: { showRhythm?: boolean }) {
 	return (
-		<Prose className="w-full max-w-[36rem]">
+		<Prose className="w-full max-w-[36rem]" style={showRhythm ? rhythm : undefined}>
 			<h1>A guide to the studio handbook</h1>
 			<p>
 				This handbook covers how we plan, design and ship work. It’s <em>a living document</em>, so if something here doesn’t match how we work, <strong>change it</strong>. Start with the{' '}

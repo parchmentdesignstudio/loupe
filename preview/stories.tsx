@@ -536,10 +536,11 @@ const groups: Group[] = [
 			{
 				id: 'prose',
 				name: 'Prose',
-				description: 'Writing at length as plain HTML, such as a post from Markdown or a CMS, set in Loupe’s type with no classes inside. A site without React, such as one in Astro, puts the prose class from tokens.css on what holds it',
+				description: 'Writing at length as plain HTML, such as a post from Markdown or a CMS, set in Loupe’s type with no classes inside. It reads at 16px on a 26px line, and every space in it is a whole or half line, so it keeps one rhythm down the page. A site without React, such as one in Astro, puts the prose class from tokens.css on what holds it',
 				exports: ['Prose'],
 				stories: [
-					{ name: 'Every element of prose', render: Writing, box: 'justify-center' },
+					{ name: 'Every element of prose', render: () => <Writing />, box: 'justify-center' },
+					{ name: 'Its rhythm, a rule on each line', render: () => <Writing showRhythm />, box: 'justify-center' },
 				],
 			},
 			{
