@@ -46,25 +46,25 @@ async function askClaude(turns: Turn[]): Promise<Turn> {
 // How long a reply takes to think over
 const THINKING = 1600;
 
-export interface ChatProps {
-	title?: string;
-	/** Samples answers from a few written in, and Claude asks Claude, while the preview runs locally */
-	source?: 'samples' | 'claude';
+type Source = 'samples' | 'claude';
+
+export interface Conversation {
+	source: Source;
+	turns: Turn[];
+	isThinking: boolean;
+	ask: (question: string) => void;
+	restart: () => void;
 }
 
-/** The drawer's contents: the conversation, what to ask, and the field to ask it in */
-export function Chat({ title = 'Ask the kitchen', source = 'samples' }: ChatProps) {
+/**
+ * A conversation, held where it's made rather than in the drawer, which lets go of what it holds once it has slid shut.
+ * So one kept by the page carries on, reply and all, however often its drawer is closed
+ */
+export function useConversation(source: Source = 'samples'): Conversation {
 	const [turns, setTurns] = useState<Turn[]>([]);
 	const [isThinking, setThinking] = useState(false);
-	const log = useRef<HTMLDivElement>(null);
 	const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 	useEffect(() => () => clearTimeout(timer.current), []);
-
-	// The newest message stays in view as the conversation grows
-	useEffect(() => {
-		const element = log.current;
-		if (element) element.scrollTo({ top: element.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-	}, [turns, isThinking]);
 
 	// A reply that comes after a restart belongs to a conversation that's gone
 	const conversation = useRef(0);
@@ -94,6 +94,29 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples' }: ChatProp
 		setThinking(false);
 		setTurns([]);
 	};
+	return { source, turns, isThinking, ask, restart };
+}
+
+export interface ChatProps {
+	title?: string;
+	/** Samples answers from a few written in, and Claude asks Claude, while the preview runs locally */
+	source?: Source;
+	/** One kept outside, from useConversation, so it outlasts the drawer. Otherwise the chat keeps its own */
+	conversation?: Conversation;
+}
+
+/** The drawer's contents: the conversation, what to ask, and the field to ask it in */
+export function Chat({ title = 'Ask the kitchen', source = 'samples', conversation }: ChatProps) {
+	const own = useConversation(source);
+	const { turns, isThinking, ask, restart } = conversation ?? own;
+	const isClaude = (conversation ?? own).source === 'claude';
+	const log = useRef<HTMLDivElement>(null);
+
+	// The newest message stays in view as the conversation grows, and in view again as the drawer opens on it
+	useEffect(() => {
+		const element = log.current;
+		if (element) element.scrollTo({ top: element.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+	}, [turns, isThinking]);
 
 	// Replies come as a run of paragraphs, so each run is one message
 	const grouped = turns.reduce<Turn[][]>((runs, turn) => {
