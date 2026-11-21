@@ -32,7 +32,8 @@
     "check": "tsc -p tsconfig.json",
     "test": "vitest run",
     "dev": "vite --port 5199 --strictPort",
-    "elyx:css": "node elyx/build-css.ts"
+    "elyx:css": "node elyx/build-css.ts",
+    "site": "vite build && wrangler deploy"
   },
   "peerDependencies": {
     "@shikijs/transformers": ">=4",
@@ -73,6 +74,7 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
-    "vitest": "^5.0.5"
+    "vitest": "^5.0.5",
+    "wrangler": "^4.166.0"
   }
 }
