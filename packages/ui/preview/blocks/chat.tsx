@@ -44,11 +44,12 @@ type Answer = { text?: string; ui?: Node; title?: string; values?: Values; contr
 // The page it's asked from, by its name in the tab's title and its route, so "this" means something to Claude
 const pageOf = () => ({ title: document.title.split(' · ')[0], path: location.hash.slice(1) || '/' });
 
+const failed = (text: string): Turn => ({ from: 'assistant', text, isError: true });
+
 // The conversation so far, as the endpoint takes it, and its reply: words, and a view when one says it better. The
 // endpoint sends each step it takes as a line of JSON as it starts, and the answer last, so onStep hears each in turn
 async function askClaude(turns: Turn[], onStep: (step: string) => void): Promise<Turn> {
 	const messages = turns.filter((turn) => !turn.isError).map(({ from, text, ui, values, controls, note }) => ({ role: from, text: note ? `${text}\n\n${note}` : text, ui, values, controls }));
-	const failed = (text: string): Turn => ({ from: 'assistant', text, isError: true });
 	try {
 		const response = await fetch('/__loupe/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages, page: pageOf() }) });
 		if (!response.ok || !response.body) {
