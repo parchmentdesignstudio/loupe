@@ -17,8 +17,9 @@ export interface DrawerProps extends Omit<SheetOverlayProps, 'children'> {
     /** The window width a pushing drawer pushes from. Below it, it's an overlay */
     pushFrom?: keyof typeof breakpoints;
     /**
-     * How the page beside a pushing drawer rewraps. Once, the drawer slides over it and it rewraps a single time, which
-     * suits text. Continuous, it's squeezed as the drawer opens, rewrapping all the way, which suits a page of little text
+     * How the page beside a pushing drawer rewraps. Once, it rewraps a single time as the drawer slides over, which suits
+     * text, and what's marked data-drawer-follows glides to its new place with the drawer. Continuous, it's squeezed as
+     * the drawer opens, rewrapping all the way, which suits a page of little text
      */
     reflow?: 'once' | 'continuous';
 }

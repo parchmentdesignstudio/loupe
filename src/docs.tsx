@@ -125,12 +125,13 @@ export function DocsPage({ header, contents, isWide, children }: DocsPageProps) 
 	const column = isWide ? '' : 'mx-auto max-w-[40rem]';
 	return (
 		<div className={contents ? 'xl:grid xl:grid-cols-[13rem_minmax(0,1fr)] xl:items-start' : undefined}>
+			{/* The columns glide over when a drawer beside the page opens, rather than jumping as they recentre */}
 			<div className="px-4 pt-10 pb-10 md:px-10 xl:col-start-2">
-				<div className={column}>{header}</div>
+				<div data-drawer-follows className={column}>{header}</div>
 			</div>
 			{contents}
 			<div className="min-w-0 px-4 pb-10 md:px-10 xl:col-start-2 xl:row-start-2">
-				<div className={`flex flex-col gap-10 ${column}`}>{children}</div>
+				<div data-drawer-follows className={`flex flex-col gap-10 ${column}`}>{children}</div>
 			</div>
 		</div>
 	);

@@ -126,7 +126,7 @@ export function DrawerPlayground() {
 				<DrawerTrigger>
 					<div className="flex h-96 w-full overflow-hidden rounded-lg bg-ground [--bleed:var(--ground-bleed)]">
 						{side === 'start' && drawer}
-						<div className="flex min-w-0 flex-1 flex-col items-start gap-3 p-6">
+						<div data-drawer-follows className="flex min-w-0 flex-1 flex-col items-start gap-3 p-6">
 							{button}
 							<p className="max-w-prose text-body text-muted">{bodyOf('long').join(' ')}</p>
 						</div>
