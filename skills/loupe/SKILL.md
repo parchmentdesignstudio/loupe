@@ -22,6 +22,9 @@ component. Light and dark are one set of roles, so nothing is coloured per theme
    raw values (`bg-[#fff]`, `text-[13px]`, `shadow-[…]`, `rounded-[10px]`). Roles carry light and dark, and the
    palette doesn't. See [tokens](references/tokens.md).
 
+`pnpm lint` fails on breaking rules 1 and 3, and on a Button with no variant, with `packages/ui/lint/misuse.mjs`.
+Where a raw value is meant, say why on the line above: `// loupe-lint-ignore: a specimen, set larger than any text`.
+
 ## Defaults to reach for
 
 - Text: `text-body` for reading, `text-control` inside controls, `text-label` for small labels and meta, `text-title`

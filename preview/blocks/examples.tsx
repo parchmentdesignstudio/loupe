@@ -103,13 +103,14 @@ export const examples: Record<string, () => ReactNode> = {
 	),
 	Typography: () => (
 		<span className="flex items-baseline gap-3">
+			{/* loupe-lint-ignore: a specimen, set larger than any text in use */}
 			<span className="text-[3.5rem] leading-none font-medium">Aa</span>
 			<span className="font-mono text-title text-muted">Aa</span>
 		</span>
 	),
 
 	// Actions
-	Button: () => <Button start={<Icon name="plus" />}>New project</Button>,
+	Button: () => <Button variant="primary" start={<Icon name="plus" />}>New project</Button>,
 	Chip: () => (
 		<ChipGroup aria-label="Start with" className="flex flex-wrap justify-center gap-2">
 			<Chip>A logo</Chip>
@@ -304,7 +305,7 @@ export const examples: Record<string, () => ReactNode> = {
 				<DialogHeading>Rename project</DialogHeading>
 				<DialogActions>
 					<Button variant="secondary">Cancel</Button>
-					<Button>Save</Button>
+					<Button variant="primary">Save</Button>
 				</DialogActions>
 			</Dialog>
 		</Shrink>

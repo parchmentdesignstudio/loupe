@@ -591,6 +591,7 @@ export function LeadsScreen() {
 					onDensity={setDensity}
 				/>
 				<Tabs selectedKey={tab} onSelectionChange={(key) => (setTab(key), reset())} className="min-h-0 flex-1 gap-0">
+					{/* loupe-lint-ignore: the tabs' bar sits on the line under them, which takes a 3px nudge */}
 					<TabList aria-label="Status" items={tabs} className="mx-0 border-b border-bleed/8 bg-none px-4 pt-2 pb-[3px]">
 						{(each) => (
 							<Tab id={each.id}>
