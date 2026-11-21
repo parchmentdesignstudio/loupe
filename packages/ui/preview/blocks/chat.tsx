@@ -215,7 +215,7 @@ export function ChatPlayground() {
 			<DrawerTrigger defaultOpen>
 				<div className="flex h-[36rem] w-full overflow-hidden rounded-lg bg-ground [--bleed:var(--ground-bleed)]">
 					{side === 'start' && drawer}
-					<div className="flex min-w-0 flex-1 flex-col items-start gap-3 overflow-auto p-6">
+					<div data-drawer-follows className="flex min-w-0 flex-1 flex-col items-start gap-3 overflow-auto p-6">
 						{button}
 						<p className="max-w-prose text-body text-muted">{bodyOf('long').join(' ')}</p>
 					</div>
@@ -231,7 +231,7 @@ export function ClaudeChatPlayground() {
 	return (
 		<DrawerTrigger defaultOpen>
 			<div className="flex h-[44rem] w-full overflow-hidden rounded-lg bg-ground [--bleed:var(--ground-bleed)] [--drawer-push-width:32rem]">
-				<div className="flex min-w-0 flex-1 flex-col items-start gap-3 overflow-auto p-6">
+				<div data-drawer-follows className="flex min-w-0 flex-1 flex-col items-start gap-3 overflow-auto p-6">
 					<Button variant="secondary" start={<Icon name="note-text-badge-pencil" />}>
 						Ask
 					</Button>
