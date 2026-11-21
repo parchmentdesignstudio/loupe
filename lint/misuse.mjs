@@ -6,7 +6,7 @@
 //
 //   node packages/ui/lint/misuse.mjs [files or folders…]
 //
-// With none, it checks the preview's screens and blocks, which are built as a site would build. A line can be let off
+// With none, it checks the preview's screens, blocks and generated views, which are built as a site would build. A line can be let off
 // with a comment on the line above saying why: // loupe-lint-ignore: the brand's exact yellow, as an illustration
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
@@ -96,7 +96,7 @@ function files(path) {
 }
 
 const paths = process.argv.slice(2);
-const targets = (paths.length ? paths : [join(ui, 'preview/screens'), join(ui, 'preview/blocks')]).flatMap(files);
+const targets = (paths.length ? paths : [join(ui, 'preview/screens'), join(ui, 'preview/blocks'), join(ui, 'preview/genui')]).flatMap(files);
 let count = 0;
 for (const file of targets) {
 	for (const { line, column, rule, message } of check(file, readFileSync(file, 'utf8'))) {

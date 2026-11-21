@@ -20,6 +20,10 @@ Steve's next focus, on 21 November 2026: readability and typography across Loupe
 - **`npx @parchment/ui`:** a CLI with `skill`, which copies `skills/loupe` into a project's `.claude/skills`, and
   `lint`, which runs `lint/misuse.mjs` on a site. It needs `bin` and `files` in package.json, and the checker on
   `oxc-parser` rather than Vite's parser, as a site may not have Vite.
+- **Claude in the hosted Loupe:** the chat's Claude only runs locally, through `preview/genui/claude.mjs`. Hosted,
+  the endpoint becomes a Worker route with `ANTHROPIC_API_KEY` as a Worker secret, behind Access, and the catalogue
+  is built at build time, as the Worker has no Vite to load `virtual:details` through.
+- **Generative UI's catalogue:** icons, with names checked against `icons.json`, and a Menu of row actions on a Table.
 
 ## Foundations, next
 
