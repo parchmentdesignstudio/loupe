@@ -20,7 +20,8 @@
       "types": "./lib/shiki.d.ts",
       "default": "./lib/shiki.js"
     },
-    "./tokens.css": "./tokens.css"
+    "./tokens.css": "./tokens.css",
+    "./styles/*": "./styles/*"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
