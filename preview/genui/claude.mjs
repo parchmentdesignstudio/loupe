@@ -23,11 +23,18 @@ How Loupe is used:
 - A Table is its own box: never in a Card. Amounts and counts are align end. Exactly one column is the row header, the one that names each row. Status goes in its own column as a Status, never a word on its own.
 - Cards are only for things among other cards, such as stats in a Grid: a group label, then the figure as Text with size title.
 - Settings are Switches, which take effect at once, with no Save button. A form that is submitted ends with its one primary Button.
-- Labels and headings are sentence case. Buttons say what happens, such as Send invoice, never Submit or OK.`;
+- Labels and headings are sentence case. Buttons say what happens, such as Send invoice, never Submit or OK.
+
+Controls, when asked for them, or to tweak, adjust or try out a view:
+- Name what's worth adjusting in values, set to what you'd pick, and have each prop read its value with {"$value": name}. A value read by several props moves them together, such as every section gap. To show or hide a block, give it when, with the name of a true or false value.
+- List the controls in groups, such as Spacing, Content and Style, each naming a label and a value. Don't say what kind of control it is or how far it goes: that comes from the props that read the value, so a gap gets a slider over Loupe's steps and a variant a choice of its options.
+- Offer controls rather than buttons that ask you to redraw the view. They change it as they move, without you.
+- The user's next message says where they left the controls. Draw from there when you draw again.`;
 
 let client;
 let renderTool;
 let validate;
+let panelOf;
 
 async function setUp(server) {
 	// The preview's root is preview, so the package's own .env.local is a folder up
@@ -47,19 +54,24 @@ async function setUp(server) {
 		eager_input_streaming: true,
 	};
 	validate = (input) => catalogue.validate(input, schema);
+	panelOf = (input) => catalogue.panelOf(input, schema);
 }
 
-// What the page sends: each turn's words, and the tree it was shown, which Claude is told of as words of its own
+// What the page sends: each turn's words, and the view it was shown, with its values and controls, which Claude is
+// told of as words of its own
 const historyOf = (messages) =>
-	messages.map(({ role, text, ui }) => ({
+	messages.map(({ role, text, ui, values, controls }) => ({
 		role,
-		content: ui ? `${text}\n\n[The view drawn with render_ui]\n${JSON.stringify(ui)}` : text,
+		content: ui ? `${text}\n\n[The view drawn with render_ui]\n${JSON.stringify({ ui, values, controls })}` : text,
 	}));
 
 async function answer(messages) {
 	const conversation = historyOf(messages);
 	let ui;
 	let summary;
+	let values;
+	let panel;
+	let controls;
 	for (let attempt = 0; attempt <= attempts; attempt++) {
 		const response = await client.beta.messages
 			.stream({
@@ -79,9 +91,9 @@ async function answer(messages) {
 			.finalMessage();
 		const words = response.content.filter((block) => block.type === 'text').map((block) => block.text).join('\n\n').trim();
 		if (response.stop_reason === 'refusal') return { text: words || 'Claude couldn’t help with that one.' };
-		if (response.stop_reason === 'max_tokens') return { text: words || 'That reply ran too long to finish.', ui, summary };
+		if (response.stop_reason === 'max_tokens') return { text: words || 'That reply ran too long to finish.', ui, summary, values, controls, panel };
 		const calls = response.content.filter((block) => block.type === 'tool_use');
-		if (response.stop_reason !== 'tool_use' || !calls.length) return { text: words, ui, summary };
+		if (response.stop_reason !== 'tool_use' || !calls.length) return { text: words, ui, summary, values, controls, panel };
 
 		// Every call gets its result back in the one message, and only a tree that passes is kept
 		const results = calls.map((call) => {
@@ -90,11 +102,14 @@ async function answer(messages) {
 			if (errors.length) return { type: 'tool_result', tool_use_id: call.id, is_error: true, content: `It can't be drawn:\n${errors.join('\n')}\nFix these and call render_ui again.` };
 			ui = call.input.ui;
 			summary = call.input.summary;
+			values = call.input.values;
+			controls = call.input.controls;
+			panel = controls ? panelOf(call.input) : undefined;
 			return { type: 'tool_result', tool_use_id: call.id, content: 'Drawn under your reply.' };
 		});
 		conversation.push({ role: 'assistant', content: response.content }, { role: 'user', content: results });
 	}
-	return { text: 'Claude couldn’t draw a view that fits Loupe, so here are its words alone.', ui, summary };
+	return { text: 'Claude couldn’t draw a view that fits Loupe, so here are its words alone.', ui, summary, values, controls, panel };
 }
 
 export function claude() {

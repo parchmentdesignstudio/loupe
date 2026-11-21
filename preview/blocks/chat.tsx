@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@parchment/icons/react';
 import { Button, Composer, DialogClose, DialogHeading, Drawer, DrawerTrigger, Message, MessageList, Suggestion, Suggestions, TextEffect } from '../../src/index.js';
 import { codeOf } from '../code.js';
-import type { Node } from '../genui/catalogue.js';
+import type { Node, Panel, Values } from '../genui/catalogue.js';
 import { Generated } from '../genui/render.js';
 import { bodyOf } from '../playgrounds/overlay.js';
 import { Choice, ControlGroup, Playground, TextControl, pick, useRemembered } from '../playground.js';
@@ -17,6 +17,14 @@ interface Turn {
 	text: string;
 	/** A view Claude drew with render_ui */
 	ui?: Node;
+	/** What its values start at, the controls Claude asked for, and those controls as they're drawn */
+	values?: Values;
+	controls?: unknown;
+	panel?: Panel[];
+	/** Its values as the controls have left them */
+	tweaked?: Values;
+	/** Sent with a question, unseen: where the last view's controls were left */
+	note?: string;
 	isError?: boolean;
 }
 
@@ -32,12 +40,12 @@ const claudeStarters = ['Show this month’s overdue invoices', 'A settings pane
 
 // The conversation so far, as the endpoint takes it, and its reply: words, and a view when one says it better
 async function askClaude(turns: Turn[]): Promise<Turn> {
-	const messages = turns.filter((turn) => !turn.isError).map(({ from, text, ui }) => ({ role: from, text, ui }));
+	const messages = turns.filter((turn) => !turn.isError).map(({ from, text, ui, values, controls, note }) => ({ role: from, text: note ? `${text}\n\n${note}` : text, ui, values, controls }));
 	try {
 		const response = await fetch('/__loupe/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages }) });
-		const reply = (await response.json()) as { text?: string; ui?: Node; error?: string };
+		const reply = (await response.json()) as { text?: string; ui?: Node; values?: Values; controls?: unknown; panel?: Panel[]; error?: string };
 		if (!response.ok || reply.error) return { from: 'assistant', text: reply.error ?? `Claude didn’t answer (${response.status})`, isError: true };
-		return { from: 'assistant', text: reply.text ?? '', ui: reply.ui };
+		return { from: 'assistant', text: reply.text ?? '', ui: reply.ui, values: reply.values, controls: reply.controls, panel: reply.panel };
 	} catch {
 		return { from: 'assistant', text: 'Claude is only here while the preview runs locally, with pnpm dev', isError: true };
 	}
@@ -54,6 +62,8 @@ export interface Conversation {
 	isThinking: boolean;
 	ask: (question: string) => void;
 	restart: () => void;
+	/** Keeps where a view's controls were left, for the next question to carry */
+	tweak: (turn: Turn, values: Values) => void;
 }
 
 /**
@@ -70,7 +80,11 @@ export function useConversation(source: Source = 'samples'): Conversation {
 	const conversation = useRef(0);
 	const isClaude = source === 'claude';
 	const ask = (question: string) => {
-		const asked: Turn = { from: 'user', text: question };
+		// Where the latest view's controls were left, if they've moved, so Claude can draw on from there
+		const view = turns.findLast((turn) => turn.ui);
+		const moved = view?.tweaked && Object.entries(view.tweaked).filter(([name, value]) => view.values?.[name] !== value);
+		const note = moved?.length ? `[I've set the controls on your last view to: ${moved.map(([name, value]) => `${name} ${JSON.stringify(value)}`).join(', ')}]` : undefined;
+		const asked: Turn = { from: 'user', text: question, note };
 		setTurns((list) => [...list, asked]);
 		setThinking(true);
 		clearTimeout(timer.current);
@@ -94,7 +108,8 @@ export function useConversation(source: Source = 'samples'): Conversation {
 		setThinking(false);
 		setTurns([]);
 	};
-	return { source, turns, isThinking, ask, restart };
+	const tweak = (turn: Turn, values: Values) => setTurns((list) => list.map((item) => (item === turn ? { ...item, tweaked: values } : item)));
+	return { source, turns, isThinking, ask, restart, tweak };
 }
 
 export interface ChatProps {
@@ -108,7 +123,7 @@ export interface ChatProps {
 /** The drawer's contents: the conversation, what to ask, and the field to ask it in */
 export function Chat({ title = 'Ask the kitchen', source = 'samples', conversation }: ChatProps) {
 	const own = useConversation(source);
-	const { turns, isThinking, ask, restart } = conversation ?? own;
+	const { turns, isThinking, ask, restart, tweak } = conversation ?? own;
 	const isClaude = (conversation ?? own).source === 'claude';
 	const log = useRef<HTMLDivElement>(null);
 
@@ -162,7 +177,7 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 															{paragraph}
 														</p>
 													))}
-												{turn.ui && <Generated ui={turn.ui} onAction={ask} />}
+												{turn.ui && <Generated ui={turn.ui} values={turn.tweaked ?? turn.values} panel={turn.panel} onAction={ask} onValuesChange={(values) => tweak(turn, values)} />}
 											</div>
 										))}
 							</Message>

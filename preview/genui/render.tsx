@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Alert, Avatar, Button, Cell, Checkbox, Column, EmptyState, ListBoxItem, Meter, ProgressBar, Quote, Radio, RadioGroup, Row, Select, Separator, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, TextField } from '../../src/index.js';
-import type { Node } from './catalogue.js';
+import { type Node, type Panel, type Values, resolve } from './catalogue.js';
+import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
 
 // Draws a tree that validate() passed, with Loupe's components and nothing else. Layout is a few fixed classes,
 // written out whole so Tailwind finds them. A grid's columns follow its own width, through a container query,
@@ -56,10 +57,23 @@ export interface GeneratedProps {
 	ui: Node;
 	/** A Button's action, sent on as the next message */
 	onAction?: (message: string) => void;
+	/** What the view's values start at, which its controls move */
+	values?: Values;
+	/** Its controls, from panelOf */
+	panel?: Panel[];
+	/** Each time a control moves, with every value as it now is */
+	onValuesChange?: (values: Values) => void;
 }
 
-/** A view Claude made with render_ui */
-export function Generated({ ui, onAction }: GeneratedProps) {
+/** A view Claude made with render_ui, and the controls to tweak it, which redraw it here as they move */
+export function Generated({ ui, onAction, values: initial, panel, onValuesChange }: GeneratedProps) {
+	const [values, setValues] = useState<Values>(initial ?? {});
+	const set = (name: string, value: string | number | boolean) => {
+		const next = { ...values, [name]: value };
+		setValues(next);
+		onValuesChange?.(next);
+	};
+	const shown = resolve(ui, values);
 	const draw = (node: Node, key?: string | number): ReactNode => {
 		const p = node as Props;
 		const kids = () => node.children?.map((child, index) => draw(child, index));
@@ -144,5 +158,26 @@ export function Generated({ ui, onAction }: GeneratedProps) {
 		</Button>
 	);
 
-	return <div className="@container flex min-w-0 flex-col">{draw(ui)}</div>;
+	const controls = panel?.filter((group) => group.items.length);
+	return (
+		<div className="@container flex min-w-0 flex-col gap-4">
+			{shown && draw(shown)}
+			{controls?.length ? (
+				// The playground's own rows, in a well under the view, so it reads as the view's controls, not part of it
+				<section aria-label="Controls" className="flex flex-col rounded-lg bg-bleed/4 px-3 pt-2 pb-1">
+					{controls.map((group) => (
+						<ControlGroup key={group.group} label={group.group}>
+							{group.items.map(({ label, value: name, control }) => {
+								const value = values[name];
+								if (control.kind === 'slider') return <SliderControl key={name} label={label} value={value as number} onChange={(next) => set(name, next)} minValue={control.min} maxValue={control.max} steps={control.steps} scale={control.scale} unit={control.unit} />;
+								if (control.kind === 'choice') return <Choice key={name} label={label} options={control.options} value={value as string} onChange={(next) => set(name, next)} />;
+								if (control.kind === 'switch') return <SwitchControl key={name} label={label} value={value as boolean} onChange={(next) => set(name, next)} />;
+								return <TextControl key={name} label={label} value={value as string} onChange={(next) => set(name, next)} />;
+							})}
+						</ControlGroup>
+					))}
+				</section>
+			) : null}
+		</div>
+	);
 }

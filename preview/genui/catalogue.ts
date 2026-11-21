@@ -2,7 +2,12 @@
 // component, or a layout of them, and takes data rather than markup: a Table's columns and rows, a Select's options.
 // The closed sets, such as Button's variants, are read from the source through virtual:details, so a variant added
 // or taken away there is one here too, and the catalogue fails to load if a prop it names has gone. Nothing takes a
-// class or a style, so every tree is drawn with Loupe's own tokens
+// class or a style, so every tree is drawn with Loupe's own tokens.
+//
+// A view can also come with controls to tweak it, as a playground has. Its values are named, a block's prop reads one
+// with {"$value": name}, and a block's when shows it only while a true-or-false value is on. A control names only its
+// label and its value: what kind of control it is, and how far it goes, comes from the props that read the value, so a
+// gap gets a slider over Loupe's own steps, and no setting of any control can draw a view the catalogue wouldn't
 import type { Details } from '../details.mjs';
 
 export type Schema = { [key: string]: unknown };
@@ -23,6 +28,7 @@ export interface Node {
 }
 
 const node = { $ref: '#/$defs/node' };
+const bound = { $ref: '#/$defs/bound' };
 const text = (description: string): Schema => ({ type: 'string', description });
 const oneOf = (values: readonly (string | number)[], description?: string): Schema => ({ enum: [...values], ...(description && { description }) });
 // Loupe's 4px steps, as Tailwind's gap-1 to gap-10
@@ -76,22 +82,47 @@ export function blocksOf(details: Details): Record<string, Block> {
 	};
 }
 
-const schemaOf = (type: string, block: Block): Schema => ({
+// A block in the tree can read its props from the view's values, and be shown or hidden by one. A Status in a table's
+// cells, or an EmptyState's button, keeps to fixed props, as the controls follow only the tree's own blocks
+const schemaOf = (type: string, block: Block, isBindable = false): Schema => ({
 	type: 'object',
 	description: block.doc,
-	properties: { type: { const: type }, ...block.props, ...(block.children && { children: { type: 'array', items: node } }) },
+	properties: {
+		type: { const: type },
+		...(isBindable ? Object.fromEntries(Object.entries(block.props).map(([key, prop]) => [key, { anyOf: [prop, bound] }])) : block.props),
+		...(isBindable && { when: text('The name of a true-or-false value: the block shows only while it is true') }),
+		...(block.children && { children: { type: 'array', items: node } }),
+	},
 	required: ['type', ...(block.required ?? [])],
 	additionalProperties: false,
 });
 
-/** render_ui's input schema: { ui: a block }, each block one of the catalogue's */
+/** render_ui's input schema: { ui: a block }, each block one of the catalogue's, and the values and controls to tweak it */
 export function inputSchemaOf(blocks: Record<string, Block>): Schema {
 	return {
 		type: 'object',
-		properties: { ui: node, summary: text('One sentence on what the view shows, for the conversation') },
+		properties: {
+			ui: node,
+			summary: text('One sentence on what the view shows, for the conversation'),
+			values: { type: 'object', description: 'Only with controls. Named values, each a number, a string or true or false, set to what the view starts with. A prop reads one with {"$value": name}' },
+			controls: {
+				type: 'array',
+				description: 'Only when asked for controls, or to tweak or adjust a view. Groups of controls, each moving one value. What kind of control it is, and its range, come from the props that read the value',
+				items: {
+					type: 'object',
+					properties: {
+						group: text('Sentence case, such as Spacing'),
+						items: { type: 'array', minItems: 1, items: { type: 'object', properties: { label: text('Sentence case, such as Between sections'), value: text('A name in values') }, required: ['label', 'value'], additionalProperties: false } },
+					},
+					required: ['group', 'items'],
+					additionalProperties: false,
+				},
+			},
+		},
 		required: ['ui', 'summary'],
 		$defs: {
-			node: { anyOf: Object.entries(blocks).map(([type, block]) => schemaOf(type, block)) },
+			node: { anyOf: Object.entries(blocks).map(([type, block]) => schemaOf(type, block, true)) },
+			bound: { type: 'object', description: 'Reads a value from values, which a control can change', properties: { $value: text('A name in values') }, required: ['$value'], additionalProperties: false },
 			status: schemaOf('Status', blocks.Status),
 			button: schemaOf('Button', blocks.Button),
 		},
@@ -105,7 +136,7 @@ function check(value: unknown, schema: Schema, at: string, defs: Record<string, 
 		// A block is picked by its type, so its own errors can be told rather than every block's
 		const branches = schema.anyOf as Schema[];
 		const type = (value as Node | null)?.type;
-		const named = branches.find((branch) => (branch.properties as Record<string, Schema> | undefined)?.type?.const === type);
+		const named = type !== undefined && branches.find((branch) => (branch.properties as Record<string, Schema> | undefined)?.type?.const === type);
 		if (named) return check(value, named, at, defs, errors);
 		const tried = branches.map((branch) => {
 			const found: string[] = [];
@@ -175,10 +206,131 @@ function rules(ui: Node, errors: string[]) {
 	if (primaries > 1) errors.push(`ui: has ${primaries} primary buttons. One at most, so the view has one next step`);
 }
 
+export type Values = Record<string, string | number | boolean>;
+
+/** What a control is, from the props that read its value */
+export type Control =
+	| { kind: 'slider'; steps?: number[]; min: number; max: number; scale: number; unit?: 'px' }
+	| { kind: 'choice'; options: string[] }
+	| { kind: 'switch' }
+	| { kind: 'text' };
+
+export interface Panel {
+	group: string;
+	items: { label: string; value: string; control: Control }[];
+}
+
+interface Input {
+	ui: Node;
+	summary?: string;
+	values?: Values;
+	controls?: { group: string; items: { label: string; value: string }[] }[];
+}
+
+const isBound = (value: unknown): value is { $value: string } => typeof value === 'object' && value !== null && !Array.isArray(value) && typeof (value as { $value?: unknown }).$value === 'string';
+
+// What a prop takes, as a control: numbers from a set on a slider that snaps to them, a few words as a choice, a
+// number between limits on a slider, true or false on a switch, and words in a field. A gap is shown in pixels
+function controlOf(key: string, prop: Schema): Control | undefined {
+	if (Array.isArray(prop.enum)) {
+		if (prop.enum.every((item) => typeof item === 'number')) {
+			const steps = (prop.enum as number[]).toSorted((a, b) => a - b);
+			const scale = key === 'gap' ? 4 : 1;
+			return { kind: 'slider', steps, min: steps[0], max: steps.at(-1)!, scale, unit: key === 'gap' || key === 'size' ? 'px' : undefined };
+		}
+		return { kind: 'choice', options: prop.enum.map(String) };
+	}
+	if (prop.type === 'number' || prop.type === 'integer') return { kind: 'slider', min: typeof prop.minimum === 'number' ? prop.minimum : 0, max: typeof prop.maximum === 'number' ? prop.maximum : 100, scale: 1 };
+	if (prop.type === 'boolean') return { kind: 'switch' };
+	if (prop.type === 'string') return { kind: 'text' };
+}
+
+// Two props reading one value: the control is what both take, such as the gap steps they share
+function merge(a: Control, b: Control): Control | undefined {
+	if (a.kind !== b.kind) return;
+	if (a.kind === 'choice' && b.kind === 'choice') {
+		const options = a.options.filter((option) => b.options.includes(option));
+		return options.length > 1 ? { kind: 'choice', options } : undefined;
+	}
+	if (a.kind === 'slider' && b.kind === 'slider') {
+		if (a.steps || b.steps) {
+			const steps = (a.steps ?? b.steps!).filter((step) => (b.steps ?? a.steps!).includes(step));
+			return steps.length > 1 && a.scale === b.scale ? { ...a, steps, min: steps[0], max: steps.at(-1)! } : undefined;
+		}
+		return { ...a, min: Math.max(a.min, b.min), max: Math.min(a.max, b.max) };
+	}
+	return a;
+}
+
+const fits = (control: Control, value: unknown) =>
+	control.kind === 'slider' ? typeof value === 'number' && (control.steps ? control.steps.includes(value) : value >= control.min && value <= control.max) : control.kind === 'choice' ? control.options.includes(value as string) : control.kind === 'switch' ? typeof value === 'boolean' : typeof value === 'string';
+
+/**
+ * The controls a view comes with, each with what it is, from the props that read its value. Errors where a value is
+ * read by props that can't share one control, or isn't one of those props' own, or a control names no value
+ */
+export function panelOf(input: Input, schema: Schema, errors: string[] = []): Panel[] {
+	const values = input.values ?? {};
+	const blocks = new Map(((schema.$defs as Record<string, Schema>).node.anyOf as Schema[]).map((branch) => {
+		const properties = branch.properties as Record<string, Schema>;
+		return [properties.type.const as string, properties];
+	}));
+	const controls = new Map<string, Control>();
+	const read = (name: string, control: Control | undefined, at: string) => {
+		if (!(name in values)) return errors.push(`${at}: reads ${JSON.stringify(name)}, which isn't in values`);
+		if (!control) return errors.push(`${at}: can't be set from a control`);
+		const was = controls.get(name);
+		const both = was ? merge(was, control) : control;
+		if (!both) return errors.push(`${at}: reads ${JSON.stringify(name)}, which other props read as something else. Give each its own value`);
+		controls.set(name, both);
+	};
+	const visit = (item: Node, at: string) => {
+		if (!item || typeof item !== 'object') return;
+		const properties = blocks.get(item.type);
+		for (const [key, value] of Object.entries(item)) {
+			if (key === 'when' && typeof value === 'string') read(value, { kind: 'switch' }, `${at}.when`);
+			else if (isBound(value)) {
+				const prop = (properties?.[key]?.anyOf as Schema[] | undefined)?.[0];
+				read(value.$value, prop && controlOf(key, prop), `${at}.${key}`);
+			}
+		}
+		item.children?.forEach((child, index) => visit(child, `${at}.children[${index}]`));
+		(item.tabs as { content: Node }[] | undefined)?.forEach((tab, index) => visit(tab.content, `${at}.tabs[${index}].content`));
+	};
+	visit(input.ui, 'ui');
+	for (const [name, control] of controls) if (!fits(control, values[name])) errors.push(`values.${name}: ${JSON.stringify(values[name])} doesn't suit what reads it${control.kind === 'slider' && control.steps ? `, which takes ${control.steps.join(', ')}` : control.kind === 'choice' ? `, which takes ${control.options.join(', ')}` : ''}`);
+	for (const name of Object.keys(values)) if (!controls.has(name)) errors.push(`values.${name}: nothing reads it`);
+	return (input.controls ?? []).map((group, at) => ({
+		group: group.group,
+		items: group.items.flatMap((item, index) => {
+			const control = controls.get(item.value);
+			if (!control) {
+				errors.push(`controls[${at}].items[${index}]: ${JSON.stringify(item.value)} isn't a value any prop reads`);
+				return [];
+			}
+			return [{ ...item, control }];
+		}),
+	}));
+}
+
+/** The tree as it is with these values: each read prop takes its value, and a block whose when is off is left out */
+export function resolve(ui: Node, values: Values): Node | undefined {
+	if (typeof ui.when === 'string' && values[ui.when] === false) return undefined;
+	const node = Object.fromEntries(Object.entries(ui).filter(([key]) => key !== 'when').map(([key, value]) => [key, isBound(value) ? values[value.$value] : value])) as Node;
+	if (node.children) node.children = node.children.map((child) => resolve(child, values)).filter((child): child is Node => child !== undefined);
+	if (Array.isArray(node.tabs)) node.tabs = (node.tabs as { content: Node }[]).map((tab) => ({ ...tab, content: resolve(tab.content, values) ?? { type: 'Stack' } }));
+	return node;
+}
+
 /** Why a tree can't be drawn, as lines Claude can act on, or none */
 export function validate(input: unknown, schema: Schema): string[] {
 	const errors: string[] = [];
 	check(input, schema, 'input', schema.$defs as Record<string, Schema>, errors);
-	if (!errors.length) rules((input as { ui: Node }).ui, errors);
+	if (errors.length) return errors;
+	const given = input as Input;
+	panelOf(given, schema, errors);
+	if (given.controls?.length && !given.values) errors.push('input: has controls but no values for them to move');
+	// The rules hold for the view as it starts, with its values in place
+	if (!errors.length) rules(resolve(given.ui, given.values ?? {}) ?? given.ui, errors);
 	return errors;
 }
