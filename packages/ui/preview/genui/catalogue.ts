@@ -157,7 +157,10 @@ function rules(ui: Node, errors: string[]) {
 		}
 		if ((item.type === 'Select' || item.type === 'RadioGroup') && item.selected !== undefined && !(item.options as { id: string }[] | undefined)?.some((o) => o.id === item.selected)) errors.push(`${at}.selected: ${JSON.stringify(item.selected)} isn't one of the options' ids`);
 		for (const key of ['options', 'columns', 'rows', 'tabs'] as const) {
-			const ids = ((item[key] as { id: string }[] | undefined) ?? []).map((entry) => entry?.id);
+			// A Grid's columns is a count, not a list
+			const list = item[key];
+			if (!Array.isArray(list)) continue;
+			const ids = (list as { id: string }[]).map((entry) => entry?.id);
 			const repeated = ids.find((id, index) => ids.indexOf(id) !== index);
 			if (repeated !== undefined) errors.push(`${at}.${key}: the id ${JSON.stringify(repeated)} is used twice`);
 		}

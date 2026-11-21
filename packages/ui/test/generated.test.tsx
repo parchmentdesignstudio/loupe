@@ -36,6 +36,8 @@ describe('Generated views', () => {
 
 	it('passes a tree that keeps to the catalogue', () => {
 		expect(validate({ ui: invoices, summary: 'Two overdue invoices' }, schema)).toEqual([]);
+		// A Grid's columns is a count, which the id checks for a Table's columns must step past
+		expect(validate({ summary: 'Stats', ui: { type: 'Grid', columns: 3, children: [{ type: 'Card', children: [{ type: 'Text', text: '£4,182.50', size: 'title' }] }] } }, schema)).toEqual([]);
 	});
 
 	it('says what breaks the catalogue, so Claude can draw it again', () => {
