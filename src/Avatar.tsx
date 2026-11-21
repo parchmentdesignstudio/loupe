@@ -14,14 +14,17 @@ const dotMask = [
 export const avatar = tv({
 	slots: {
 		// In a line of text it hangs from the line's top, so a 20px one fills a 20px line exactly where middle would push
-		// the line a pixel or two taller. --avatar-edge is an outline button's edge, so a pale tint keeps its shape on the
-		// ground as a button's does. --avatar-gap is the gap cut around a status dot and between avatars in a group
-		base: 'relative inline-flex shrink-0 align-top [--avatar-gap:2px] [--avatar-edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_8%,transparent))]',
+		// the line a pixel or two taller. --avatar-edge is an outline button's edge in the light, so a pale tint keeps its
+		// shape on the ground as a button's does, and the dark edge in the dark, with --avatar-sheen a lighter ring just
+		// inside it, as a raised panel has, so a dark tint keeps its shape without a pale outline. --avatar-gap is the gap
+		// cut around a status dot and between avatars in a group
+		base: 'relative inline-flex shrink-0 align-top [--avatar-gap:2px] [--avatar-edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),var(--dark-edge))] [--avatar-sheen:light-dark(transparent,color-mix(in_oklab,var(--color-white)_12%,transparent))]',
 		face: [
 			'relative flex size-(--avatar-size) items-center justify-center overflow-hidden rounded-(--avatar-radius) bg-(color:--avatar-fill) font-(--avatar-font-weight) text-(color:--avatar-text) select-none',
 			// The edge is a see-through border with the fill clipped inside it, so like a button's it darkens whatever the
 			// avatar sits on rather than the tint, and a cut gap takes it along
-			'border border-(color:--avatar-edge) bg-clip-padding',
+			// The sheen is under a photo, which has its own colours to keep its shape
+			'border border-(color:--avatar-edge) bg-clip-padding shadow-[inset_0_0_0_1px_var(--avatar-sheen)]',
 			// Gaps are cut from the face rather than drawn as rings in the colour behind it, so they show whatever it sits on.
 			// Its own dot's gap and the gap for the dot of the avatar before it, which hangs over it, are kept where they
 			// aren't cut. Below them, the next avatar's outline, grown by the gap, is built from up to four shapes and cut
