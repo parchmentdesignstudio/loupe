@@ -1,8 +1,10 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
+import { details } from './preview/details.mjs';
 
 export default defineConfig({
-	plugins: [react()],
+	// details, so the generative UI's catalogue is tested against the source's own variants
+	plugins: [react(), details()],
 	test: {
 		environment: 'jsdom',
 		include: ['test/**/*.test.tsx'],

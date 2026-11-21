@@ -51,7 +51,7 @@ import { AsidePlayground, AsidesInProse } from './playgrounds/aside.js';
 import { AvatarPlayground, AvatarsInText, photo } from './playgrounds/avatar.js';
 import { ButtonPlayground } from './playgrounds/button.js';
 import { CardPlayground, Category } from './blocks/card.js';
-import { ChatPlayground } from './blocks/chat.js';
+import { ChatPlayground, ClaudeChatPlayground } from './blocks/chat.js';
 import { CalendarPlayground } from './playgrounds/calendar.js';
 import { DateFieldPlayground } from './playgrounds/date-field.js';
 import { DatePickerPlayground } from './playgrounds/date-picker.js';
@@ -1251,8 +1251,11 @@ export const blocks: Entry[] = [
 	{
 		id: 'chat',
 		name: 'Chat',
-		description: 'A conversation in a drawer that pushes the page aside, so what’s asked about stays in view. It opens on suggested questions, thinks with a ray over the word, and offers follow-ups after each reply, with Composer at the foot',
-		stories: [{ name: 'Build one', render: ChatPlayground }],
+		description: 'A conversation in a drawer that pushes the page aside, so what’s asked about stays in view. It opens on suggested questions, thinks with a ray over the word, and offers follow-ups after each reply, with Composer at the foot. With Claude, while the preview runs locally, it answers with views drawn from Loupe’s blocks',
+		stories: [
+			{ name: 'Build one', render: ChatPlayground },
+			{ name: 'With Claude', render: ClaudeChatPlayground },
+		],
 	},
 ];
 

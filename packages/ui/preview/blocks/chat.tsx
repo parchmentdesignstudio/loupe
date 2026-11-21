@@ -2,16 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@parchment/icons/react';
 import { Button, Composer, DialogClose, DialogHeading, Drawer, DrawerTrigger, Message, MessageList, Suggestion, Suggestions, TextEffect } from '../../src/index.js';
 import { codeOf } from '../code.js';
+import type { Node } from '../genui/catalogue.js';
+import { Generated } from '../genui/render.js';
 import { bodyOf } from '../playgrounds/overlay.js';
 import { Choice, ControlGroup, Playground, TextControl, pick, useRemembered } from '../playground.js';
 
 // A chat in a drawer that pushes the page aside, so what's asked about stays in view. It opens on what to ask first,
 // and after each reply offers what to ask next. While a reply is thought over, a ray loops over
-// the word. Composer sits at the foot, as a drawer's actions do, and stays live, so a question can follow straight on
+// the word. Composer sits at the foot, as a drawer's actions do, and stays live, so a question can follow straight on.
+// While the preview runs locally it can ask Claude instead, which answers with views drawn from Loupe's own blocks
 
 interface Turn {
 	from: 'user' | 'assistant';
 	text: string;
+	/** A view Claude drew with render_ui */
+	ui?: Node;
+	isError?: boolean;
 }
 
 const starters = ['What should I cook tonight?', 'Plan a week of lunches', 'What’s in season now?'];
@@ -22,16 +28,32 @@ const replies: Record<string, string[]> = {
 };
 const followUps = ['Could it be vegan?', 'How long does it keep?', 'What goes with it?'];
 const fallback = ['Good question. In a real chat the answer would stream in here, a line at a time.'];
+const claudeStarters = ['Show this month’s overdue invoices', 'A settings panel for notifications', 'How did the shop do this week?'];
+
+// The conversation so far, as the endpoint takes it, and its reply: words, and a view when one says it better
+async function askClaude(turns: Turn[]): Promise<Turn> {
+	const messages = turns.filter((turn) => !turn.isError).map(({ from, text, ui }) => ({ role: from, text, ui }));
+	try {
+		const response = await fetch('/__loupe/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages }) });
+		const reply = (await response.json()) as { text?: string; ui?: Node; error?: string };
+		if (!response.ok || reply.error) return { from: 'assistant', text: reply.error ?? `Claude didn’t answer (${response.status})`, isError: true };
+		return { from: 'assistant', text: reply.text ?? '', ui: reply.ui };
+	} catch {
+		return { from: 'assistant', text: 'Claude is only here while the preview runs locally, with pnpm dev', isError: true };
+	}
+}
 
 // How long a reply takes to think over
 const THINKING = 1600;
 
 export interface ChatProps {
 	title?: string;
+	/** Samples answers from a few written in, and Claude asks Claude, while the preview runs locally */
+	source?: 'samples' | 'claude';
 }
 
 /** The drawer's contents: the conversation, what to ask, and the field to ask it in */
-export function Chat({ title = 'Ask the kitchen' }: ChatProps) {
+export function Chat({ title = 'Ask the kitchen', source = 'samples' }: ChatProps) {
 	const [turns, setTurns] = useState<Turn[]>([]);
 	const [isThinking, setThinking] = useState(false);
 	const log = useRef<HTMLDivElement>(null);
@@ -44,16 +66,30 @@ export function Chat({ title = 'Ask the kitchen' }: ChatProps) {
 		if (element) element.scrollTo({ top: element.scrollHeight, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 	}, [turns, isThinking]);
 
+	// A reply that comes after a restart belongs to a conversation that's gone
+	const conversation = useRef(0);
+	const isClaude = source === 'claude';
 	const ask = (question: string) => {
-		setTurns((list) => [...list, { from: 'user', text: question }]);
+		const asked: Turn = { from: 'user', text: question };
+		setTurns((list) => [...list, asked]);
 		setThinking(true);
 		clearTimeout(timer.current);
+		if (isClaude) {
+			const id = conversation.current;
+			void askClaude([...turns, asked]).then((reply) => {
+				if (id !== conversation.current) return;
+				setThinking(false);
+				setTurns((list) => [...list, reply]);
+			});
+			return;
+		}
 		timer.current = setTimeout(() => {
 			setThinking(false);
 			setTurns((list) => [...list, ...(replies[question] ?? fallback).map((text) => ({ from: 'assistant' as const, text }))]);
 		}, THINKING);
 	};
 	const restart = () => {
+		conversation.current++;
 		clearTimeout(timer.current);
 		setThinking(false);
 		setTurns([]);
@@ -78,9 +114,9 @@ export function Chat({ title = 'Ask the kitchen' }: ChatProps) {
 			<div ref={log} className="-mx-(--dialog-padding) mt-4 flex min-h-0 flex-1 flex-col gap-6 overflow-auto px-(--dialog-padding) pb-4">
 				{isEmpty ? (
 					<div className="mt-auto flex flex-col gap-3">
-						<p className="text-body text-muted">Ask about what to cook, what’s in season, or how to use up what you have.</p>
+						<p className="text-body text-muted">{isClaude ? 'Ask for a view, such as a table, a form or a few figures, and Claude draws it with Loupe.' : 'Ask about what to cook, what’s in season, or how to use up what you have.'}</p>
 						<Suggestions aria-label="Suggested questions">
-							{starters.map((question) => (
+							{(isClaude ? claudeStarters : starters).map((question) => (
 								<Suggestion key={question} onPress={() => ask(question)}>
 									{question}
 								</Suggestion>
@@ -91,7 +127,21 @@ export function Chat({ title = 'Ask the kitchen' }: ChatProps) {
 					<MessageList aria-label="Conversation">
 						{grouped.map((run, index) => (
 							<Message key={index} from={run[0].from}>
-								{run[0].from === 'user' ? run[0].text : run.map((turn) => <p key={turn.text}>{turn.text}</p>)}
+								{run[0].from === 'user'
+									? run[0].text
+									: run.map((turn, at) => (
+											<div key={at} className="flex flex-col gap-3">
+												{turn.text
+													.split(/\n{2,}/)
+													.filter(Boolean)
+													.map((paragraph) => (
+														<p key={paragraph} className={turn.isError ? 'text-danger' : undefined}>
+															{paragraph}
+														</p>
+													))}
+												{turn.ui && <Generated ui={turn.ui} onAction={ask} />}
+											</div>
+										))}
 							</Message>
 						))}
 						{isThinking && (
@@ -103,7 +153,7 @@ export function Chat({ title = 'Ask the kitchen' }: ChatProps) {
 						)}
 					</MessageList>
 				)}
-				{!isEmpty && !isThinking && (
+				{!isEmpty && !isThinking && !isClaude && (
 					<Suggestions key={turns.length} aria-label="Follow-up questions" variant="follow-up" className="-mx-2">
 						{followUps.map((question) => (
 							<Suggestion key={question} onPress={() => ask(question)}>
@@ -173,5 +223,24 @@ export function ChatPlayground() {
 				</div>
 			</DrawerTrigger>
 		</Playground>
+	);
+}
+
+// The chat with Claude behind it, in a drawer wide enough for a table. Locally only, as the key stays on the server
+export function ClaudeChatPlayground() {
+	return (
+		<DrawerTrigger defaultOpen>
+			<div className="flex h-[44rem] w-full overflow-hidden rounded-lg bg-ground [--bleed:var(--ground-bleed)] [--drawer-push-width:32rem]">
+				<div className="flex min-w-0 flex-1 flex-col items-start gap-3 overflow-auto p-6">
+					<Button variant="secondary" start={<Icon name="note-text-badge-pencil" />}>
+						Ask
+					</Button>
+					<p className="max-w-prose text-body text-muted">{bodyOf('long').join(' ')}</p>
+				</div>
+				<Drawer mode="push" position="end">
+					<Chat title="Ask Claude" source="claude" />
+				</Drawer>
+			</div>
+		</DrawerTrigger>
 	);
 }

@@ -5,9 +5,10 @@ import { defineConfig } from 'vite';
 import { locate } from '../../scripts/locate.mjs';
 import { details } from './preview/details.mjs';
 import { highlightedCode } from './preview/highlighted.mjs';
+import { claude } from './preview/genui/claude.mjs';
 import { saveTokens } from './preview/save-tokens.mjs';
 
 export default defineConfig({
 	root: 'preview',
-	plugins: [locate(), details(), highlightedCode(), saveTokens(), react(), tailwindcss()],
+	plugins: [locate(), details(), highlightedCode(), saveTokens(), claude(), react(), tailwindcss()],
 });
