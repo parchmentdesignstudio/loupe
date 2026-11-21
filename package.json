@@ -17,7 +17,7 @@
     "bump": "node scripts/bump.mjs",
     "release": "node scripts/release.mjs",
     "elyx:tokens": "node scripts/elyx-tokens.mjs",
-    "lint": "oxlint",
+    "lint": "oxlint && node packages/ui/lint/misuse.mjs",
     "test": "pnpm -r test && node scripts/elyx-tokens.mjs --check"
   },
   "devDependencies": {

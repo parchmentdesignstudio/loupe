@@ -44,6 +44,7 @@ export function Card({ fill = 'raised', media, title, description, actions, href
 	const style: CSSProperties | undefined = brand ? surface(hex(brand[0]), hex(brand[1])) : undefined;
 	return (
 		<article style={style} className={[
+				// loupe-lint-ignore: a card's corner, rounder than a control's, which Loupe has no token for yet
 				'group/card relative flex flex-col gap-3 rounded-2xl p-2 pb-3 text-ink',
 				href && 'outline-offset-2 outline-ink has-[a:focus-visible]:outline-2',
 				// A raised card with no buttons is pressed whole, so it answers as a raised button does: hovered, it lifts by two
@@ -52,6 +53,7 @@ export function Card({ fill = 'raised', media, title, description, actions, href
 				href &&
 					!actions &&
 					fill === 'raised' &&
+					// loupe-lint-ignore: the card lifts on hover, a step past shadow-raised that no level has yet
 					'transition-shadow duration-150 ease-out has-[a:hover:not(:active)]:shadow-[inset_0_0_0_.5px_var(--sheen),0_0_0_.5px_var(--edge),0_1px_1px_-1px_var(--shadow-raised-color),0_1px_3px_-1.5px_var(--shadow-raised-color),0_2px_4px_-2px_var(--shadow-raised-color),0_3px_6px_-3px_var(--shadow-raised-color),0_4px_8px_-4px_var(--shadow-raised-color)] has-[a:active]:shadow-[inset_0_0_0_.5px_var(--sheen),0_0_0_.5px_var(--edge)] motion-reduce:transition-none',
 				fillClass[fill],
 				className,
@@ -61,6 +63,7 @@ export function Card({ fill = 'raised', media, title, description, actions, href
 				<div
 					inert
 					className={[
+						// loupe-lint-ignore: inset from the card's corner by its padding, so the curves stay parallel
 						'flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[calc(var(--radius-2xl)---spacing(2))] p-4 transition-colors duration-150 ease-out motion-reduce:transition-none',
 						// On a raised card in the dark, the area sinks to the ground's colour, so the raised components in it sit
 						// up off it rather than blending in
@@ -77,6 +80,7 @@ export function Card({ fill = 'raised', media, title, description, actions, href
 				<h3 className="text-control font-medium text-ink">
 					{href ? (
 						// The title is the link, so the card reads as one link named by its title, and its text can still be selected
+						// loupe-lint-ignore: the card's own corner, which the link's hit area follows
 						<a href={href} className="cursor-default outline-0 after:absolute after:inset-0 after:rounded-2xl">
 							{title}
 						</a>
