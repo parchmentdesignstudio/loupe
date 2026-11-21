@@ -645,7 +645,7 @@
 
 		@media not all {
 			/* A person's bubble */
-			--message-fill: var(--color-highlight);
+			--message-fill: color-mix(in oklab, var(--color-bleed) 8%, transparent);
 		}
 
 		/* Suggestions */
