@@ -104,6 +104,7 @@ export function inputSchemaOf(blocks: Record<string, Block>): Schema {
 		properties: {
 			ui: node,
 			summary: text('One sentence on what the view shows, for the conversation'),
+			title: text('A few words naming the view, on the bar over it, such as Password reset'),
 			values: { type: 'object', description: 'Only with controls. Named values, each a number, a string or true or false, set to what the view starts with. A prop reads one with {"$value": name}' },
 			controls: {
 				type: 'array',
@@ -223,6 +224,7 @@ export interface Panel {
 interface Input {
 	ui: Node;
 	summary?: string;
+	title?: string;
 	values?: Values;
 	controls?: { group: string; items: { label: string; value: string }[] }[];
 }

@@ -15,8 +15,9 @@ import { Choice, ControlGroup, Playground, TextControl, pick, useRemembered } fr
 interface Turn {
 	from: 'user' | 'assistant';
 	text: string;
-	/** A view Claude drew with render_ui */
+	/** A view Claude drew with render_ui, and its name */
 	ui?: Node;
+	title?: string;
 	/** What its values start at, the controls Claude asked for, and those controls as they're drawn */
 	values?: Values;
 	controls?: unknown;
@@ -43,9 +44,9 @@ async function askClaude(turns: Turn[]): Promise<Turn> {
 	const messages = turns.filter((turn) => !turn.isError).map(({ from, text, ui, values, controls, note }) => ({ role: from, text: note ? `${text}\n\n${note}` : text, ui, values, controls }));
 	try {
 		const response = await fetch('/__loupe/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages }) });
-		const reply = (await response.json()) as { text?: string; ui?: Node; values?: Values; controls?: unknown; panel?: Panel[]; error?: string };
+		const reply = (await response.json()) as { text?: string; ui?: Node; title?: string; values?: Values; controls?: unknown; panel?: Panel[]; error?: string };
 		if (!response.ok || reply.error) return { from: 'assistant', text: reply.error ?? `Claude didn’t answer (${response.status})`, isError: true };
-		return { from: 'assistant', text: reply.text ?? '', ui: reply.ui, values: reply.values, controls: reply.controls, panel: reply.panel };
+		return { from: 'assistant', text: reply.text ?? '', ui: reply.ui, title: reply.title, values: reply.values, controls: reply.controls, panel: reply.panel };
 	} catch {
 		return { from: 'assistant', text: 'Claude is only here while the preview runs locally, with pnpm dev', isError: true };
 	}
@@ -177,7 +178,7 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 															{paragraph}
 														</p>
 													))}
-												{turn.ui && <Generated ui={turn.ui} values={turn.tweaked ?? turn.values} panel={turn.panel} onAction={ask} onValuesChange={(values) => tweak(turn, values)} />}
+												{turn.ui && <Generated ui={turn.ui} title={turn.title} values={turn.tweaked ?? turn.values} panel={turn.panel} onAction={ask} onValuesChange={(values) => tweak(turn, values)} />}
 											</div>
 										))}
 							</Message>

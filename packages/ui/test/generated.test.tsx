@@ -138,7 +138,11 @@ describe('Generated views with controls', () => {
 	it('redraws as its controls move, and says where they are', async () => {
 		const user = userEvent.setup();
 		const onValuesChange = vi.fn();
-		const { container } = render(<Generated ui={tweakable.ui as Node} values={tweakable.values} panel={panelOf(tweakable, schema)} onValuesChange={onValuesChange} />);
+		const { container } = render(<Generated ui={tweakable.ui as Node} title="Password reset" values={tweakable.values} panel={panelOf(tweakable, schema)} onValuesChange={onValuesChange} />);
+		// In its sandbox, named on the bar over it, with Copy code at its foot, and Reset only once something's moved
+		expect(screen.getByRole('figure', { name: 'Password reset' })).toBeTruthy();
+		expect(screen.getByRole('button', { name: 'Copy code' })).toBeTruthy();
+		expect(screen.queryByRole('button', { name: 'Reset' })).toBeNull();
 		expect(container.querySelector('.gap-8')).toBeTruthy();
 		const slider = screen.getByRole('slider', { name: 'Between sections in pixels' });
 		expect(slider.getAttribute('aria-valuetext')).toBe('32');
@@ -150,5 +154,8 @@ describe('Generated views with controls', () => {
 		expect(screen.getByText('The link expires in 30 minutes')).toBeTruthy();
 		await user.click(screen.getByRole('switch', { name: 'Expiry hint' }));
 		expect(screen.queryByText('The link expires in 30 minutes')).toBeNull();
+		await user.click(screen.getByRole('button', { name: 'Reset' }));
+		expect(container.querySelector('.gap-8')).toBeTruthy();
+		expect(screen.getByText('The link expires in 30 minutes')).toBeTruthy();
 	});
 });

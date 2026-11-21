@@ -1,6 +1,7 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useId, useState } from 'react';
 import { Alert, Avatar, Button, Cell, Checkbox, Column, EmptyState, ListBoxItem, Meter, ProgressBar, Quote, Radio, RadioGroup, Row, Select, Separator, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, TextField } from '../../src/index.js';
 import { type Node, type Panel, type Values, resolve } from './catalogue.js';
+import { code as frame } from '../../src/Code.js';
 import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
 
 // Draws a tree that validate() passed, with Loupe's components and nothing else. Layout is a few fixed classes,
@@ -55,6 +56,8 @@ const table = (p: Props, key?: string | number) => {
 
 export interface GeneratedProps {
 	ui: Node;
+	/** Names the view, on the bar over it */
+	title?: string;
 	/** A Button's action, sent on as the next message */
 	onAction?: (message: string) => void;
 	/** What the view's values start at, which its controls move */
@@ -65,14 +68,29 @@ export interface GeneratedProps {
 	onValuesChange?: (values: Values) => void;
 }
 
-/** A view Claude made with render_ui, and the controls to tweak it, which redraw it here as they move */
-export function Generated({ ui, onAction, values: initial, panel, onValuesChange }: GeneratedProps) {
+/**
+ * A view Claude made with render_ui, in a sandbox: its name on a bar over it, as a block of code has, the controls to
+ * tweak it, which redraw it here as they move, and a footer to copy it as JSX, as it is now
+ */
+export function Generated({ ui, title, onAction, values: initial, panel, onValuesChange }: GeneratedProps) {
 	const [values, setValues] = useState<Values>(initial ?? {});
-	const set = (name: string, value: string | number | boolean) => {
-		const next = { ...values, [name]: value };
+	const change = (next: Values) => {
 		setValues(next);
 		onValuesChange?.(next);
 	};
+	const set = (name: string, value: string | number | boolean) => change({ ...values, [name]: value });
+	const [isCopied, setCopied] = useState(false);
+	// Loaded once it's drawn, rather than imported, as it names components from all of the preview's stories, which
+	// would load them all with it. The preview has them already, so it's there straight away
+	const [codeOf, setCodeOf] = useState<(node: ReactNode) => string>();
+	useEffect(() => {
+		import('../code.js').then((module) => setCodeOf(() => module.codeOf)).catch(() => {});
+	}, []);
+	useEffect(() => {
+		if (!isCopied) return;
+		const timer = setTimeout(() => setCopied(false), 1000);
+		return () => clearTimeout(timer);
+	}, [isCopied]);
 	const shown = resolve(ui, values);
 	const draw = (node: Node, key?: string | number): ReactNode => {
 		const p = node as Props;
@@ -159,25 +177,44 @@ export function Generated({ ui, onAction, values: initial, panel, onValuesChange
 	);
 
 	const controls = panel?.filter((group) => group.items.length);
+	const drawn = shown && draw(shown);
+	const isMoved = Object.entries(values).some(([name, value]) => initial?.[name] !== value);
+	const { base, bar, title: name } = frame({ hasBar: true });
+	// Named by its title outright, as not every screen reader names a figure from its caption
+	const titleId = useId();
 	return (
-		<div className="@container flex min-w-0 flex-col gap-4">
-			{shown && draw(shown)}
+		<figure aria-labelledby={titleId} className={base()}>
+			<figcaption className={bar()}>
+				<span id={titleId} className={name()}>{title ?? 'View'}</span>
+			</figcaption>
+			{/* On the panel, a step up from the bar, which casts the line between them as a block of code does */}
+			<div className="@container relative flex min-w-0 flex-col bg-panel p-4 shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--shadow-raised-color)]">{drawn}</div>
 			{controls?.length ? (
-				// The playground's own rows, in a well under the view, so it reads as the view's controls, not part of it
-				<section aria-label="Controls" className="flex flex-col rounded-lg bg-bleed/4 px-3 pt-2 pb-1">
+				// The playground's own rows, under the view on the same panel, parted from it by a line
+				<section aria-label="Controls" className="flex flex-col border-t border-bleed/8 bg-panel px-4 pt-3 pb-1">
 					{controls.map((group) => (
 						<ControlGroup key={group.group} label={group.group}>
-							{group.items.map(({ label, value: name, control }) => {
-								const value = values[name];
-								if (control.kind === 'slider') return <SliderControl key={name} label={label} value={value as number} onChange={(next) => set(name, next)} minValue={control.min} maxValue={control.max} steps={control.steps} scale={control.scale} unit={control.unit} />;
-								if (control.kind === 'choice') return <Choice key={name} label={label} options={control.options} value={value as string} onChange={(next) => set(name, next)} />;
-								if (control.kind === 'switch') return <SwitchControl key={name} label={label} value={value as boolean} onChange={(next) => set(name, next)} />;
-								return <TextControl key={name} label={label} value={value as string} onChange={(next) => set(name, next)} />;
+							{group.items.map(({ label, value: id, control }) => {
+								const value = values[id];
+								if (control.kind === 'slider') return <SliderControl key={id} label={label} value={value as number} onChange={(next) => set(id, next)} minValue={control.min} maxValue={control.max} steps={control.steps} scale={control.scale} unit={control.unit} />;
+								if (control.kind === 'choice') return <Choice key={id} label={label} options={control.options} value={value as string} onChange={(next) => set(id, next)} />;
+								if (control.kind === 'switch') return <SwitchControl key={id} label={label} value={value as boolean} onChange={(next) => set(id, next)} />;
+								return <TextControl key={id} label={label} value={value as string} onChange={(next) => set(id, next)} />;
 							})}
 						</ControlGroup>
 					))}
 				</section>
 			) : null}
-		</div>
+			<div className={bar({ className: 'justify-end shadow-[inset_0_.5px_var(--edge)]' })}>
+				{isMoved && (
+					<Button variant="ghost" size="small" onPress={() => change(initial ?? {})}>
+						Reset
+					</Button>
+				)}
+				<Button variant="ghost" size="small" isDisabled={!codeOf} onPress={() => codeOf && void navigator.clipboard.writeText(codeOf(drawn)).then(() => setCopied(true))}>
+					{isCopied ? 'Copied' : 'Copy code'}
+				</Button>
+			</div>
+		</figure>
 	);
 }
