@@ -101,6 +101,7 @@ import { ToggleButtonGroupPlayground } from './playgrounds/toggle-button-group.j
 import { ToolbarPlayground } from './playgrounds/toolbar.js';
 import { TooltipPlayground } from './playgrounds/tooltip.js';
 import { hexOf } from './palette.js';
+import { skillStories } from './skills.js';
 
 export interface Story {
 	name: string;
@@ -1323,12 +1324,7 @@ export const areas: Entry[] = [
 	{
 		id: 'skills',
 		name: 'Skills',
-		description: 'What an agent needs to know to build with loupe',
-		stories: [],
-		empty: () => (
-			<EmptyState icon={<Icon name="books-vertical" />} title="No skills yet">
-				Which component, variant and token to use, written from the code, go here, to be shipped as a plugin
-			</EmptyState>
-		),
+		description: 'What an agent needs to know to build with loupe: which component to use over its alternative, which variant applies where, and which tokens are allowed. It’s skills/loupe in the ui package, to be shipped as a plugin',
+		stories: skillStories,
 	},
 ];
