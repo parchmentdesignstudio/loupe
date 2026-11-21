@@ -628,7 +628,7 @@
     --color-swatch-picker-item-radius: var(--radius-lg);
     --drop-zone-radius: var(--radius-lg);
     --drop-zone-padding: calc(var(--spacing) * 6);
-    --avatar-font-weight: 500;
+    --avatar-font-weight: 700;
     --code-radius: var(--radius-xl);
     --grid-list-item-radius: var(--radius-lg);
     --grid-list-item-padding-x: calc(var(--spacing) * 3);
@@ -2320,6 +2320,10 @@
     border-color: var(--aside-signpost-rule, var(--color-accent));
   }
 
+  .border-\(color\:--avatar-edge\) {
+    border-color: var(--avatar-edge);
+  }
+
   .border-\(color\:--color-thumb-edge\,var\(--color-white\)\) {
     border-color: var(--color-thumb-edge, var(--color-white));
   }
@@ -2470,6 +2474,14 @@
 
   .bg-\(--tone-danger\,var\(--color-red-67\)\) {
     background-color: var(--tone-danger, var(--color-red-67));
+  }
+
+  .bg-\(--tone-info\,var\(--color-blue-56\)\) {
+    background-color: var(--tone-info, var(--color-blue-56));
+  }
+
+  .bg-\(--tone-neutral\,var\(--color-sand-66\)\) {
+    background-color: var(--tone-neutral, var(--color-sand-66));
   }
 
   .bg-\(--tone-success\,var\(--color-green-68\)\) {
@@ -2626,6 +2638,12 @@
     mask-image: linear-gradient(to right,transparent,black var(--lead));
   }
 
+  .\[mask-image\:var\(--avatar-dot-mask\,linear-gradient\(\#000\,\#000\)\)\,var\(--avatar-under-dot-mask\,linear-gradient\(\#000\,\#000\)\)\,linear-gradient\(\#000\,\#000\)\,var\(--avatar-cut-1\,linear-gradient\(\#0000\,\#0000\)\)\,var\(--avatar-cut-2\,linear-gradient\(\#0000\,\#0000\)\)\,var\(--avatar-cut-3\,linear-gradient\(\#0000\,\#0000\)\)\,var\(--avatar-cut-4\,linear-gradient\(\#0000\,\#0000\)\)\] {
+    -webkit-mask-image: var(--avatar-dot-mask, linear-gradient(#000,#000)),var(--avatar-under-dot-mask, linear-gradient(#000,#000)),linear-gradient(#000,#000),var(--avatar-cut-1, linear-gradient(#0000,#0000)),var(--avatar-cut-2, linear-gradient(#0000,#0000)),var(--avatar-cut-3, linear-gradient(#0000,#0000)),var(--avatar-cut-4, linear-gradient(#0000,#0000));
+    -webkit-mask-image: var(--avatar-dot-mask, linear-gradient(#000,#000)),var(--avatar-under-dot-mask, linear-gradient(#000,#000)),linear-gradient(#000,#000),var(--avatar-cut-1, linear-gradient(#0000,#0000)),var(--avatar-cut-2, linear-gradient(#0000,#0000)),var(--avatar-cut-3, linear-gradient(#0000,#0000)),var(--avatar-cut-4, linear-gradient(#0000,#0000));
+    mask-image: var(--avatar-dot-mask, linear-gradient(#000,#000)),var(--avatar-under-dot-mask, linear-gradient(#000,#000)),linear-gradient(#000,#000),var(--avatar-cut-1, linear-gradient(#0000,#0000)),var(--avatar-cut-2, linear-gradient(#0000,#0000)),var(--avatar-cut-3, linear-gradient(#0000,#0000)),var(--avatar-cut-4, linear-gradient(#0000,#0000));
+  }
+
   .bg-size-\[100\%_100\%\,4px_4px\] {
     background-size: 100% 100%, 4px 4px;
   }
@@ -2642,6 +2660,10 @@
     background-size: calc(100% - .5rem) 1px;
   }
 
+  .bg-clip-padding {
+    background-clip: padding-box;
+  }
+
   .bg-center {
     background-position: center;
   }
@@ -2652,6 +2674,29 @@
 
   .bg-no-repeat {
     background-repeat: no-repeat;
+  }
+
+  .\[mask-composite\:intersect\,intersect\,subtract\,add\,add\,add\,add\] {
+    -webkit-mask-composite: source-in, source-in, source-out, source-over, source-over, source-over, source-over;
+    -webkit-mask-composite: source-in, source-in, source-out, source-over, source-over, source-over, source-over;
+    mask-composite: intersect, intersect, subtract, add, add, add, add;
+  }
+
+  .\[mask-size\:100\%_100\%\,100\%_100\%\,100\%_100\%\,100\%_100\%\,var\(--avatar-cut-2-size\,100\%_100\%\)\,100\%_100\%\,100\%_100\%\] {
+    -webkit-mask-size: 100% 100%,100% 100%,100% 100%,100% 100%,var(--avatar-cut-2-size, 100% 100%),100% 100%,100% 100%;
+    -webkit-mask-size: 100% 100%,100% 100%,100% 100%,100% 100%,var(--avatar-cut-2-size, 100% 100%),100% 100%,100% 100%;
+    mask-size: 100% 100%,100% 100%,100% 100%,100% 100%,var(--avatar-cut-2-size, 100% 100%),100% 100%,100% 100%;
+  }
+
+  .\[mask-position\:0_0\,0_0\,0_0\,0_0\,var\(--avatar-cut-2-at\,0_0\)\,0_0\,0_0\] {
+    -webkit-mask-position: 0 0,0 0,0 0,0 0,var(--avatar-cut-2-at, 0 0),0 0,0 0;
+    -webkit-mask-position: 0 0,0 0,0 0,0 0,var(--avatar-cut-2-at, 0 0),0 0,0 0;
+    mask-position: 0 0,0 0,0 0,0 0,var(--avatar-cut-2-at, 0 0),0 0,0 0;
+  }
+
+  .mask-no-repeat {
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
   }
 
   .fill-\(--popover-fill\,var\(--color-overlay\)\) {
@@ -3343,6 +3388,14 @@
     color: var(--alert-icon);
   }
 
+  .text-\(--color-pine-20\) {
+    color: var(--color-pine-20);
+  }
+
+  .text-\(--color-white\) {
+    color: var(--color-white);
+  }
+
   .text-\(color\:--aside-afterthought-text\,var\(--color-muted\)\) {
     color: var(--aside-afterthought-text, var(--color-muted));
   }
@@ -3584,11 +3637,6 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
-  .shadow-\[0_0_0_2px_var\(--avatar-ring\,var\(--color-panel\)\)\] {
-    --tw-shadow: 0 0 0 2px var(--tw-shadow-color, var(--avatar-ring, var(--color-panel)));
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-
   .shadow-\[inset_0_\.5px_var\(--color-scrim\)\] {
     --tw-shadow: inset 0 .5px var(--tw-shadow-color, var(--color-scrim));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -3677,18 +3725,9 @@
     outline-width: 0;
   }
 
-  .outline-1 {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
-  }
-
   .outline-2 {
     outline-style: var(--tw-outline-style);
     outline-width: 2px;
-  }
-
-  .-outline-offset-1 {
-    outline-offset: calc(1px * -1);
   }
 
   .-outline-offset-2 {
@@ -3713,10 +3752,6 @@
 
   .outline-\(color\:--field-focus-ring\,var\(--color-ink\)\) {
     outline-color: var(--field-focus-ring, var(--color-ink));
-  }
-
-  .outline-\[color\:light-dark\(color-mix\(in_oklab\,var\(--color-black\)_10\%\,transparent\)\,color-mix\(in_oklab\,var\(--color-white\)_10\%\,transparent\)\)\] {
-    outline-color: color-mix(in oklab,var(--color-black) 10%,transparent);
   }
 
   .outline-\[color\:var\(--swatch-inner\,transparent\)\] {
@@ -4018,6 +4053,38 @@
     --alert: var(--tone-warning, var(--color-yellow-76));
   }
 
+  .\[--avatar-badge-icon\:10px\] {
+    --avatar-badge-icon: 10px;
+  }
+
+  .\[--avatar-badge-icon\:12px\] {
+    --avatar-badge-icon: 12px;
+  }
+
+  .\[--avatar-badge-icon\:16px\] {
+    --avatar-badge-icon: 16px;
+  }
+
+  .\[--avatar-badge\:16px\] {
+    --avatar-badge: 16px;
+  }
+
+  .\[--avatar-badge\:20px\] {
+    --avatar-badge: 20px;
+  }
+
+  .\[--avatar-badge\:24px\] {
+    --avatar-badge: 24px;
+  }
+
+  .\[--avatar-dot-at\:calc\(100\%-var\(--avatar-radius\)\*0\.2929\)\] {
+    --avatar-dot-at: calc(100% - var(--avatar-radius) * .2929);
+  }
+
+  .\[--avatar-dot-mask\:radial-gradient\(circle_at_var\(--avatar-dot-at\)_calc\(100\%-var\(--avatar-radius\)\*0\.2929\)\,transparent_calc\(var\(--avatar-dot\)\/2\+var\(--avatar-gap\)\)\,\#000_calc\(var\(--avatar-dot\)\/2\+var\(--avatar-gap\)\+0\.5px\)\)\] {
+    --avatar-dot-mask: radial-gradient(circle at var(--avatar-dot-at) calc(100% - var(--avatar-radius) * .2929),transparent calc(var(--avatar-dot) / 2 + var(--avatar-gap)),#000 calc(var(--avatar-dot) / 2 + var(--avatar-gap) + .5px));
+  }
+
   .\[--avatar-dot\:6px\] {
     --avatar-dot: 6px;
   }
@@ -4038,12 +4105,24 @@
     --avatar-dot: 16px;
   }
 
+  .\[--avatar-dot\:var\(--avatar-badge\)\] {
+    --avatar-dot: var(--avatar-badge);
+  }
+
+  .\[--avatar-edge\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_12\%\,transparent\)\,var\(--dark-edge\)\)\] {
+    --avatar-edge: color-mix(in oklab,var(--bleed) 12%,transparent);
+  }
+
   .\[--avatar-fill\:color-mix\(in_oklab\,var\(--bleed\)_8\%\,var\(--avatar-ring\,var\(--color-panel\)\)\)\] {
     --avatar-fill: color-mix(in oklab,var(--bleed) 8%,var(--avatar-ring, var(--color-panel)));
   }
 
-  .\[--avatar-fill\:light-dark\(var\(--tint\)\,oklch\(from_var\(--tint\)_0\.4_calc\(c\*0\.8\)_h\)\)\] {
-    --avatar-fill: var(--tint);
+  .\[--avatar-fill\:light-dark\(oklch\(from_var\(--tint\)_0\.94_calc\(c\*0\.7\)_h\)\,oklch\(from_var\(--tint\)_0\.4_calc\(c\*0\.8\)_h\)\)\] {
+    --avatar-fill: oklch(from var(--tint) .94 calc(c * .7) h);
+  }
+
+  .\[--avatar-gap\:2px\] {
+    --avatar-gap: 2px;
   }
 
   .\[--avatar-radius\:1rem\] {
@@ -4068,6 +4147,10 @@
 
   .\[--avatar-radius\:var\(--radius-xl\)\] {
     --avatar-radius: var(--radius-xl);
+  }
+
+  .\[--avatar-sheen\:light-dark\(transparent\,color-mix\(in_oklab\,var\(--color-white\)_40\%\,transparent\)\)\] {
+    --avatar-sheen: transparent;
   }
 
   .\[--avatar-size\:1\.5rem\] {
@@ -4362,6 +4445,11 @@
     margin-block: calc(.5lh - .5rem);
   }
 
+  :is(.\*\:size-\(--avatar-badge-icon\) > *) {
+    width: var(--avatar-badge-icon);
+    height: var(--avatar-badge-icon);
+  }
+
   :is(.\*\:scale-\(--button-press-scale\) > *) {
     scale: var(--button-press-scale);
   }
@@ -4432,6 +4520,46 @@
 
   :is(.\*\:not-first\:mt-\[1em\] > *):not(:first-child) {
     margin-top: 1em;
+  }
+
+  :is(.\*\:not-last\:\[--avatar-corner-at\:calc\(100\%-var\(--avatar-size\)\/6\+var\(--avatar-radius\)\)\] > *):not(:last-child) {
+    --avatar-corner-at: calc(100% - var(--avatar-size) / 6 + var(--avatar-radius));
+  }
+
+  :is(.\*\:not-last\:\[--avatar-cut-1\:linear-gradient\(var\(--avatar-overlap-to\)\,\#0000_calc\(100\%-var\(--avatar-size\)\/6\+var\(--avatar-radius\)\)\,\#000_0\)\] > *):not(:last-child) {
+    --avatar-cut-1: linear-gradient(var(--avatar-overlap-to),#0000 calc(100% - var(--avatar-size) / 6 + var(--avatar-radius)),#000 0);
+  }
+
+  :is(.\*\:not-last\:\[--avatar-cut-1\:radial-gradient\(circle_at_var\(--avatar-overlap-at\)_50\%\,\#000_calc\(var\(--avatar-size\)\/2\+var\(--avatar-gap\)\)\,\#0000_calc\(var\(--avatar-size\)\/2\+var\(--avatar-gap\)\+0\.5px\)\)\] > *):not(:last-child) {
+    --avatar-cut-1: radial-gradient(circle at var(--avatar-overlap-at) 50%,#000 calc(var(--avatar-size) / 2 + var(--avatar-gap)),#0000 calc(var(--avatar-size) / 2 + var(--avatar-gap) + .5px));
+  }
+
+  :is(.\*\:not-last\:\[--avatar-cut-2-at\:0_var\(--avatar-radius\)\] > *):not(:last-child) {
+    --avatar-cut-2-at: 0 var(--avatar-radius);
+  }
+
+  :is(.\*\:not-last\:\[--avatar-cut-2-size\:100\%_calc\(100\%-var\(--avatar-radius\)\*2\)\] > *):not(:last-child) {
+    --avatar-cut-2-size: 100% calc(100% - var(--avatar-radius) * 2);
+  }
+
+  :is(.\*\:not-last\:\[--avatar-cut-2\:linear-gradient\(var\(--avatar-overlap-to\)\,\#0000_calc\(100\%-var\(--avatar-size\)\/6-var\(--avatar-gap\)\)\,\#000_0\)\] > *):not(:last-child) {
+    --avatar-cut-2: linear-gradient(var(--avatar-overlap-to),#0000 calc(100% - var(--avatar-size) / 6 - var(--avatar-gap)),#000 0);
+  }
+
+  :is(.\*\:not-last\:\[--avatar-cut-3\:radial-gradient\(circle_at_var\(--avatar-corner-at\)_var\(--avatar-radius\)\,\#000_calc\(var\(--avatar-radius\)\+var\(--avatar-gap\)\)\,\#0000_calc\(var\(--avatar-radius\)\+var\(--avatar-gap\)\+0\.5px\)\)\] > *):not(:last-child) {
+    --avatar-cut-3: radial-gradient(circle at var(--avatar-corner-at) var(--avatar-radius),#000 calc(var(--avatar-radius) + var(--avatar-gap)),#0000 calc(var(--avatar-radius) + var(--avatar-gap) + .5px));
+  }
+
+  :is(.\*\:not-last\:\[--avatar-cut-4\:radial-gradient\(circle_at_var\(--avatar-corner-at\)_calc\(100\%-var\(--avatar-radius\)\)\,\#000_calc\(var\(--avatar-radius\)\+var\(--avatar-gap\)\)\,\#0000_calc\(var\(--avatar-radius\)\+var\(--avatar-gap\)\+0\.5px\)\)\] > *):not(:last-child) {
+    --avatar-cut-4: radial-gradient(circle at var(--avatar-corner-at) calc(100% - var(--avatar-radius)),#000 calc(var(--avatar-radius) + var(--avatar-gap)),#0000 calc(var(--avatar-radius) + var(--avatar-gap) + .5px));
+  }
+
+  :is(.\*\:not-last\:\[--avatar-overlap-at\:calc\(100\%\+var\(--avatar-size\)\/3\)\] > *):not(:last-child) {
+    --avatar-overlap-at: calc(100% + var(--avatar-size) / 3);
+  }
+
+  :is(.\*\:not-last\:\[--avatar-overlap-to\:to_right\] > *):not(:last-child) {
+    --avatar-overlap-to: to right;
   }
 
   @media (hover: hover) {
@@ -4871,6 +4999,23 @@
   .after\:opacity-100:after {
     content: var(--tw-content);
     opacity: 1;
+  }
+
+  .after\:mix-blend-overlay:after {
+    content: var(--tw-content);
+    mix-blend-mode: overlay;
+  }
+
+  .after\:shadow-\[inset_0_\.5px_0_var\(--toplight\)\,inset_0_0_0_\.5px_var\(--sheen\)\]:after {
+    content: var(--tw-content);
+    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .after\:shadow-\[inset_0_0_0_1px_var\(--avatar-sheen\)\]:after {
+    content: var(--tw-content);
+    --tw-shadow: inset 0 0 0 1px var(--tw-shadow-color, var(--avatar-sheen));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .after\:inset-ring:after {
@@ -5369,12 +5514,28 @@
     text-align: right;
   }
 
+  .rtl\:\[--avatar-dot-at\:calc\(var\(--avatar-radius\)\*0\.2929\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    --avatar-dot-at: calc(var(--avatar-radius) * .2929);
+  }
+
   .rtl\:\[--lead\:var\(--far\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     --lead: var(--far);
   }
 
   .rtl\:\[--trail\:var\(--inset\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
     --trail: var(--inset);
+  }
+
+  :is(.rtl\:\*\:not-last\:\[--avatar-corner-at\:calc\(var\(--avatar-size\)\/6-var\(--avatar-radius\)\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) > *):not(:last-child) {
+    --avatar-corner-at: calc(var(--avatar-size) / 6 - var(--avatar-radius));
+  }
+
+  :is(.rtl\:\*\:not-last\:\[--avatar-overlap-at\:calc\(var\(--avatar-size\)\/-3\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) > *):not(:last-child) {
+    --avatar-overlap-at: calc(var(--avatar-size) / -3);
+  }
+
+  :is(.rtl\:\*\:not-last\:\[--avatar-overlap-to\:to_left\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) > *):not(:last-child) {
+    --avatar-overlap-to: to left;
   }
 
   .rtl\:group-data-hovered\/suggestion\:-translate-x-0\.5:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *):is(:where(.group\/suggestion)[data-hovered] *) {
@@ -5406,11 +5567,6 @@
   }
 
   @media (forced-colors: active) {
-    .forced-colors\:border {
-      border-style: var(--tw-border-style);
-      border-width: 1px;
-    }
-
     .forced-colors\:border-\[CanvasText\] {
       border-color: canvastext;
     }
@@ -5429,6 +5585,10 @@
 
     .forced-colors\:bg-\[Highlight\]\/40 {
       background-color: color-mix(in oklab, Highlight 40%, transparent);
+    }
+
+    .forced-colors\:text-\[Canvas\] {
+      color: canvas;
     }
 
     .forced-colors\:text-\[HighlightText\] {
@@ -5738,6 +5898,22 @@
 
   .\[\&\>\:has\(\+\[data-dialog-actions\]\)\]\:mb-\(--dialog-padding\) > :has( + [data-dialog-actions]) {
     margin-bottom: var(--dialog-padding);
+  }
+
+  .\[\&\>\[data-status\=badge\]\+\*\]\:\[--avatar-under-dot\:var\(--avatar-badge\)\] > [data-status="badge"] + * {
+    --avatar-under-dot: var(--avatar-badge);
+  }
+
+  .\[\&\>\[data-status\]\+\*\]\:\[--avatar-under-dot-at\:calc\(var\(--avatar-size\)\/6-var\(--avatar-radius\)\*0\.2929\)\] > [data-status] + * {
+    --avatar-under-dot-at: calc(var(--avatar-size) / 6 - var(--avatar-radius) * .2929);
+  }
+
+  .\[\&\>\[data-status\]\+\*\]\:\[--avatar-under-dot-mask\:radial-gradient\(circle_at_var\(--avatar-under-dot-at\)_calc\(100\%-var\(--avatar-radius\)\*0\.2929\)\,transparent_calc\(var\(--avatar-under-dot\,var\(--avatar-dot\)\)\/2\+var\(--avatar-gap\)\)\,\#000_calc\(var\(--avatar-under-dot\,var\(--avatar-dot\)\)\/2\+var\(--avatar-gap\)\+0\.5px\)\)\] > [data-status] + * {
+    --avatar-under-dot-mask: radial-gradient(circle at var(--avatar-under-dot-at) calc(100% - var(--avatar-radius) * .2929),transparent calc(var(--avatar-under-dot, var(--avatar-dot)) / 2 + var(--avatar-gap)),#000 calc(var(--avatar-under-dot, var(--avatar-dot)) / 2 + var(--avatar-gap) + .5px));
+  }
+
+  .rtl\:\[\&\>\[data-status\]\+\*\]\:\[--avatar-under-dot-at\:calc\(100\%-var\(--avatar-size\)\/6\+var\(--avatar-radius\)\*0\.2929\)\]:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) > [data-status] + * {
+    --avatar-under-dot-at: calc(100% - var(--avatar-size) / 6 + var(--avatar-radius) * .2929);
   }
 
   .\[\&\>kbd\]\:ms-auto > kbd {
