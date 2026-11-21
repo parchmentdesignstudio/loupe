@@ -1,7 +1,7 @@
 import { Icon } from '@parchment/icons/react';
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { ThemeSettings } from './theme.js';
-import { type Appearance as Scheme, Switch, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger, useAppearance, useOnOffLabels } from '../src/index.js';
+import { type Appearance as Scheme, Drawer, Switch, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger, useAppearance, useOnOffLabels } from '../src/index.js';
 
 // Kept between visits where the browser lets it, and forgotten quietly where it doesn't
 export function remembered<T extends string>(key: string, fallback: T): T {
@@ -112,23 +112,26 @@ export function SettingsPanels() {
 	);
 }
 
+const wide = '(min-width: 48rem)';
+const subscribe = (onChange: () => void) => {
+	const list = matchMedia(wide);
+	list.addEventListener('change', onChange);
+	return () => list.removeEventListener('change', onChange);
+};
+
 /**
- * The preview's own settings, at the card's right side under its bar. From 1440px there's room beside the stories at
- * their full width, so the settings make room and the stories move over without re-wrapping. Narrower, they float over
- * the page, so nothing under them reflows. Either way they slide in from past the card's edge, which clips them, and
- * out a little faster. Closed, they're out of the tab order and let clicks through
+ * The preview's own settings, in a drawer at the card's end that pushes the page aside, so the theme is tuned against a
+ * page that stays in view and undimmed. It sits in the card's scrolling row, so it's pinned under the bar at the card's
+ * height. Below md the phone's own drawer holds them, so there's none here
  */
-export function Settings({ isOpen }: { isOpen: boolean }) {
+export function SettingsDrawer({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: (isOpen: boolean) => void }) {
+	const isWide = useSyncExternalStore(subscribe, () => matchMedia(wide).matches, () => true);
+	if (!isWide) return null;
 	return (
-		// Room for the panel and its gaps when open on a wide screen, and otherwise none, so the card hangs inside the page's right edge
-		<div className={`sticky top-12 z-10 hidden h-[calc(100dvh-4rem)] w-0 shrink-0 self-start md:block ${isOpen ? 'min-[90rem]:w-64' : ''}`}>
-			<aside
-				aria-label="Preview settings"
-				inert={!isOpen}
-				className={`absolute top-2 right-2 max-h-[calc(100%-1rem)] w-60 overflow-y-auto rounded-lg bg-overlay p-4 shadow-floating [--bleed:var(--overlay-bleed)] transition-[translate] ease-[cubic-bezier(.32,.72,0,1)] motion-reduce:transition-none ${isOpen ? 'duration-300' : 'pointer-events-none translate-x-[calc(100%+1rem)] duration-200'}`}
-			>
+		<div className="sticky top-12 h-[calc(100dvh-4rem)] shrink-0 self-start">
+			<Drawer mode="push" position="end" isOpen={isOpen} onOpenChange={onOpenChange} aria-label="Preview settings">
 				<SettingsPanels />
-			</aside>
+			</Drawer>
 		</div>
 	);
 }
