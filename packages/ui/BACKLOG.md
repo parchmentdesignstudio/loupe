@@ -8,6 +8,19 @@ What `@parchment/ui` is missing, found by building the device and favicon tools 
 |---|---|---|
 | Focus after a click | Device | A control clicked with the mouse keeps focus, then takes Space and the arrows: Space pressed Add device again instead of panning. Device hands those keys back to its canvas in `shortcuts.ts`. A `Toolbar` gives the controls one Tab stop, but the handing back still needs a shared way to do it |
 
+## Readability and typography, now
+
+Steve's next focus, on 21 November 2026: readability and typography across Loupe, with good prose.
+
+- **Prose with a vertical rhythm:** space between paragraphs, headings, lists, quotes and code set from the line
+  height, so text keeps one rhythm down the page. Then the rest of the type to suit it.
+
+## Later
+
+- **`npx @parchment/ui`:** a CLI with `skill`, which copies `skills/loupe` into a project's `.claude/skills`, and
+  `lint`, which runs `lint/misuse.mjs` on a site. It needs `bin` and `files` in package.json, and the checker on
+  `oxc-parser` rather than Vite's parser, as a site may not have Vite.
+
 ## Foundations, next
 
 Steve’s priority on 10 November was shadows, layered transparency for dark mode, and the palette. The roles, layers, tints, shadows and palette are in, under Done. What’s left:
