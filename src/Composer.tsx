@@ -1,4 +1,4 @@
-import { type FormEvent, type KeyboardEvent, type ReactNode, useState } from 'react';
+import { type FormEvent, type KeyboardEvent, type ReactNode, useRef, useState } from 'react';
 import { Form, Group, Text, TextArea, TextField as AriaTextField } from 'react-aria-components';
 import { Button } from './Button.js';
 import { tv } from './tv.js';
@@ -24,6 +24,10 @@ const composer = tv({
 		},
 	},
 });
+
+// Sending nothing doesn't send, but it isn't ignored either: the field takes focus, so its ring shows where to write,
+// and gives a short shake, a no it can't be mistaken for a lag. Still, with reduced motion
+const shake = [{ translate: '0' }, { translate: '-4px' }, { translate: '3px' }, { translate: '-2px' }, { translate: '0' }];
 
 export interface ComposerProps {
 	/** Names the field for screen readers, as it has no visible label */
@@ -57,12 +61,16 @@ function sendOnEnter(event: KeyboardEvent<HTMLTextAreaElement>) {
 	event.currentTarget.form?.requestSubmit();
 }
 
-/** A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line, and an empty message can't be sent */
+/**
+ * A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line. The button is
+ * always live: an empty message isn't sent, and the field says so by taking focus with a shake
+ */
 export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, context, description, maxLength, isDisabled = false, className }: ComposerProps) {
 	const [draft, setDraft] = useState(defaultValue);
 	const message = value ?? draft;
 	const empty = message.trim() === '';
 	const slots = composer();
+	const field = useRef<HTMLTextAreaElement>(null);
 
 	const change = (next: string) => {
 		if (value === undefined) setDraft(next);
@@ -71,7 +79,12 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
 
 	const send = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		if (empty || isDisabled) return;
+		if (isDisabled) return;
+		if (empty) {
+			field.current?.focus();
+			if (!matchMedia('(prefers-reduced-motion: reduce)').matches) field.current?.parentElement?.animate?.(shake, { duration: 280, easing: 'ease-out' });
+			return;
+		}
 		onSubmit(message.trim());
 		if (value === undefined) setDraft('');
 	};
@@ -82,8 +95,8 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
 				<Group className={(state) => slots.group(state)}>
 					{context && <div className={slots.context()}>{context}</div>}
 					{/* A phone's return key says Send, as that's what it does */}
-					<TextArea rows={1} placeholder={placeholder} enterKeyHint="send" onKeyDown={sendOnEnter} className={slots.input()} />
-					<Button type="submit" aria-label={submitLabel} size="small" isDisabled={isDisabled || empty} className={slots.send()}>
+					<TextArea ref={field} rows={1} placeholder={placeholder} enterKeyHint="send" onKeyDown={sendOnEnter} className={slots.input()} />
+					<Button type="submit" aria-label={submitLabel} size="small" isDisabled={isDisabled} className={slots.send()}>
 						{submitIcon}
 					</Button>
 				</Group>

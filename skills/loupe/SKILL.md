@@ -62,7 +62,8 @@ What is the action?
  └── Anything else → Button variant="secondary"
 ```
 
-`Button` defaults to `primary`, so always set `variant`. Two primaries in one view means it has no hierarchy. A
+`Button` defaults to `primary`, so always set `variant`. A Button is never `isDisabled`: when it can't act yet, it
+answers the press, as the [product-design](../product-design/SKILL.md) skill sets out. Two primaries in one view means it has no hierarchy. A
 dialog is a view of its own, so its confirming button can be primary too.
 
 ```

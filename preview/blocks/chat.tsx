@@ -146,9 +146,12 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 	return (
 		<>
 			<DialogHeading>{title}</DialogHeading>
-			<Button variant="ghost" shape="full" size="small" aria-label="New conversation" isDisabled={isEmpty} onPress={restart} className="absolute top-5 right-14">
-				<Icon name="note-text-badge-pencil" />
-			</Button>
+			{/* Only once there's a conversation to start over from */}
+			{!isEmpty && (
+				<Button variant="ghost" shape="full" size="small" aria-label="New conversation" onPress={restart} className="absolute top-5 right-14">
+					<Icon name="note-text-badge-pencil" />
+				</Button>
+			)}
 			<DialogClose />
 			<div ref={log} className="-mx-(--dialog-padding) mt-4 flex min-h-0 flex-1 flex-col gap-6 overflow-auto px-(--dialog-padding) pb-4">
 				{isEmpty ? (
