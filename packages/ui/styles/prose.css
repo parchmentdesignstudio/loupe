@@ -1,44 +1,58 @@
 /* Writing at length as plain HTML styles it, such as a post from Markdown or a CMS, with the prose class or Prose. Only
    the tokens, so a gap in the scale shows as one. In the components layer, and :where() keeps each element's rule as
-   weak as a class, so a utility on an element inside still wins */
+   weak as a class, so a utility on an element inside still wins.
+
+   It keeps one vertical rhythm: the reading text's 26px line is --prose-line, and every space between blocks is a
+   whole or half one, so paragraphs, headings, lists and quotes land on the same beat down the page. Headings sit on
+   whole lines too, with more space above than below, so each belongs to what follows it */
 @layer components {
 	.prose {
-		font-size: var(--text-body);
-		line-height: var(--text-body--line-height);
+		--prose-line: var(--text-reading--line-height);
+		font-size: var(--text-reading);
+		line-height: var(--prose-line);
 		color: var(--color-ink);
 		text-wrap: pretty;
 
 		/* Each element's rule, but not inside not-prose, which a component such as Code puts on itself as it lays out its
 		   own parts. The element marked not-prose is still spaced as the writing around it */
 		:where(:not(.not-prose *)) {
+			/* A line between paragraphs, as a blank line would leave */
 			&:where(* + *) {
-				margin-top: 1em;
+				margin-top: var(--prose-line);
 			}
 			&:where(h1, h2, h3, h4, h5, h6) {
 				font-weight: 700;
-				letter-spacing: -0.0125em;
 				text-wrap: balance;
 			}
-			&:where(* + h2, * + h3) {
-				margin-top: 2em;
+			/* Two lines above a section, a line and a half above a part of one, a line above a smaller heading, and half
+			   a line below each, so a heading reads with what it heads rather than what came before */
+			&:where(* + h2) {
+				margin-top: calc(var(--prose-line) * 2);
 			}
-			&:where(* + h4, * + h5, * + h6) {
-				margin-top: 1.5em;
+			&:where(* + h3) {
+				margin-top: calc(var(--prose-line) * 1.5);
 			}
-			&:where(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *) {
-				margin-top: 0.5em;
+			&:where(h1 + *, h2 + *, h3 + *, h4 + *, h5 + *, h6 + *) {
+				margin-top: calc(var(--prose-line) / 2);
 			}
 			&:where(h1) {
-				font-size: var(--text-title);
-				line-height: var(--text-title--line-height);
+				font-size: var(--text-reading-display);
+				line-height: var(--text-reading-display--line-height);
+				letter-spacing: var(--text-reading-display--letter-spacing);
+			}
+			&:where(h2) {
+				font-size: var(--text-reading-heading);
+				line-height: var(--text-reading-heading--line-height);
+				letter-spacing: var(--text-reading-heading--letter-spacing);
 			}
 			&:where(h3) {
-				font-size: var(--text-control);
-				line-height: var(--text-control--line-height);
+				font-size: var(--text-reading-subheading);
+				line-height: var(--text-reading-subheading--line-height);
 			}
+			/* The reading text's own size, in bold, so the smallest headings keep its line */
 			&:where(h4, h5, h6) {
-				font-size: var(--text-label);
-				line-height: var(--text-label--line-height);
+				font-size: inherit;
+				line-height: var(--prose-line);
 			}
 			&:where(h6) {
 				color: var(--color-muted);
@@ -56,9 +70,17 @@
 				font-weight: 500;
 			}
 			&:where(small, figcaption, caption, footer) {
-				font-size: var(--text-label);
-				line-height: var(--text-label--line-height);
+				font-size: var(--text-body);
 				color: var(--color-muted);
+			}
+			/* A caption is smaller, but on the reading line, so it keeps the beat */
+			&:where(figcaption, caption, footer) {
+				line-height: var(--prose-line);
+			}
+			/* Smaller text inside a line takes no line of its own, or its baseline would push the line a pixel taller
+			   and everything under it off the beat */
+			&:where(small, code, kbd, samp) {
+				line-height: 0;
 			}
 			&:where(mark) {
 				border-radius: .125rem;
@@ -98,18 +120,21 @@
 				background: var(--color-raised);
 				padding: 0.0625em 0.375em;
 			}
+			/* Code on the reading line, which is open for 14px but how code is often set, and half a line of padding, so a
+			   block of any length ends on the beat */
 			&:where(pre) {
 				overflow-x: auto;
 				border-radius: var(--radius-lg);
 				background: color-mix(in oklab, var(--bleed) 6%, transparent);
-				padding: 0.75rem 1rem;
-				font-size: var(--text-label);
-				line-height: 1.6;
+				padding: calc(var(--prose-line) / 2) 1rem;
+				font-size: var(--text-body);
+				line-height: var(--prose-line);
 			}
 			&:where(pre code) {
 				background: none;
 				padding: 0;
 				font-size: inherit;
+				line-height: inherit;
 			}
 			&:where(ul, ol) {
 				padding-inline-start: 1.25rem;
@@ -120,8 +145,9 @@
 			&:where(ol) {
 				list-style: decimal;
 			}
+			/* Items half a line apart, enough to part one that runs over two lines from the next, and on the beat */
 			&:where(li + li, li > ul, li > ol) {
-				margin-top: 0.375em;
+				margin-top: calc(var(--prose-line) / 2);
 			}
 			&:where(li)::marker {
 				color: var(--color-muted);
@@ -130,31 +156,34 @@
 				font-weight: 500;
 			}
 			&:where(dd) {
-				margin-top: 0.125em;
+				margin-top: 0;
 				color: var(--color-muted);
 			}
 			&:where(dd + dt) {
-				margin-top: 0.75em;
+				margin-top: calc(var(--prose-line) / 2);
 			}
+			/* Two lines either side, less the rule's own pixel below, so what follows is back on the beat */
 			&:where(hr) {
-				margin-block: 2em;
+				margin-block: calc(var(--prose-line) * 2) calc(var(--prose-line) * 2 - 1px);
 				border-top: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
 			}
+			/* Each row a line and a half: the reading line with a quarter above and below */
 			&:where(table) {
 				width: 100%;
 				border-collapse: collapse;
-				font-size: var(--text-control);
-				line-height: var(--text-control--line-height);
+				font-size: var(--text-body);
+				line-height: var(--prose-line);
 				font-variant-numeric: tabular-nums;
 			}
 			&:where(caption) {
 				caption-side: bottom;
-				padding-top: 0.5rem;
+				padding-top: calc(var(--prose-line) / 2);
 				text-align: start;
 			}
+			/* The rule under each row is a shadow, which takes no room, so the rows stay on the beat */
 			&:where(th, td) {
-				border-bottom: 1px solid color-mix(in oklab, var(--bleed) 8%, transparent);
-				padding: 0.5rem 0.75rem 0.5rem 0;
+				box-shadow: inset 0 -1px color-mix(in oklab, var(--bleed) 8%, transparent);
+				padding: calc(var(--prose-line) / 4) 0.75rem calc(var(--prose-line) / 4) 0;
 				text-align: start;
 			}
 			&:where(thead th) {
@@ -163,20 +192,20 @@
 				color: var(--color-muted);
 			}
 			&:where(tfoot td, tfoot th) {
-				border-bottom: 0;
+				box-shadow: none;
 				font-weight: 500;
 			}
 			&:where(figure > div) {
 				border-radius: var(--radius-lg);
 			}
 			&:where(figcaption) {
-				margin-top: 0.5rem;
+				margin-top: calc(var(--prose-line) / 2);
 			}
 			&:where(details) {
 				border-radius: var(--radius-lg);
 				box-shadow: var(--shadow-panel);
 				background: var(--color-raised);
-				padding: 0.5rem 0.75rem;
+				padding: calc(var(--prose-line) / 4) 0.75rem;
 			}
 			&:where(summary) {
 				cursor: default;
@@ -208,7 +237,7 @@
 	/* Spaced by its own size, more than a paragraph, and the same above and below, so it stands apart from the writing
 	   around it. Only in prose, so a Quote on its own brings no margin with it */
 	.prose :where(blockquote:not(.quote > *), .quote) {
-		margin-block: 1.5em;
+		margin-block: calc(var(--prose-line) * 1.5);
 	}
 	.prose :where(blockquote:not(.quote > *), .quote):where(:first-child) {
 		margin-top: 0;
@@ -230,6 +259,16 @@
 	.prose :where(blockquote:not(.quote > *) > :first-child),
 	.quote > blockquote {
 		margin-top: 0.25em;
+	}
+	/* In prose, a step smaller, on the reading line, about the 1.2 it has on its own, so a quote of any length keeps
+	   the beat. What follows the mark, and who said it, are half a line under, on the line too */
+	.prose :where(blockquote:not(.quote > *), .quote) {
+		--quote-font-size: var(--text-reading-heading);
+		line-height: var(--prose-line);
+	}
+	.prose :where(blockquote:not(.quote > *) > :first-child),
+	.prose .quote > blockquote {
+		margin-top: 0;
 	}
 	/* Prose spaces a blockquote's paragraphs already, and a Quote on its own spaces them the same */
 	.quote > blockquote > * + * {
@@ -255,5 +294,16 @@
 		display: block;
 		font-style: normal;
 		color: var(--color-ink);
+	}
+	/* Last, over the rules above for a quote anywhere: in prose, the mark is a line tall, and who said it is half a
+	   line under, on the reading line */
+	.prose :where(blockquote:not(.quote > *))::before,
+	.prose .quote::before {
+		height: var(--prose-line);
+	}
+	.prose :where(blockquote:not(.quote > *) footer),
+	.prose .quote > figcaption {
+		margin-top: calc(var(--prose-line) / 2);
+		line-height: var(--prose-line);
 	}
 }

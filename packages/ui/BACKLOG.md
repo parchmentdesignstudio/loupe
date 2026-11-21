@@ -12,8 +12,9 @@ What `@parchment/ui` is missing, found by building the device and favicon tools 
 
 Steve's next focus, on 21 November 2026: readability and typography across Loupe, with good prose.
 
-- **Prose with a vertical rhythm:** space between paragraphs, headings, lists, quotes and code set from the line
-  height, so text keeps one rhythm down the page. Then the rest of the type to suit it.
+- **Prose with a vertical rhythm:** done. Prose reads at 16px on a 26px line, `--prose-line`, and every space is a
+  whole or half one. An image's own height still moves what follows off the beat, as CSS can't round it.
+- **The rest of the type to suit it:** the interface's body, labels and titles against the reading scale.
 
 ## Later
 

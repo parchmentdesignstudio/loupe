@@ -4,7 +4,7 @@ export declare const aside: import("tailwind-variants").TVReturnType<{
         signpost: string;
         afterthought: string;
     };
-}, undefined, "border-s-(length:--rule) ps-[calc(--spacing(4)-var(--rule))] text-body in-[.prose]:-ms-4 *:not-first:mt-[1em]", undefined, undefined, undefined>;
+}, undefined, "border-s-(length:--rule) ps-[calc(--spacing(4)-var(--rule))] text-body in-[.prose]:-ms-4 in-[.prose]:text-[length:inherit] in-[.prose]:leading-(--prose-line) *:not-first:mt-[var(--prose-line,1em)]", undefined, undefined, undefined>;
 export interface AsideProps extends HTMLAttributes<HTMLElement> {
     /** A signpost to what’s coming or what the reader needs first, or an afterthought, a tangent to read or skip */
     variant?: 'signpost' | 'afterthought';

@@ -52,3 +52,52 @@ export title = text {
   line-height: t.typography.text-title-line-height,
   letter-spacing: -1.25%
 }
+
+export reading = text {
+  caption: "Writing at length, as Prose sets it, on the 26px line its rhythm counts in",
+  left: 832px,
+  top: 0px,
+  fill: base.colors.ink,
+  contents: "Reading",
+  font-size: t.typography.text-reading,
+  font-family: f.fonts.sans,
+  line-height: t.typography.text-reading-line-height
+}
+
+export reading-subheading = text {
+  caption: "A heading within a section of prose, an h3",
+  left: 1040px,
+  top: 0px,
+  fill: base.colors.ink,
+  contents: "Reading-subheading",
+  font-size: t.typography.text-reading-subheading,
+  font-family: f.fonts.sans,
+  font-style: "Bold",
+  line-height: t.typography.text-reading-subheading-line-height
+}
+
+export reading-heading = text {
+  caption: "A section of prose’s heading, an h2",
+  left: 1248px,
+  top: 0px,
+  fill: base.colors.ink,
+  contents: "Reading-heading",
+  font-size: t.typography.text-reading-heading,
+  font-family: f.fonts.sans,
+  font-style: "Bold",
+  line-height: t.typography.text-reading-heading-line-height,
+  letter-spacing: -1.25%
+}
+
+export reading-display = text {
+  caption: "Prose’s title, an h1, on a line and a half",
+  left: 1456px,
+  top: 0px,
+  fill: base.colors.ink,
+  contents: "Reading-display",
+  font-size: t.typography.text-reading-display,
+  font-family: f.fonts.sans,
+  font-style: "Bold",
+  line-height: t.typography.text-reading-display-line-height,
+  letter-spacing: -2%
+}
