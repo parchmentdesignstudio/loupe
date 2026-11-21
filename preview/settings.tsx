@@ -122,13 +122,14 @@ const subscribe = (onChange: () => void) => {
 /**
  * The preview's own settings, in a drawer at the card's end that pushes the page aside, so the theme is tuned against a
  * page that stays in view and undimmed. It sits in the card's scrolling row, so it's pinned under the bar at the card's
- * height. Below md the phone's own drawer holds them, so there's none here
+ * height. It takes the card's colour, and the card's bleed for its lines and controls, so it's one surface with the page
+ * and the hairline between. Below md the phone's own drawer holds them, so there's none here
  */
 export function SettingsDrawer({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: (isOpen: boolean) => void }) {
 	const isWide = useSyncExternalStore(subscribe, () => matchMedia(wide).matches, () => true);
 	if (!isWide) return null;
 	return (
-		<div className="sticky top-12 h-[calc(100dvh-4rem)] shrink-0 self-start">
+		<div className="sticky top-12 h-[calc(100dvh-4rem)] shrink-0 self-start [--drawer-push-fill:var(--color-panel)] [--ground-bleed:var(--panel-bleed)]">
 			<Drawer mode="push" position="end" isOpen={isOpen} onOpenChange={onOpenChange} aria-label="Preview settings">
 				<SettingsPanels />
 			</Drawer>
