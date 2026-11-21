@@ -20,6 +20,10 @@
       "types": "./lib/shiki.d.ts",
       "default": "./lib/shiki.js"
     },
+    "./docs": {
+      "types": "./lib/docs.d.ts",
+      "default": "./lib/docs.js"
+    },
     "./tokens.css": "./tokens.css",
     "./styles/*": "./styles/*"
   },

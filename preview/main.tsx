@@ -1,30 +1,26 @@
-import { Component, type ReactNode, StrictMode, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { Component, type ReactNode, StrictMode, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Icon } from '@parchment/icons/react';
 // Loupe's one version, which every package is released at (pnpm bump)
 import manifest from '../../../package.json?raw';
 import {
-	Breadcrumb,
-	Breadcrumbs,
 	Button,
 	Code,
 	Link,
-	Navigation,
 	NavigationTree,
 	NavigationTreeItem,
 	NavigationTreeItemContent,
-	Drawer,
-	DrawerTrigger,
 	Tooltip,
 	TooltipTrigger,
 } from '../src/index.js';
+import { DocsBadge, DocsPage, DocsSearch, DocsSearchButton, DocsShell } from '../src/docs.js';
 import { Contents, ContentsMenu, type Heading } from './contents.js';
 import { Inspector, hasInspector } from './inspector.js';
 import { Reference, hasReference } from './reference.js';
 import { Lockup, ParchmentLogo } from './logo.js';
-import { Search, SearchButton } from './search.js';
+import { pages as searchPages } from './search.js';
 import { Settings, SettingsPanels, remember, remembered } from './settings.js';
-import { type Crumb, forward, href, pageAt } from './routes.js';
+import { forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
 import { type Entry, areas, blocks, library } from './stories.js';
 import { Category, categoryId } from './blocks/card.js';
@@ -107,82 +103,25 @@ function Tree({ current }: { current: string }) {
 	);
 }
 
-function Sidebar({ current }: { current: string }) {
-	// Navigation has its own button for phones, which the phone bar takes the place of
-	return (
-		<div className="contents max-md:hidden">
-			<Navigation aria-label="Components" className="md:border-r-0">
-				{/* As tall as the page's bar and level with it, so the logo lines up with the breadcrumbs */}
-				<div className="-mt-4 flex h-12 shrink-0 items-center gap-2.5 px-3">
-					<Lockup word="loupe" height={16} />
-					<Version />
-				</div>
-				<Tree current={current} />
-			</Navigation>
-		</div>
-	);
-}
-
-// Loupe's version, beside the logo in the sidebar and the phone bar. Before 1.0 it's an alpha: usable, as React Aria
-// stands behind it, but not yet at the quality to rely on, which 1.0 will mark
+// Loupe's name and version, beside the logo in the sidebar and the phone bar. Before 1.0 it's an alpha: usable, as React
+// Aria stands behind it, but not yet at the quality to rely on, which 1.0 will mark
 const isAlpha = version.startsWith('0.');
 
-function Version() {
+function Brand() {
 	return (
-		<span className="rounded-full bg-bleed/8 px-2 py-0.5 font-mono text-label text-muted">
-			v{version}
-			{isAlpha && ' alpha'}
-		</span>
+		<>
+			<Link href="#/" className="flex items-center no-underline">
+				<Lockup word="loupe" height={16} />
+			</Link>
+			<DocsBadge>
+				v{version}
+				{isAlpha && ' alpha'}
+			</DocsBadge>
+		</>
 	);
 }
 
-// Three dots, as the icons have no ellipsis yet
-function More() {
-	return (
-		<svg viewBox="0 0 16 16" className="size-4 fill-current" aria-hidden>
-			<circle cx="3" cy="8" r="1.5" />
-			<circle cx="8" cy="8" r="1.5" />
-			<circle cx="13" cy="8" r="1.5" />
-		</svg>
-	);
-}
-
-// On phones, the library's name and version, with search and the components
-function PhoneBar({ current, onSearch }: { current: string; onSearch: () => void }) {
-	const [isOpen, setOpen] = useState(false);
-	// Choosing a page closes the drawer, to show it
-	const [shown, setShown] = useState(current);
-	if (shown !== current) {
-		setShown(current);
-		setOpen(false);
-	}
-	return (
-		<header className="sticky top-0 z-20 flex items-center justify-between gap-3 bg-ground px-4 py-2 [--bleed:var(--ground-bleed)] md:hidden">
-			<div className="flex items-center gap-2.5">
-				<Link href="#/" className="flex items-center no-underline">
-					<Lockup word="loupe" height={16} />
-				</Link>
-				<Version />
-			</div>
-			<div className="-mr-1.5 flex items-center gap-1">
-				<SearchButton onPress={onSearch} />
-				<DrawerTrigger isOpen={isOpen} onOpenChange={setOpen}>
-					<Button variant="ghost" shape="full" size="small" aria-label="Components">
-						<More />
-					</Button>
-					<Drawer position="end" aria-label="Components">
-						<div className="flex flex-col gap-6">
-							<Tree current={current} />
-							<div className="flex flex-col gap-6 px-3">
-								<SettingsPanels />
-							</div>
-						</div>
-					</Drawer>
-				</DrawerTrigger>
-			</div>
-		</header>
-	);
-}
+const searchIcon = <Icon name="magnifyingglass" />;
 
 /** A damped spring from 0 to 1 as a CSS linear() easing. Bounce 0 settles without passing its end, and more passes it further */
 function spring(bounce: number, samples = 60) {
@@ -220,36 +159,19 @@ function SidebarIcon({ isOpen, isPressed }: { isOpen: boolean; isPressed: boolea
 	);
 }
 
-// Where the page sits in the library, with its sections where there's no room for their column, and the search and settings
-function Bar({ trail, headings, isOpen, onToggle, onSearch }: { trail: Crumb[]; headings: Heading[]; isOpen: boolean; onToggle: () => void; onSearch: () => void }) {
+// Search, and the settings beside the page, at the bar's end
+function Actions({ isOpen, onToggle, onSearch }: { isOpen: boolean; onToggle: () => void; onSearch: () => void }) {
 	const label = isOpen ? 'Hide settings' : 'Show settings';
 	return (
-		// Sticks below the phone's header, which is as tall as its 28px buttons and its padding
-		<div className="sticky top-11 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-bleed/8 bg-panel px-4 md:top-0 md:px-5">
-			<div className="flex min-w-0 flex-1 items-center gap-2">
-				{headings.length > 0 && <ContentsMenu headings={headings} />}
-				<Breadcrumbs>
-					{/* On phones the bar above has loupe's name. A group, such as Actions, has no page, so it isn't a link */}
-					{[{ name: 'loupe', href: '#/' }, ...trail].map((crumb, index) => (
-						<Breadcrumb key={`${index}${crumb.name}`} href={crumb.href} className="first:max-md:hidden">
-							{crumb.name}
-						</Breadcrumb>
-					))}
-				</Breadcrumbs>
-			</div>
-			<div className="-mr-1.5 flex items-center gap-1 max-md:hidden">
-				<TooltipTrigger>
-					<SearchButton onPress={onSearch} />
-					<Tooltip>Search ⌘K</Tooltip>
-				</TooltipTrigger>
-				<TooltipTrigger>
-					<Button variant="ghost" shape="full" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
-						{({ isPressed }) => <SidebarIcon isOpen={isOpen} isPressed={isPressed} />}
-					</Button>
-					<Tooltip>{label}</Tooltip>
-				</TooltipTrigger>
-			</div>
-		</div>
+		<>
+			<DocsSearchButton onPress={onSearch} icon={searchIcon} tooltip="Search ⌘K" />
+			<TooltipTrigger>
+				<Button variant="ghost" shape="full" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
+					{({ isPressed }) => <SidebarIcon isOpen={isOpen} isPressed={isPressed} />}
+				</Button>
+				<Tooltip>{label}</Tooltip>
+			</TooltipTrigger>
+		</>
 	);
 }
 
@@ -369,19 +291,15 @@ function Preview() {
 	const scroller = useRef<HTMLDivElement>(null);
 	const [isOpen, setOpen] = useState(() => remembered<string>('settings', 'closed') === 'open');
 	const [isSearching, setSearching] = useState(false);
-	const search = useCallback(() => setSearching(true), []);
+	const search = () => setSearching(true);
 
-	const headings = useMemo<Heading[]>(
-		() =>
-			isComponents
+	const headings: Heading[] = isComponents
 				? componentGroups.map(({ name }) => ({ id: categoryId(name), name }))
 				: listed
 				? listed.map(({ id, name }) => ({ id, name }))
 				: entry
 					? [...entry.stories.map((story, index) => ({ id: `${entry.id}-${index}`, name: story.name })), ...(hasReference(entry) ? [{ id: 'api', name: 'API reference' }] : []), ...(hasInspector(entry) ? [{ id: 'code', name: 'Code' }] : [])]
-					: [],
-		[entry, listed, isComponents],
-	);
+					: [];
 
 	// An old address, such as #/button, is swapped for where it lives now, so going back skips it
 	useEffect(() => {
@@ -405,55 +323,38 @@ function Preview() {
 	};
 
 	return (
-		<div className="font-sans text-body text-ink md:flex">
-			<Sidebar current={address} />
-			<PhoneBar current={address} onSearch={search} />
-			{/* On wider screens the page is a card that scrolls inside, so the contents and the code stay beside the stories */}
-			<div
-				ref={scroller}
-				className={[
-					// Raised over the sticky columns either side, which would otherwise paint over its shadow
-					'min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:mr-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-panel',
-				].join(' ')}
+		<>
+			<DocsShell
+				brand={<Brand />}
+				nav={<Tree current={address} />}
+				navLabel="Components"
+				trail={[{ name: 'loupe', href: '#/' }, ...(page?.trail ?? [])]}
+				barStart={headings.length > 0 && <ContentsMenu headings={headings} />}
+				actions={<Actions isOpen={isOpen} onToggle={toggle} onSearch={search} />}
+				phoneActions={<DocsSearchButton onPress={search} icon={searchIcon} />}
+				drawerEnd={<SettingsPanels />}
+				aside={<Settings isOpen={isOpen} />}
+				current={address}
+				scrollerRef={scroller}
 			>
-				{/* The card's own bleed, so lines inside suit white rather than cream, while its shadow keeps the ground's */}
-				<div className="flex min-h-full flex-col [--bleed:var(--panel-bleed)]">
-					<Bar trail={page?.trail ?? []} headings={headings} isOpen={isOpen} onToggle={toggle} onSearch={search} />
-					{/* The settings beside the page under the bar, which runs over both, as an inspector does. Clipped, not
-					    hidden, so the settings past the card's edge can't scroll it sideways */}
-					<div className="flex flex-1 overflow-x-clip">
-						{/* On wide screens a grid: the title over the stories, with the contents beside them from the top */}
-						<main className="min-w-0 flex-1 xl:grid xl:grid-cols-[13rem_minmax(0,1fr)] xl:items-start">
-							<div className="px-4 pt-10 pb-10 md:px-10 xl:col-start-2">
-								<div className="mx-auto max-w-[40rem]">
-									<Title entry={entry} />
-								</div>
-							</div>
-							{headings.length > 0 && <Contents key={`contents-${address}`} headings={headings} scroller={scroller} />}
-							<div className="min-w-0 px-4 pb-10 md:px-10 xl:col-start-2 xl:row-start-2">
-								<div className="mx-auto flex max-w-[40rem] flex-col gap-10">
-									{isComponents ? (
-										componentGroups.map((group) => <Category key={group.name} name={group.name} id={categoryId(group.name)} />)
-									) : listed ? (
-										<Overview entries={listed} />
-									) : entry ? (
-										<>
-											<Stories entry={entry} heading="h2" />
-											<Reference entry={entry} />
-											<Inspector entry={entry} />
-										</>
-									) : (
-										<p className="text-muted">Nothing at this address</p>
-									)}
-								</div>
-							</div>
-						</main>
-						<Settings isOpen={isOpen} />
-					</div>
-				</div>
-			</div>
-			<Search isOpen={isSearching} onOpenChange={setSearching} />
-		</div>
+				<DocsPage header={<Title entry={entry} />} contents={headings.length > 0 && <Contents key={`contents-${address}`} headings={headings} scroller={scroller} />}>
+					{isComponents ? (
+						componentGroups.map((group) => <Category key={group.name} name={group.name} id={categoryId(group.name)} />)
+					) : listed ? (
+						<Overview entries={listed} />
+					) : entry ? (
+						<>
+							<Stories entry={entry} heading="h2" />
+							<Reference entry={entry} />
+							<Inspector entry={entry} />
+						</>
+					) : (
+						<p className="text-muted">Nothing at this address</p>
+					)}
+				</DocsPage>
+			</DocsShell>
+			<DocsSearch pages={searchPages} isOpen={isSearching} onOpenChange={setSearching} />
+		</>
 	);
 }
 
