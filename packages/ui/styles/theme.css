@@ -215,6 +215,31 @@
 	}
 }
 
+/* The parts each shadow is built from. Set on every element rather than :root, so each works its colours out where
+   it's drawn: a component that sets its own --edge or shadow colour, as a button does, gets its own. Light falls from
+   above: a fine line along the top, a soft glow under it and a shade along the bottom, as a rounded, glossy surface
+   catches it. Then the rim, a faint line inside the edge and the edge itself, and under it all the shadow, deeper at
+   each level. Every colour is a role in :root, below, which is where to change how strong each is */
+@layer base {
+	*,
+	::before,
+	::after {
+		--shadow-toplight: inset 0 .5px 0 var(--toplight);
+		--shadow-light: var(--shadow-toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade);
+		--shadow-edge: 0 0 0 .5px var(--edge);
+		--shadow-rim: inset 0 0 0 .5px var(--sheen), var(--shadow-edge);
+		/* A button's edge is 1px, and it can set --fine-edge to draw a half-pixel one as well, or clear --edge to have
+		   only that one */
+		--shadow-rim-button: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge);
+		--shadow-depth-raised: 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+		--shadow-depth-lifted: var(--shadow-depth-raised), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color);
+		--shadow-depth-floating: 0 1px 1px -.5px var(--shadow-floating-color), 0 1px 3px -1.5px var(--shadow-floating-color), 0 2px 4px -2px var(--shadow-floating-color), 0 3px 6px -3px var(--shadow-floating-color), 0 6px 12px -6px var(--shadow-floating-color), 0 12px 24px -12px var(--shadow-floating-color);
+		/* Only in the dark, the last two are a wide soft shade, as fills there are too close together to part it */
+		--shadow-depth-overlay: 0 1px 1px -.5px var(--shadow-overlay-color), 0 1px 3px -1.5px var(--shadow-overlay-color), 0 2px 4px -2px var(--shadow-overlay-color), 0 3px 6px -3px var(--shadow-overlay-color), 0 8px 16px -12px var(--shadow-overlay-color), 0 12px 32px -24px var(--shadow-overlay-color), 0 12px 24px -6px var(--shadow-deep-color), 0 24px 48px -12px var(--shadow-deep-color);
+		--shadow-depth-handle: 0 1px 1px -.5px var(--shadow-handle-color), 0 1px 3px -1.5px var(--shadow-handle-color), 0 2px 4px -2px var(--shadow-handle-color), 0 3px 6px -3px var(--shadow-handle-color), 0 6px 12px -6px var(--shadow-handle-color), 0 12px 24px -12px var(--shadow-handle-color);
+	}
+}
+
 /* What reads a variable a layer or component sets for itself, such as --bleed and a button's --edge. Inline, so
    Tailwind writes the value into each utility, and the variable is read where the utility is used rather than on :root */
 @theme inline {
@@ -222,22 +247,20 @@
 	/* Code's ground, a control's fill unless a theme sets --code-ground, read where it's used so it takes the raised of
 	   the ground it's on, a step lighter than it in the dark, as a button is */
 	--color-code-ground: var(--code-ground, var(--color-raised));
-	/* A level for controls, one for floating toolbars and one for overlays, each a soft shadow and an edge. Raised's edge
-	   is half a pixel, a hint of depth for fields, chips and checkboxes. A button is raised with a 1px edge, as it's
-	   pressed, and lifted a little on hover by two wider layers, short of floating. A button can set --fine-edge to
-	   draw a half-pixel edge as well, and clear --edge to have only that one. In the dark, the fills sit close
-	   together and the edges carry the depth: a dark ring outside, a faint light one just inside it, and on controls a
-	   fainter light along the top. A panel or card has the rings without the top light. The geometry is the same in both
+	/* A level for controls, one for floating toolbars and one for overlays, each built from the parts below, in the
+	   order they paint, top first. Raised's edge is half a pixel, a hint of depth for fields, chips and checkboxes. A
+	   button is raised with a 1px edge, as it's pressed, and lifted a little on hover by a deeper shadow, short of
+	   floating. A panel or card has the rim and a raised shadow, without the light. The geometry is the same in both
 	   modes, and the colours come from :root, below */
-	--shadow-raised: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
-	--shadow-panel: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
-	--shadow-button: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
-	--shadow-button-lifted: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color);
-	--shadow-floating: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--shadow-floating-color), 0 1px 3px -1.5px var(--shadow-floating-color), 0 2px 4px -2px var(--shadow-floating-color), 0 3px 6px -3px var(--shadow-floating-color), 0 6px 12px -6px var(--shadow-floating-color), 0 12px 24px -12px var(--shadow-floating-color);
-	--shadow-overlay: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--shadow-overlay-color), 0 1px 3px -1.5px var(--shadow-overlay-color), 0 2px 4px -2px var(--shadow-overlay-color), 0 3px 6px -3px var(--shadow-overlay-color), 0 8px 16px -12px var(--shadow-overlay-color), 0 12px 32px -24px var(--shadow-overlay-color), 0 12px 24px -6px var(--shadow-deep-color), 0 24px 48px -12px var(--shadow-deep-color);
-	/* Floating, for the handle of a switch or slider that lifts off its well. In the dark its shadow is darker than a
-	   raised one's, so the handle stands off the track rather than sitting in it */
-	--shadow-handle: 0 0 0 .5px var(--edge), 0 1px 1px -.5px var(--shadow-handle-color), 0 1px 3px -1.5px var(--shadow-handle-color), 0 2px 4px -2px var(--shadow-handle-color), 0 3px 6px -3px var(--shadow-handle-color), 0 6px 12px -6px var(--shadow-handle-color), 0 12px 24px -12px var(--shadow-handle-color);
+	--shadow-raised: var(--shadow-light), var(--shadow-rim), var(--shadow-depth-raised);
+	--shadow-panel: var(--shadow-rim), var(--shadow-depth-raised);
+	--shadow-button: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-raised);
+	--shadow-button-lifted: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-lifted);
+	--shadow-floating: var(--shadow-rim), var(--shadow-depth-floating);
+	--shadow-overlay: var(--shadow-toplight), var(--shadow-rim), var(--shadow-depth-overlay);
+	/* For the handle of a switch or slider that lifts off its well. In the dark its shadow is darker than a raised
+	   one's, so the handle stands off the track rather than sitting in it */
+	--shadow-handle: var(--shadow-light), var(--shadow-edge), var(--shadow-depth-handle);
 	/* In place of a field's shadow when what's in it is wrong */
 	--shadow-invalid: 0 0 0 1px var(--color-danger);
 	/* The opposite of raised, for a well that controls sit in, such as a switch's track or a toggle group's tray: a soft
@@ -358,6 +381,10 @@
 		   from above. They're shadows, so they go when something is disabled or pressed flat */
 		--sheen: light-dark(transparent, color-mix(in oklab, var(--bleed) 5%, transparent));
 		--toplight: light-dark(transparent, color-mix(in oklab, var(--bleed) 6%, transparent));
+		/* Light under the top edge and shade along the bottom, as on a rounded, glossy surface. White and black, so on a
+		   coloured fill, such as a primary button, the light is a lighter tint of it */
+		--glow: light-dark(transparent, color-mix(in oklab, var(--color-white) 6%, transparent));
+		--shade: light-dark(transparent, color-mix(in oklab, var(--color-black) 16%, transparent));
 		--shadow-raised-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
 		--shadow-floating-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
 		/* Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it */

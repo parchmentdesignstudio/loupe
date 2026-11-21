@@ -40,6 +40,22 @@ export raised = frame {
     },
     {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
     {inner-shadow: {color: base.colors.sheen, spread: 0.5px}},
+    {
+      inner-shadow: {
+        color: base.colors.shade,
+        offset: point(0px, -4px),
+        blur-radius: 6px,
+        spread: -4px
+      }
+    },
+    {
+      inner-shadow: {
+        color: base.colors.glow,
+        offset: point(0px, 4px),
+        blur-radius: 6px,
+        spread: -4px
+      }
+    },
     {inner-shadow: {color: base.colors.toplight, offset: point(0px, 0.5px)}}
   ],
   corner-radius: l.lengths.radius-lg,
@@ -119,6 +135,22 @@ export button = frame {
     },
     {drop-shadow: {color: base.colors.edge, spread: 1px}},
     {inner-shadow: {color: base.colors.sheen, spread: 0.5px}},
+    {
+      inner-shadow: {
+        color: base.colors.shade,
+        offset: point(0px, -4px),
+        blur-radius: 6px,
+        spread: -4px
+      }
+    },
+    {
+      inner-shadow: {
+        color: base.colors.glow,
+        offset: point(0px, 4px),
+        blur-radius: 6px,
+        spread: -4px
+      }
+    },
     {inner-shadow: {color: base.colors.toplight, offset: point(0px, 0.5px)}}
   ],
   corner-radius: l.lengths.radius-lg,
@@ -175,6 +207,22 @@ export button-lifted = frame {
     },
     {drop-shadow: {color: base.colors.edge, spread: 1px}},
     {inner-shadow: {color: base.colors.sheen, spread: 0.5px}},
+    {
+      inner-shadow: {
+        color: base.colors.shade,
+        offset: point(0px, -4px),
+        blur-radius: 6px,
+        spread: -4px
+      }
+    },
+    {
+      inner-shadow: {
+        color: base.colors.glow,
+        offset: point(0px, 4px),
+        blur-radius: 6px,
+        spread: -4px
+      }
+    },
     {inner-shadow: {color: base.colors.toplight, offset: point(0px, 0.5px)}}
   ],
   corner-radius: l.lengths.radius-lg,
@@ -380,7 +428,24 @@ export handle = frame {
         spread: -0.5px
       }
     },
-    {drop-shadow: {color: base.colors.edge, spread: 0.5px}}
+    {drop-shadow: {color: base.colors.edge, spread: 0.5px}},
+    {
+      inner-shadow: {
+        color: base.colors.shade,
+        offset: point(0px, -4px),
+        blur-radius: 6px,
+        spread: -4px
+      }
+    },
+    {
+      inner-shadow: {
+        color: base.colors.glow,
+        offset: point(0px, 4px),
+        blur-radius: 6px,
+        spread: -4px
+      }
+    },
+    {inner-shadow: {color: base.colors.toplight, offset: point(0px, 0.5px)}}
   ],
   corner-radius: l.lengths.radius-3xl,
   slot: .true

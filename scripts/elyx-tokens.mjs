@@ -181,12 +181,17 @@ const write = (value, prefix = '') => {
   return value.amount ? `opacity(${name}, ${value.amount}%)` : name
 }
 
+// The parts the shadows are built from, set on every element so each works its colours out where it's drawn, written
+// out in full so each layer can be read
+const parts = Object.fromEntries(declarations(block('::after')).map(({ name, value }) => [name, value]))
+const expand = (value) => value.replace(/var\(--(shadow-[\w-]+)\)/g, (reference, name) => (parts[name] ? expand(parts[name]) : reference))
+
 const shadows = declarations(block('@theme inline'))
   .filter(({ name }) => name.startsWith('shadow-'))
   .map(({ name, value }) => {
     const level = levels[name.slice('shadow-'.length)]
     if (!level) throw new Error(`Add --${name} to the levels in scripts/elyx-tokens.mjs`)
-    const drops = split(unprefix(value)).flatMap((layer) => {
+    const drops = split(unprefix(expand(value))).flatMap((layer) => {
       const [, inset, lengths, colourName, fallback] = /^(inset\s+)?(.*) var\(--([\w-]+)(?:,\s*(.+))?\)$/.exec(layer) ?? []
       if (!lengths) throw new Error(`--${name} has a layer the script can’t read: ${layer}`)
       // A colour a component sets for itself, such as a button's --fine-edge, isn't in :root. Where it falls back to

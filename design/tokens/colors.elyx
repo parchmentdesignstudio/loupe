@@ -192,6 +192,10 @@ export colors = tokens {
   // from above. They're shadows, so they go when something is disabled or pressed flat
   sheen: opacity(black, 0%),
   toplight: opacity(black, 0%),
+  // Light under the top edge and shade along the bottom, as on a rounded, glossy surface. White and black, so on a
+  // coloured fill, such as a primary button, the light is a lighter tint of it
+  glow: opacity(black, 0%),
+  shade: opacity(black, 0%),
   shadow-raised-color: opacity(bleed, 12%),
   shadow-floating-color: opacity(bleed, 12%),
   // Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it

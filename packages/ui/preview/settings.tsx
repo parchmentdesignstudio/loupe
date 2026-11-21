@@ -1,5 +1,6 @@
 import { Icon } from '@parchment/icons/react';
 import { useState, useSyncExternalStore } from 'react';
+import { ShadowSettings } from './shadows.js';
 import { ThemeSettings } from './theme.js';
 import { type Appearance as Scheme, Drawer, Switch, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger, useAppearance, useOnOffLabels } from '../src/index.js';
 
@@ -72,6 +73,7 @@ const panels = [
 	{ id: 'appearance', name: 'Appearance', icon: 'circle-lefthalf-filled' },
 	{ id: 'accessibility', name: 'Accessibility', icon: 'accessibility' },
 	{ id: 'theme', name: 'Theme', icon: 'paintpalette' },
+	{ id: 'shadows', name: 'Shadows', icon: 'square-on-square' },
 ] as const;
 
 type Panel = (typeof panels)[number]['id'];
@@ -108,6 +110,7 @@ export function SettingsPanels() {
 			{panel === 'appearance' && <Appearance />}
 			{panel === 'accessibility' && <OnOffLabels />}
 			{panel === 'theme' && <ThemeSettings />}
+			{panel === 'shadows' && <ShadowSettings />}
 		</div>
 	);
 }

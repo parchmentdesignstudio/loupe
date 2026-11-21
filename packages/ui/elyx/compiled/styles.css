@@ -230,10 +230,10 @@
     --text-title--letter-spacing: -.0125em;
     --color-bleed: var(--bleed);
     --color-code-ground: var(--code-ground, var(--color-raised));
-    --shadow-raised: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
-    --shadow-panel: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
-    --shadow-button: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
-    --shadow-button-lifted: inset 0 .5px 0 var(--toplight), inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge), 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color);
+    --shadow-raised: var(--shadow-light), var(--shadow-rim), var(--shadow-depth-raised);
+    --shadow-panel: var(--shadow-rim), var(--shadow-depth-raised);
+    --shadow-button: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-raised);
+    --shadow-button-lifted: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-lifted);
     --animate-enter: enter .16s cubic-bezier(.2, .9, .3, 1);
     --animate-exit: exit .11s ease-in forwards;
     --animate-fade-in: fade-in .16s ease-out;
@@ -493,6 +493,19 @@
     }
   }
 
+  *, :before, :after {
+    --shadow-toplight: inset 0 .5px 0 var(--toplight);
+    --shadow-light: var(--shadow-toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade);
+    --shadow-edge: 0 0 0 .5px var(--edge);
+    --shadow-rim: inset 0 0 0 .5px var(--sheen), var(--shadow-edge);
+    --shadow-rim-button: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge);
+    --shadow-depth-raised: 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+    --shadow-depth-lifted: var(--shadow-depth-raised), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color);
+    --shadow-depth-floating: 0 1px 1px -.5px var(--shadow-floating-color), 0 1px 3px -1.5px var(--shadow-floating-color), 0 2px 4px -2px var(--shadow-floating-color), 0 3px 6px -3px var(--shadow-floating-color), 0 6px 12px -6px var(--shadow-floating-color), 0 12px 24px -12px var(--shadow-floating-color);
+    --shadow-depth-overlay: 0 1px 1px -.5px var(--shadow-overlay-color), 0 1px 3px -1.5px var(--shadow-overlay-color), 0 2px 4px -2px var(--shadow-overlay-color), 0 3px 6px -3px var(--shadow-overlay-color), 0 8px 16px -12px var(--shadow-overlay-color), 0 12px 32px -24px var(--shadow-overlay-color), 0 12px 24px -6px var(--shadow-deep-color), 0 24px 48px -12px var(--shadow-deep-color);
+    --shadow-depth-handle: 0 1px 1px -.5px var(--shadow-handle-color), 0 1px 3px -1.5px var(--shadow-handle-color), 0 2px 4px -2px var(--shadow-handle-color), 0 3px 6px -3px var(--shadow-handle-color), 0 6px 12px -6px var(--shadow-handle-color), 0 12px 24px -12px var(--shadow-handle-color);
+  }
+
   :root {
     color-scheme: light dark;
     --ground-bleed: var(--color-linen-30);
@@ -505,6 +518,8 @@
     --edge: color-mix(in oklab, var(--bleed) 12%, transparent);
     --sheen: transparent;
     --toplight: transparent;
+    --glow: transparent;
+    --shade: transparent;
     --shadow-raised-color: color-mix(in oklab, var(--bleed) 12%, transparent);
     --shadow-floating-color: color-mix(in oklab, var(--bleed) 12%, transparent);
     --shadow-deep-color: transparent;
@@ -3660,17 +3675,17 @@
   }
 
   .shadow-button {
-    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--fine-edge, transparent)), 0 0 0 1px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--shadow-raised-color)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--shadow-raised-color)), 0 2px 4px -2px var(--tw-shadow-color, var(--shadow-raised-color));
+    --tw-shadow: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-raised);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .shadow-button-lifted {
-    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--fine-edge, transparent)), 0 0 0 1px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--shadow-raised-color)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--shadow-raised-color)), 0 2px 4px -2px var(--tw-shadow-color, var(--shadow-raised-color)), 0 3px 6px -3px var(--tw-shadow-color, var(--shadow-raised-color)), 0 4px 8px -4px var(--tw-shadow-color, var(--shadow-raised-color));
+    --tw-shadow: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-lifted);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .shadow-handle {
-    --tw-shadow: 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -.5px var(--tw-shadow-color, var(--shadow-handle-color)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--shadow-handle-color)), 0 2px 4px -2px var(--tw-shadow-color, var(--shadow-handle-color)), 0 3px 6px -3px var(--tw-shadow-color, var(--shadow-handle-color)), 0 6px 12px -6px var(--tw-shadow-color, var(--shadow-handle-color)), 0 12px 24px -12px var(--tw-shadow-color, var(--shadow-handle-color));
+    --tw-shadow: var(--shadow-light), var(--shadow-edge), var(--shadow-depth-handle);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
@@ -3685,17 +3700,17 @@
   }
 
   .shadow-overlay {
-    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -.5px var(--tw-shadow-color, var(--shadow-overlay-color)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--shadow-overlay-color)), 0 2px 4px -2px var(--tw-shadow-color, var(--shadow-overlay-color)), 0 3px 6px -3px var(--tw-shadow-color, var(--shadow-overlay-color)), 0 8px 16px -12px var(--tw-shadow-color, var(--shadow-overlay-color)), 0 12px 32px -24px var(--tw-shadow-color, var(--shadow-overlay-color)), 0 12px 24px -6px var(--tw-shadow-color, var(--shadow-deep-color)), 0 24px 48px -12px var(--tw-shadow-color, var(--shadow-deep-color));
+    --tw-shadow: var(--shadow-toplight), var(--shadow-rim), var(--shadow-depth-overlay);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .shadow-panel {
-    --tw-shadow: inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--shadow-raised-color)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--shadow-raised-color)), 0 2px 4px -2px var(--tw-shadow-color, var(--shadow-raised-color));
+    --tw-shadow: var(--shadow-rim), var(--shadow-depth-raised);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .shadow-raised {
-    --tw-shadow: inset 0 .5px 0 var(--tw-shadow-color, var(--toplight)), inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--shadow-raised-color)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--shadow-raised-color)), 0 2px 4px -2px var(--tw-shadow-color, var(--shadow-raised-color));
+    --tw-shadow: var(--shadow-light), var(--shadow-rim), var(--shadow-depth-raised);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
@@ -5467,7 +5482,7 @@
     }
 
     .md\:shadow-panel {
-      --tw-shadow: inset 0 0 0 .5px var(--tw-shadow-color, var(--sheen)), 0 0 0 .5px var(--tw-shadow-color, var(--edge)), 0 1px 1px -1px var(--tw-shadow-color, var(--shadow-raised-color)), 0 1px 3px -1.5px var(--tw-shadow-color, var(--shadow-raised-color)), 0 2px 4px -2px var(--tw-shadow-color, var(--shadow-raised-color));
+      --tw-shadow: var(--shadow-rim), var(--shadow-depth-raised);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
