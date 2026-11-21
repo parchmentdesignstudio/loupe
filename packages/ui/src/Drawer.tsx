@@ -1,4 +1,5 @@
 import { useContext, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { flushSync } from 'react-dom';
 import { Dialog, type DialogProps, OverlayTriggerStateContext, Sheet, SheetBackdrop, SheetContent, SheetOverlay, type SheetOverlayProps } from 'react-aria-components';
 import { Overlay } from 'react-aria';
 import { composeClassName, tv } from './tv.js';
@@ -38,6 +39,34 @@ const duration = 350;
 const easing = 'cubic-bezier(.32,.72,0,1)';
 // Where each element marked to follow a pushing drawer sits now
 const where = () => new Map([...document.querySelectorAll<HTMLElement>('[data-drawer-follows]')].map((element) => [element, element.getBoundingClientRect()]));
+// What follows, sent back to where it was measured and gliding on to where it is now
+function glide(from: Map<HTMLElement, DOMRect>) {
+	if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+	for (const [element, rect] of from) {
+		if (!element.isConnected || typeof element.animate !== 'function') continue;
+		for (const animation of element.getAnimations()) if (animation.id === 'drawer-follows') animation.cancel();
+		const to = element.getBoundingClientRect();
+		const x = rect.left - to.left;
+		const y = rect.top - to.top;
+		if (x || y) element.animate({ translate: [`${x}px ${y}px`, '0 0'] }, { duration, easing, id: 'drawer-follows' });
+	}
+}
+
+/**
+ * Changes an open pushing drawer's width, as change sets --drawer-push-width, in time with how it opens: the page
+ * rewraps once, what follows glides to its new place, and the panel grows or shrinks from its inner edge over the same
+ * 350ms. For the preview's own drawers, such as a chat that widens for a larger view, so it's not in the index
+ */
+export function resizePushDrawer(within: HTMLElement, change: () => void) {
+	const panel = within.querySelector<HTMLElement>('[data-push-drawer-panel]');
+	const from = where();
+	const width = panel?.getBoundingClientRect().width;
+	flushSync(change);
+	glide(from);
+	if (!panel || width == null || matchMedia('(prefers-reduced-motion: reduce)').matches || typeof panel.animate !== 'function') return;
+	panel.animate({ width: [`${width}px`, `${panel.getBoundingClientRect().width}px`] }, { duration, easing });
+}
+
 const ease = 'duration-350 ease-[cubic-bezier(.32,.72,0,1)] motion-reduce:transition-none';
 const pushDrawer = tv({
 	slots: {
@@ -51,9 +80,10 @@ const pushDrawer = tv({
 			continuous: { aside: `flex overflow-hidden transition-[width] ${ease}`, panel: 'shrink-0' },
 			once: { panel: 'pointer-events-none absolute inset-y-0', sheet: `pointer-events-auto transition-[translate] ${ease}` },
 		},
+		// The panel's pinned to the outer edge, so a change of width grows or shrinks it from the inner one
 		position: {
-			start: { sheet: 'border-e' },
-			end: { sheet: 'border-s' },
+			start: { panel: 'start-0', sheet: 'border-e' },
+			end: { panel: 'end-0', sheet: 'border-s' },
 		},
 		isOpen: {
 			true: { aside: 'w-(--drawer-push-width)' },
@@ -148,15 +178,7 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
 	const [followed, setFollowed] = useState<{ isOpen: boolean; from?: Map<HTMLElement, DOMRect> }>({ isOpen });
 	if (followed.isOpen !== isOpen) setFollowed({ isOpen, from: reflow === 'once' ? where() : undefined });
 	useLayoutEffect(() => {
-		if (!followed.from || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-		for (const [element, from] of followed.from) {
-			if (!element.isConnected || typeof element.animate !== 'function') continue;
-			for (const animation of element.getAnimations()) if (animation.id === 'drawer-follows') animation.cancel();
-			const to = element.getBoundingClientRect();
-			const x = from.left - to.left;
-			const y = from.top - to.top;
-			if (x || y) element.animate({ translate: [`${x}px ${y}px`, '0 0'] }, { duration, easing, id: 'drawer-follows' });
-		}
+		if (followed.from) glide(followed.from);
 	}, [followed]);
 	const slots = pushDrawer({ position: side, isOpen, reflow });
 
@@ -208,7 +230,7 @@ function PushDrawer({ children, 'aria-label': label, isOpen: givenOpen, defaultO
 			onTransitionEnd={(event) => event.target === (reflow === 'once' ? sheet.current : event.currentTarget) && !isOpen && setMounted(false)}
 			className={slots.aside({ className: typeof className === 'string' ? className : undefined })}
 		>
-			<div className={slots.panel()}>
+			<div data-push-drawer-panel className={slots.panel()}>
 				<div
 					ref={(element) => {
 						sheet.current = element;

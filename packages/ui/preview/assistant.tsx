@@ -1,4 +1,5 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useRef, useState, useSyncExternalStore } from 'react';
+import { resizePushDrawer } from '../src/Drawer.js';
 import { Drawer } from '../src/index.js';
 import { Chat, type Conversation } from './blocks/chat.js';
 
@@ -19,10 +20,12 @@ export function ChatDrawer({ isOpen, onOpenChange, conversation }: { isOpen: boo
 	// nothing to expand
 	const isWide = useSyncExternalStore(subscribe, () => matchMedia(wide).matches, () => true);
 	const [isExpanded, setExpanded] = useState(false);
+	const element = useRef<HTMLDivElement>(null);
+	const expand = (next: boolean) => (element.current ? resizePushDrawer(element.current, () => setExpanded(next)) : setExpanded(next));
 	return (
-		<div className="shrink-0 self-start [--drawer-push-fill:var(--color-panel)] [--drawer-push-width:32rem] data-expanded:[--drawer-push-width:min(56rem,calc(100vw-24rem))] [--ground-bleed:var(--panel-bleed)] md:sticky md:top-12 md:h-[calc(100dvh-4rem)]" data-expanded={isExpanded || undefined}>
+		<div ref={element} className="shrink-0 self-start [--drawer-push-fill:var(--color-panel)] [--drawer-push-width:32rem] data-expanded:[--drawer-push-width:min(56rem,calc(100vw-24rem))] [--ground-bleed:var(--panel-bleed)] md:sticky md:top-12 md:h-[calc(100dvh-4rem)]" data-expanded={isExpanded || undefined}>
 			<Drawer mode="push" position="end" isOpen={isOpen} onOpenChange={onOpenChange} className="[--drawer-fill:var(--color-panel)] [--overlay-bleed:var(--panel-bleed)]" aria-label="Ask Loupe">
-				<Chat title="Ask Loupe" conversation={conversation} isExpanded={isExpanded} onExpandedChange={isWide ? setExpanded : undefined} />
+				<Chat title="Ask Loupe" conversation={conversation} isExpanded={isExpanded} onExpandedChange={isWide ? expand : undefined} />
 			</Drawer>
 		</div>
 	);
