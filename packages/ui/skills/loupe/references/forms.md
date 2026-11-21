@@ -78,7 +78,8 @@ The `<form>` goes inside the Dialog and holds everything, DialogActions included
 - The submit button names what it does, "Save lead", never "Submit". It's `primary` if it's the view's action.
 - Forms stack fields with `gap-4`. Two short fields can share a row in a `grid grid-cols-2 gap-4`.
 - `isReadOnly` keeps a field's edge and drops its fill, for a value that can't be changed here. `isDisabled` is for
-  one that can't be changed yet.
+  one that can't be changed yet, never for a button: a submit stays live and answers with errors by its fields. See
+  the [product-design](../../product-design/SKILL.md) skill.
 
 ## Choices
 

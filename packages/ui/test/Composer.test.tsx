@@ -45,9 +45,12 @@ describe('Composer', () => {
 		expect(field.value).toBe('A draft');
 	});
 
-	it('won’t send an empty message', async () => {
+	it('won’t send an empty message, and points to the field instead', async () => {
 		const { onSubmit, user, field, send } = setup();
-		expect(send.hasAttribute('disabled')).toBe(true);
+		expect(send.hasAttribute('disabled')).toBe(false);
+		await user.click(send);
+		expect(onSubmit).not.toHaveBeenCalled();
+		expect(document.activeElement).toBe(field);
 		await user.type(field, '   {Enter}');
 		expect(onSubmit).not.toHaveBeenCalled();
 	});
