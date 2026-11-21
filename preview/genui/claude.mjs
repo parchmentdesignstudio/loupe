@@ -1,6 +1,6 @@
 // Claude for the preview's chat, while it runs locally: POST /__loupe/claude with the conversation so far, and it
 // answers in words and, when a view says it better, a tree of Loupe blocks drawn through render_ui. The key is read
-// on this side, from ANTHROPIC_API_KEY or packages/ui/.env.local, so it never reaches the page. A tree that breaks
+// on this side, from ANTHROPIC_API_KEY or packages/ui/.env or .env.local, so it never reaches the page. A tree that breaks
 // the catalogue goes back to Claude with what's wrong, for it to draw again, so the page only gets one that draws
 import Anthropic, { APIError, AuthenticationError, RateLimitError } from '@anthropic-ai/sdk';
 import { dirname } from 'node:path';
@@ -11,7 +11,9 @@ const model = 'claude-opus-5-5';
 // Drawing again after an error is rare, and three goes is plenty to tell a tree that won't come right
 const attempts = 3;
 
-const system = `You answer questions in a chat inside Loupe, a component library's preview. When a view would answer better than words, such as a table of records, a form, a few stats or a settings panel, call render_ui once with a tree of Loupe's blocks, and say in a sentence or two what it shows. Otherwise answer in words alone.
+const system = `You answer questions in a chat inside Loupe, a component library's preview. When a view would answer better than words, such as a table of records, a form, a few stats or a settings panel, call render_ui once with a tree of Loupe's blocks. Otherwise answer in words alone.
+
+Your words show as plain paragraphs, so write no Markdown: no bold, lists or headings. Alongside a view, say in two or three sentences what stands out, as the view carries the detail; don't list what it contains.
 
 The schema is the whole of what exists: every block, prop and option is listed, and nothing else can be drawn. Sample data you make up should be plausible and specific, with real-looking names, dates and amounts in British English.
 
@@ -30,8 +32,10 @@ let validate;
 async function setUp(server) {
 	// The preview's root is preview, so the package's own .env.local is a folder up
 	const env = loadEnv(server.config.mode, dirname(server.config.root), '');
-	// With no key in either place, the SDK looks for an ant auth login profile of its own
-	client ??= new Anthropic(process.env.ANTHROPIC_API_KEY || env.ANTHROPIC_API_KEY ? { apiKey: process.env.ANTHROPIC_API_KEY || env.ANTHROPIC_API_KEY } : {});
+	// Made again when the key changes, so one added while the preview runs is used without a restart. With no key in
+	// either place, the SDK looks for an ant auth login profile of its own
+	const key = process.env.ANTHROPIC_API_KEY || env.ANTHROPIC_API_KEY;
+	if (!client || client.apiKey !== (key ?? client.apiKey)) client = new Anthropic(key ? { apiKey: key } : {});
 	// Loaded each time, so the catalogue follows the source as it changes, as virtual:details does
 	const { default: details } = await server.ssrLoadModule('virtual:details');
 	const catalogue = await server.ssrLoadModule('/genui/catalogue.ts');
@@ -67,7 +71,8 @@ async function answer(messages) {
 				betas: ['server-side-fallback-2026-07-01'],
 				fallbacks: 'default',
 				cache_control: { type: 'ephemeral' },
-				system,
+				// The date last, after what's cached, so made-up records are this month's rather than the model's guess at it
+				system: [{ type: 'text', text: system }, { type: 'text', text: `Today is ${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.` }],
 				tools: [renderTool],
 				messages: conversation,
 			})
@@ -113,7 +118,7 @@ export function claude() {
 						await setUp(server);
 						reply(200, await answer(messages));
 					} catch (error) {
-						if (error instanceof AuthenticationError || (!(error instanceof APIError) && /authentication method/i.test(String(error)))) return reply(503, { error: 'No key for Claude. Put ANTHROPIC_API_KEY in packages/ui/.env.local and start the preview again' });
+						if (error instanceof AuthenticationError || (!(error instanceof APIError) && /authentication method/i.test(String(error)))) return reply(503, { error: 'No key for Claude. Put ANTHROPIC_API_KEY in packages/ui/.env.local' });
 						if (error instanceof RateLimitError) return reply(429, { error: 'Claude is busy. Try again in a moment' });
 						if (error instanceof APIError) return reply(502, { error: `Claude said ${error.status}: ${error.message}` });
 						reply(500, { error: error instanceof Error ? error.message : String(error) });
