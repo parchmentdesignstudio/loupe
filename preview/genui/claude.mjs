@@ -69,6 +69,7 @@ async function answer(messages) {
 	const conversation = historyOf(messages);
 	let ui;
 	let summary;
+	let title;
 	let values;
 	let panel;
 	let controls;
@@ -91,9 +92,9 @@ async function answer(messages) {
 			.finalMessage();
 		const words = response.content.filter((block) => block.type === 'text').map((block) => block.text).join('\n\n').trim();
 		if (response.stop_reason === 'refusal') return { text: words || 'Claude couldn’t help with that one.' };
-		if (response.stop_reason === 'max_tokens') return { text: words || 'That reply ran too long to finish.', ui, summary, values, controls, panel };
+		if (response.stop_reason === 'max_tokens') return { text: words || 'That reply ran too long to finish.', ui, summary, title, values, controls, panel };
 		const calls = response.content.filter((block) => block.type === 'tool_use');
-		if (response.stop_reason !== 'tool_use' || !calls.length) return { text: words, ui, summary, values, controls, panel };
+		if (response.stop_reason !== 'tool_use' || !calls.length) return { text: words, ui, summary, title, values, controls, panel };
 
 		// Every call gets its result back in the one message, and only a tree that passes is kept
 		const results = calls.map((call) => {
@@ -102,6 +103,7 @@ async function answer(messages) {
 			if (errors.length) return { type: 'tool_result', tool_use_id: call.id, is_error: true, content: `It can't be drawn:\n${errors.join('\n')}\nFix these and call render_ui again.` };
 			ui = call.input.ui;
 			summary = call.input.summary;
+			title = call.input.title;
 			values = call.input.values;
 			controls = call.input.controls;
 			panel = controls ? panelOf(call.input) : undefined;
@@ -109,7 +111,7 @@ async function answer(messages) {
 		});
 		conversation.push({ role: 'assistant', content: response.content }, { role: 'user', content: results });
 	}
-	return { text: 'Claude couldn’t draw a view that fits Loupe, so here are its words alone.', ui, summary, values, controls, panel };
+	return { text: 'Claude couldn’t draw a view that fits Loupe, so here are its words alone.', ui, summary, title, values, controls, panel };
 }
 
 export function claude() {
