@@ -139,7 +139,7 @@ describe('Generated views with controls', () => {
 		const user = userEvent.setup();
 		const onValuesChange = vi.fn();
 		const { container } = render(<Generated ui={tweakable.ui as Node} title="Password reset" values={tweakable.values} panel={panelOf(tweakable, schema)} onValuesChange={onValuesChange} />);
-		// In its sandbox, named on the bar over it, with Copy code at its foot, and Reset only once something's moved
+		// In its sandbox, named on the bar over it, with Copy code beside the name, and Reset only once something's moved
 		expect(screen.getByRole('figure', { name: 'Password reset' })).toBeTruthy();
 		expect(screen.getByRole('button', { name: 'Copy code' })).toBeTruthy();
 		expect(screen.queryByRole('button', { name: 'Reset' })).toBeNull();

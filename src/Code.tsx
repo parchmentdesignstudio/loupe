@@ -16,7 +16,8 @@ export const code = tv({
 		// The ground under the block shows through it, lightened in the light, and as it is in the dark, where the code is a
 		// step lighter, as a button is. The code casts the line between them, so it sits a little above the bar
 		bar: 'flex items-center gap-3 bg-[light-dark(color-mix(in_oklab,var(--color-white)_40%,transparent),transparent)] py-1 ps-4 pe-1 text-control font-medium',
-		title: 'min-w-0 flex-1 truncate',
+		// Padded as a small button is, so the bar's the same height with Copy at its end or without it
+		title: 'min-w-0 flex-1 truncate py-(--button-small-padding-y)',
 		// A path's folders, quieter than its file
 		folder: 'font-normal text-code-comment',
 		changes: 'flex gap-1.5 font-mono text-label tabular-nums',

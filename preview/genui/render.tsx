@@ -1,5 +1,6 @@
+import { Icon } from '@parchment/icons/react';
 import { type ReactNode, useEffect, useId, useState } from 'react';
-import { Alert, Avatar, Button, Cell, Checkbox, Column, EmptyState, ListBoxItem, Meter, ProgressBar, Quote, Radio, RadioGroup, Row, Select, Separator, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, TextField } from '../../src/index.js';
+import { Alert, Avatar, Button, Tooltip, TooltipTrigger, Cell, Checkbox, Column, EmptyState, ListBoxItem, Meter, ProgressBar, Quote, Radio, RadioGroup, Row, Select, Separator, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, TextField } from '../../src/index.js';
 import { type Node, type Panel, type Values, resolve } from './catalogue.js';
 import { code as frame } from '../../src/Code.js';
 import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
@@ -80,12 +81,12 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 	};
 	const set = (name: string, value: string | number | boolean) => change({ ...values, [name]: value });
 	const [isCopied, setCopied] = useState(false);
-	// Loaded once it's drawn, rather than imported, as it names components from all of the preview's stories, which
-	// would load them all with it. The preview has them already, so it's there straight away
-	const [codeOf, setCodeOf] = useState<(node: ReactNode) => string>();
-	useEffect(() => {
-		import('../code.js').then((module) => setCodeOf(() => module.codeOf)).catch(() => {});
-	}, []);
+	// Loaded when it's first copied, rather than imported, as it names components from all of the preview's stories,
+	// which would load them all with it. The preview has them already, so it's there straight away
+	const copy = () =>
+		void import('../code.js')
+			.then(({ codeOf }) => navigator.clipboard.writeText(codeOf(drawn)))
+			.then(() => setCopied(true));
 	useEffect(() => {
 		if (!isCopied) return;
 		const timer = setTimeout(() => setCopied(false), 1000);
@@ -179,41 +180,53 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 	const controls = panel?.filter((group) => group.items.length);
 	const drawn = shown && draw(shown);
 	const isMoved = Object.entries(values).some(([name, value]) => initial?.[name] !== value);
-	const { base, bar, title: name } = frame({ hasBar: true });
+	const { base, bar, title: name, swap, gone } = frame({ hasBar: true });
+	const copyLabel = isCopied ? 'Copied' : 'Copy code';
 	// Named by its title outright, as not every screen reader names a figure from its caption
 	const titleId = useId();
 	return (
 		<figure aria-labelledby={titleId} className={base()}>
+			{/* As a block of code's: its name, then Reset once something's moved, and Copy as an icon at the end */}
 			<figcaption className={bar()}>
 				<span id={titleId} className={name()}>{title ?? 'View'}</span>
-			</figcaption>
-			{/* On the panel, a step up from the bar, which casts the line between them as a block of code does */}
-			<div className="@container relative flex min-w-0 flex-col bg-panel p-4 shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--shadow-raised-color)]">{drawn}</div>
-			{controls?.length ? (
-				// The playground's own rows, under the view on the same panel, parted from it by a line
-				<section aria-label="Controls" className="flex flex-col border-t border-bleed/8 bg-panel px-4 pt-3 pb-1">
-					{controls.map((group) => (
-						<ControlGroup key={group.group} label={group.group}>
-							{group.items.map(({ label, value: id, control }) => {
-								const value = values[id];
-								if (control.kind === 'slider') return <SliderControl key={id} label={label} value={value as number} onChange={(next) => set(id, next)} minValue={control.min} maxValue={control.max} steps={control.steps} scale={control.scale} unit={control.unit} />;
-								if (control.kind === 'choice') return <Choice key={id} label={label} options={control.options} value={value as string} onChange={(next) => set(id, next)} />;
-								if (control.kind === 'switch') return <SwitchControl key={id} label={label} value={value as boolean} onChange={(next) => set(id, next)} />;
-								return <TextControl key={id} label={label} value={value as string} onChange={(next) => set(id, next)} />;
-							})}
-						</ControlGroup>
-					))}
-				</section>
-			) : null}
-			<div className={bar({ className: 'justify-end shadow-[inset_0_.5px_var(--edge)]' })}>
 				{isMoved && (
 					<Button variant="ghost" size="small" onPress={() => change(initial ?? {})}>
 						Reset
 					</Button>
 				)}
-				<Button variant="ghost" size="small" isDisabled={!codeOf} onPress={() => codeOf && void navigator.clipboard.writeText(codeOf(drawn)).then(() => setCopied(true))}>
-					{isCopied ? 'Copied' : 'Copy code'}
-				</Button>
+				<TooltipTrigger>
+					<Button variant="ghost" size="small" aria-label={copyLabel} onPress={copy}>
+						<span className={swap()}>
+							<span className={isCopied ? gone() : undefined}>
+								<Icon name="square-on-square" />
+							</span>
+							<span className={isCopied ? undefined : gone()}>
+								<Icon name="checkmark" />
+							</span>
+						</span>
+					</Button>
+					<Tooltip>{copyLabel}</Tooltip>
+				</TooltipTrigger>
+			</figcaption>
+			{/* On the code's ground, a step up from the bar, which casts the line between them as a block of code does. The
+			    controls share it, under the view, parted from it by a line */}
+			<div className="relative flex flex-col bg-code-ground shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--shadow-raised-color)]">
+				<div className="@container flex min-w-0 flex-col p-4">{drawn}</div>
+				{controls?.length ? (
+					<section aria-label="Controls" className="flex flex-col border-t border-bleed/8 px-4 pt-3 pb-1">
+						{controls.map((group) => (
+							<ControlGroup key={group.group} label={group.group}>
+								{group.items.map(({ label, value: id, control }) => {
+									const value = values[id];
+									if (control.kind === 'slider') return <SliderControl key={id} label={label} value={value as number} onChange={(next) => set(id, next)} minValue={control.min} maxValue={control.max} steps={control.steps} scale={control.scale} unit={control.unit} />;
+									if (control.kind === 'choice') return <Choice key={id} label={label} options={control.options} value={value as string} onChange={(next) => set(id, next)} />;
+									if (control.kind === 'switch') return <SwitchControl key={id} label={label} value={value as boolean} onChange={(next) => set(id, next)} />;
+									return <TextControl key={id} label={label} value={value as string} onChange={(next) => set(id, next)} />;
+								})}
+							</ControlGroup>
+						))}
+					</section>
+				) : null}
 			</div>
 		</figure>
 	);
