@@ -6,6 +6,7 @@ Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. 
 |---|---|
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
 | `@parchment/ui` | Accessible React components, built on React Aria |
+| `@parchment/logos` | Company logos, with versions drawn for 16px where a company’s own doesn’t hold up |
 
 | Tool | What it does | Command |
 |---|---|---|
@@ -299,18 +300,66 @@ That writes the tokens in `design/tokens` (`colors.elyx`, `colors-dark.elyx`, `t
 
 `packages/ui/elyx/README.md` covers placing the components themselves, as code layers.
 
+## Logos
+
+Each logo is the company’s own, a version drawn for one size, or both. Draw a version wherever theirs doesn’t hold up, usually at 16px, or where there isn’t one worth using anymore.
+
+### Adding a logo
+
+Put the company’s logo in `packages/logos/source/<name>.svg`, as they supply it. It scales to any size.
+
+To draw one for 16px, export it from a 16px artboard to `source/16/<name>.svg`. That’s used at 16px, and the original still covers every other size. Any size works the same way, eg: `source/24/`. A logo with no original shows only at the sizes it’s drawn.
+
+Draw in black, with white for anything knocked out. Black and dark greys become `currentColor`, and white and light greys `--icon-fill`, the same knock-out as the icons. Any colour stays as it is, like the yellow of Buy Me a Coffee’s cup.
+
+The build leaves out a group called `Keylines`, and warns about a drawing that isn’t as tall as its folder. `pnpm logos` builds, and `pnpm logos:watch` rebuilds whenever `source/` changes. Open `packages/logos/preview.html` to see every logo at 16, 24 and 32px, and which sizes are drawn.
+
+### What the build makes
+
+| Output | Use |
+|---|---|
+| `svg/<name>.svg`, `svg/<size>/<name>.svg` | Clean files for anything that takes an SVG |
+| `lib/astro/Logo.astro` | Astro component |
+| `lib/react/index.js` | React component |
+| `lib/index.js` | `toSvg()`, `resolveLogo()` and `logoNames()` for anything else |
+| `logos.json` | Every logo, whether it has an original, and the sizes it’s drawn at |
+
+### Using it in a site
+
+```sh
+pnpm add github:parchmentdesignstudio/loupe#logos
+npm install github:parchmentdesignstudio/loupe#logos
+```
+
+```astro
+---
+import Logo from '@parchment/logos/astro'
+---
+<Logo name="fingerprint" />
+<Logo name="github" label="GitHub" />
+<Logo name="iamsteve" size={24} />
+```
+
+```jsx
+import { Logo } from '@parchment/logos/react'
+
+<Logo name="buy-me-a-coffee" size={24} />
+```
+
+Logos are 16px tall by default, and as wide as their proportions make them. `size` sets the height. A version drawn for that size is used when there is one, otherwise the original scales to it, and asking for a size a logo has neither for is an error. Without `label` the logo is hidden from screen readers.
+
 ## Releasing
 
 Each package is published to its own branch, so npm and pnpm can both install it from GitHub.
 
-Loupe has one version, in the root `package.json`, which the preview shows beside the logo. Below 1.0 it's marked alpha there: usable, as React Aria stands behind it, but not yet at the quality to rely on in production. 1.0 is when it is. The UI and icons share it, so they move together even when only one of them changed. `pnpm bump` sets it everywhere:
+Loupe has one version, in the root `package.json`, which the preview shows beside the logo. Below 1.0 it's marked alpha there: usable, as React Aria stands behind it, but not yet at the quality to rely on in production. 1.0 is when it is. The UI, icons and logos share it, so they move together even when only one of them changed. `pnpm bump` sets it everywhere:
 
 ```sh
 pnpm bump 0.9.0
 pnpm release icons
 ```
 
-Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`.
+Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`, and the logos with `pnpm release logos`, to the `logos` branch.
 
 ## Device
 

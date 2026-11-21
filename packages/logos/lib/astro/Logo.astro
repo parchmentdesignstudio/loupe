@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import type { LogoName } from '../index.js'
+import { resolveLogo, logoAttributes } from '../index.js'
+
+interface Props extends Omit<HTMLAttributes<'svg'>, 'name'> {
+  name: LogoName
+  size?: number
+  label?: string
+}
+
+const { name, size = 16, label, ...rest } = Astro.props
+const logo = resolveLogo(name, { size })
+if (!logo) throw new Error(`No logo called ${name} at ${size}px`)
+---
+
+<svg {...logoAttributes(logo, { label })} {...rest} set:html={logo.body} />
