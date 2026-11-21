@@ -39,18 +39,45 @@ const followUps = ['Could it be vegan?', 'How long does it keep?', 'What goes wi
 const fallback = ['Good question. In a real chat the answer would stream in here, a line at a time.'];
 const claudeStarters = ['Show this month’s overdue invoices', 'A settings panel for notifications', 'How did the shop do this week?'];
 
-// The conversation so far, as the endpoint takes it, and its reply: words, and a view when one says it better
-async function askClaude(turns: Turn[]): Promise<Turn> {
+type Answer = { text?: string; ui?: Node; title?: string; values?: Values; controls?: unknown; panel?: Panel[] };
+
+// The page it's asked from, by its name in the tab's title and its route, so "this" means something to Claude
+const pageOf = () => ({ title: document.title.split(' · ')[0], path: location.hash.slice(1) || '/' });
+
+// The conversation so far, as the endpoint takes it, and its reply: words, and a view when one says it better. The
+// endpoint sends each step it takes as a line of JSON as it starts, and the answer last, so onStep hears each in turn
+async function askClaude(turns: Turn[], onStep: (step: string) => void): Promise<Turn> {
 	const messages = turns.filter((turn) => !turn.isError).map(({ from, text, ui, values, controls, note }) => ({ role: from, text: note ? `${text}\n\n${note}` : text, ui, values, controls }));
+	const failed = (text: string): Turn => ({ from: 'assistant', text, isError: true });
 	try {
-		const response = await fetch('/__loupe/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages }) });
-		const reply = (await response.json()) as { text?: string; ui?: Node; title?: string; values?: Values; controls?: unknown; panel?: Panel[]; error?: string };
-		if (!response.ok || reply.error) return { from: 'assistant', text: reply.error ?? `Claude didn’t answer (${response.status})`, isError: true };
-		return { from: 'assistant', text: reply.text ?? '', ui: reply.ui, title: reply.title, values: reply.values, controls: reply.controls, panel: reply.panel };
+		const response = await fetch('/__loupe/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages, page: pageOf() }) });
+		if (!response.ok || !response.body) {
+			const reply = (await response.json().catch(() => ({}))) as { error?: string };
+			return failed(reply.error ?? `Claude didn’t answer (${response.status})`);
+		}
+		const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+		let buffer = '';
+		for (;;) {
+			const { value, done } = await reader.read();
+			if (done) break;
+			buffer += value;
+			const lines = buffer.split('\n');
+			buffer = lines.pop() ?? '';
+			for (const line of lines.filter(Boolean)) {
+				const event = JSON.parse(line) as { step?: string; answer?: Answer; error?: string };
+				if (event.step) onStep(event.step);
+				if (event.error) return failed(event.error);
+				if (event.answer) return { from: 'assistant', text: event.answer.text ?? '', ui: event.answer.ui, title: event.answer.title, values: event.answer.values, controls: event.answer.controls, panel: event.answer.panel };
+			}
+		}
+		return failed('Claude stopped before answering');
 	} catch {
-		return { from: 'assistant', text: 'Claude is only here while the preview runs locally, with pnpm dev', isError: true };
+		return failed('Claude is only here while the preview runs locally, with pnpm dev');
 	}
 }
+
+// The least a step shows for, so one followed straight away by the next can still be read
+const STEP = 900;
 
 // How long a reply takes to think over
 const THINKING = 1600;
@@ -61,6 +88,8 @@ export interface Conversation {
 	source: Source;
 	turns: Turn[];
 	isThinking: boolean;
+	/** What Claude is doing while it thinks, such as Reading the forms guide */
+	step?: string;
 	ask: (question: string) => void;
 	restart: () => void;
 	/** Keeps where a view's controls were left, for the next question to carry */
@@ -74,6 +103,7 @@ export interface Conversation {
 export function useConversation(source: Source = 'samples'): Conversation {
 	const [turns, setTurns] = useState<Turn[]>([]);
 	const [isThinking, setThinking] = useState(false);
+	const [step, setStep] = useState<string>();
 	const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 	useEffect(() => () => clearTimeout(timer.current), []);
 
@@ -91,9 +121,18 @@ export function useConversation(source: Source = 'samples'): Conversation {
 		clearTimeout(timer.current);
 		if (isClaude) {
 			const id = conversation.current;
-			void askClaude([...turns, asked]).then((reply) => {
+			setStep(undefined);
+			// Steps can come in the same moment, a lookup and then what follows it, so each holds for a beat to be read
+			let shownUntil = 0;
+			const show = (next: string) => {
+				const wait = Math.max(0, shownUntil - Date.now());
+				shownUntil = Date.now() + wait + STEP;
+				setTimeout(() => id === conversation.current && setStep(next), wait);
+			};
+			void askClaude([...turns, asked], show).then((reply) => {
 				if (id !== conversation.current) return;
 				setThinking(false);
+				setStep(undefined);
 				setTurns((list) => [...list, reply]);
 			});
 			return;
@@ -107,10 +146,11 @@ export function useConversation(source: Source = 'samples'): Conversation {
 		conversation.current++;
 		clearTimeout(timer.current);
 		setThinking(false);
+		setStep(undefined);
 		setTurns([]);
 	};
 	const tweak = (turn: Turn, values: Values) => setTurns((list) => list.map((item) => (item === turn ? { ...item, tweaked: values } : item)));
-	return { source, turns, isThinking, ask, restart, tweak };
+	return { source, turns, isThinking, step, ask, restart, tweak };
 }
 
 export interface ChatProps {
@@ -127,7 +167,7 @@ export interface ChatProps {
 /** The drawer's contents: the conversation, what to ask, and the field to ask it in */
 export function Chat({ title = 'Ask the kitchen', source = 'samples', conversation, isExpanded = false, onExpandedChange }: ChatProps) {
 	const own = useConversation(source);
-	const { turns, isThinking, ask, restart, tweak } = conversation ?? own;
+	const { turns, isThinking, step, ask, restart, tweak } = conversation ?? own;
 	const isClaude = (conversation ?? own).source === 'claude';
 	const log = useRef<HTMLDivElement>(null);
 
@@ -202,8 +242,9 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 							))}
 							{isThinking && (
 								<Message from="assistant">
+									{/* Each step as Claude takes it, the ray running on over the words as they change */}
 									<TextEffect variant="ray" loop className="text-muted">
-										Thinking
+										{step ?? 'Thinking'}
 									</TextEffect>
 								</Message>
 							)}
