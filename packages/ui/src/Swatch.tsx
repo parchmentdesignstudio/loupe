@@ -1,11 +1,12 @@
 import type { CSSProperties, HTMLAttributes } from 'react';
 import { tv } from './tv.js';
 
-// The hairline keeps a pale colour's edge on paper. The checkerboard's squares shrink with the swatch, so a small one
-// still shows a few
+// The hairline keeps a pale colour's edge on paper, and in the dark it's the dark edge, as an avatar's is, so with the
+// lighter line inside it a colour has a dark rim and a light one rather than two pale ones. The checkerboard's squares
+// shrink with the swatch, so a small one still shows a few
 export const swatch = tv({
 	base: [
-		'inline-block shrink-0 bg-center align-middle inset-ring inset-ring-bleed/12 forced-colors:inset-ring-[CanvasText]',
+		'inline-block shrink-0 bg-center align-middle inset-ring inset-ring-[color:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),var(--dark-edge))] forced-colors:inset-ring-[CanvasText]',
 		// Inside the hairline, a line a shade lighter, as a filled button has: a fifth of the way to white, or a third in the
 		// dark. An outline drawn inward, so it follows whatever corners the swatch has. Its colour comes from
 		// --swatch-color, so without one, as in an empty frame, there's no line
