@@ -6,7 +6,7 @@ export declare const code: import("tailwind-variants").TVReturnType<{
         };
     };
 }, {
-    base: string;
+    base: string[];
     bar: string;
     title: string;
     folder: string;

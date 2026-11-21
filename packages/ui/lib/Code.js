@@ -5,8 +5,13 @@ import { Tooltip, TooltipTrigger } from './Tooltip.js';
 import { tv } from './tv.js';
 export const code = tv({
     slots: {
-        // not-prose, so in Prose its parts are laid out as Code lays them out, rather than as writing
-        base: 'not-prose relative flex flex-col overflow-hidden rounded-(--code-radius) text-code-text shadow-[0_0_0_.5px_var(--edge)] [--bleed:var(--panel-bleed)]',
+        // not-prose, so in Prose its parts are laid out as Code lays them out, rather than as writing. In the dark its edge
+        // is dark, so a sheen inside it and a light along its top lift it from the panel as they lift a secondary button.
+        // They're a layer over the bar and the code, which would cover them on the block itself, and in the light they're clear
+        base: [
+            'not-prose relative flex flex-col overflow-hidden rounded-(--code-radius) text-code-text shadow-[0_0_0_.5px_var(--edge)] [--bleed:var(--panel-bleed)]',
+            'after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:shadow-[inset_0_.5px_0_var(--toplight),inset_0_0_0_.5px_var(--sheen)]',
+        ],
         // The title, what's changed and Copy, on a line of their own above the code, as an editor's tab bar has them.
         // The ground under the block shows through it, lightened in the light, and as it is in the dark, where the code is a
         // step lighter, as a button is. The code casts the line between them, so it sits a little above the bar
