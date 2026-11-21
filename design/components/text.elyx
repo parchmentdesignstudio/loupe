@@ -53,20 +53,9 @@ export title = text {
   letter-spacing: -1.25%
 }
 
-export reading = text {
-  caption: "Writing at length, as Prose sets it, on the 26px line its rhythm counts in",
-  left: 832px,
-  top: 0px,
-  fill: base.colors.ink,
-  contents: "Reading",
-  font-size: t.typography.text-reading,
-  font-family: f.fonts.sans,
-  line-height: t.typography.text-reading-line-height
-}
-
 export reading-subheading = text {
   caption: "A heading within a section of prose, an h3",
-  left: 1040px,
+  left: 832px,
   top: 0px,
   fill: base.colors.ink,
   contents: "Reading-subheading",
@@ -78,7 +67,7 @@ export reading-subheading = text {
 
 export reading-heading = text {
   caption: "A section of prose’s heading, an h2",
-  left: 1248px,
+  left: 1040px,
   top: 0px,
   fill: base.colors.ink,
   contents: "Reading-heading",
@@ -90,8 +79,8 @@ export reading-heading = text {
 }
 
 export reading-display = text {
-  caption: "Prose’s title, an h1, on a line and a half",
-  left: 1456px,
+  caption: "Prose’s title, an h1",
+  left: 1248px,
   top: 0px,
   fill: base.colors.ink,
   contents: "Reading-display",

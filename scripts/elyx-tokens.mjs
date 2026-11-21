@@ -53,10 +53,9 @@ const styles = {
   control: 'Buttons, fields, labels, options and tabs. Buttons, selects, tabs, toggles, navigation links and a chosen option set it in Medium',
   label: 'Descriptions, errors, tags, tooltips and a toast’s message. Section headers set it in Auger Mono',
   title: 'Page and dialog headings',
-  reading: 'Writing at length, as Prose sets it, on the 26px line its rhythm counts in',
   'reading-subheading': 'A heading within a section of prose, an h3',
   'reading-heading': 'A section of prose’s heading, an h2',
-  'reading-display': 'Prose’s title, an h1, on a line and a half',
+  'reading-display': 'Prose’s title, an h1',
 }
 
 // Colours Elyx writes by name, as it does any hex with a CSS name. These are the greys, which a neutral in the palette

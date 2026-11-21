@@ -23,20 +23,15 @@ export typography = tokens {
   text-title: 20,
   // 22px in the CSS, and a multiple of text-title here, as Elyx takes line height
   text-title-line-height: 1.1,
-  // Writing at length, as Prose sets it: larger than body, as it's read for minutes rather than glanced at, on a 26px
-  // line. Prose's every space is a whole or half one of these lines, so text keeps one rhythm down the page
-  text-reading: 16,
-  // 26px in the CSS, and a multiple of text-reading here, as Elyx takes line height
-  text-reading-line-height: 1.63,
-  // Prose's headings, each a step up and each on whole or half lines of the reading text, so they keep its rhythm:
-  // h3 and h2 on one line, h1 on one and a half
-  text-reading-subheading: 18,
-  // 26px in the CSS, and a multiple of text-reading-subheading here, as Elyx takes line height
-  text-reading-subheading-line-height: 1.44,
-  text-reading-heading: 22,
-  // 26px in the CSS, and a multiple of text-reading-heading here, as Elyx takes line height
-  text-reading-heading-line-height: 1.18,
-  text-reading-display: 28,
-  // 39px in the CSS, and a multiple of text-reading-display here, as Elyx takes line height
-  text-reading-display-line-height: 1.39
+  // Prose's headings, each a step up, on lines of 4px steps, so a heading of any length ends on Loupe's grid as
+  // prose's text does
+  text-reading-subheading: 16,
+  // 24px in the CSS, and a multiple of text-reading-subheading here, as Elyx takes line height
+  text-reading-subheading-line-height: 1.5,
+  text-reading-heading: 20,
+  // 28px in the CSS, and a multiple of text-reading-heading here, as Elyx takes line height
+  text-reading-heading-line-height: 1.4,
+  text-reading-display: 24,
+  // 32px in the CSS, and a multiple of text-reading-display here, as Elyx takes line height
+  text-reading-display-line-height: 1.33
 }

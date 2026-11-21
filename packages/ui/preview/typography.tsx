@@ -195,8 +195,8 @@ export function Article() {
 	);
 }
 
-// A rule at the foot of each of prose's lines, so a space that's off the beat shows as text off its rule
-const rhythm = { backgroundImage: 'repeating-linear-gradient(to bottom, transparent 0 calc(var(--prose-line) - 1px), color-mix(in oklab, var(--color-accent) 40%, transparent) calc(var(--prose-line) - 1px) var(--prose-line))' };
+// Loupe's 4px grid behind the writing, so a block that starts or ends off it shows as text off its rules
+const rhythm = { backgroundImage: 'repeating-linear-gradient(to bottom, transparent 0 calc(var(--spacing) - 1px), color-mix(in oklab, var(--color-accent) 16%, transparent) calc(var(--spacing) - 1px) var(--spacing))' };
 
 /** Plain HTML as Prose sets it, as many elements as a page of writing is likely to use */
 export function Writing({ showRhythm = false }: { showRhythm?: boolean }) {
