@@ -246,19 +246,17 @@
 		margin-bottom: 0;
 	}
 	/* Upright, as a mark rather than a letter, and left out of what a screen reader says, as the words say it's a
-	   quote. Half its line tall, so the quote sits close under it */
+	   quote. Its glyph hangs below its box, so the box is tall enough that the mark's foot sits about 0.65em clear of
+	   the quote's capitals, near enough 16px at 24px, rather than crowding them */
 	.prose :where(blockquote:not(.quote > *))::before,
 	.quote::before {
 		content: '“' / '';
 		display: block;
-		height: 0.5lh;
+		/* 1.625 of the quote's em, which is a third of the mark's own */
+		height: calc(1.625em / 3);
 		font-size: 3em;
 		font-style: normal;
 		line-height: 1;
-	}
-	.prose :where(blockquote:not(.quote > *) > :first-child),
-	.quote > blockquote {
-		margin-top: 0.25em;
 	}
 	/* In prose, a step smaller, 20px on a 24px line, the 1.2 it has on its own, so a quote of any length ends on the
 	   grid. What follows the mark sits straight under it */
@@ -295,11 +293,11 @@
 		font-style: normal;
 		color: var(--color-ink);
 	}
-	/* Last, over the rules above for a quote anywhere: in prose, the mark is 24px tall, and who said it is 8px under,
-	   on the text's line */
+	/* Last, over the rules above for a quote anywhere: in prose, the mark is 36px tall, which leaves four of the 4px
+	   grid's lines between its foot and the quote's capitals, and who said it is 8px under, on the text's line */
 	.prose :where(blockquote:not(.quote > *))::before,
 	.prose .quote::before {
-		height: calc(var(--spacing) * 6);
+		height: calc(var(--spacing) * 9);
 	}
 	.prose :where(blockquote:not(.quote > *) footer),
 	.prose .quote > figcaption {
