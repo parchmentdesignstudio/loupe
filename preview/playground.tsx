@@ -120,7 +120,7 @@ export function Playground({ children, controls, preview, onRandom, box, code: w
 	}, [isCopied]);
 	return (
 		<div className="flex w-full flex-col gap-4">
-			<div style={grounds[ground]?.()} className={['relative flex min-h-36 items-center justify-center rounded-lg bg-panel px-6 py-12', box].filter(Boolean).join(' ')}>
+			<div style={grounds[ground]?.()} className={['relative flex min-h-36 items-center justify-center rounded-lg bg-panel px-6 py-12 outline outline-ground', box].filter(Boolean).join(' ')}>
 				{children}
 				<div className="absolute top-2 right-2 flex gap-1">
 					<Button variant="ghost" size="small" onPress={() => void navigator.clipboard.writeText(code).then(() => setCopied(true))}>

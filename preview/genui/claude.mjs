@@ -97,7 +97,7 @@ async function setUp(server) {
 		{
 			name: 'get_component',
 			description: 'Looks up one of Loupe’s components by name: what it’s for, and its props with their options and defaults, from the source',
-			input_schema: { type: 'object', properties: { name: { enum: Object.keys(components).sort() } }, required: ['name'], additionalProperties: false },
+			input_schema: { type: 'object', properties: { name: { enum: Object.keys(components).toSorted() } }, required: ['name'], additionalProperties: false },
 		},
 		{
 			name: 'render_ui',
