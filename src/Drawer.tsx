@@ -5,14 +5,15 @@ import { composeClassName, tv } from './tv.js';
 
 export { SheetTrigger as DrawerTrigger } from 'react-aria-components';
 
-// A drawer is React Aria's Sheet, which moves by scrolling. The backdrop’s fade and the step back of a drawer under
+// A drawer is React Aria's Sheet, which moves by scrolling. Its fill is --drawer-surface, for what's in it to take, such
+// as a bar that's the drawer's colour a little see-through. The backdrop’s fade and the step back of a drawer under
 // another are keyframes in styles/theme.css, which it plays in time with the swipe. Overscroll padding sits outside
 // the drawer’s size, hence box-content. What it holds is a column, so DialogActions can sit at its foot, with the
 // dialog's padding kept between them and what's above
 const drawer = tv({
 	slots: {
 		backdrop: 'data-[stack-index=0]:bg-(--drawer-backdrop,var(--color-scrim))',
-		panel: 'z-1 box-content overflow-clip rounded-(--drawer-radius) bg-(--drawer-fill,var(--color-overlay)) [--bleed:var(--overlay-bleed)] text-ink shadow-overlay [--shadow-overlay-color:var(--drawer-shadow)] outline-0 will-change-transform transform-[perspective(1000px)] forced-colors:bg-[Canvas]',
+		panel: 'z-1 box-content overflow-clip rounded-(--drawer-radius) bg-(--drawer-surface) [--drawer-surface:var(--drawer-fill,var(--color-overlay))] [--bleed:var(--overlay-bleed)] text-ink shadow-overlay [--shadow-overlay-color:var(--drawer-shadow)] outline-0 will-change-transform transform-[perspective(1000px)] forced-colors:bg-[Canvas]',
 		content: 'relative box-border flex h-full flex-col overflow-hidden p-(--dialog-padding) pb-[calc(var(--dialog-padding)_+_var(--sheet-scroll-padding-y))] outline-0 group-data-expanded/drawer:overflow-auto [&>:has(+[data-dialog-actions])]:mb-(--dialog-padding) *:data-dialog-actions:mt-auto',
 	},
 	variants: {
@@ -42,7 +43,7 @@ const pushDrawer = tv({
 	slots: {
 		aside: 'relative h-full shrink-0',
 		panel: 'h-full w-(--drawer-push-width) overflow-hidden',
-		sheet: 'h-full border-bleed/8 bg-(--drawer-push-fill,var(--color-ground)) [--bleed:var(--ground-bleed)]',
+		sheet: 'h-full border-bleed/8 bg-(--drawer-surface) [--drawer-surface:var(--drawer-push-fill,var(--color-ground))] [--bleed:var(--ground-bleed)]',
 		content: 'relative box-border flex h-full flex-col overflow-auto p-(--dialog-padding) outline-0 [&>:has(+[data-dialog-actions])]:mb-(--dialog-padding) *:data-dialog-actions:mt-auto',
 	},
 	variants: {

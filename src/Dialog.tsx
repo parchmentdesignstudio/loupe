@@ -33,12 +33,14 @@ export function DialogActions({ children }: DialogActionsProps) {
 export interface DialogCloseProps {
 	/** Names the button for screen readers */
 	'aria-label'?: string;
+	/** In place of its corner, such as static in a bar of its own */
+	className?: string;
 }
 
 /** A close button for a dialog's corner */
-export function DialogClose({ 'aria-label': label = 'Close' }: DialogCloseProps) {
+export function DialogClose({ 'aria-label': label = 'Close', className = 'absolute top-5 right-5' }: DialogCloseProps) {
 	return (
-		<Button slot="close" variant="ghost" shape="full" size="small" aria-label={label} className="absolute top-5 right-5">
+		<Button slot="close" variant="ghost" shape="full" size="small" aria-label={label} className={className}>
 			<Cross />
 		</Button>
 	);

@@ -96,7 +96,7 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
 					{context && <div className={slots.context()}>{context}</div>}
 					{/* A phone's return key says Send, as that's what it does */}
 					<TextArea ref={field} rows={1} placeholder={placeholder} enterKeyHint="send" onKeyDown={sendOnEnter} className={slots.input()} />
-					<Button type="submit" aria-label={submitLabel} size="small" isDisabled={isDisabled} className={slots.send()}>
+					<Button type="submit" variant="secondary" aria-label={submitLabel} size="small" isDisabled={isDisabled} className={slots.send()}>
 						{submitIcon}
 					</Button>
 				</Group>

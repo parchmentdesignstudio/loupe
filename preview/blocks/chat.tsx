@@ -119,10 +119,13 @@ export interface ChatProps {
 	source?: Source;
 	/** One kept outside, from useConversation, so it outlasts the drawer. Otherwise the chat keeps its own */
 	conversation?: Conversation;
+	/** Wider, for a view with more to it. With onExpandedChange, the bar has a button to widen it and back */
+	isExpanded?: boolean;
+	onExpandedChange?: (isExpanded: boolean) => void;
 }
 
 /** The drawer's contents: the conversation, what to ask, and the field to ask it in */
-export function Chat({ title = 'Ask the kitchen', source = 'samples', conversation }: ChatProps) {
+export function Chat({ title = 'Ask the kitchen', source = 'samples', conversation, isExpanded = false, onExpandedChange }: ChatProps) {
 	const own = useConversation(source);
 	const { turns, isThinking, ask, restart, tweak } = conversation ?? own;
 	const isClaude = (conversation ?? own).source === 'claude';
@@ -145,67 +148,82 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 
 	return (
 		<>
-			<DialogHeading>{title}</DialogHeading>
-			{/* Only once there's a conversation to start over from */}
-			{!isEmpty && (
-				<Button variant="ghost" shape="full" size="small" aria-label="New conversation" onPress={restart} className="absolute top-5 right-14">
-					<Icon name="note-text-badge-pencil" />
-				</Button>
-			)}
-			<DialogClose />
-			<div ref={log} className="-mx-(--dialog-padding) mt-4 flex min-h-0 flex-1 flex-col gap-6 overflow-auto px-(--dialog-padding) pb-4">
-				{isEmpty ? (
-					<div className="mt-auto flex flex-col gap-3">
-						<p className="text-body text-muted">{isClaude ? 'Ask for a view, such as a table, a form or a few figures, and Claude draws it with Loupe.' : 'Ask about what to cook, what’s in season, or how to use up what you have.'}</p>
-						<Suggestions aria-label="Suggested questions">
-							{(isClaude ? claudeStarters : starters).map((question) => (
+			{/* The drawer's padding given back, so the conversation scrolls its full height, under the bar and the field */}
+			<div ref={log} className="-m-(--dialog-padding) flex min-h-0 flex-1 flex-col overflow-auto">
+				{/* A toolbar, pinned over the conversation in the drawer's colour, see-through, so what scrolls under it shows
+				    blurred. Inside the scroller, so the scrollbar runs over it rather than under */}
+				<div className="sticky top-0 z-1 flex items-center gap-1 border-b border-bleed/8 bg-[color-mix(in_oklab,var(--drawer-surface,var(--color-panel))_80%,transparent)] py-2 ps-(--dialog-padding) pe-3 backdrop-blur-md">
+					<DialogHeading className="min-w-0 flex-1 truncate pr-0 text-body font-medium">{title}</DialogHeading>
+					{/* Only once there's a conversation to start over from */}
+					{!isEmpty && (
+						<Button variant="ghost" shape="full" size="small" aria-label="New conversation" onPress={restart}>
+							<Icon name="note-text-badge-pencil" />
+						</Button>
+					)}
+					{onExpandedChange && (
+						<Button variant="ghost" shape="full" size="small" aria-label={isExpanded ? 'Narrow' : 'Expand'} aria-pressed={isExpanded} onPress={() => onExpandedChange(!isExpanded)}>
+							<Icon name={isExpanded ? 'arrow-down-left-and-arrow-up-right' : 'arrow-up-right-and-arrow-down-left'} />
+						</Button>
+					)}
+					<DialogClose className="" />
+				</div>
+				<div className="flex flex-1 flex-col gap-6 px-(--dialog-padding) pt-4 pb-6">
+					{isEmpty ? (
+						<div className="mt-auto flex flex-col gap-3">
+							<p className="text-body text-muted">{isClaude ? 'Ask for a view, such as a table, a form or a few figures, and Claude draws it with Loupe.' : 'Ask about what to cook, what’s in season, or how to use up what you have.'}</p>
+							<Suggestions aria-label="Suggested questions">
+								{(isClaude ? claudeStarters : starters).map((question) => (
+									<Suggestion key={question} onPress={() => ask(question)}>
+										{question}
+									</Suggestion>
+								))}
+							</Suggestions>
+						</div>
+					) : (
+						<MessageList aria-label="Conversation">
+							{grouped.map((run, index) => (
+								<Message key={index} from={run[0].from}>
+									{run[0].from === 'user'
+										? run[0].text
+										: run.map((turn, at) => (
+												<div key={at} className="flex flex-col gap-3">
+													{turn.text
+														.split(/\n{2,}/)
+														.filter(Boolean)
+														.map((paragraph) => (
+															<p key={paragraph} className={turn.isError ? 'text-danger' : undefined}>
+																{paragraph}
+															</p>
+														))}
+													{turn.ui && <Generated ui={turn.ui} title={turn.title} values={turn.tweaked ?? turn.values} panel={turn.panel} onAction={ask} onValuesChange={(values) => tweak(turn, values)} />}
+												</div>
+											))}
+								</Message>
+							))}
+							{isThinking && (
+								<Message from="assistant">
+									<TextEffect variant="ray" loop className="text-muted">
+										Thinking
+									</TextEffect>
+								</Message>
+							)}
+						</MessageList>
+					)}
+					{!isEmpty && !isThinking && !isClaude && (
+						<Suggestions key={turns.length} aria-label="Follow-up questions" variant="follow-up" className="-mx-2">
+							{followUps.map((question) => (
 								<Suggestion key={question} onPress={() => ask(question)}>
 									{question}
 								</Suggestion>
 							))}
 						</Suggestions>
-					</div>
-				) : (
-					<MessageList aria-label="Conversation">
-						{grouped.map((run, index) => (
-							<Message key={index} from={run[0].from}>
-								{run[0].from === 'user'
-									? run[0].text
-									: run.map((turn, at) => (
-											<div key={at} className="flex flex-col gap-3">
-												{turn.text
-													.split(/\n{2,}/)
-													.filter(Boolean)
-													.map((paragraph) => (
-														<p key={paragraph} className={turn.isError ? 'text-danger' : undefined}>
-															{paragraph}
-														</p>
-													))}
-												{turn.ui && <Generated ui={turn.ui} title={turn.title} values={turn.tweaked ?? turn.values} panel={turn.panel} onAction={ask} onValuesChange={(values) => tweak(turn, values)} />}
-											</div>
-										))}
-							</Message>
-						))}
-						{isThinking && (
-							<Message from="assistant">
-								<TextEffect variant="ray" loop className="text-muted">
-									Thinking
-								</TextEffect>
-							</Message>
-						)}
-					</MessageList>
-				)}
-				{!isEmpty && !isThinking && !isClaude && (
-					<Suggestions key={turns.length} aria-label="Follow-up questions" variant="follow-up" className="-mx-2">
-						{followUps.map((question) => (
-							<Suggestion key={question} onPress={() => ask(question)}>
-								{question}
-							</Suggestion>
-						))}
-					</Suggestions>
-				)}
+					)}
+				</div>
+				{/* Over the conversation's foot, on nothing of its own: what scrolls under it blurs, more so further down */}
+				<div className="sticky bottom-0 px-(--dialog-padding) pt-6 pb-(--dialog-padding) before:absolute before:inset-0 before:-z-1 before:mask-[linear-gradient(transparent,black_60%)] before:backdrop-blur-sm">
+					<Composer aria-label="Your question" placeholder="Ask anything" submitIcon={<Icon name="arrow-up" />} description="Enter sends, Shift-Enter starts a new line" onSubmit={ask} />
+				</div>
 			</div>
-			<Composer aria-label="Your question" placeholder="Ask anything" submitIcon={<Icon name="arrow-up" />} description="Enter sends, Shift-Enter starts a new line" onSubmit={ask} />
 		</>
 	);
 }
@@ -280,7 +298,7 @@ export function ClaudeChatPlayground() {
 					<p className="max-w-prose text-body text-muted">{bodyOf('long').join(' ')}</p>
 				</div>
 				<Drawer mode="push" position="end">
-					<Chat title="Ask Claude" source="claude" />
+					<Chat title="Ask Loupe" source="claude" />
 				</Drawer>
 			</div>
 		</DrawerTrigger>

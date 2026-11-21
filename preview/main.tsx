@@ -166,7 +166,7 @@ const hasClaude = import.meta.env.DEV;
 
 /** Opens or closes the chat with Claude, marked expanded while it's open */
 function ChatButton({ isOpen, onToggle, tooltip }: { isOpen: boolean; onToggle: () => void; tooltip?: boolean }) {
-	const label = isOpen ? 'Hide chat' : 'Ask Claude';
+	const label = isOpen ? 'Hide chat' : 'Ask Loupe';
 	const button = (
 		<Button variant="ghost" shape="full" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
 			<Icon name="bubble-left" />
