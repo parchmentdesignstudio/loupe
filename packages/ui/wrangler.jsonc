@@ -1,0 +1,7 @@
+// The preview, served as static files at loupe.parchment.studio. Its pages are # links, so every path is index.html
+{
+	"name": "loupe",
+	"compatibility_date": "2026-11-01",
+	"assets": { "directory": "./preview/dist" },
+	"routes": [{ "pattern": "loupe.parchment.studio", "custom_domain": true }]
+}

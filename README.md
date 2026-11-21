@@ -286,6 +286,7 @@ Size bars, headers and rows by padding around their content, not a fixed height,
 | `pnpm test` | Vitest across the workspace, with an axe check for each component, then a check that the Elyx tokens match `styles/theme.css` |
 | `pnpm lint` | oxlint, with the accessibility rules on. The icons package and device aren’t linted yet |
 | `pnpm --filter @parchment/ui build` | Builds `lib`, which is committed so releases can install it |
+| `pnpm --filter @parchment/ui site` | Builds the preview and puts it up at loupe.parchment.studio, with Wrangler signed in to Parchment Studio’s Cloudflare |
 
 ## Elyx
 
