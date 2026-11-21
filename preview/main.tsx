@@ -19,7 +19,7 @@ import { Inspector, hasInspector } from './inspector.js';
 import { Reference, hasReference } from './reference.js';
 import { Lockup, ParchmentLogo } from './logo.js';
 import { pages as searchPages } from './search.js';
-import { Settings, SettingsPanels, remember, remembered } from './settings.js';
+import { SettingsDrawer, SettingsPanels, remember, remembered } from './settings.js';
 import { forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
 import { type Entry, areas, blocks, library } from './stories.js';
@@ -317,10 +317,11 @@ function Preview() {
 		scroller.current?.scrollTo(0, 0);
 	}, [address]);
 
-	const toggle = () => {
-		setOpen(!isOpen);
-		remember('settings', isOpen ? 'closed' : 'open');
+	const openSettings = (next: boolean) => {
+		setOpen(next);
+		remember('settings', next ? 'open' : 'closed');
 	};
+	const toggle = () => openSettings(!isOpen);
 
 	return (
 		<>
@@ -333,7 +334,7 @@ function Preview() {
 				actions={<Actions isOpen={isOpen} onToggle={toggle} onSearch={search} />}
 				phoneActions={<DocsSearchButton onPress={search} icon={searchIcon} />}
 				drawerEnd={<SettingsPanels />}
-				aside={<Settings isOpen={isOpen} />}
+				aside={<SettingsDrawer isOpen={isOpen} onOpenChange={openSettings} />}
 				current={address}
 				scrollerRef={scroller}
 			>
