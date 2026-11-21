@@ -3659,6 +3659,10 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
+  .inset-ring-\[color\:light-dark\(color-mix\(in_oklab\,var\(--bleed\)_12\%\,transparent\)\,var\(--dark-edge\)\)\] {
+    --tw-inset-ring-color: color-mix(in oklab,var(--bleed) 12%,transparent);
+  }
+
   .inset-ring-bleed\/12 {
     --tw-inset-ring-color: color-mix(in oklab, var(--bleed) 12%, transparent);
   }
