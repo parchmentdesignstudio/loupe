@@ -1,15 +1,15 @@
 import type { ReactNode } from 'react';
 import { tv } from './tv.js';
 
-// What a person sends sits in a tinted bubble at the end of the row, no wider than most of it, so a long one still
-// reads as theirs. It grows up from its corner as it arrives. A reply is the page's own text, a column of paragraphs,
-// lists or anything else, which fades up a beat after. Each arrives once, by @starting-style, so nothing replays as
-// the conversation grows
+// What a person sends sits in a bubble at the end of the row, no wider than most of it, so a long one still reads as
+// theirs. It's a tint of the ink on whatever it's on, so it's that surface a step on, rather than a colour of its own.
+// It grows up from its corner as it arrives. A reply is the page's own text, a column of paragraphs, lists or anything
+// else, which fades up a beat after. Each arrives once, by @starting-style, so nothing replays as the conversation grows
 export const message = tv({
 	base: 'motion-reduce:transition-none',
 	variants: {
 		from: {
-			user: 'max-w-[85%] origin-bottom-right self-end rounded-(--message-radius) bg-(--message-fill,var(--color-highlight)) px-(--message-padding-x) pt-(--message-padding-top) pb-(--message-padding-bottom) text-body text-pretty whitespace-pre-line text-ink transition-[opacity,translate,scale] duration-250 ease-spring rtl:origin-bottom-left starting:translate-y-2 starting:scale-96 starting:opacity-0',
+			user: 'max-w-[85%] origin-bottom-right self-end rounded-(--message-radius) bg-(--message-fill,color-mix(in_oklab,var(--color-bleed)_8%,transparent)) px-(--message-padding-x) pt-(--message-padding-top) pb-(--message-padding-bottom) text-body text-pretty whitespace-pre-line text-ink transition-[opacity,translate,scale] duration-250 ease-spring rtl:origin-bottom-left starting:translate-y-2 starting:scale-96 starting:opacity-0',
 			assistant: 'flex flex-col gap-3 text-body text-pretty text-ink transition-[opacity,translate] delay-75 duration-300 ease-out starting:translate-y-1 starting:opacity-0',
 		},
 	},
