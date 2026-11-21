@@ -1,8 +1,13 @@
-import { type ReactNode, type Ref, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { type ReactNode, useEffect, useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import { type IconName, type IconVariant, iconNames, matchesIcon } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
-import { Button, ComboBox, ListBoxItem, NumberField, Select, Switch, TextField, ToggleButton, ToggleButtonGroup } from '../src/index.js';
+import { Button, ComboBox, ListBoxItem } from '../src/index.js';
 import { hex, surface } from './brand.js';
+import { Choice, ControlGroup, ControlRow } from './controls.js';
+
+// The rows of controls, in a module of their own so a view drawn elsewhere, as Claude's are, can use them without the
+// whole playground
+export { Choice, ControlGroup, ControlRow, NumberControl, SliderControl, SwitchControl, TextControl, capitalise } from './controls.js';
 import { codeOf } from './code.js';
 
 // A kit for each component's "Build one" story: the component in a box, a row of controls under it, each named on the
@@ -10,7 +15,6 @@ import { codeOf } from './code.js';
 // redrawn
 
 export const pick = <T,>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
-export const capitalise = (word: string) => word[0].toUpperCase() + word.slice(1);
 export const sampleWords = ['New project', 'Continue', 'Send an email', 'Book a call', 'Save', 'Sort by', 'Download', 'Share'];
 export const longWords = 'A much longer label than anyone should write, to see where it wraps or truncates';
 
@@ -66,122 +70,6 @@ export const useBuilt = () =>
 		},
 		() => built,
 	);
-
-export function ControlRow({ label, children, ref }: { label: string; children: ReactNode; ref?: Ref<HTMLDivElement> }) {
-	return (
-		<div ref={ref} className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-dotted border-bleed/8 py-1.5">
-			<span className="text-control font-medium text-ink">{label}</span>
-			{children}
-		</div>
-	);
-}
-
-/**
- * A heading over some of a playground's controls, so the component's own props sit apart from its placement, its
- * behaviour, the control that opens it, and the settings that only change the preview
- */
-export function ControlGroup({ label, children }: { label: string; children: ReactNode }) {
-	return (
-		<section aria-label={label} className="flex flex-col pt-8 first:pt-0">
-			<h3 className="border-b border-bleed/8 pb-2 text-label font-medium text-muted">{label}</h3>
-			{children}
-		</section>
-	);
-}
-
-/**
- * A few options side by side, for a variant, a size or anything else with a handful of values. Where they won't fit on
- * the row, even on a line of their own, as on a phone or with larger text, they fold into a select
- */
-export function Choice<T extends string>({
-	label,
-	options,
-	labels,
-	value,
-	onChange,
-	isDisabled,
-}: {
-	label: string;
-	options: readonly T[];
-	/** What to call options that capitalising gets wrong, such as JSON or iamsteve */
-	labels?: Partial<Record<T, string>>;
-	value: T;
-	onChange: (value: T) => void;
-	isDisabled?: boolean;
-}) {
-	const name = (option: T) => labels?.[option] ?? capitalise(option);
-	const row = useRef<HTMLDivElement>(null);
-	const group = useRef<HTMLDivElement>(null);
-	// The group's own width, kept from when it last showed, to know when there's room for it again
-	const wanted = useRef(0);
-	const [isFolded, setFolded] = useState(false);
-
-	useLayoutEffect(() => {
-		const element = row.current;
-		if (!element) return;
-		const measure = () => {
-			if (group.current) wanted.current = group.current.scrollWidth;
-			setFolded(wanted.current > element.clientWidth);
-		};
-		measure();
-		const observer = new ResizeObserver(measure);
-		observer.observe(element);
-		// The group too, as larger text widens it without the row changing
-		if (group.current?.firstElementChild) observer.observe(group.current.firstElementChild);
-		return () => observer.disconnect();
-		// isFolded isn't read, but each switch swaps the group in or out, so the observer starts again on what's there
-		// oxlint-disable-next-line react/exhaustive-deps
-	}, [isFolded]);
-
-	return (
-		<ControlRow ref={row} label={label}>
-			{isFolded ? (
-				<Select aria-label={label} size="small" selectedKey={value} onSelectionChange={(key) => onChange(key as T)} isDisabled={isDisabled} className="w-40">
-					{options.map((option) => (
-						<ListBoxItem key={option} id={option}>
-							{name(option)}
-						</ListBoxItem>
-					))}
-				</Select>
-			) : (
-				// Wrapped, as the group takes no ref, and its scrollWidth is the group's whole width even when it overflows
-				<div ref={group} className="flex min-w-0">
-					<ToggleButtonGroup aria-label={label} size="small" selectedKeys={[value]} onSelectionChange={(keys) => onChange([...keys][0] as T)} isDisabled={isDisabled}>
-						{options.map((option) => (
-							<ToggleButton key={option} id={option}>
-								{name(option)}
-							</ToggleButton>
-						))}
-					</ToggleButtonGroup>
-				</div>
-			)}
-		</ControlRow>
-	);
-}
-
-export function TextControl({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-	return (
-		<ControlRow label={label}>
-			<TextField aria-label={label} value={value} onChange={onChange} className="w-56" />
-		</ControlRow>
-	);
-}
-
-export function NumberControl({ label, value, onChange, minValue, maxValue, step }: { label: string; value: number; onChange: (value: number) => void; minValue?: number; maxValue?: number; step?: number }) {
-	return (
-		<ControlRow label={label}>
-			<NumberField aria-label={label} value={value} onChange={onChange} minValue={minValue} maxValue={maxValue} step={step} className="w-32" />
-		</ControlRow>
-	);
-}
-
-export function SwitchControl({ label, value, onChange }: { label: string; value: boolean; onChange: (value: boolean) => void }) {
-	return (
-		<ControlRow label={label}>
-			<Switch aria-label={label} isSelected={value} onChange={onChange} />
-		</ControlRow>
-	);
-}
 
 /**
  * Shows the focus ring of what's in it, through data-show-focus, for a component that keeps its props off its own
