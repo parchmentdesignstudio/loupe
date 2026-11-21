@@ -6,4 +6,4 @@ export interface KeyboardProps extends ComponentProps<typeof AriaKeyboard> {
 }
 export declare const KeyboardVariantContext: import("react").Context<NonNullable<"plain" | "raised" | undefined>>;
 /** A keyboard shortcut, such as ⌘Z, in a sentence, a Tooltip, or last in a MenuItem, which it sits at the end of */
-export declare function Keyboard({ variant, ...props }: KeyboardProps): import("react").JSX.Element;
+export declare function Keyboard({ variant, children, ...props }: KeyboardProps): import("react").JSX.Element;
