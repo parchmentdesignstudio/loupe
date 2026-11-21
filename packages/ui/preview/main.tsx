@@ -19,6 +19,8 @@ import { Inspector, hasInspector } from './inspector.js';
 import { Reference, hasReference } from './reference.js';
 import { Lockup, ParchmentLogo } from './logo.js';
 import { pages as searchPages } from './search.js';
+import { ChatDrawer } from './assistant.js';
+import { useConversation } from './blocks/chat.js';
 import { SettingsDrawer, SettingsPanels, remember, remembered } from './settings.js';
 import { forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
@@ -159,12 +161,33 @@ function SidebarIcon({ isOpen, isPressed }: { isOpen: boolean; isPressed: boolea
 	);
 }
 
-// Search, and the settings beside the page, at the bar's end
-function Actions({ isOpen, onToggle, onSearch }: { isOpen: boolean; onToggle: () => void; onSearch: () => void }) {
+// Claude, while the preview runs locally, as the key stays on the server
+const hasClaude = import.meta.env.DEV;
+
+/** Opens or closes the chat with Claude, marked expanded while it's open */
+function ChatButton({ isOpen, onToggle, tooltip }: { isOpen: boolean; onToggle: () => void; tooltip?: boolean }) {
+	const label = isOpen ? 'Hide chat' : 'Ask Claude';
+	const button = (
+		<Button variant="ghost" shape="full" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
+			<Icon name="bubble-left" />
+		</Button>
+	);
+	if (!tooltip) return button;
+	return (
+		<TooltipTrigger>
+			{button}
+			<Tooltip>{label}</Tooltip>
+		</TooltipTrigger>
+	);
+}
+
+// Search, Claude, and the settings beside the page, at the bar's end
+function Actions({ isOpen, onToggle, isChatting, onChat, onSearch }: { isOpen: boolean; onToggle: () => void; isChatting: boolean; onChat: () => void; onSearch: () => void }) {
 	const label = isOpen ? 'Hide settings' : 'Show settings';
 	return (
 		<>
 			<DocsSearchButton onPress={onSearch} icon={searchIcon} tooltip="Search ⌘K" />
+			{hasClaude && <ChatButton isOpen={isChatting} onToggle={onChat} tooltip />}
 			<TooltipTrigger>
 				<Button variant="ghost" shape="full" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
 					{({ isPressed }) => <SidebarIcon isOpen={isOpen} isPressed={isPressed} />}
@@ -290,6 +313,8 @@ function Preview() {
 	const shown = useRef(address);
 	const scroller = useRef<HTMLDivElement>(null);
 	const [isOpen, setOpen] = useState(() => remembered<string>('settings', 'closed') === 'open');
+	const [isChatting, setChatting] = useState(() => hasClaude && !isOpen && remembered<string>('chat', 'closed') === 'open');
+	const conversation = useConversation('claude');
 	const [isSearching, setSearching] = useState(false);
 	const search = () => setSearching(true);
 
@@ -317,11 +342,21 @@ function Preview() {
 		scroller.current?.scrollTo(0, 0);
 	}, [address]);
 
+	// One drawer beside the page at a time, so the page keeps the room to be read: opening one closes the other
 	const openSettings = (next: boolean) => {
 		setOpen(next);
 		remember('settings', next ? 'open' : 'closed');
+		if (next) openChat(false);
 	};
 	const toggle = () => openSettings(!isOpen);
+	const openChat = (next: boolean) => {
+		setChatting(next);
+		remember('chat', next ? 'open' : 'closed');
+		if (next && isOpen) {
+			setOpen(false);
+			remember('settings', 'closed');
+		}
+	};
 
 	return (
 		<>
@@ -331,10 +366,20 @@ function Preview() {
 				navLabel="Components"
 				trail={[{ name: 'loupe', href: '#/' }, ...(page?.trail ?? [])]}
 				barStart={headings.length > 0 && <ContentsMenu headings={headings} />}
-				actions={<Actions isOpen={isOpen} onToggle={toggle} onSearch={search} />}
-				phoneActions={<DocsSearchButton onPress={search} icon={searchIcon} />}
+				actions={<Actions isOpen={isOpen} onToggle={toggle} isChatting={isChatting} onChat={() => openChat(!isChatting)} onSearch={search} />}
+				phoneActions={
+					<>
+						<DocsSearchButton onPress={search} icon={searchIcon} />
+						{hasClaude && <ChatButton isOpen={isChatting} onToggle={() => openChat(!isChatting)} />}
+					</>
+				}
 				drawerEnd={<SettingsPanels />}
-				aside={<SettingsDrawer isOpen={isOpen} onOpenChange={openSettings} />}
+				aside={
+					<>
+						<SettingsDrawer isOpen={isOpen} onOpenChange={openSettings} />
+						{hasClaude && <ChatDrawer isOpen={isChatting} onOpenChange={openChat} conversation={conversation} />}
+					</>
+				}
 				current={address}
 				scrollerRef={scroller}
 			>
