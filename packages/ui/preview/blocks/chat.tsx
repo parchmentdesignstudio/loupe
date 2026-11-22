@@ -85,6 +85,34 @@ const THINKING = 1600;
 
 type Source = 'samples' | 'claude';
 
+// Kept in the browser, so a refresh, or a reload as the preview rebuilds, doesn't lose the conversation or a question
+// half written. A browser that won't keep it, as a private window may not, just starts afresh
+const keyOf = (source: Source, part: 'turns' | 'draft') => `loupe:chat:${source}:${part}`;
+function recall<T>(key: string, fallback: T): T {
+	try {
+		const stored = localStorage.getItem(key);
+		return stored === null ? fallback : (JSON.parse(stored) as T);
+	} catch {
+		return fallback;
+	}
+}
+function keep(key: string, value: unknown, isEmpty: boolean) {
+	try {
+		if (isEmpty) localStorage.removeItem(key);
+		else localStorage.setItem(key, JSON.stringify(value));
+	} catch {}
+}
+
+// A question left without its answer, as when the page reloads while it's thought over, goes back in the field to send
+// again, rather than sitting unanswered
+function restore(source: Source) {
+	const turns = recall<Turn[]>(keyOf(source, 'turns'), []);
+	const draft = recall<string>(keyOf(source, 'draft'), '');
+	const last = turns.at(-1);
+	if (last?.from !== 'user') return { turns, draft };
+	return { turns: turns.slice(0, -1), draft: draft || last.text };
+}
+
 export interface Conversation {
 	source: Source;
 	turns: Turn[];
@@ -95,14 +123,25 @@ export interface Conversation {
 	restart: () => void;
 	/** Keeps where a view's controls were left, for the next question to carry */
 	tweak: (turn: Turn, values: Values) => void;
+	/** What's written in the field and not yet sent */
+	draft: string;
+	setDraft: (draft: string) => void;
 }
 
 /**
  * A conversation, held where it's made rather than in the drawer, which lets go of what it holds once it has slid shut.
  * So one kept by the page carries on, reply and all, however often its drawer is closed
  */
-export function useConversation(source: Source = 'samples'): Conversation {
-	const [turns, setTurns] = useState<Turn[]>([]);
+export function useConversation(source: Source = 'samples', isRemembered = true): Conversation {
+	const [restored] = useState(() => (isRemembered ? restore(source) : { turns: [], draft: '' }));
+	const [turns, setTurns] = useState<Turn[]>(restored.turns);
+	const [draft, setDraft] = useState(restored.draft);
+	useEffect(() => {
+		if (isRemembered) keep(keyOf(source, 'turns'), turns, turns.length === 0);
+	}, [isRemembered, source, turns]);
+	useEffect(() => {
+		if (isRemembered) keep(keyOf(source, 'draft'), draft, draft === '');
+	}, [isRemembered, source, draft]);
 	const [isThinking, setThinking] = useState(false);
 	const [step, setStep] = useState<string>();
 	const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -151,7 +190,7 @@ export function useConversation(source: Source = 'samples'): Conversation {
 		setTurns([]);
 	};
 	const tweak = (turn: Turn, values: Values) => setTurns((list) => list.map((item) => (item === turn ? { ...item, tweaked: values } : item)));
-	return { source, turns, isThinking, step, ask, restart, tweak };
+	return { source, turns, isThinking, step, ask, restart, tweak, draft, setDraft };
 }
 
 export interface ChatProps {
@@ -167,8 +206,9 @@ export interface ChatProps {
 
 /** The drawer's contents: the conversation, what to ask, and the field to ask it in */
 export function Chat({ title = 'Ask the kitchen', source = 'samples', conversation, isExpanded = false, onExpandedChange }: ChatProps) {
-	const own = useConversation(source);
-	const { turns, isThinking, step, ask, restart, tweak } = conversation ?? own;
+	// Unused when one's kept outside, so it mustn't remember over that one
+	const own = useConversation(source, !conversation);
+	const { turns, isThinking, step, ask, restart, tweak, draft, setDraft } = conversation ?? own;
 	const isClaude = (conversation ?? own).source === 'claude';
 	const log = useRef<HTMLDivElement>(null);
 
@@ -266,7 +306,14 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 				</div>
 				{/* Over the conversation's foot, on nothing of its own: what scrolls under it blurs, more so further down */}
 				<div className="sticky bottom-0 px-(--dialog-padding) pt-6 pb-(--dialog-padding) before:absolute before:inset-0 before:-z-1 before:mask-[linear-gradient(transparent,black_60%)] before:backdrop-blur-sm">
-					<Composer aria-label="Your question" placeholder="Ask anything" submitIcon={<Icon name="arrow-up" />} description="Enter sends, Shift-Enter starts a new line" onSubmit={ask} />
+					<Composer aria-label="Your question" placeholder="Ask anything" submitIcon={<Icon name="arrow-up" />} description="Enter sends, Shift-Enter starts a new line"
+						value={draft}
+						onChange={setDraft}
+						onSubmit={(question) => {
+							setDraft('');
+							ask(question);
+						}}
+					/>
 				</div>
 			</div>
 		</>
