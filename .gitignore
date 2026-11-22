@@ -10,3 +10,5 @@ elyx_deps
 
 # Ask Loupe eval runs, made locally by preview/genui/evals/run.mjs
 packages/ui/preview/genui/evals/results
+# and the gallery's reviews of them
+packages/ui/preview/genui/evals/reviews
