@@ -24,7 +24,16 @@ export function details() {
 		load(module) {
 			if (module !== loaded) return;
 			data ??= read(root, ui, packages);
-			return `export default ${JSON.stringify(data)}`;
+			// It takes its own updates, filling the same object, so an edit to a style or a component doesn't reach the
+			// modules that read it, which can't be refreshed and would reload the page
+			return `const details = ${JSON.stringify(data)};
+export default details;
+if (import.meta.hot) import.meta.hot.accept((next) => {
+	if (!next) return;
+	for (const key of Object.keys(details)) delete details[key];
+	Object.assign(details, next.default);
+	window.dispatchEvent(new Event('loupe:details'));
+});`;
 		},
 		// The other packages aren’t in the preview’s module graph, so their files are watched here
 		configureServer(server) {

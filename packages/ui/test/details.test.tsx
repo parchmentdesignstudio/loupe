@@ -5,7 +5,7 @@ import { type Details, details } from '../preview/details.mjs';
 // for its root, as it looks up from there for the package and the workspace
 const plugin = details() as ReturnType<typeof details> & { configResolved(config: { root: string }): void; load(id: string): string };
 plugin.configResolved({ root: (import.meta as ImportMeta & { dirname: string }).dirname });
-const { components, componentTokens } = JSON.parse(plugin.load('\0virtual:details').replace(/^export default /, '')) as Details;
+const { components, componentTokens } = JSON.parse(plugin.load('\0virtual:details').split('\n')[0].replace(/^const details = |;$/g, '')) as Details;
 const tokensOf = (name: string) => (componentTokens[name] ?? []).map((token) => token.name);
 
 describe('details', () => {

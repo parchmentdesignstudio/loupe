@@ -1,4 +1,4 @@
-import { Component, type ReactNode, StrictMode, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { Component, type ReactNode, StrictMode, useEffect, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Icon } from '@parchment/icons/react';
 // Loupe's one version, which every package is released at (pnpm bump)
@@ -297,6 +297,12 @@ function Overview({ entries }: { entries: Entry[] }) {
 // A screen fills the window on its own, without loupe's sidebar and bar around it
 function Root() {
 	const address = useAddress();
+	// What's shown beside each component updates in place as its code changes, so draw it again when it does
+	const [, redraw] = useReducer((count: number) => count + 1, 0);
+	useEffect(() => {
+		window.addEventListener('loupe:details', redraw);
+		return () => window.removeEventListener('loupe:details', redraw);
+	}, []);
 	const screen = screenAt(address);
 	useEffect(() => {
 		if (screen) document.title = `${screen.name} · loupe`;
@@ -405,6 +411,16 @@ function Preview() {
 			<DocsSearch pages={searchPages} isOpen={isSearching} onOpenChange={setSearching} />
 		</>
 	);
+}
+
+// A library file exports its component beside its tv() styles and helpers, which Fast Refresh won't take, so an edit to
+// one would reload the page. Those are named in camelCase and components in PascalCase, so it's told to pass over those,
+// and the component is refreshed in place. What else imports them keeps the old ones until the page reloads
+if (import.meta.hot) {
+	const sources = /\/src\/[^/]+\.tsx?$/;
+	Object.assign(window, {
+		__getReactRefreshIgnoredExports: ({ id }: { id: string }) => (sources.test(id) ? { includes: (name: string) => /^[a-z]/.test(name) } : []),
+	});
 }
 
 createRoot(document.getElementById('root')!).render(
