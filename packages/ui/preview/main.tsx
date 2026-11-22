@@ -314,7 +314,7 @@ function Preview() {
 	const isComponents = address === 'ui';
 	const listed = entry?.id === 'blocks' && blocks.length > 0 ? blocks : undefined;
 	const shown = useRef(address);
-	const scroller = useRef<HTMLDivElement>(null);
+	const scroller = useRef<HTMLElement>(null);
 	const [isOpen, setOpen] = useState(() => remembered<string>('settings', 'closed') === 'open');
 	const [isChatting, setChatting] = useState(() => hasClaude && !isOpen && remembered<string>('chat', 'closed') === 'open');
 	const conversation = useConversation('claude');

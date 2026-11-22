@@ -7,8 +7,8 @@ export interface Heading {
 	name: string;
 }
 
-// How far below the scroller's top a section counts as the one you're reading, past the toolbar
-const reading = 80;
+// How far below the scroller's top a section counts as the one you're reading
+const reading = 32;
 
 const jump = (id: string) => {
 	const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -44,7 +44,7 @@ export function Contents({ headings, scroller }: { headings: Heading[]; scroller
 	}, [headings, scroller]);
 
 	return (
-		<nav aria-label="On this page" className="sticky top-12 hidden h-[calc(100dvh-4rem)] flex-col gap-3 overflow-y-auto px-6 pt-12 pb-6 @4xl/page:col-start-1 @4xl/page:row-span-2 @4xl/page:row-start-1 @4xl/page:flex">
+		<nav aria-label="On this page" className="sticky top-0 hidden h-[calc(100dvh-4rem)] flex-col gap-3 overflow-y-auto px-6 pt-12 pb-6 @4xl/page:col-start-1 @4xl/page:row-span-2 @4xl/page:row-start-1 @4xl/page:flex">
 			<p className="text-label text-muted">On this page</p>
 			<ul className="flex flex-col gap-2 text-label">
 				{headings.map((heading) => (

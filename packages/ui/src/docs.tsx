@@ -42,7 +42,7 @@ export interface DocsShellProps {
 	/** The page's address. When it changes, the phone's drawer closes to show it */
 	current?: string;
 	/** The panel that scrolls, for anything that follows its scroll */
-	scrollerRef?: Ref<HTMLDivElement>;
+	scrollerRef?: Ref<HTMLElement>;
 	children: ReactNode;
 }
 
@@ -80,11 +80,11 @@ export function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phon
 					</DrawerTrigger>
 				</div>
 			</header>
-			{/* On wider screens the page is a card that scrolls inside, so what's beside it stays in view. Raised over the
+			{/* On wider screens the page is a card as tall as the window, so what's beside it stays in view. Raised over the
 			    sticky columns either side, which would otherwise paint over its shadow */}
-			<div ref={scrollerRef} className="min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:mr-2 md:h-[calc(100dvh-1rem)] md:overflow-y-auto md:rounded-xl md:shadow-panel">
+			<div className="min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:mr-2 md:h-[calc(100dvh-1rem)] md:overflow-hidden md:rounded-xl md:shadow-panel">
 				{/* The card's own bleed, so lines inside suit it, while its shadow keeps the ground's */}
-				<div className="flex min-h-full flex-col [--bleed:var(--panel-bleed)]">
+				<div className="flex min-h-full flex-col [--bleed:var(--panel-bleed)] md:h-full">
 					{/* Sticks below the phone's header, which is as tall as its 28px buttons and its padding */}
 					<div className="sticky top-11 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-bleed/8 bg-panel px-4 md:top-0 md:px-5">
 						<div className="flex min-w-0 flex-1 items-center gap-2">
@@ -100,10 +100,13 @@ export function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phon
 						{actions && <div className="-mr-1.5 flex items-center gap-1 max-md:hidden">{actions}</div>}
 					</div>
 					{/* Clipped, not hidden, so an aside past the card's edge can't scroll it sideways */}
-					<div className="flex flex-1 overflow-x-clip">
+					<div className="flex flex-1 overflow-x-clip md:min-h-0">
 						{/* A container, so the page lays itself out by the room it has, which a drawer beside it takes some of, rather
-						    than by the window */}
-						<main data-docs-page className="@container/page min-w-0 flex-1">{children}</main>
+						    than by the window. On wider screens it scrolls on its own, under the bar, so its scrollbar is beside the
+						    page rather than past a drawer, and a drawer scrolls apart from it */}
+						<main ref={scrollerRef} data-docs-page className="@container/page min-w-0 flex-1 md:overflow-y-auto md:overscroll-contain">
+							{children}
+						</main>
 						{aside}
 					</div>
 				</div>
