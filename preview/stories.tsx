@@ -98,6 +98,7 @@ import { EmptyTable, LoadingMoreTable, TablePlayground } from './playgrounds/tab
 import { TabsPlayground } from './playgrounds/tabs.js';
 import { TagGroupPlayground } from './playgrounds/tag-group.js';
 import { FieldsInARow, TextFieldPlayground } from './playgrounds/text-field.js';
+import { OnItsOwn, WaitingForAnAnswer } from './playgrounds/scribble.js';
 import { ToastPlayground } from './playgrounds/toast.js';
 import { ToggleButtonGroupPlayground } from './playgrounds/toggle-button-group.js';
 import { ToolbarPlayground } from './playgrounds/toolbar.js';
@@ -1002,6 +1003,16 @@ const groups: Group[] = [
 				],
 			},
 			{
+				id: 'scribble',
+				name: 'Scribble',
+				description: 'A pen writing loops, for while something’s on its way, such as an answer. Its colour is the text’s',
+				exports: ['Scribble'],
+				stories: [
+					{ name: 'Waiting for an answer', render: WaitingForAnAnswer },
+					{ name: 'On its own', render: OnItsOwn },
+				],
+			},
+			{
 				id: 'status',
 				name: 'Status',
 				description: 'Where something is up to, such as a lead that’s qualified or an invoice that’s overdue, as a coloured dot and a label. The colour backs up the label, so the label has to say it all',
@@ -1183,7 +1194,7 @@ const regrouped: Record<string, string[]> = {
 	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
 	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
 	Data: ['Avatar', 'Card', 'Code', 'Grid list', 'List', 'Swatch', 'Table', 'Tag group'],
-	Feedback: ['Alert', 'Empty state', 'Progress bar', 'Status', 'Toast'],
+	Feedback: ['Alert', 'Empty state', 'Progress bar', 'Scribble', 'Status', 'Toast'],
 	Writing: ['Aside', 'Quote'],
 	Conversation: ['Composer', 'Message', 'Suggestions'],
 	Overlays: ['Dialog', 'Menu', 'Popover', 'Preview trigger', 'Drawer', 'Tooltip'],

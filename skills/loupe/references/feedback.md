@@ -9,6 +9,7 @@ What does the user need to know?
  ├── Something that just happened → Toast (see overlays.md)
  ├── There's nothing here yet → EmptyState
  ├── How far along something is → ProgressBar, or ProgressCircle in the space of an icon
+ ├── Something's on its way, with no telling how long, such as an answer → Scribble, beside words
  └── How much of a known limit is used, such as storage → Meter
 ```
 
@@ -75,3 +76,21 @@ Anything that takes longer than 400ms shows one of these.
 A person as a `circle` (the default), an organisation or project as a `square`. Sizes: `20`, `24`, `32` (the
 default), `48`, `64`. Always pass `name`, which gives the initials and the screen reader's name. `status` is
 `online`, `away` or `busy`. Several overlap in an `AvatarGroup` with `maxVisible`.
+
+## Scribble
+
+A pen writing loops, for a wait with no telling how long, such as an answer being written. It's 23 by 16px, in the
+text's colour, and hidden from screen readers, so it always sits beside words that say what's happening, in a
+`flex items-center gap-2` row. `onPass` is called as each pass begins, to change those words with the pen. A wait
+inside a button is ProgressCircle; a wait with a known end is ProgressBar.
+
+```tsx
+// Correct
+<p className="flex items-center gap-2 text-muted">
+  <Scribble />
+  <TextEffect variant="ray" loop>Thinking</TextEffect>
+</p>
+
+// Incorrect: on its own, so a screen reader hears nothing
+<Scribble />
+```

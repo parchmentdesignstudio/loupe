@@ -541,6 +541,12 @@
 		/* The space between a figure and the line that describes it */
 		--card-figure-gap: --spacing(6);
 
+		/* Scribble */
+
+		/* Its size, as wide as its loops run and as tall as a line of text */
+		--scribble-width: 1.4375rem;
+		--scribble-height: 1rem;
+
 		/* List */
 
 		/* Space */
