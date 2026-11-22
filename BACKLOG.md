@@ -24,6 +24,11 @@ Steve's next focus, on 21 November 2026: readability and typography across Loupe
 - **`npx @parchment/ui`:** a CLI with `skill`, which copies `skills/loupe` into a project's `.claude/skills`, and
   `lint`, which runs `lint/misuse.mjs` on a site. It needs `bin` and `files` in package.json, and the checker on
   `oxc-parser` rather than Vite's parser, as a site may not have Vite.
+- **Ask before drawing, to discuss:** the chat draws straight away from whatever it's given. For a vague or large ask,
+  such as "a dashboard", it could first ask one or two questions, as choices to tap (Chips) rather than a form, such as
+  who it's for or which figures matter, then draw. Questions to settle: when it asks and when it just draws (a short
+  ask with an obvious answer shouldn't be held up), how many at most, and whether it draws a first guess alongside
+  them. Part of a wider look at the chat as a whole. The evals can measure it, with vague asks added to the set.
 - **A model and effort picker in the composer:** the chat's server already takes `model` and `effort` from a request,
   from the lists in `preview/genui/claude.mjs`, for the evals. A small picker beside Send would let a simple ask run on
   Sonnet or Haiku, or at low effort, for less. Decide which from the evals' cost and quality per model.
