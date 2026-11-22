@@ -44,9 +44,9 @@ Where a raw value is meant, say why on the line above: `// loupe-lint-ignore: a 
   the primary Button on the right.
 - Forms and settings sit in one column, `mx-auto max-w-160` (640px), with `gap-10` between sections. Tables and
   lists take the full width.
-- A section is a heading and its content in a column, not a card. Make a card (`rounded-xl bg-panel p-4
-  shadow-panel`) only where it sits among other cards. Table, Alert, fields and overlays draw their own box and
-  shadow, so never wrap one in a card as well.
+- A section is a heading and its content in a column, not a card. A `Card` is only for something among others like
+  it, such as plans or stats in a grid, and it draws its own box, so don't build one from classes. Table, Alert,
+  fields and overlays draw their own box and shadow, so never wrap one in a card as well.
 - Something destructive for the whole page, such as "Delete account", goes last, in its own section under
   `border-t border-bleed/8 pt-8`, apart from Save.
 
@@ -84,7 +84,7 @@ Load the one the task needs:
 | [actions.md](references/actions.md) | Button, Link, Menu, ToggleButtonGroup, Toolbar, Chip, Keyboard |
 | [forms.md](references/forms.md) | Fields, choices, dates, colours, files, search |
 | [overlays.md](references/overlays.md) | Modal, Drawer, Popover, Tooltip, Toast |
-| [collections.md](references/collections.md) | Table, GridList, ListBox, Tabs, TagGroup, navigation, pagination |
+| [collections.md](references/collections.md) | Table, GridList, List, Card, ListBox, Tabs, TagGroup, navigation, pagination |
 | [feedback.md](references/feedback.md) | Status, Alert, EmptyState, progress, Avatar |
 | [content.md](references/content.md) | Prose, Quote, Aside, Code, Disclosure, Separator, chat |
 

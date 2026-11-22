@@ -4,6 +4,8 @@
 What is the list?
  ├── Records with several fields to compare, such as leads or invoices → Table
  ├── Items to choose or act on, each with its own buttons → GridList (layout="grid" for tiles)
+ ├── Things to read, one under another, nothing to press → List
+ ├── A few things of one kind side by side, such as plans or stats → Card, in a grid
  ├── Options to pick from, in a Select or ComboBox → ListBox (they hold their own)
  ├── Labels to add, remove or choose → TagGroup
  └── Pages of a site or tool → NavigationTree in Navigation
@@ -44,6 +46,39 @@ many columns or rows). Nothing else exists.
 
 Items that hold buttons of their own, which a Table row or ListBox can't. `layout`: `stack` (rows, the default) or
 `grid` (tiles). Give it an `aria-label`. Sections are `GridListSection` with a `GridListHeader` first.
+
+## List
+
+Things to read, one under another, such as an account's details or what a plan includes. Nothing in it is pressed
+or picked: that's a GridList. Variants: `divided` (the default, a line between rows, to scan) and `plain` (no lines,
+for short points). Nothing else exists. Each `ListItem` takes an `icon` before it, a `description` under it and an
+`end`, such as an amount or a Status, which is drawn with tabular figures. Give the List an `aria-label` when nothing
+on the page names it.
+
+```tsx
+// Correct: a plan's points, with a tick each
+<List variant="plain">
+  <ListItem icon={<Icon name="checkmark" />}>Unlimited projects</ListItem>
+</List>
+
+// Incorrect: lines of Text, or a GridList for things nobody presses
+<p>✓ Unlimited projects</p>
+```
+
+## Card
+
+One of a few things side by side, such as plans or stats, in a `grid` with `gap-3`. Never a section on its own, and
+a Table never goes in one. Fills: `raised` (the default, white off the page) and `quiet` (for cards inside something
+raised). Nothing else exists. Its `title` is a heading (`headingLevel`, 3 by default), `description` a line under it,
+`children` what it holds, and `actions` its buttons, pinned to the foot so a row of cards lines them up. One card in a
+row may have the primary Button, as the plan to pick; the rest are secondary.
+
+```tsx
+<Card title="Team" description="For small teams" actions={<Button variant="primary">Start free trial</Button>}>
+  <p className="text-title tabular-nums">£12</p>
+  <List variant="plain">…</List>
+</Card>
+```
 
 ## Tabs
 

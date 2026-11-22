@@ -5,6 +5,7 @@ export { Avatar, AvatarGroup, avatar, avatarGroup, avatarTint, initials, type Av
 export { Breadcrumb, Breadcrumbs, breadcrumb, breadcrumbs, type BreadcrumbProps, type BreadcrumbsProps } from './Breadcrumbs.js';
 export { Button, button, type ButtonProps, type ButtonVariant } from './Button.js';
 export { Calendar, RangeCalendar, calendar, calendarDay, type CalendarProps, type RangeCalendarProps, type VisibleDuration } from './Calendar.js';
+export { Card, card, type CardProps } from './Card.js';
 export { Checkbox, CheckboxGroup, checkboxBox, type CheckboxGroupProps, type CheckboxProps } from './Checkbox.js';
 export { Chip, ChipGroup, chip, type ChipGroupProps, type ChipProps } from './Chip.js';
 export { ColorArea, type ColorAreaProps } from './ColorArea.js';
@@ -33,6 +34,7 @@ export { Keyboard, type KeyboardProps } from './Keyboard.js';
 export { Prose, type ProseProps } from './Prose.js';
 export { Quote, quote, type QuoteProps } from './Quote.js';
 export { Link, link, type LinkProps } from './Link.js';
+export { List, ListItem, list, listItem, type ListItemProps, type ListProps } from './List.js';
 export { ListBox, ListBoxItem, ListBoxSection, listBoxItem, type ListBoxItemProps, type ListBoxProps, type ListBoxSectionProps } from './ListBox.js';
 export { Menu, MenuItem, MenuSection, MenuSeparator, MenuTrigger, SubmenuTrigger, type MenuItemProps, type MenuProps, type MenuSectionProps } from './Menu.js';
 export { Message, MessageList, message, messageList, type MessageListProps, type MessageProps } from './Message.js';

@@ -37,7 +37,10 @@ import {
 	DisclosureHeader,
 	DisclosurePanel,
 	DropZone,
+	Card,
 	EmptyState,
+	List,
+	ListItem,
 	FileTrigger,
 	GridList,
 	GridListItem,
@@ -277,6 +280,21 @@ export const examples: Record<string, () => ReactNode> = {
 			<Tag>Literata</Tag>
 			<Tag>Work Sans</Tag>
 		</TagGroup>
+	),
+
+	List: () => (
+		<List className="w-48">
+			<ListItem end="£144.00">Team plan</ListItem>
+			<ListItem end="£12.00">Next invoice</ListItem>
+			<ListItem end="1 Dec">Renews</ListItem>
+		</List>
+	),
+	Card: () => (
+		<Shrink by={0.8}>
+			<Card title="Team" actions={<Button variant="secondary">Start trial</Button>} className="w-44">
+				<p className="text-title tabular-nums">£12</p>
+			</Card>
+		</Shrink>
 	),
 
 	// Feedback

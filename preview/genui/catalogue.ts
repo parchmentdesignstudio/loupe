@@ -38,6 +38,8 @@ const day = (description: string): Schema => ({ type: 'string', pattern: '^\\d{4
 const time = (description: string): Schema => ({ type: 'string', pattern: '^([01]\\d|2[0-3]):[0-5]\\d$', description: `${description}, as HH:MM on a 24 hour clock` });
 const number = (description: string): Schema => ({ type: 'number', description });
 const option = { type: 'object', properties: { id: text('Unique within the list'), name: text('What it says') }, required: ['id', 'name'], additionalProperties: false };
+// The icons a List's items can take, which say something on their own, such as what a plan has or hasn't
+export const icons = ['checkmark', 'xmark', 'minus', 'plus', 'star', 'bolt', 'arrow-right', 'person', 'calendar', 'envelope'] as const;
 // One of a Menu's actions, or a table row's
 const menuAction = { type: 'object', properties: { label: text('Says what happens'), action: text('Sent back to you as the next message when it is picked'), isDanger: { type: 'boolean', description: 'Deletes or can’t be undone. Goes last' } }, required: ['label'], additionalProperties: false };
 
@@ -56,7 +58,8 @@ export function blocksOf(details: Details): Record<string, Block> {
 		Split: { doc: 'Two columns, a narrow one beside a wide one, such as filters beside results or a summary beside a form. They fold one above the other when the space is under 42rem, so never for things that must sit side by side. Its two children go in the order they sit, so with side end the wide one comes first', props: { side: oneOf(['start', 'end'], 'Where the narrow column goes: start for navigation or filters, end for a summary or details'), gap: oneOf(gaps) }, required: ['side'], children: true },
 		Row: { doc: 'Blocks side by side, wrapping when there is no room, such as a heading with its actions', props: { gap: oneOf(gaps), justify: oneOf(['start', 'between', 'end']), align: oneOf(['start', 'center', 'end']) }, children: true },
 		Grid: { doc: 'Cards or stats in equal columns, fewer as the space narrows', props: { columns: oneOf([2, 3, 4]), gap: oneOf(gaps) }, required: ['columns'], children: true },
-		Card: { doc: 'A raised panel, only among other cards, such as stats in a Grid. A section on its own is not a card, and a Table never goes in one', props: {}, children: true },
+		Card: { doc: 'One of a few things side by side in a Grid, such as plans or stats. A section on its own is not a card, and a Table never goes in one. Its buttons sit at its foot, so a row of cards lines them up', props: { title: text('What it is, such as Team or Revenue'), description: text('A line under the title'), fill: oneOf(options('Card', 'fill'), 'raised unless it sits inside something raised already'), actions: { type: 'array', minItems: 1, maxItems: 2, items: { $ref: '#/$defs/cardButton' }, description: 'Its buttons, at the foot. One card in a row may have the primary, as the one to pick' } }, children: true },
+		List: { doc: 'Things to read, one under another, such as what a plan includes or an account’s details. Nothing in it is pressed: items to open are a GridList, and records to compare are a Table', props: { label: text('Names the list for a screen reader, where no heading does'), variant: oneOf(options('List', 'variant'), 'divided to scan rows, plain for short points such as a plan’s'), items: { type: 'array', minItems: 1, items: { type: 'object', properties: { title: text('What it says'), description: text('A line under it'), icon: oneOf(icons, 'Before it, such as checkmark for what a plan includes'), end: { anyOf: [{ type: 'string' }, { type: 'number' }, { $ref: '#/$defs/status' }], description: 'A value at the end, such as an amount or a Status' } }, required: ['title'], additionalProperties: false } } }, required: ['items'] },
 		Heading: { doc: 'page: the one title. section: heads a section. group: a quiet label over a small group', props: { text: text('Sentence case'), level: oneOf(['page', 'section', 'group']) }, required: ['text', 'level'] },
 		Text: { doc: 'A paragraph or a figure', props: { text: text('The words'), tone: oneOf(['default', 'muted', 'danger'], 'muted for secondary words, danger only for an error'), size: oneOf(['body', 'title', 'label'], 'title for a big figure in a stat card') }, required: ['text'] },
 		Separator: { doc: 'A rule between groups that space alone does not part', props: {} },
@@ -153,6 +156,7 @@ export function inputSchemaOf(blocks: Record<string, Block>): Schema {
 			bound: { type: 'object', description: 'Reads a value from values, which a control can change', properties: { $value: text('A name in values') }, required: ['$value'], additionalProperties: false },
 			status: schemaOf('Status', blocks.Status),
 			button: schemaOf('Button', blocks.Button),
+			cardButton: schemaOf('Button', blocks.Button, true),
 		},
 	};
 }
@@ -263,6 +267,7 @@ function rules(ui: Node, errors: string[]) {
 		}
 		item.children?.forEach((child, index) => visit(child, `${at}.children[${index}]`));
 		(item.tabs as { content: Node }[] | undefined)?.forEach((tab, index) => visit(tab.content, `${at}.tabs[${index}].content`));
+		if (item.type === 'Card') (item.actions as Node[] | undefined)?.forEach((action, index) => visit(action, `${at}.actions[${index}]`));
 	};
 	visit(ui, 'ui');
 	if (primaries > 1) errors.push(`ui: has ${primaries} primary buttons. One at most, so the view has one next step`);
@@ -359,6 +364,7 @@ export function panelOf(input: Input, schema: Schema, errors: string[] = []): Pa
 		}
 		item.children?.forEach((child, index) => visit(child, `${at}.children[${index}]`));
 		(item.tabs as { content: Node }[] | undefined)?.forEach((tab, index) => visit(tab.content, `${at}.tabs[${index}].content`));
+		if (item.type === 'Card') (item.actions as Node[] | undefined)?.forEach((action, index) => visit(action, `${at}.actions[${index}]`));
 	};
 	visit(input.ui, 'ui');
 	for (const [name, control] of controls) if (!fits(control, values[name])) errors.push(`values.${name}: ${JSON.stringify(values[name])} doesn't suit what reads it${control.kind === 'slider' && control.steps ? `, which takes ${control.steps.join(', ')}` : control.kind === 'choice' ? `, which takes ${control.options.join(', ')}` : ''}`);
@@ -381,6 +387,7 @@ export function resolve(ui: Node, values: Values): Node | undefined {
 	if (typeof ui.when === 'string' && values[ui.when] === false) return undefined;
 	const node = Object.fromEntries(Object.entries(ui).filter(([key]) => key !== 'when').map(([key, value]) => [key, isBound(value) ? values[value.$value] : value])) as Node;
 	if (node.children) node.children = node.children.map((child) => resolve(child, values)).filter((child): child is Node => child !== undefined);
+	if (node.type === 'Card' && Array.isArray(node.actions)) node.actions = (node.actions as Node[]).map((action) => resolve(action, values)).filter((action): action is Node => action !== undefined);
 	if (Array.isArray(node.tabs)) node.tabs = (node.tabs as { content: Node }[]).map((tab) => ({ ...tab, content: resolve(tab.content, values) ?? { type: 'Stack' } }));
 	return node;
 }

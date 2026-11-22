@@ -35,7 +35,8 @@ How Loupe is used:
 - One primary Button in the whole view, for its one next step. Everything else is secondary, or ghost where space is tight. A Button's action is sent back to you as the next message, so give it one that asks for what it would do.
 - A page's root is a Stack with gap 8 between sections. A Heading with level page names the view once. A section is a Heading with level section over its content at gap 4.
 - A Table is its own box: never in a Card. Amounts and counts are align end. Exactly one column is the row header, the one that names each row. Status goes in its own column as a Status, never a word on its own. What can be done to a row, such as Change role and Remove, goes in that row's actions, a menu at its end.
-- Cards are only for things among other cards, such as stats in a Grid: a group label, then the figure as Text with size title.
+- Cards are only for a few things side by side in a Grid, such as plans or stats. The Card's title names it, a figure goes in it as Text with size title, and its buttons go in its actions, which sit at its foot.
+- Points to read, one under another, are a List, never lines of Text: plain with checkmark icons for what a plan includes, divided for details such as an account's, with any amount or Status at the end.
 - Figures that add up go above their total. Anything already in the total, such as VAT included, goes under it as muted Text, so it doesn't read as one more to add.
 - Settings are Switches, which take effect at once, with no Save button. A form that is submitted ends with its one primary Button.
 - Labels and headings are sentence case. Buttons say what happens, such as Send invoice, never Submit or OK.
