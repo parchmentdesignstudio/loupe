@@ -86,6 +86,21 @@ The `<form>` goes inside the Dialog and holds everything, DialogActions included
 - `Checkbox` with its label as children. Several under one label in a `CheckboxGroup`.
 - `RadioGroup` with `Radio` children; `orientation="horizontal"` for two or three short ones.
 - `Switch` with its label as children. `shape="full"` only where the design has pill switches throughout.
+- A few Switches under one heading, such as which emails to get, go in a `SwitchGroup` with that heading as its
+  `label`, and no heading of your own above it. Each Switch is a row, its label first and the switch at the end, with
+  a line between rows. A Switch's `description` is a line under its label. A settings screen has one SwitchGroup per
+  heading, `gap-10` apart. Options ticked in a form that's sent are a CheckboxGroup.
+
+```tsx
+// Correct
+<SwitchGroup label="Email">
+  <Switch defaultSelected description="When someone tags you">Mentions and replies</Switch>
+  <Switch>Product news and tips</Switch>
+</SwitchGroup>
+
+// Incorrect: a GridList of switches, which makes the group one tab stop and announces a grid
+<GridList aria-label="Email">…</GridList>
+```
 
 ## Files
 

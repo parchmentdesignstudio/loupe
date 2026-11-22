@@ -1,5 +1,7 @@
+import { type ReactNode, createContext, useContext, useId } from 'react';
 import { Switch as AriaSwitch, type SwitchProps as AriaSwitchProps, composeRenderProps } from 'react-aria-components';
 import { choice } from './Checkbox.js';
+import { field } from './Field.js';
 import { focusRing, tv } from './tv.js';
 
 const toggle = tv({
@@ -49,15 +51,54 @@ const toggle = tv({
 	},
 });
 
+// Where the switch sits beside its label, and whether it's one of a group's rows
+const row = tv({
+	slots: {
+		base: '',
+		text: 'flex min-w-0 flex-col',
+		description: 'text-control text-muted',
+	},
+	variants: {
+		// At the end, the label leads and the switches line up down the far side, however long the labels, as a phone's
+		// settings have them. The whole row still presses it
+		placement: {
+			start: '',
+			end: { base: 'flex-row-reverse justify-between gap-4' },
+		},
+		// A line between each of a group's rows, as a divided list has
+		isInGroup: {
+			true: { base: 'border-t border-bleed/8 py-(--switch-group-padding-y) first:border-t-0 first:pt-0 last:pb-0' },
+		},
+	},
+});
+
+// Set by a SwitchGroup, so its switches sit at the end of their rows, with lines between
+const InGroup = createContext(false);
+
 export interface SwitchProps extends AriaSwitchProps {
 	/** Rounded corners, as a button's, or full, a pill. Rounded by default */
 	shape?: 'rounded' | 'full';
+	/** Before its label, or at the end of the row, after it. Start by default, and end in a SwitchGroup */
+	placement?: 'start' | 'end';
+	/** A line under the label, such as what the setting does */
+	description?: ReactNode;
 }
 
 /** An on and off setting that takes effect straight away, with its label as children */
-export function Switch({ shape, ...props }: SwitchProps) {
+export function Switch({ shape, placement, description, ...props }: SwitchProps) {
+	const isInGroup = useContext(InGroup);
+	// With a description, which sits inside the label, the name points at the label's own words, so it doesn't run on
+	// into the description
+	const labelledBy = useId();
+	const describedBy = useId();
+	const layout = row({ placement: placement ?? (isInGroup ? 'end' : 'start'), isInGroup });
 	return (
-		<AriaSwitch {...props} className={composeRenderProps(props.className, (className, state) => choice({ ...state, className }))}>
+		<AriaSwitch
+			{...props}
+			aria-labelledby={props['aria-labelledby'] ?? (description ? labelledBy : undefined)}
+			aria-describedby={[props['aria-describedby'], description ? describedBy : undefined].filter(Boolean).join(' ') || undefined}
+			className={composeRenderProps(props.className, (className, state) => choice({ ...state, className: layout.base({ className }) }))}
+		>
 			{composeRenderProps(props.children, (children, state) => {
 				const slots = toggle({ ...state, shape });
 				return (
@@ -71,10 +112,49 @@ export function Switch({ shape, ...props }: SwitchProps) {
 							</span>
 							<span className={slots.handle()} />
 						</span>
-						{children}
+						{description ? (
+							<span className={layout.text()}>
+								<span id={labelledBy}>{children}</span>
+								<span id={describedBy} className={layout.description()}>
+									{description}
+								</span>
+							</span>
+						) : (
+							children
+						)}
 					</>
 				);
 			})}
 		</AriaSwitch>
+	);
+}
+
+export interface SwitchGroupProps {
+	/** What the switches are about, such as Email. It names the group for screen readers too */
+	label?: ReactNode;
+	/** Its Switches */
+	children?: ReactNode;
+	className?: string;
+}
+
+const group = field();
+
+/**
+ * Switches under one heading, each on its own row with a line between, its label first and its switch at the end. For
+ * a few settings that take effect straight away, such as which emails to get
+ */
+export function SwitchGroup({ label, children, className }: SwitchGroupProps) {
+	const labelledBy = useId();
+	return (
+		<div role="group" aria-labelledby={label ? labelledBy : undefined} className={['flex flex-col gap-3', className].filter(Boolean).join(' ')}>
+			{label && (
+				<span id={labelledBy} className={group.label()}>
+					{label}
+				</span>
+			)}
+			<div className="flex flex-col">
+				<InGroup.Provider value>{children}</InGroup.Provider>
+			</div>
+		</div>
 	);
 }

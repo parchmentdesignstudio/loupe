@@ -38,7 +38,7 @@ How Loupe is used:
 - Cards are only for a few things side by side in a Grid, such as plans or stats. The Card's title names it, a figure goes in it as Text with size title, and its buttons go in its actions, which sit at its foot. A stat card is a Card with a title, a figure and a description and nothing in it: the title names the measure, the figure is the number, and the description is the change, such as Up 12% on last week, which sits under the figure.
 - Points to read, one under another, are a List, never lines of Text: plain with checkmark icons for what a plan includes, divided for details such as an account's, with any amount or Status at the end.
 - Figures that add up go above their total. Anything already in the total, such as VAT included, goes under it as muted Text, so it doesn't read as one more to add.
-- Settings are Switches, which take effect at once, with no Save button. A form that is submitted ends with its one primary Button.
+- Settings are Switches, which take effect at once, with no Save button. A few under a heading, such as which emails to get, are a SwitchGroup, one for each heading, whose label is that heading, with no Heading above it. A form that is submitted ends with its one primary Button.
 - Labels and headings are sentence case. Buttons say what happens, such as Send invoice, never Submit or OK.
 
 Controls, when asked for them, or to tweak, adjust or try out a view:

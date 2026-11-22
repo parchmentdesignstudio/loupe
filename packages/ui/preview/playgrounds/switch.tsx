@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Switch } from '../../src/index.js';
+import { Switch, SwitchGroup } from '../../src/index.js';
 import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 
 const labels = ['Send me the newsletter', 'Dark mode', 'Show rulers', 'Notify me when someone replies', 'Autosave'];
@@ -71,5 +71,25 @@ export function SwitchPlayground() {
 				))}
 			</div>
 		</Playground>
+	);
+}
+
+/** A settings screen's notifications: a few switches under each heading, each label first and its switch at the end */
+export function Notifications() {
+	return (
+		<div className="flex w-full max-w-160 flex-col gap-10">
+			<SwitchGroup label="Email">
+				<Switch defaultSelected description="When someone tags you or answers a comment of yours">
+					Mentions and replies
+				</Switch>
+				<Switch defaultSelected>Comments on my projects</Switch>
+				<Switch defaultSelected>Invoices paid or overdue</Switch>
+				<Switch>Product news and tips</Switch>
+			</SwitchGroup>
+			<SwitchGroup label="Push">
+				<Switch defaultSelected>Direct messages</Switch>
+				<Switch description="A summary each morning at 9am, rather than as they happen">Daily digest</Switch>
+			</SwitchGroup>
+		</div>
 	);
 }

@@ -2,7 +2,7 @@ import { parseDate, parseTime } from '@internationalized/date';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { type ReactNode, useEffect, useId, useState } from 'react';
-import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Card, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, List, ListBoxItem, ListItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, RowActions, SearchField, Select, Separator, Slider, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
+import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Card, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, List, ListBoxItem, ListItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, RowActions, SearchField, Select, Separator, Slider, Status, Switch, SwitchGroup, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
 import { type Node, type Panel, type Values, resolve } from './catalogue.js';
 import { code as frame } from '../../src/Code.js';
 import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
@@ -245,6 +245,16 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 					<ComboBox key={key} label={p.label as string} description={p.description as string | undefined} placeholder={p.placeholder as string | undefined} defaultItems={p.options as Option[]} defaultSelectedKey={p.selected as string | undefined}>
 						{(option: Option) => <ListBoxItem id={option.id}>{option.name}</ListBoxItem>}
 					</ComboBox>
+				);
+			case 'SwitchGroup':
+				return (
+					<SwitchGroup key={key} label={p.label as string}>
+						{(p.settings as { id: string; name: string; description?: string; isSelected?: boolean }[]).map((setting) => (
+							<Switch key={setting.id} description={setting.description} defaultSelected={setting.isSelected}>
+								{setting.name}
+							</Switch>
+						))}
+					</SwitchGroup>
 				);
 			case 'CheckboxGroup':
 				return (

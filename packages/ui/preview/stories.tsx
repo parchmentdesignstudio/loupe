@@ -93,7 +93,7 @@ import { SearchFieldPlayground } from './playgrounds/search-field.js';
 import { SelectPlayground } from './playgrounds/select.js';
 import { DrawerPlayground } from './playgrounds/drawer.js';
 import { SliderPlayground } from './playgrounds/slider.js';
-import { SwitchPlayground } from './playgrounds/switch.js';
+import { Notifications, SwitchPlayground } from './playgrounds/switch.js';
 import { EmptyTable, LoadingMoreTable, TablePlayground } from './playgrounds/table.js';
 import { TabsPlayground } from './playgrounds/tabs.js';
 import { TagGroupPlayground } from './playgrounds/tag-group.js';
@@ -668,9 +668,10 @@ const groups: Group[] = [
 				name: 'Switch',
 				description: 'A setting that takes effect straight away, with rounded corners or full ones for a pill. With on/off labels turned on, or where the system asks for more contrast, a | and an O say its state too',
 				summary: 'A setting that takes effect straight away',
-				exports: ['Switch'],
+				exports: ['Switch', 'SwitchGroup'],
 				stories: [
 					{ name: 'Build one', render: SwitchPlayground },
+					{ name: 'A group of settings', render: Notifications },
 					{
 						name: 'With on/off labels',
 						render: () => (

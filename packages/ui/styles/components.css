@@ -291,6 +291,8 @@
 
 		/* The track's corners, when its shape is rounded. The handle's are 2px less, so the two sit concentric */
 		--switch-radius: var(--radius-lg);
+		/* The space above and below each of a group's rows, as a divided list's */
+		--switch-group-padding-y: var(--list-divided-padding-y);
 
 		/* Colour */
 
