@@ -157,12 +157,12 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 			case 'Stack':
 				return <div key={key} className={`flex min-w-0 flex-col ${gap[(p.gap as number) ?? 4]} ${p.width === 'narrow' ? 'w-full max-w-xl' : ''}`}>{kids()}</div>;
 			case 'Split': {
-				// The narrow column first in the source either way, so it's read first, as filters or navigation are
-				const [narrow, wide] = node.children ?? [];
+				// The columns in the order they sit, so the source reads as the page does, and side says which is narrow
+				const [first, second] = node.children ?? [];
 				return (
 					<div key={key} className={`grid min-w-0 grid-cols-1 items-start ${gap[(p.gap as number) ?? 8]} ${split[p.side === 'end' ? 'end' : 'start']}`}>
-						<div className={`flex min-w-0 flex-col ${p.side === 'end' ? '@2xl:order-last' : ''}`}>{narrow && draw(narrow)}</div>
-						<div className="flex min-w-0 flex-col">{wide && draw(wide)}</div>
+						<div className="flex min-w-0 flex-col">{first && draw(first)}</div>
+						<div className="flex min-w-0 flex-col">{second && draw(second)}</div>
 					</div>
 				);
 			}
