@@ -50,7 +50,8 @@ export function blocksOf(details: Details): Record<string, Block> {
 	const status: Block = { doc: 'Where a record is up to. The label says it on its own; the colour only backs it up', props: { label: text('Such as Overdue'), tone: oneOf(tones, 'neutral: not started or archived. info: new or in progress. success: done or paid. warning: waiting or due soon. danger: failed or overdue'), variant: oneOf(options('Status', 'variant'), 'dot in tables and lists, badge in a card or beside a heading') }, required: ['label', 'tone'] };
 
 	return {
-		Stack: { doc: 'Blocks one above another. The usual root', props: { gap: oneOf(gaps, '4px steps: 2 within a group, 4 between groups, 8 between sections') }, children: true },
+		Stack: { doc: 'Blocks one above another. The usual root', props: { gap: oneOf(gaps, '4px steps: 2 within a group, 4 between groups, 8 between sections'), width: oneOf(['full', 'narrow'], 'narrow holds a form or settings to a 36rem column, as an app would, so its fields don’t stretch across a wide page') }, children: true },
+		Split: { doc: 'Two columns, a narrow one beside a wide one, such as filters beside results or a summary beside a form. They fold one above the other when the space is under 42rem, so never for things that must sit side by side', props: { side: oneOf(['start', 'end'], 'Where the narrow column goes: start for navigation or filters, end for a summary or details'), gap: oneOf(gaps) }, required: ['side'], children: true },
 		Row: { doc: 'Blocks side by side, wrapping when there is no room, such as a heading with its actions', props: { gap: oneOf(gaps), justify: oneOf(['start', 'between', 'end']), align: oneOf(['start', 'center', 'end']) }, children: true },
 		Grid: { doc: 'Cards or stats in equal columns, fewer as the space narrows', props: { columns: oneOf([2, 3, 4]), gap: oneOf(gaps) }, required: ['columns'], children: true },
 		Card: { doc: 'A raised panel, only among other cards, such as stats in a Grid. A section on its own is not a card, and a Table never goes in one', props: {}, children: true },
@@ -229,6 +230,7 @@ function rules(ui: Node, errors: string[]) {
 			const [page, count] = numbers('page', 'count');
 			if (page !== undefined && count !== undefined && page > count) errors.push(`${at}: page ${page} is past its count of ${count}`);
 		}
+		if (item.type === 'Split' && item.children?.length !== 2) errors.push(`${at}: holds exactly two blocks, the narrow column and the wide one, not ${item.children?.length ?? 0}`);
 		if (item.type === 'Menu' && item.variant === 'primary') errors.push(`${at}: a Menu's button is secondary or ghost, never primary`);
 		// Dates as YYYY-MM-DD sort as text. A bound value is checked once it has one
 		const dates = (...keys: string[]) => keys.map((key) => (typeof item[key] === 'string' ? (item[key] as string) : undefined));

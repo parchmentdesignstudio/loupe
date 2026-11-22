@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useState } from 'react';
+import { type RefObject, useEffect, useState, useSyncExternalStore } from 'react';
 import { Icon } from '@parchment/icons/react';
 import { Button, Link, Menu, MenuItem, MenuTrigger } from '../src/index.js';
 
@@ -44,7 +44,7 @@ export function Contents({ headings, scroller }: { headings: Heading[]; scroller
 	}, [headings, scroller]);
 
 	return (
-		<nav aria-label="On this page" className="sticky top-12 hidden h-[calc(100dvh-4rem)] flex-col gap-3 overflow-y-auto px-6 pt-12 pb-6 xl:col-start-1 xl:row-span-2 xl:row-start-1 xl:flex">
+		<nav aria-label="On this page" className="sticky top-12 hidden h-[calc(100dvh-4rem)] flex-col gap-3 overflow-y-auto px-6 pt-12 pb-6 @4xl/page:col-start-1 @4xl/page:row-span-2 @4xl/page:row-start-1 @4xl/page:flex">
 			<p className="text-label text-muted">On this page</p>
 			<ul className="flex flex-col gap-2 text-label">
 				{headings.map((heading) => (
@@ -64,11 +64,24 @@ export function Contents({ headings, scroller }: { headings: Heading[]; scroller
 	);
 }
 
+// Whether the page has room for the column, as its @4xl/page query has it: 56rem. The menu sits in the bar, outside the
+// page, so it can't ask the page's container in CSS and measures it instead
+const page = () => document.querySelector('[data-docs-page]');
+const subscribe = (onChange: () => void) => {
+	const observer = new ResizeObserver(onChange);
+	const element = page();
+	if (element) observer.observe(element);
+	return () => observer.disconnect();
+};
+const hasRoom = () => (page()?.clientWidth ?? 0) >= 56 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+
 /** The same sections as a menu, beside the breadcrumbs where there's no room for the column */
 export function ContentsMenu({ headings }: { headings: Heading[] }) {
+	const isRoomy = useSyncExternalStore(subscribe, hasRoom, () => false);
+	if (isRoomy) return null;
 	return (
 		<MenuTrigger>
-			<Button variant="ghost" shape="full" size="small" aria-label="On this page" className="-ml-1.5 xl:hidden">
+			<Button variant="ghost" shape="full" size="small" aria-label="On this page" className="-ml-1.5">
 				<Icon name="text-alignleft" />
 			</Button>
 			<Menu items={headings} onAction={(id) => jump(String(id))} placement="bottom start">

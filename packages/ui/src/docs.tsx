@@ -101,7 +101,9 @@ export function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phon
 					</div>
 					{/* Clipped, not hidden, so an aside past the card's edge can't scroll it sideways */}
 					<div className="flex flex-1 overflow-x-clip">
-						<main className="min-w-0 flex-1">{children}</main>
+						{/* A container, so the page lays itself out by the room it has, which a drawer beside it takes some of, rather
+						    than by the window */}
+						<main data-docs-page className="@container/page min-w-0 flex-1">{children}</main>
 						{aside}
 					</div>
 				</div>
@@ -124,13 +126,13 @@ export interface DocsPageProps {
 export function DocsPage({ header, contents, isWide, children }: DocsPageProps) {
 	const column = isWide ? '' : 'mx-auto max-w-[40rem]';
 	return (
-		<div className={contents ? 'xl:grid xl:grid-cols-[13rem_minmax(0,1fr)] xl:items-start' : undefined}>
+		<div className={contents ? '@4xl/page:grid @4xl/page:grid-cols-[13rem_minmax(0,1fr)] @4xl/page:items-start' : undefined}>
 			{/* The columns glide over when a drawer beside the page opens, rather than jumping as they recentre */}
-			<div className="px-4 pt-10 pb-10 md:px-10 xl:col-start-2">
+			<div className="px-4 pt-10 pb-10 @lg/page:px-10 @4xl/page:col-start-2">
 				<div data-drawer-follows className={column}>{header}</div>
 			</div>
 			{contents}
-			<div className="min-w-0 px-4 pb-10 md:px-10 xl:col-start-2 xl:row-start-2">
+			<div className="min-w-0 px-4 pb-10 @lg/page:px-10 @4xl/page:col-start-2 @4xl/page:row-start-2">
 				<div data-drawer-follows className={`flex flex-col gap-10 ${column}`}>{children}</div>
 			</div>
 		</div>

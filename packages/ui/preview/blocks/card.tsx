@@ -159,11 +159,12 @@ export function Category({ name = 'Actions', fill = 'raised', id }: { name?: str
 	if (!group) return null;
 	const heading = `${id ?? categoryId(name)}-heading`;
 	return (
-		<section id={id} aria-labelledby={heading} className="flex w-full scroll-mt-25 flex-col gap-4 md:scroll-mt-18">
+		<section id={id} aria-labelledby={heading} className="@container flex w-full scroll-mt-25 flex-col gap-4 md:scroll-mt-18">
 			<h2 id={heading} className="text-title">
 				{name}
 			</h2>
-			<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+			{/* Two columns once each card has 14rem, by the section's own width, so a drawer beside the page folds them */}
+			<div className="grid grid-cols-1 gap-3 @md:grid-cols-2">
 				{group.components.map((entry) => {
 					const Example = examples[entry.name];
 					return (

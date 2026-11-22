@@ -278,4 +278,24 @@ describe('Generated views with controls', () => {
 		expect(screen.queryByRole('dialog')).toBeNull();
 		expect(screen.getByRole('switch', { name: 'Expiry hint' })).toHaveProperty('checked', true);
 	});
+
+	it('lays out a narrow column beside a wide one, holding just the two', () => {
+		const split = { type: 'Split', side: 'start', children: [{ type: 'Heading', level: 'group', text: 'Filters' }, { type: 'Stack', width: 'narrow', children: [{ type: 'TextField', label: 'Name' }] }] };
+		expect(validate({ summary: 'Filters and a form', ui: split as Node }, schema)).toEqual([]);
+		expect(validate({ summary: 'Three', ui: { ...split, children: [...split.children, { type: 'Separator' }] } as Node }, schema)).toEqual([expect.stringContaining('exactly two blocks')]);
+		const { container } = render(<Generated ui={split as Node} />);
+		expect(container.querySelector('[class*="@2xl:grid-cols-[16rem_minmax(0,1fr)]"]')).toBeTruthy();
+		expect(container.querySelector('.max-w-xl')).toBeTruthy();
+	});
+
+	it('frames the full-size view at a width, which the code it copies leaves out', async () => {
+		const user = userEvent.setup();
+		render(<Generated ui={tweakable.ui as Node} title="Password reset" values={tweakable.values} />);
+		await user.click(screen.getByRole('button', { name: 'Full size' }));
+		const full = await screen.findByRole('dialog', { name: 'Password reset' });
+		const view = within(full).getByRole('heading', { name: 'Check your email' }).closest('.\\@container');
+		expect(view?.className).not.toContain('max-w-[24rem]');
+		await user.click(within(full).getByRole('radio', { name: 'Phone' }));
+		expect(view?.className).toContain('max-w-[24rem]');
+	});
 });

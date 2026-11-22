@@ -35,7 +35,7 @@ const samples: Record<string, string> = {
 function Size({ name }: { name: string }) {
 	const [ref, measure] = useMeasure<HTMLParagraphElement>();
 	return (
-		<div className="grid gap-x-6 gap-y-1 py-4 first:pt-0 last:pb-0 sm:grid-cols-[8rem_1fr]">
+		<div className="grid gap-x-6 gap-y-1 py-4 first:pt-0 last:pb-0 @xl/page:grid-cols-[8rem_1fr]">
 			<div className="flex flex-col gap-0.5 text-label">
 				<code className="font-mono text-ink">text-{name}</code>
 				<span className="text-muted tabular-nums">{measure ? `${measure.size} on ${measure.line}` : ' '}</span>
@@ -65,7 +65,7 @@ const families: Record<string, { name: string; role: string }> = {
 /** Each family, its alphabet and figures */
 export function Families() {
 	return (
-		<div className="grid w-full gap-6 sm:grid-cols-2">
+		<div className="grid w-full gap-6 @xl/page:grid-cols-2">
 			{details.type.families.map(({ name }) => (
 				<div key={name} className={`flex flex-col gap-3 ${faces[name] ?? ''}`}>
 					<span className="text-[2.5rem] leading-none text-ink">Aa</span>
