@@ -262,4 +262,20 @@ describe('Generated views with controls', () => {
 		expect(container.querySelector('.gap-8')).toBeTruthy();
 		expect(screen.getByText('The link expires in 30 minutes')).toBeTruthy();
 	});
+
+	it('opens full size with the same values, and closes back to the chat', async () => {
+		const user = userEvent.setup();
+		render(<Generated ui={tweakable.ui as Node} title="Password reset" values={tweakable.values} panel={panelOf(tweakable, schema)} />);
+		await user.click(screen.getByRole('switch', { name: 'Expiry hint' }));
+		await user.click(screen.getByRole('button', { name: 'Full size' }));
+		const full = await screen.findByRole('dialog', { name: 'Password reset' });
+		// The hint stays hidden there too, and its controls come with it
+		expect(within(full).getByRole('heading', { name: 'Check your email' })).toBeTruthy();
+		expect(within(full).queryByText('The link expires in 30 minutes')).toBeNull();
+		await user.click(within(full).getByRole('switch', { name: 'Expiry hint' }));
+		expect(within(full).getByText('The link expires in 30 minutes')).toBeTruthy();
+		await user.click(within(full).getByRole('button', { name: 'Close' }));
+		expect(screen.queryByRole('dialog')).toBeNull();
+		expect(screen.getByRole('switch', { name: 'Expiry hint' })).toHaveProperty('checked', true);
+	});
 });

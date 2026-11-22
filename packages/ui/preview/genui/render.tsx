@@ -1,7 +1,7 @@
 import { parseDate, parseTime } from '@internationalized/date';
 import { Icon } from '@parchment/icons/react';
 import { type ReactNode, useEffect, useId, useState } from 'react';
-import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, ListBoxItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, SearchField, Select, Separator, Slider, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
+import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, ListBoxItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, SearchField, Select, Separator, Slider, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
 import { type Node, type Panel, type Values, resolve } from './catalogue.js';
 import { code as frame } from '../../src/Code.js';
 import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
@@ -357,50 +357,80 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 	const copyLabel = isCopied ? 'Copied' : 'Copy code';
 	// Named by its title outright, as not every screen reader names a figure from its caption
 	const titleId = useId();
+	const fullTitleId = useId();
+	const [isFull, setFull] = useState(false);
+	const reset = isMoved && (
+		<Button variant="ghost" size="small" onPress={() => change(initial ?? {})}>
+			Reset
+		</Button>
+	);
+	const copyButton = (
+		<TooltipTrigger>
+			<Button variant="ghost" size="small" aria-label={copyLabel} onPress={copy}>
+				<span className={swap()}>
+					<span className={isCopied ? gone() : undefined}>
+						<Icon name="square-on-square" />
+					</span>
+					<span className={isCopied ? undefined : gone()}>
+						<Icon name="checkmark" />
+					</span>
+				</span>
+			</Button>
+			<Tooltip>{copyLabel}</Tooltip>
+		</TooltipTrigger>
+	);
+	const controlsOf = (className: string) =>
+		controls?.length ? (
+			<section aria-label="Controls" className={className}>
+				{controls.map((group) => (
+					<ControlGroup key={group.group} label={group.group}>
+						{group.items.map(({ label, value: id, control }) => {
+							const value = values[id];
+							if (control.kind === 'slider') return <SliderControl key={id} label={label} value={value as number} onChange={(next) => set(id, next)} minValue={control.min} maxValue={control.max} steps={control.steps} scale={control.scale} unit={control.unit} />;
+							if (control.kind === 'choice') return <Choice key={id} label={label} options={control.options} value={value as string} onChange={(next) => set(id, next)} />;
+							if (control.kind === 'switch') return <SwitchControl key={id} label={label} value={value as boolean} onChange={(next) => set(id, next)} />;
+							return <TextControl key={id} label={label} value={value as string} onChange={(next) => set(id, next)} />;
+						})}
+					</ControlGroup>
+				))}
+			</section>
+		) : null;
 	return (
 		<figure aria-labelledby={titleId} className={base()}>
-			{/* As a block of code's: its name, then Reset once something's moved, and Copy as an icon at the end */}
+			{/* As a block of code's: its name, then Reset once something's moved, Copy as an icon, and full size at the end */}
 			<figcaption className={bar()}>
 				<span id={titleId} className={name()}>{title ?? 'View'}</span>
-				{isMoved && (
-					<Button variant="ghost" size="small" onPress={() => change(initial ?? {})}>
-						Reset
-					</Button>
-				)}
+				{reset}
+				{copyButton}
 				<TooltipTrigger>
-					<Button variant="ghost" size="small" aria-label={copyLabel} onPress={copy}>
-						<span className={swap()}>
-							<span className={isCopied ? gone() : undefined}>
-								<Icon name="square-on-square" />
-							</span>
-							<span className={isCopied ? undefined : gone()}>
-								<Icon name="checkmark" />
-							</span>
-						</span>
+					<Button variant="ghost" size="small" aria-label="Full size" onPress={() => setFull(true)}>
+						<Icon name="arrow-up-right-and-arrow-down-left" />
 					</Button>
-					<Tooltip>{copyLabel}</Tooltip>
+					<Tooltip>Full size</Tooltip>
 				</TooltipTrigger>
 			</figcaption>
 			{/* On the code's ground, a step up from the bar, which casts the line between them as a block of code does. The
 			    controls share it, under the view, parted from it by a line */}
 			<div className="relative flex flex-col bg-code-ground shadow-[0_-.5px_var(--edge),0_-1px_3px_-1.5px_var(--shadow-raised-color)]">
 				<div className="@container flex min-w-0 flex-col p-4">{drawn}</div>
-				{controls?.length ? (
-					<section aria-label="Controls" className="flex flex-col border-t border-bleed/8 px-4 pt-3 pb-1">
-						{controls.map((group) => (
-							<ControlGroup key={group.group} label={group.group}>
-								{group.items.map(({ label, value: id, control }) => {
-									const value = values[id];
-									if (control.kind === 'slider') return <SliderControl key={id} label={label} value={value as number} onChange={(next) => set(id, next)} minValue={control.min} maxValue={control.max} steps={control.steps} scale={control.scale} unit={control.unit} />;
-									if (control.kind === 'choice') return <Choice key={id} label={label} options={control.options} value={value as string} onChange={(next) => set(id, next)} />;
-									if (control.kind === 'switch') return <SwitchControl key={id} label={label} value={value as boolean} onChange={(next) => set(id, next)} />;
-									return <TextControl key={id} label={label} value={value as string} onChange={(next) => set(id, next)} />;
-								})}
-							</ControlGroup>
-						))}
-					</section>
-				) : null}
+				{controlsOf('flex flex-col border-t border-bleed/8 px-4 pt-3 pb-1')}
 			</div>
+			{/* The same view across the window, as wide as a page would have it, with its controls beside it where there's
+			    room. Its values are the ones here, so a control moved in one has moved in both */}
+			<Modal size="full" isDismissable isOpen={isFull} onOpenChange={setFull}>
+				<Dialog aria-labelledby={fullTitleId} className="flex h-full flex-col p-0">
+					<div className="flex items-center gap-1 border-b border-bleed/8 py-2 ps-(--dialog-padding) pe-3">
+						<span id={fullTitleId} className="min-w-0 flex-1 truncate py-(--button-small-padding-y) text-body font-medium">{title ?? 'View'}</span>
+						{reset}
+						{copyButton}
+						<DialogClose className="" />
+					</div>
+					<div className="flex min-h-0 flex-1 flex-col overflow-auto lg:flex-row">
+						<div className="@container flex min-w-0 flex-1 flex-col p-(--dialog-padding) lg:overflow-auto">{isFull && drawn}</div>
+						{controlsOf('flex shrink-0 flex-col border-t border-bleed/8 px-(--dialog-padding) pt-3 pb-1 lg:w-80 lg:overflow-auto lg:border-t-0 lg:border-s')}
+					</div>
+				</Dialog>
+			</Modal>
 		</figure>
 	);
 }

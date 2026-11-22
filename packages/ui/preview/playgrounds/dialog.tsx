@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigge
 import { Choice, ControlGroup, Playground, SwitchControl, TextControl, longWords, pick, useRemembered } from '../playground.js';
 import { type Length, bodyOf, lengths } from './overlay.js';
 
-const sizes = ['small', 'medium', 'large'] as const;
+const sizes = ['small', 'medium', 'large', 'full'] as const;
 const headings = ['none', 'short', 'long'] as const;
 const actionSets = ['none', 'one', 'two', 'three'] as const;
 const titles = ['Rename project', 'Share link', 'Delete project', 'Invite people', 'Export'];
