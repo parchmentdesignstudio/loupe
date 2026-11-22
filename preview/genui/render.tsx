@@ -54,6 +54,11 @@ const justify: Record<string, string> = { start: 'justify-start', between: 'just
 const align: Record<string, string> = { start: 'items-start', center: 'items-center', end: 'items-end' };
 // A stat card reads at 7rem, so three sit side by side from 24rem, and four pair off first
 const columns: Record<number, string> = { 2: '@xs:grid-cols-2', 3: '@sm:grid-cols-3', 4: '@xs:grid-cols-2 @2xl:grid-cols-4' };
+// The narrow column at 16rem beside the rest, once the view is 42rem wide
+const split = { start: '@2xl:grid-cols-[16rem_minmax(0,1fr)]', end: '@2xl:grid-cols-[minmax(0,1fr)_16rem]' } as const;
+// What the full-size view can be framed at: a phone, a tablet, a laptop, or all the room there is
+const devices = { phone: 'max-w-[24rem]', tablet: 'max-w-[48rem]', laptop: 'max-w-[80rem]', fill: '' } as const;
+type Device = keyof typeof devices;
 const headings = { page: 'text-title', section: 'text-body font-medium', group: 'text-label text-muted' } as const;
 const tones = { default: '', muted: 'text-muted', danger: 'text-danger' } as const;
 const sizes = { body: 'text-body', title: 'text-title tabular-nums', label: 'text-label' } as const;
@@ -132,7 +137,17 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 		const kids = () => node.children?.map((child, index) => draw(child, index));
 		switch (node.type) {
 			case 'Stack':
-				return <div key={key} className={`flex min-w-0 flex-col ${gap[(p.gap as number) ?? 4]}`}>{kids()}</div>;
+				return <div key={key} className={`flex min-w-0 flex-col ${gap[(p.gap as number) ?? 4]} ${p.width === 'narrow' ? 'w-full max-w-xl' : ''}`}>{kids()}</div>;
+			case 'Split': {
+				// The narrow column first in the source either way, so it's read first, as filters or navigation are
+				const [narrow, wide] = node.children ?? [];
+				return (
+					<div key={key} className={`grid min-w-0 grid-cols-1 items-start ${gap[(p.gap as number) ?? 8]} ${split[p.side === 'end' ? 'end' : 'start']}`}>
+						<div className={`flex min-w-0 flex-col ${p.side === 'end' ? '@2xl:order-last' : ''}`}>{narrow && draw(narrow)}</div>
+						<div className="flex min-w-0 flex-col">{wide && draw(wide)}</div>
+					</div>
+				);
+			}
 			case 'Row':
 				return <div key={key} className={`flex min-w-0 flex-wrap ${gap[(p.gap as number) ?? 2]} ${justify[(p.justify as string) ?? 'start']} ${align[(p.align as string) ?? 'center']}`}>{kids()}</div>;
 			case 'Grid':
@@ -359,6 +374,7 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 	const titleId = useId();
 	const fullTitleId = useId();
 	const [isFull, setFull] = useState(false);
+	const [device, setDevice] = useState<Device>('fill');
 	const reset = isMoved && (
 		<Button variant="ghost" size="small" onPress={() => change(initial ?? {})}>
 			Reset
@@ -421,12 +437,16 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 				<Dialog aria-labelledby={fullTitleId} className="flex h-full flex-col p-0">
 					<div className="flex items-center gap-1 border-b border-bleed/8 py-2 ps-(--dialog-padding) pe-3">
 						<span id={fullTitleId} className="min-w-0 flex-1 truncate py-(--button-small-padding-y) text-body font-medium">{title ?? 'View'}</span>
+						{/* Only the preview's frame, like a device's, so it never reaches the code that's copied */}
+						<Choice label="Width" options={Object.keys(devices) as Device[]} value={device} onChange={setDevice} />
 						{reset}
 						{copyButton}
 						<DialogClose className="" />
 					</div>
 					<div className="flex min-h-0 flex-1 flex-col overflow-auto lg:flex-row">
-						<div className="@container flex min-w-0 flex-1 flex-col p-(--dialog-padding) lg:overflow-auto">{isFull && drawn}</div>
+						<div className={`flex min-w-0 flex-1 flex-col lg:overflow-auto ${device === 'fill' ? '' : 'bg-code-ground p-4'}`}>
+							<div className={`@container mx-auto flex w-full min-w-0 flex-col p-(--dialog-padding) ${devices[device]} ${device === 'fill' ? '' : 'min-h-full rounded-lg bg-(--modal-fill,var(--color-overlay)) shadow-panel'}`}>{isFull && drawn}</div>
+						</div>
 						{controlsOf('flex shrink-0 flex-col border-t border-bleed/8 px-(--dialog-padding) pt-3 pb-1 lg:w-80 lg:overflow-auto lg:border-t-0 lg:border-s')}
 					</div>
 				</Dialog>

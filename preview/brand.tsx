@@ -136,7 +136,7 @@ export function Palette() {
 		<div className="flex w-full flex-col gap-4">
 			<div className="flex flex-col gap-2">
 				<span className="text-label text-muted">Brand</span>
-				<div className="grid grid-cols-4 gap-2 sm:grid-cols-9">
+				<div className="grid grid-cols-4 gap-2 @xl/page:grid-cols-9">
 					{brandColumns.map((steps, i) => (
 						<Column key={i} steps={steps} />
 					))}
@@ -144,7 +144,7 @@ export function Palette() {
 			</div>
 			<div className="flex flex-col gap-2 border-t border-bleed/12 pt-4">
 				<span className="text-label text-muted">UI</span>
-				<div className="grid grid-cols-3 gap-2 sm:grid-cols-9">
+				<div className="grid grid-cols-3 gap-2 @xl/page:grid-cols-9">
 					{ui.map((hue) => (
 						<Column key={hue} steps={names(hue)} labels={['Light', hue, 'Dark']} />
 					))}
@@ -178,7 +178,7 @@ const icons: [Name, Name, Name?][] = [
 
 export function AppIcons() {
 	return (
-		<ul className="grid w-full grid-cols-4 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))]">
+		<ul className="grid w-full grid-cols-4 gap-4 @xl/page:grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))]">
 			{icons.map(([background, page, curl]) => (
 				<li key={`${background}${page}${curl ?? ''}`} className="flex flex-col items-center gap-2">
 					<div style={tile(hex(background))} className="flex aspect-square w-full max-w-22 items-center justify-center rounded-[22.5%] shadow-panel">
@@ -249,7 +249,7 @@ const cards: [Name, Name, string][] = [
 
 export function Cards() {
 	return (
-		<div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3">
+		<div className="grid w-full grid-cols-2 gap-2 @xl/page:grid-cols-3">
 			{cards.map(([background, page, label]) => (
 				<div key={`${background}${page}`} style={{ ...tile(hex(background)), color: hex(page) }} className="flex aspect-[3/4] flex-col rounded-2xl p-4">
 					<div className="flex flex-1 items-center justify-center">
@@ -298,7 +298,7 @@ export function Lockups() {
 		['Blue dark', 'Blue light'],
 	];
 	return (
-		<div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
+		<div className="grid w-full grid-cols-1 gap-2 @xl/page:grid-cols-2">
 			{pairs.map(([background, page]) => (
 				<div key={`${background}${page}`} style={{ ...tile(hex(background)), color: hex(page) }} className="flex h-24 items-center gap-2 rounded-2xl px-6 inset-ring inset-ring-bleed/8">
 					<Lockup word="parchment" height={28} page={hex(page)} curl={tonal(hex(background), hex(page))} />
@@ -432,7 +432,7 @@ const inkOn: Partial<Record<Name, Name>> = {
 
 export function ProjectCards() {
 	return (
-		<div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
+		<div className="grid w-full grid-cols-1 gap-3 @xl/page:grid-cols-3">
 			{projects.map(({ card, image, mark, title, description, action }) => {
 				const ink = hex(inkOn[card] ?? 'Pine');
 				// A chalk card is a raised layer on the page, so it takes the library's own roles and shadow
@@ -538,15 +538,15 @@ export function System() {
 	];
 	return (
 		<div style={tile('#fbfaf9')} className="flex w-full flex-col gap-3 rounded-2xl p-4 text-[#0c2920]">
-			<div className="hidden grid-cols-[6rem_repeat(3,minmax(0,1fr))] gap-2 text-label opacity-70 sm:grid">
+			<div className="hidden grid-cols-[6rem_repeat(3,minmax(0,1fr))] gap-2 text-label opacity-70 @xl/page:grid">
 				<span />
 				{stepNames.map((step) => (
 					<span key={step}>{step}</span>
 				))}
 			</div>
 			{rows.map(({ name, steps }) => (
-				<div key={name} className="grid grid-cols-3 items-start gap-2 sm:grid-cols-[6rem_repeat(3,minmax(0,1fr))]">
-					<span className="col-span-3 pt-1 font-medium sm:col-span-1">{name}</span>
+				<div key={name} className="grid grid-cols-3 items-start gap-2 @xl/page:grid-cols-[6rem_repeat(3,minmax(0,1fr))]">
+					<span className="col-span-3 pt-1 font-medium @xl/page:col-span-1">{name}</span>
 					{steps.map((step, i) => (step ? <SystemStep key={step} name={step} index={i} /> : <span key={stepNames[i]} />))}
 				</div>
 			))}
