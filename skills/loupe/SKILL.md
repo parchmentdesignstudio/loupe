@@ -35,6 +35,8 @@ Where a raw value is meant, say why on the line above: `// loupe-lint-ignore: a 
 - Corners: `rounded-lg` (8px) for most things. Inside a rounded container, the container's radius less the space
   between them.
 - Secondary text is `text-muted`. Errors are `text-danger`, always with words that say what's wrong.
+- Words: labels, headings and buttons are sentence case. A button says what happens, such as "Send invoice", never
+  "Submit" or "OK".
 - Headings: the page's is `text-title`, a section's `text-body font-medium`, and a group's name inside a panel
   `text-label text-muted`. A line under a heading is `text-body text-muted`.
 
@@ -46,7 +48,7 @@ Where a raw value is meant, say why on the line above: `// loupe-lint-ignore: a 
   the primary Button on the right.
 - Forms and settings sit in one column, `mx-auto max-w-160` (640px), with `gap-10` between sections. Tables and
   lists take the full width.
-- A section is a heading and its content in a column, not a card. A `Card` is only for something among others like
+- A section is a heading over its content in a column, `gap-4` between them, not a card. A `Card` is only for something among others like
   it, such as plans or stats in a grid, and it draws its own box, so don't build one from classes. Table, Alert,
   fields and overlays draw their own box and shadow, so never wrap one in a card as well.
 - Something destructive for the whole page, such as "Delete account", goes last, in its own section under

@@ -23,7 +23,7 @@ button's `aria-label`. Never put links or buttons in a tooltip, as it can't be r
 Sizes: `small` for a confirmation, `medium` (the default) for a short form, `large` for a long one.
 
 - In `DialogActions`, the confirming button is last. Cancel is `secondary` with `slot="close"`.
-- The confirming button is `primary`, or `danger` if it deletes. Its label says what happens: "Delete lead", not "OK".
+- The confirming button is `primary`, or `danger` if it deletes. Its label says what happens, such as "Delete lead".
 - `DialogClose` is the corner's close button, for a dialog with no Cancel.
 - To close after the action, take `close` from the Dialog: `<Dialog>{({ close }) => …}</Dialog>`.
 - Opened from somewhere other than its Button, such as a menu item or an empty state's action: control it with
