@@ -292,7 +292,7 @@ export const examples: Record<string, () => ReactNode> = {
 	Card: () => (
 		<Shrink by={0.8}>
 			<Card title="Team" actions={<Button variant="secondary">Start trial</Button>} className="w-44">
-				<p className="text-title tabular-nums">£12</p>
+				<p className="text-title">£12</p>
 			</Card>
 		</Shrink>
 	),

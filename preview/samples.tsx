@@ -253,7 +253,7 @@ export const samples: Partial<Record<string, Sample>> = {
 	DropZone: (props) => <DropZone label="Drop files here" className="w-56" {...props} />,
 	Card: (props) => (
 		<Card title="Team" description="For small teams" actions={<Button variant="secondary">Start free trial</Button>} className="w-56" {...props}>
-			<p className="text-title tabular-nums">£12</p>
+			<p className="text-title">£12</p>
 		</Card>
 	),
 	List: (props) => (

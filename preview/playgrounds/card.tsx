@@ -48,7 +48,7 @@ export function CardPlayground() {
 					)
 				}
 			>
-				<p className="text-title tabular-nums">£12</p>
+				<p className="text-title">£12</p>
 				{hasList && (
 					<List variant="plain">
 						<ListItem icon={<Icon name="checkmark" />}>Unlimited projects</ListItem>
@@ -72,7 +72,7 @@ export function PricingCards() {
 		<div className="grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
 			{plans.map((plan) => (
 				<Card key={plan.name} title={plan.name} description={plan.note} actions={<Button variant={plan.isPicked ? 'primary' : 'secondary'}>{plan.button}</Button>}>
-					<p className="text-title tabular-nums">
+					<p className="text-title">
 						{plan.price} <span className="text-label text-muted">a month</span>
 					</p>
 					<List variant="plain">
@@ -98,7 +98,7 @@ export function StatCards() {
 				['Refunds', '6', '£342 returned'],
 			].map(([label, figure, change]) => (
 				<Card key={label} title={label}>
-					<p className="text-title tabular-nums">{figure}</p>
+					<p className="text-title">{figure}</p>
 					<p className="text-label text-muted">{change}</p>
 				</Card>
 			))}
