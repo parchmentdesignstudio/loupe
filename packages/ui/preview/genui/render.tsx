@@ -62,7 +62,7 @@ const devices = { phone: 'max-w-[24rem]', tablet: 'max-w-[48rem]', laptop: 'max-
 type Device = keyof typeof devices;
 const headings = { page: 'text-title', section: 'text-body font-medium', group: 'text-label text-muted' } as const;
 const tones = { default: '', muted: 'text-muted', danger: 'text-danger' } as const;
-const sizes = { body: 'text-body', title: 'text-title tabular-nums', label: 'text-label' } as const;
+const sizes = { body: 'text-body', title: 'text-title', label: 'text-label' } as const;
 
 const status = (p: Props, key?: string | number) => (
 	<Status key={key} tone={p.tone as never} variant={p.variant as never}>

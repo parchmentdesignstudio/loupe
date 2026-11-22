@@ -73,9 +73,27 @@ raised). Nothing else exists. Its `title` is a heading (`headingLevel`, 3 by def
 `children` what it holds, and `actions` its buttons, pinned to the foot so a row of cards lines them up. One card in a
 row may have the primary Button, as the plan to pick; the rest are secondary.
 
+A stat card reads title, figure, change: the title names the measure, the figure follows as `text-title`, and the
+change goes under the figure as `text-label text-muted`. It has no `description`, which would sit above the figure. A
+figure on its own takes proportional figures, which sit as tight as a heading; `tabular-nums` is for figures in a
+column.
+
+```tsx
+// Correct
+<Card title="Revenue">
+  <p className="text-title">£18,430</p>
+  <p className="text-label text-muted">Up 12% on last week</p>
+</Card>
+
+// Incorrect: the change is the description, so it sits above the figure
+<Card title="Revenue" description="Up 12% on last week">
+  <p className="text-title">£18,430</p>
+</Card>
+```
+
 ```tsx
 <Card title="Team" description="For small teams" actions={<Button variant="primary">Start free trial</Button>}>
-  <p className="text-title tabular-nums">£12</p>
+  <p className="text-title">£12</p>
   <List variant="plain">…</List>
 </Card>
 ```
