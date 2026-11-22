@@ -1,7 +1,7 @@
-import { parseDate } from '@internationalized/date';
+import { parseDate, parseTime } from '@internationalized/date';
 import { Icon } from '@parchment/icons/react';
 import { type ReactNode, useEffect, useId, useState } from 'react';
-import { Alert, Avatar, Button, Tooltip, TooltipTrigger, Cell, Checkbox, Column, DatePicker, DateRangePicker, EmptyState, ListBoxItem, Meter, ProgressBar, Quote, Radio, RadioGroup, Row, Select, Separator, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, TextField } from '../../src/index.js';
+import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, ListBoxItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, SearchField, Select, Separator, Slider, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
 import { type Node, type Panel, type Values, resolve } from './catalogue.js';
 import { code as frame } from '../../src/Code.js';
 import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
@@ -24,6 +24,30 @@ const dateOf = (value: unknown) => {
 		return undefined;
 	}
 };
+
+const timeOf = (value: unknown) => {
+	try {
+		return typeof value === 'string' ? parseTime(value) : undefined;
+	} catch {
+		return undefined;
+	}
+};
+
+// A number as Intl shows it: a percentage, an amount in a currency, or as it is
+const formatOf = (p: Props): Intl.NumberFormatOptions | undefined =>
+	p.format === 'percent' ? { style: 'percent' } : p.format === 'currency' ? { style: 'currency', currency: (p.currency as string | undefined) ?? 'GBP' } : undefined;
+
+// Its own page, as a view has nothing to fetch the others from
+function Pages({ page, count }: { page: number; count: number }) {
+	const [current, setCurrent] = useState(page);
+	return <Pagination page={current} count={count} onChange={setCurrent} />;
+}
+
+interface Action {
+	label: string;
+	action?: string;
+	isDanger?: boolean;
+}
 
 const gap: Record<number, string> = { 1: 'gap-1', 2: 'gap-2', 3: 'gap-3', 4: 'gap-4', 6: 'gap-6', 8: 'gap-8', 10: 'gap-10' };
 const justify: Record<string, string> = { start: 'justify-start', between: 'justify-between', end: 'justify-end' };
@@ -116,8 +140,8 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 			case 'Card':
 				return <div key={key} className="flex min-w-0 flex-col gap-2 rounded-xl bg-panel p-4 shadow-panel">{kids()}</div>;
 			case 'Heading': {
-				const Tag = p.level === 'page' ? 'h2' : p.level === 'section' ? 'h3' : 'h4';
-				return <Tag key={key} className={`text-pretty ${headings[p.level as keyof typeof headings]}`}>{p.text as string}</Tag>;
+				const Level = p.level === 'page' ? 'h2' : p.level === 'section' ? 'h3' : 'h4';
+				return <Level key={key} className={`text-pretty ${headings[p.level as keyof typeof headings]}`}>{p.text as string}</Level>;
 			}
 			case 'Text':
 				return <p key={key} className={`text-pretty ${sizes[(p.size as keyof typeof sizes) ?? 'body']} ${tones[(p.tone as keyof typeof tones) ?? 'default']}`}>{p.text as string}</p>;
@@ -156,6 +180,139 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 			case 'DateRangePicker': {
 				const [start, end] = [dateOf(p.start), dateOf(p.end)];
 				return <DateRangePicker key={key} label={p.label as string} description={p.description as string | undefined} defaultValue={start && end ? { start, end } : undefined} minValue={dateOf(p.minValue)} />;
+			}
+			case 'NumberField':
+				return <NumberField key={key} label={p.label as string} description={p.description as string | undefined} defaultValue={p.value as number | undefined} minValue={p.minValue as number | undefined} maxValue={p.maxValue as number | undefined} step={p.step as number | undefined} formatOptions={formatOf(p)} />;
+			case 'Slider':
+				return <Slider<number | number[]> key={key} label={p.label as string} description={p.description as string | undefined} defaultValue={p.end === undefined ? ((p.value as number | undefined) ?? (p.minValue as number | undefined) ?? 0) : [(p.value as number | undefined) ?? (p.minValue as number | undefined) ?? 0, p.end as number]} thumbLabels={p.end === undefined ? undefined : ['Minimum', 'Maximum']} minValue={p.minValue as number | undefined} maxValue={p.maxValue as number | undefined} step={p.step as number | undefined} formatOptions={formatOf(p)} />;
+			case 'SearchField':
+				return <SearchField key={key} aria-label={p.label as string} placeholder={p.placeholder as string | undefined} />;
+			case 'ComboBox':
+				return (
+					<ComboBox key={key} label={p.label as string} description={p.description as string | undefined} placeholder={p.placeholder as string | undefined} defaultItems={p.options as Option[]} defaultSelectedKey={p.selected as string | undefined}>
+						{(option: Option) => <ListBoxItem id={option.id}>{option.name}</ListBoxItem>}
+					</ComboBox>
+				);
+			case 'CheckboxGroup':
+				return (
+					<CheckboxGroup key={key} label={p.label as string} description={p.description as string | undefined} defaultValue={p.selected as string[] | undefined}>
+						{(p.options as Option[]).map((option) => (
+							<Checkbox key={option.id} value={option.id}>{option.name}</Checkbox>
+						))}
+					</CheckboxGroup>
+				);
+			case 'ToggleButtonGroup': {
+				const options = p.options as Option[];
+				return (
+					<ToggleButtonGroup key={key} aria-label={p.label as string} size={p.size as never} width={p.width as never} defaultSelectedKeys={[(p.selected as string | undefined) ?? options[0].id]}>
+						{options.map((option) => (
+							<ToggleButton key={option.id} id={option.id}>{option.name}</ToggleButton>
+						))}
+					</ToggleButtonGroup>
+				);
+			}
+			case 'TimeField':
+				return <TimeField key={key} label={p.label as string} description={p.description as string | undefined} defaultValue={timeOf(p.value)} />;
+			case 'TagGroup':
+				return (
+					<TagGroup key={key} label={p.label as string} description={p.description as string | undefined} selectionMode={p.selectionMode as never} defaultSelectedKeys={p.selected as string[] | undefined} items={p.tags as Option[]}>
+						{(tag: Option) => <Tag id={tag.id} textValue={tag.name}>{tag.name}</Tag>}
+					</TagGroup>
+				);
+			case 'DropZone':
+				return (
+					<DropZone key={key} label={p.label as string} acceptedFileTypes={p.types as string[] | undefined} className="w-full">
+						<FileTrigger allowsMultiple={p.isMultiple as boolean | undefined} acceptedFileTypes={p.types as string[] | undefined}>
+							<Button variant="secondary" size="small">{(p.button as string | undefined) ?? (p.isMultiple ? 'Choose files' : 'Choose a file')}</Button>
+						</FileTrigger>
+					</DropZone>
+				);
+			case 'Link':
+				return <Link key={key} onPress={() => typeof p.action === 'string' && onAction?.(p.action)}>{p.text as string}</Link>;
+			case 'Breadcrumbs':
+				return (
+					<Breadcrumbs key={key}>
+						{(p.trail as string[]).map((name, index, trail) => (
+							<Breadcrumb key={index} href={index < trail.length - 1 ? '#' : undefined}>{name}</Breadcrumb>
+						))}
+					</Breadcrumbs>
+				);
+			case 'Pagination':
+				return <Pages key={key} page={p.page as number} count={p.count as number} />;
+			case 'Menu': {
+				const actions = p.actions as Action[];
+				const safe = actions.filter((item) => !item.isDanger);
+				const danger = actions.filter((item) => item.isDanger);
+				const item = (entry: Action, index: number) => (
+					<MenuItem key={`${entry.label}-${index}`} id={`${entry.label}-${index}`} variant={entry.isDanger ? 'danger' : undefined} onAction={() => entry.action && onAction?.(entry.action)}>
+						{entry.label}
+					</MenuItem>
+				);
+				return (
+					<MenuTrigger key={key}>
+						<Button variant={(p.variant as never) ?? 'secondary'}>{p.label as string}</Button>
+						<Menu>
+							{safe.map(item)}
+							{safe.length > 0 && danger.length > 0 && <MenuSeparator />}
+							{danger.map(item)}
+						</Menu>
+					</MenuTrigger>
+				);
+			}
+			case 'GridList': {
+				const items = p.items as { id: string; title: string; description?: string; status?: Props; action?: string }[];
+				return (
+					<GridList key={key} aria-label={p.label as string} layout={p.layout as never} items={items} onAction={(id) => { const action = items.find((entry) => entry.id === id)?.action; if (action) onAction?.(action); }} renderEmptyState={() => <p className="p-4 text-body text-muted">{(p.empty as string | undefined) ?? 'Nothing here yet'}</p>}>
+						{(entry) => (
+							<GridListItem id={entry.id} textValue={entry.title}>
+								<span className="flex min-w-0 flex-1 flex-col">
+									<span className="truncate font-medium">{entry.title}</span>
+									{entry.description && <span className="truncate text-label text-muted">{entry.description}</span>}
+								</span>
+								{entry.status && status(entry.status)}
+							</GridListItem>
+						)}
+					</GridList>
+				);
+			}
+			case 'AvatarGroup':
+				return (
+					<AvatarGroup key={key} maxVisible={p.maxVisible as number | undefined} size={p.size === undefined ? undefined : (Number(p.size) as never)}>
+						{(p.names as string[]).map((name, index) => (
+							<Avatar key={`${name}-${index}`} name={name} />
+						))}
+					</AvatarGroup>
+				);
+			case 'Disclosure':
+				return (
+					<Disclosure key={key} defaultExpanded={p.isExpanded as boolean | undefined}>
+						<DisclosureHeader>{p.title as string}</DisclosureHeader>
+						<DisclosurePanel>
+							<div className="flex flex-col gap-4">{kids()}</div>
+						</DisclosurePanel>
+					</Disclosure>
+				);
+			case 'Code':
+				return <Code key={key} code={p.code as string} title={p.title as string | undefined} />;
+			case 'Dialog': {
+				const trigger = p.trigger as Props;
+				return (
+					<DialogTrigger key={key}>
+						<Button variant={trigger.variant as never} size={trigger.size as never}>{trigger.label as string}</Button>
+						<Modal size={p.size as never}>
+							<Dialog>
+								<DialogHeading>{p.heading as string}</DialogHeading>
+								{node.children?.length ? <div className="mt-2 flex flex-col gap-4">{kids()}</div> : null}
+								<DialogActions>
+									<Button slot="close" variant="secondary">{(p.cancel as string | undefined) ?? 'Cancel'}</Button>
+									<Button slot="close" variant={p.tone === 'danger' ? 'danger' : 'primary'} onPress={() => typeof p.action === 'string' && onAction?.(p.action)}>
+										{p.confirm as string}
+									</Button>
+								</DialogActions>
+							</Dialog>
+						</Modal>
+					</DialogTrigger>
+				);
 			}
 			case 'RadioGroup':
 				return (
