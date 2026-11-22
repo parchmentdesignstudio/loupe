@@ -70,11 +70,27 @@
 
 		/* The shadow's colour under a raised button, which grows on hover. Transparent makes it flat and keeps its edge */
 		--button-shadow: var(--shadow-raised-color);
+		/* Primary (marigold), quiet and danger are filled, and lit like a glossy surface. Their edge isn't --edge but a
+		   ring a little darker than the fill: its lightness, as a share of the fill's. Lower is a darker ring */
+		--button-filled-rim: 0.84;
+		/* How much lighter the fill is at the top than at the bottom, as white mixed into it */
+		--button-filled-light: 4%;
+		/* How much lighter the whole fill gets on hover, as white mixed into it. The top stays lighter by the amount above */
+		--button-filled-hover-light: 12%;
+		/* The line just inside the edge, as white mixed into the fill, in the light and in the dark */
+		--button-filled-inner-line: 20%;
+		--button-filled-inner-line-dark: 32%;
+		/* In the dark, a brighter line along the top, as white mixed into the fill */
+		--button-filled-top-line-dark: 64%;
+		/* The bevel along the bottom: a light line and a soft band, as white mixed into the fill, then a faint band of the
+		   ring's colour above them, as how much of it shows */
+		--button-filled-bevel: 20%;
+		--button-filled-bevel-shade: 20%;
 
 		/* Motion */
 
 		/* How small the contents press to */
-		--button-press-scale: 0.95;
+		--button-press-scale: 0.975;
 
 		/* Chip */
 
