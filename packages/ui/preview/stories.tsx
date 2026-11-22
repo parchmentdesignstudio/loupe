@@ -71,7 +71,7 @@ import { DialogPlayground } from './playgrounds/dialog.js';
 import { DisclosurePlayground } from './playgrounds/disclosure.js';
 import { DropZonePlayground, FileStates } from './playgrounds/drop-zone.js';
 import { EmptyStatePlayground } from './playgrounds/empty-state.js';
-import { CardPlayground as LoupeCardPlayground, PricingCards, StatCards } from './playgrounds/card.js';
+import { CardPlayground as LoupeCardPlayground, PricingCards, StatCards, StatPlayground } from './playgrounds/card.js';
 import { FileTriggerPlayground } from './playgrounds/file-trigger.js';
 import { GridListPlayground } from './playgrounds/grid-list.js';
 import { ListPlayground } from './playgrounds/list.js';
@@ -855,6 +855,7 @@ const groups: Group[] = [
 					{ name: 'Build one', render: LoupeCardPlayground },
 					{ name: 'Plans side by side', render: PricingCards },
 					{ name: 'Stats in a row', render: StatCards },
+					{ name: 'Tune a stat', render: StatPlayground },
 				],
 			},
 			{

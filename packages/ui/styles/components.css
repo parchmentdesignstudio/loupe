@@ -525,6 +525,10 @@
 
 		/* The title's weight */
 		--card-title-font-weight: 500;
+		/* A figure that leads, a step past prose's display, drawn in as large type sits loose */
+		--card-figure-size: 1.75rem;
+		--card-figure-line-height: 2rem;
+		--card-figure-letter-spacing: -0.02em;
 
 		/* Space */
 
@@ -532,6 +536,10 @@
 		--card-padding: --spacing(4);
 		/* The space between its title, what it holds and its buttons */
 		--card-gap: --spacing(3);
+		/* The space between the title and its figure, which read as one */
+		--card-figure-title-gap: --spacing(1);
+		/* The space between a figure and the line that describes it */
+		--card-figure-gap: --spacing(6);
 
 		/* List */
 

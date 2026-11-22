@@ -175,7 +175,7 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 				const actions = (p.actions as Node[] | undefined) ?? [];
 				// A section's heading is h3, so a card's title under it is h4
 				return (
-					<Card key={key} title={p.title as string | undefined} headingLevel={4} description={p.description as string | undefined} fill={p.fill as never} actions={actions.length ? actions.map((action, index) => draw(action, index)) : undefined}>
+					<Card key={key} title={p.title as string | undefined} headingLevel={4} figure={p.figure as string | undefined} description={p.description as string | undefined} fill={p.fill as never} actions={actions.length ? actions.map((action, index) => draw(action, index)) : undefined}>
 						{node.children?.length ? kids() : undefined}
 					</Card>
 				);

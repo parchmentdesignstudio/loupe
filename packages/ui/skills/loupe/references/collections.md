@@ -69,32 +69,28 @@ on the page names it.
 
 One of a few things side by side, such as plans or stats, in a `grid` with `gap-3`. Never a section on its own, and
 a Table never goes in one. Fills: `raised` (the default, white off the page) and `quiet` (for cards inside something
-raised). Nothing else exists. Its `title` is a heading (`headingLevel`, 3 by default), `description` a line under it,
+raised). Nothing else exists. Its `title` is a heading (`headingLevel`, 3 by default), `figure` a stat's number grouped with it, `description` a line under them,
 `children` what it holds, and `actions` its buttons, pinned to the foot so a row of cards lines them up. One card in a
 row may have the primary Button, as the plan to pick; the rest are secondary.
-
-A stat card reads title, figure, change: the title names the measure, the figure follows as `text-title`, and the
-change goes under the figure as `text-label text-muted`. It has no `description`, which would sit above the figure. A
-figure on its own takes proportional figures, which sit as tight as a heading; `tabular-nums` is for figures in a
-column.
-
-```tsx
-// Correct
-<Card title="Revenue">
-  <p className="text-title">£18,430</p>
-  <p className="text-label text-muted">Up 12% on last week</p>
-</Card>
-
-// Incorrect: the change is the description, so it sits above the figure
-<Card title="Revenue" description="Up 12% on last week">
-  <p className="text-title">£18,430</p>
-</Card>
-```
 
 ```tsx
 <Card title="Team" description="For small teams" actions={<Button variant="primary">Start free trial</Button>}>
   <p className="text-title">£12</p>
   <List variant="plain">…</List>
+</Card>
+```
+
+A stat is a Card with a `figure`. The title and figure read as one, a label and its value, so they sit 4px apart; the
+`description` is about the figure, the change, so it stands 24px under it. Nothing else goes in a stat card. A figure
+takes proportional figures, which sit as tight as a heading; `tabular-nums` is for figures in a column.
+
+```tsx
+// Correct
+<Card title="Revenue" figure="£18,430" description="Up 12% on last week" />
+
+// Incorrect: the change sits above the figure, and the figure is as loose from its title as anything else
+<Card title="Revenue" description="Up 12% on last week">
+  <p className="text-title">£18,430</p>
 </Card>
 ```
 

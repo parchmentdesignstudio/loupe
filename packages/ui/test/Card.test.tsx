@@ -22,6 +22,13 @@ describe('Card', () => {
 		expect(container.querySelector('article')?.children).toHaveLength(1);
 	});
 
+	it('groups a figure with its title, and puts the description under the figure', () => {
+		render(<Card title="Revenue" figure="£18,430" description="Up 12% on last week" />);
+		const figure = screen.getByText('£18,430');
+		expect(figure.previousElementSibling).toBe(screen.getByRole('heading', { name: 'Revenue' }));
+		expect(figure.parentElement?.nextElementSibling).toBe(screen.getByText('Up 12% on last week'));
+	});
+
 	it('is raised unless it’s quiet', () => {
 		const { container, rerender } = render(<Card title="Raised" />);
 		expect(container.querySelector('article')?.className).toContain('bg-raised');
