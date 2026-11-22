@@ -4,7 +4,7 @@
 // line of JSON at a time, so the chat can say what it's doing. The key is read on this side, from ANTHROPIC_API_KEY or
 // packages/ui/.env or .env.local, so it never reaches the page. A tree that breaks the catalogue goes back to Claude
 // with what's wrong, for it to draw again, so the page only gets one that draws
-import Anthropic, { APIError, AuthenticationError, RateLimitError } from '@anthropic-ai/sdk';
+import Anthropic, { AnthropicError, APIError, AuthenticationError, RateLimitError } from '@anthropic-ai/sdk';
 import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { loadEnv } from 'vite';
@@ -18,20 +18,25 @@ export const efforts = ['low', 'medium', 'high'];
 const fallsBack = (model) => model.startsWith('claude-opus');
 // Drawing again after an error is rare, and three goes is plenty to tell a tree that won't come right
 const attempts = 3;
+// Now and then a long tree streams in as JSON that doesn't parse, and the SDK throws rather than handing it over. It's
+// asked for again, twice at most, as a fresh go usually comes out whole
+const unparsed = 2;
+const isUnparsed = (error) => error instanceof AnthropicError && !(error instanceof APIError) && /Unable to parse tool parameter JSON/.test(error.message);
 // Every call in an answer, lookups and drawing together, so one that keeps looking things up still ends
 const steps = 8;
 
 const system = `You answer questions in a chat inside Loupe, a component library's preview. When a view would answer better than words, such as a table of records, a form, a few stats or a settings panel, call render_ui once with a tree of Loupe's blocks. Otherwise answer in words alone.
 
-Your words show as plain paragraphs, so write no Markdown: no bold, lists or headings. Alongside a view, say in two or three sentences what stands out, as the view carries the detail; don't list what it contains.
+Your words show as plain paragraphs, so write no Markdown: no bold, lists or headings. Alongside a view, say in two or three sentences what stands out, as the view carries the detail; don't list what it contains. Follow the guides and the rules below without quoting them: say what a choice does for the user, never that a guide or Loupe asks for it.
 
 The schema is the whole of what exists: every block, prop and option is listed, and nothing else can be drawn. Sample data you make up should be plausible and specific, with real-looking names, dates and amounts in British English.
 
 How Loupe is used:
 - One primary Button in the whole view, for its one next step. Everything else is secondary, or ghost where space is tight. A Button's action is sent back to you as the next message, so give it one that asks for what it would do.
 - A page's root is a Stack with gap 8 between sections. A Heading with level page names the view once. A section is a Heading with level section over its content at gap 4.
-- A Table is its own box: never in a Card. Amounts and counts are align end. Exactly one column is the row header, the one that names each row. Status goes in its own column as a Status, never a word on its own.
+- A Table is its own box: never in a Card. Amounts and counts are align end. Exactly one column is the row header, the one that names each row. Status goes in its own column as a Status, never a word on its own. What can be done to a row, such as Change role and Remove, goes in that row's actions, a menu at its end.
 - Cards are only for things among other cards, such as stats in a Grid: a group label, then the figure as Text with size title.
+- Figures that add up go above their total. Anything already in the total, such as VAT included, goes under it as muted Text, so it doesn't read as one more to add.
 - Settings are Switches, which take effect at once, with no Save button. A form that is submitted ends with its one primary Button.
 - Labels and headings are sentence case. Buttons say what happens, such as Send invoice, never Submit or OK.
 
@@ -43,7 +48,7 @@ Controls, when asked for them, or to tweak, adjust or try out a view:
 
 Looking things up:
 - Loupe's guides say which component to use over its alternative, which variant applies where, and how a form, a list or a page is laid out. They're written for code, but render_ui's blocks are those components, so the same choices hold. Before drawing a form, a table, a settings panel or anything with more than a few blocks, read the guide for it with read_guide, unless you've read it already for this answer. The overview is below.
-- To answer a question about a component, such as what it's for or what it takes, look it up with get_component rather than from memory.
+- To answer a question about a component, such as what it's for or what it takes, look it up with get_component rather than from memory. On a component's page, "this" is that component.
 - Don't look up what a simple view doesn't need. Each lookup is a step the user watches.`;
 
 // Each guide is one of the Loupe skill's references, or the skill on product design, read from skills as the agent
@@ -149,6 +154,7 @@ async function answer(messages, page, onStep, { model = models[0], effort = 'med
 		trace.steps.push({ label, at: Date.now() - started });
 		onStep(label);
 	};
+	let broken = 0;
 	const reply = (text) => ({ text, ui, summary, title, values, controls, panel, trace: { ...trace, drawn, ms: Date.now() - started } });
 	for (let turn = 0; turn < steps; turn++) {
 		const stream = client.beta.messages.stream({
@@ -170,13 +176,21 @@ async function answer(messages, page, onStep, { model = models[0], effort = 'med
 		});
 		// Drawing is the long part, so it's said as it starts. A lookup is said once its input is whole
 		stream.on('streamEvent', (event) => {
-			if (event.type === 'content_block_start' && event.content_block.type === 'tool_use' && event.content_block.name === 'render_ui') step(drawn ? 'Drawing it again' : 'Drawing the view');
+			if (event.type === 'content_block_start' && event.content_block.type === 'tool_use' && event.content_block.name === 'render_ui') step(drawn || broken ? 'Drawing it again' : 'Drawing the view');
 		});
 		stream.on('contentBlock', (block) => {
 			const label = block.type === 'tool_use' && stepOf(block);
 			if (label) step(label);
 		});
-		const response = await stream.finalMessage();
+		let response;
+		try {
+			response = await stream.finalMessage();
+		} catch (error) {
+			if (!isUnparsed(error) || ++broken > unparsed) throw error;
+			trace.calls++;
+			trace.errors.push('The view came through as JSON that didn’t parse, so it was asked for again');
+			continue;
+		}
 		trace.calls++;
 		trace.usage.input += response.usage.input_tokens ?? 0;
 		trace.usage.output += response.usage.output_tokens ?? 0;

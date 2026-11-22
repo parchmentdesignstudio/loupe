@@ -38,6 +38,8 @@ const day = (description: string): Schema => ({ type: 'string', pattern: '^\\d{4
 const time = (description: string): Schema => ({ type: 'string', pattern: '^([01]\\d|2[0-3]):[0-5]\\d$', description: `${description}, as HH:MM on a 24 hour clock` });
 const number = (description: string): Schema => ({ type: 'number', description });
 const option = { type: 'object', properties: { id: text('Unique within the list'), name: text('What it says') }, required: ['id', 'name'], additionalProperties: false };
+// One of a Menu's actions, or a table row's
+const menuAction = { type: 'object', properties: { label: text('Says what happens'), action: text('Sent back to you as the next message when it is picked'), isDanger: { type: 'boolean', description: 'Deletes or can’t be undone. Goes last' } }, required: ['label'], additionalProperties: false };
 
 export function blocksOf(details: Details): Record<string, Block> {
 	// A prop's options as the source has them, so the two can't drift apart
@@ -84,7 +86,7 @@ export function blocksOf(details: Details): Record<string, Block> {
 		Link: { doc: 'Words that take you somewhere, in a sentence or a list, such as View all invoices. Something that changes data is a Button', props: { text: text('Says where it goes'), action: text('Sent back to you as the next message when it is pressed') }, required: ['text'] },
 		Breadcrumbs: { doc: 'Where a page sits, as a trail up to it, over the page heading. Only for pages two or more levels deep', props: { trail: { type: 'array', minItems: 2, items: text('A page’s name'), description: 'From the top down. The last is the page you’re on' } }, required: ['trail'] },
 		Pagination: { doc: 'Pages of a long list or table, under it', props: { page: { type: 'integer', minimum: 1, description: 'The page it starts on' }, count: { type: 'integer', minimum: 2, description: 'How many pages there are' } }, required: ['page', 'count'] },
-		Menu: { doc: 'More actions than fit, behind one button, such as a row’s Edit, Duplicate and Delete. Two or three actions that fit go as Buttons', props: { label: text('The button’s words, such as More, or Actions'), variant: oneOf(options('Button', 'variant'), 'secondary or ghost; never primary'), actions: { type: 'array', minItems: 2, items: { type: 'object', properties: { label: text('Says what happens'), action: text('Sent back to you as the next message when it is picked'), isDanger: { type: 'boolean', description: 'Deletes or can’t be undone. Goes last' } }, required: ['label'], additionalProperties: false } } }, required: ['label', 'actions'] },
+		Menu: { doc: 'More actions than fit, behind one button, such as a page’s Export, Duplicate and Delete. Two or three actions that fit go as Buttons. A table row’s actions go in the row’s own actions', props: { label: text('The button’s words, such as More, or Actions'), variant: oneOf(options('Button', 'variant'), 'secondary or ghost; never primary'), actions: { type: 'array', minItems: 2, items: menuAction } }, required: ['label', 'actions'] },
 		GridList: { doc: 'Items to scan and open, such as projects, files or notifications, each with a line under it and an end to say where it’s up to. Records with several fields to compare are a Table', props: { label: text('Names the list for a screen reader'), layout: oneOf(options('GridList', 'layout'), 'grid for tiles, stack for rows'), items: { type: 'array', minItems: 1, items: { type: 'object', properties: { id: text('Unique'), title: text('Its name'), description: text('A line under it, such as when it changed'), status: { $ref: '#/$defs/status' }, action: text('Sent back to you as the next message when it is opened') }, required: ['id', 'title'], additionalProperties: false } }, empty: text('What it says when there are no items') }, required: ['label', 'items'] },
 		AvatarGroup: { doc: 'The people on something, such as a project’s members, overlapping in a row', props: { names: { type: 'array', minItems: 2, items: text('A person’s name') }, maxVisible: { type: 'integer', minimum: 2, description: 'How many show before a count of the rest' }, size: oneOf(options('AvatarGroup', 'size').map(Number)) }, required: ['names'] },
 		Disclosure: { doc: 'A section that opens and closes under its title, such as an FAQ answer or advanced settings. Several in a row make an accordion', props: { title: text('Sentence case, such as Advanced settings'), isExpanded: { type: 'boolean', description: 'Open to start with' } }, required: ['title'], children: true },
@@ -98,7 +100,7 @@ export function blocksOf(details: Details): Record<string, Block> {
 				density: oneOf(options('Table', 'density')),
 				variant: oneOf(options('Table', 'variant'), 'raised among other things, flush when the table is the whole view'),
 				columns: { type: 'array', minItems: 1, items: { type: 'object', properties: { id: text('Unique'), name: text('Sentence case'), align: oneOf(options('Column', 'align'), 'end for numbers and amounts, which are drawn with tabular figures'), isRowHeader: { type: 'boolean', description: 'The column that names each row. Exactly one' } }, required: ['id', 'name'], additionalProperties: false } },
-				rows: { type: 'array', items: { type: 'object', properties: { id: text('Unique'), cells: { type: 'array', description: 'One per column, in order', items: { anyOf: [{ type: 'string' }, { type: 'number' }, { $ref: '#/$defs/status' }] } } }, required: ['id', 'cells'], additionalProperties: false } },
+				rows: { type: 'array', items: { type: 'object', properties: { id: text('Unique'), cells: { type: 'array', description: 'One per column, in order', items: { anyOf: [{ type: 'string' }, { type: 'number' }, { $ref: '#/$defs/status' }] } }, actions: { type: 'array', minItems: 1, items: menuAction, description: 'What can be done to this row, such as Change role and Remove, in a menu at its end. Not a column of buttons' } }, required: ['id', 'cells'], additionalProperties: false } },
 				empty: text('What the table says when there are no rows'),
 			},
 			required: ['label', 'columns', 'rows'],
@@ -194,7 +196,7 @@ function check(value: unknown, schema: Schema, at: string, defs: Record<string, 
 		for (const key of (schema.required as string[] | undefined) ?? []) if (object[key] === undefined) errors.push(`${at}: needs ${key}`);
 		for (const [key, item] of Object.entries(object)) {
 			if (properties[key]) check(item, properties[key], `${at}.${key}`, defs, errors);
-			else if (schema.additionalProperties === false) errors.push(`${at}: takes no ${key}${key === 'className' || key === 'style' ? ', as every block is drawn with Loupe’s tokens' : ''}`);
+			else if (schema.additionalProperties === false) errors.push(`${at}: takes no ${key}${key === 'className' || key === 'style' ? ', as every block is drawn with Loupe’s tokens' : `, only ${Object.keys(properties).join(', ')}`}`);
 		}
 	}
 }
@@ -231,6 +233,9 @@ function rules(ui: Node, errors: string[]) {
 			if (page !== undefined && count !== undefined && page > count) errors.push(`${at}: page ${page} is past its count of ${count}`);
 		}
 		if (item.type === 'Split' && item.children?.length !== 2) errors.push(`${at}: holds exactly two blocks, the narrow column and the wide one, not ${item.children?.length ?? 0}`);
+		// A line sits between two things, so one at either end of its group divides nothing
+		const kids = (item.children as Node[] | undefined) ?? [];
+		for (const [index, edge] of [[0, 'first'], [kids.length - 1, 'last']] as const) if (kids.length && kids[index]?.type === 'Separator') errors.push(`${at}.children[${index}]: a Separator goes between two things, so it's never ${edge} in its group`);
 		if (item.type === 'Menu' && item.variant === 'primary') errors.push(`${at}: a Menu's button is secondary or ghost, never primary`);
 		// Dates as YYYY-MM-DD sort as text. A bound value is checked once it has one
 		const dates = (...keys: string[]) => keys.map((key) => (typeof item[key] === 'string' ? (item[key] as string) : undefined));
