@@ -42,6 +42,7 @@ export const button = tv({
 				'text-(color:--button-danger-text,var(--color-white))',
 				'[--fill:var(--button-danger-fill,var(--color-red-50))]',
 				'[--rim:oklch(from_var(--fill)_calc(l*var(--button-filled-rim))_c_h)]',
+				'[--top-line-strength:var(--button-danger-top-line-dark-strength)] [--bottom-line-strength:var(--button-danger-bottom-line-dark-strength)]',
 			],
 			// Fainter in the dark, where secondary's lighter fill would otherwise be all that tells them apart
 			outline: 'text-ink shadow-[0_0_0_1px_var(--edge)] [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),color-mix(in_oklab,var(--bleed)_8%,transparent))]',
@@ -74,31 +75,36 @@ export const button = tv({
 		{
 			variant: ['primary', 'quiet', 'danger'],
 			class: [
-				// Every amount here is a --button-filled-* token in styles/components.css, which is where to tweak them.
-				// Secondary's shadow, with its ring as the border, in the button's own --rim. The fill covers the whole button,
-				// so the ring is the only edge. In the dark a darker rim muddies the fill against the ground, so there's none,
-				// and the inner line below does its job. The shadow's shape is --shadow-button in styles/theme.css
-				'shadow-button [--edge:light-dark(var(--rim),transparent)] before:inset-0 before:rounded-[inherit]',
-				// The fill: lighter at the top, to its colour at the bottom
-				'before:bg-linear-to-b',
-				'before:from-[color-mix(in_oklab,var(--fill),white_var(--button-filled-light))]',
-				'before:to-(color:--fill)',
-				// A line inside the edge, lighter. In the dark, where it's the only edge, it's lighter still and brightest
-				// along the top, as secondary's sheen and top light are. Through variables, as Tailwind can't tell an arbitrary
-				// light-dark() is a colour and drops the class
-				'[--inner:light-dark(color-mix(in_oklab,var(--fill),white_var(--button-filled-inner-line)),color-mix(in_oklab,var(--fill),white_var(--button-filled-inner-line-dark)))] before:inset-ring before:inset-ring-(color:--inner)',
-				'[--inner-top:light-dark(transparent,color-mix(in_oklab,var(--fill),white_var(--button-filled-top-line-dark)))]',
-				// A bevel along the bottom: a crisp light line, a soft light band, a faint band of the --rim's colour above them, and
-				// the top line. Tailwind adds the inset
-				'[--bevel:color-mix(in_oklab,var(--fill),white_var(--button-filled-bevel))] [--bevel-shade:color-mix(in_oklab,var(--rim)_var(--button-filled-bevel-shade),transparent)]',
-				'before:inset-shadow-[0_1px_1px_-.5px_var(--bevel),0_1px_3px_-1.5px_var(--bevel),0_-1px_3px_-1.5px_var(--bevel-shade),0_1px_0_var(--inner-top)]',
+				// Every amount here is a --button-filled-* token in styles/components.css, which is where to tweak them. Colours
+				// go through variables, as Tailwind can't tell an arbitrary light-dark() is a colour and drops the class.
+				// The ring is the border, in the button's own --rim, and the fill covers the whole button, so it's the only
+				// edge. In the dark a darker rim muddies the fill against the ground, so there's none, and the lines inside
+				// do its job. Under it, raised's shadow, whose first layer in the light is a fainter, wider contact shadow
+				'[--contact:light-dark(color-mix(in_oklab,var(--shadow-raised-color)_var(--button-filled-contact),transparent),transparent)] [--close:light-dark(transparent,var(--shadow-raised-color))]',
+				'[--edge:light-dark(var(--rim),transparent)] shadow-[0_0_0_1px_var(--edge),0_1px_1.5px_1px_var(--contact),0_1px_1px_-1px_var(--close),0_1px_3px_-1.5px_var(--shadow-raised-color),0_2px_4px_-2px_var(--shadow-raised-color)]',
+				'before:inset-0 before:rounded-[inherit]',
+				// The fill: lighter at the top, to its colour at the bottom, or in the light a touch deeper than it
+				'[--fill-bottom:light-dark(oklch(from_var(--fill)_calc(l_-_var(--button-filled-depth))_calc(c*var(--button-filled-depth-chroma))_h),var(--fill))]',
+				'before:bg-linear-to-b before:from-[color-mix(in_oklab,var(--fill),white_var(--button-filled-light))] before:to-(color:--fill-bottom)',
+				// The bevel, a crisp light line under the top and a soft band below it, and a band of the --rim's colour along
+				// the bottom. In the light the bevel's line has a highlight over it, and a fainter one along the bottom
+				'[--bevel:color-mix(in_oklab,var(--fill),white_var(--button-filled-bevel))] [--bevel-line:light-dark(var(--bevel),transparent)]',
+				'[--highlight:light-dark(oklch(from_var(--bevel)_calc(l_+_var(--button-filled-highlight))_calc(c*var(--button-filled-highlight-chroma))_h),transparent)] [--highlight-bottom:color-mix(in_oklab,var(--highlight)_var(--button-filled-highlight-bottom),transparent)]',
+				'[--rim-shade:light-dark(var(--rim),color-mix(in_oklab,var(--rim)_var(--button-filled-shade-dark),transparent))] [--rim-deep:light-dark(transparent,var(--rim))]',
+				// In the dark, a bright line along the top and a lighter one along the bottom, as secondary's top light is. Danger
+				// sets how much they show, as they're harsh on red
+				'[--top-line:light-dark(transparent,color-mix(in_oklab,color-mix(in_oklab,var(--fill),white_var(--button-filled-top-line-dark))_var(--top-line-strength,100%),transparent))]',
+				'[--bottom-line:light-dark(transparent,color-mix(in_oklab,color-mix(in_oklab,var(--fill),white_var(--button-filled-bottom-line-dark))_var(--bottom-line-strength,var(--button-filled-bottom-line-dark-strength)),transparent))]',
+				// Tailwind adds the inset
+				'before:inset-shadow-[0_-1px_1px_-.5px_var(--highlight-bottom),0_1px_1px_-.5px_var(--highlight),0_1px_1px_-.5px_var(--bevel-line),0_1px_3px_-1.5px_var(--bevel),0_-1px_3px_-1.5px_var(--rim-shade),0_1px_0_var(--top-line),0_-1px_0_var(--bottom-line),0_-2px_4px_-2px_var(--rim-deep)]',
 			],
 		},
 		{
 			variant: ['primary', 'quiet', 'danger'],
 			isHovered: true,
 			class: [
-				'shadow-button-lifted',
+				// Lifted: the contact shadow tightens, and two deeper layers join, as --shadow-button-lifted's do
+				'shadow-[0_0_0_1px_var(--edge),0_1px_1px_var(--contact),0_1px_1px_-1px_var(--close),0_1px_3px_-1.5px_var(--shadow-raised-color),0_2px_4px_-2px_var(--shadow-raised-color),0_3px_6px_-3px_var(--shadow-raised-color),0_4px_8px_-4px_var(--shadow-raised-color)]',
 				'before:from-[color-mix(in_oklab,var(--fill),white_calc(var(--button-filled-hover-light)+var(--button-filled-light)))]',
 				'before:to-[color-mix(in_oklab,var(--fill),white_var(--button-filled-hover-light))]',
 			],
@@ -109,7 +115,7 @@ export const button = tv({
 		// the edge ring, and primary and quiet lose their inner line and bevel as their fill flattens.
 		// After the hovers, so it wins while both are true
 		{ variant: ['primary', 'secondary', 'quiet', 'danger'], isPressed: true, class: '[--shadow-raised-color:transparent]' },
-		{ variant: ['primary', 'quiet', 'danger'], isPressed: true, class: 'before:from-(color:--fill) before:to-(color:--fill) before:inset-ring-0 before:inset-shadow-none' },
+		{ variant: ['primary', 'quiet', 'danger'], isPressed: true, class: 'before:from-(color:--fill) before:to-(color:--fill) before:inset-shadow-none' },
 		// Disabled, a raised button goes flat and grey: the ::before goes, taking the fill, inner line and bevel with it,
 		// and so does the shadow. Outline keeps its line and ghost stays bare, both with muted text
 		{ variant: ['primary', 'secondary', 'quiet', 'danger'], isDisabled: true, class: 'bg-bleed/12 shadow-none before:content-none' },

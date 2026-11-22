@@ -73,19 +73,34 @@
 		/* Primary (marigold), quiet and danger are filled, and lit like a glossy surface. Their edge isn't --edge but a
 		   ring a little darker than the fill: its lightness, as a share of the fill's. Lower is a darker ring */
 		--button-filled-rim: 0.84;
-		/* How much lighter the fill is at the top than at the bottom, as white mixed into it */
+		/* In the light, the first, closest layer of a filled button's shadow, as a share of the shadow's colour */
+		--button-filled-contact: 67%;
+		/* How much lighter the fill is at the top than its colour, as white mixed into it */
 		--button-filled-light: 4%;
+		/* In the light, the bottom of the fill is a touch deeper than its colour: darker, as lightness taken away, and
+		   richer, as a factor on its chroma */
+		--button-filled-depth: 0.02;
+		--button-filled-depth-chroma: 1.14;
 		/* How much lighter the whole fill gets on hover, as white mixed into it. The top stays lighter by the amount above */
 		--button-filled-hover-light: 12%;
-		/* The line just inside the edge, as white mixed into the fill, in the light and in the dark */
-		--button-filled-inner-line: 20%;
-		--button-filled-inner-line-dark: 32%;
-		/* In the dark, a brighter line along the top, as white mixed into the fill */
-		--button-filled-top-line-dark: 64%;
-		/* The bevel along the bottom: a light line and a soft band, as white mixed into the fill, then a faint band of the
-		   ring's colour above them, as how much of it shows */
+		/* The bevel: a light line under the top and a soft band below it, as white mixed into the fill */
 		--button-filled-bevel: 20%;
-		--button-filled-bevel-shade: 20%;
+		/* In the light, a highlight over the bevel, along the top and, fainter, along the bottom. It's the bevel's colour
+		   made lighter, as lightness added, and softer, as a factor on its chroma, and the bottom one shows this much */
+		--button-filled-highlight: 0.05;
+		--button-filled-highlight-chroma: 0.85;
+		--button-filled-highlight-bottom: 80%;
+		/* A band of the ring's colour along the bottom, in full in the light. In the dark, where there's no ring, this
+		   much of it, with a deeper band of it under that */
+		--button-filled-shade-dark: 20%;
+		/* In the dark, a bright line along the top and a lighter one along the bottom, as white mixed into the fill, and
+		   how much the bottom one shows */
+		--button-filled-top-line-dark: 64%;
+		--button-filled-bottom-line-dark: 32%;
+		--button-filled-bottom-line-dark-strength: 80%;
+		/* Danger's lines in the dark, as how much they show. Full strength, they're harsh on red */
+		--button-danger-top-line-dark-strength: 48%;
+		--button-danger-bottom-line-dark-strength: 36%;
 
 		/* Motion */
 
