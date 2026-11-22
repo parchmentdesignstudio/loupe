@@ -230,7 +230,7 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 	return (
 		<>
 			{/* The drawer's padding given back, so the conversation scrolls its full height, under the bar and the field */}
-			<div ref={log} className="-m-(--dialog-padding) flex min-h-0 flex-1 flex-col overflow-auto">
+			<div ref={log} className="-m-(--dialog-padding) flex min-h-0 flex-1 flex-col overflow-auto overscroll-contain">
 				{/* A toolbar, pinned over the conversation in the drawer's colour, see-through, so what scrolls under it shows
 				    blurred. Inside the scroller, so the scrollbar runs over it rather than under */}
 				<div className="sticky top-0 z-1 flex items-center gap-1 border-b border-bleed/8 bg-[color-mix(in_oklab,var(--drawer-surface,var(--color-panel))_80%,transparent)] py-2 ps-(--dialog-padding) pe-3 backdrop-blur-md">

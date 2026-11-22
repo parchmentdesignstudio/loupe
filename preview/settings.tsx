@@ -132,7 +132,7 @@ export function SettingsDrawer({ isOpen, onOpenChange }: { isOpen: boolean; onOp
 	const isWide = useSyncExternalStore(subscribe, () => matchMedia(wide).matches, () => true);
 	if (!isWide) return null;
 	return (
-		<div className="sticky top-12 h-[calc(100dvh-4rem)] shrink-0 self-start [--drawer-push-fill:var(--color-panel)] [--ground-bleed:var(--panel-bleed)]">
+		<div className="h-[calc(100dvh-4rem)] shrink-0 max-md:sticky max-md:top-12 self-start [--drawer-push-fill:var(--color-panel)] [--ground-bleed:var(--panel-bleed)]">
 			<Drawer mode="push" position="end" isOpen={isOpen} onOpenChange={onOpenChange} aria-label="Preview settings">
 				<SettingsPanels />
 			</Drawer>
