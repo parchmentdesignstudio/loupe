@@ -65,6 +65,9 @@ on the page names it.
 <p>✓ Unlimited projects</p>
 ```
 
+Figures that add up, such as an invoice's lines, go above their total. Anything already counted in it, such as VAT
+included, goes under the total as `text-muted` text, so it doesn't read as one more to add.
+
 ## Card
 
 One of a few things side by side, such as plans or stats, in a `grid` with `gap-3`. Never a section on its own, and
