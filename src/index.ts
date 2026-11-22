@@ -54,7 +54,7 @@ export { Drawer, DrawerTrigger, type DrawerProps } from './Drawer.js';
 export { Slider, type SliderProps } from './Slider.js';
 export { Status, status, type StatusProps, type StatusTone } from './Status.js';
 export { Suggestion, Suggestions, suggestions, type SuggestionProps, type SuggestionsProps } from './Suggestions.js';
-export { Switch, type SwitchProps } from './Switch.js';
+export { Switch, SwitchGroup, type SwitchGroupProps, type SwitchProps } from './Switch.js';
 export { Cell, Column, Row, RowActions, Table, TableBody, TableHeader, TableLoadMoreItem, table, tableCell, tableColumn, tableRow, type CellProps, type ColumnProps, type RowActionsProps, type RowProps, type TableBodyProps, type TableHeaderProps, type TableLoadMoreItemProps, type TableProps } from './Table.js';
 export { Tab, TabList, TabPanel, Tabs, type TabListProps, type TabPanelProps, type TabProps, type TabsProps } from './Tabs.js';
 export { Tag, TagGroup, tag, type TagGroupProps, type TagProps } from './TagGroup.js';
