@@ -7,7 +7,7 @@ import { composeClassName, focusRing, tv } from './tv.js';
 // Relative, so React Aria's hidden input stays inside the label. Otherwise focusing it can scroll the whole page. The box
 // centres on the label's first line, so it stays put when the label wraps
 export const choice = tv({
-	base: 'group relative flex cursor-default items-start gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]',
+	base: 'group relative flex cursor-default items-start gap-2 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]',
 	variants: {
 		// Muted rather than faded, as a disabled button is, with each control going flat
 		isDisabled: {
