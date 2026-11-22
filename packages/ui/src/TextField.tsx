@@ -50,7 +50,7 @@ export interface TextFieldProps extends AriaTextFieldProps, FieldTextProps {
 export function TextField({ label, description, errorMessage, placeholder, isMultiline = false, rows = 4, variant, size, ...props }: TextFieldProps) {
 	return (
 		<AriaTextField {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
-			{label && <Label className="pb-0.5">{label}</Label>}
+			{label && <Label>{label}</Label>}
 			{isMultiline ? (
 				<TextArea placeholder={placeholder} rows={rows} className={(state) => textFieldInput({ ...state, variant, size, className: 'resize-y leading-[1.5]' })} />
 			) : (
