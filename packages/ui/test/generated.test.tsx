@@ -315,6 +315,14 @@ describe('Generated views with controls', () => {
 		expect(container.querySelector('.max-w-xl')).toBeTruthy();
 	});
 
+	it('keeps a Split’s columns in the order they sit, with the narrow one at the end for a summary', () => {
+		const checkout = { type: 'Split', side: 'end', children: [{ type: 'Heading', level: 'section', text: 'Delivery' }, { type: 'Heading', level: 'section', text: 'Order summary' }] };
+		const { container } = render(<Generated ui={checkout as Node} />);
+		const grid = container.querySelector('[class*="@2xl:grid-cols-[minmax(0,1fr)_16rem]"]');
+		expect([...(grid?.children ?? [])].map((column) => column.textContent)).toEqual(['Delivery', 'Order summary']);
+		expect(container.querySelector('[class*="order-last"]')).toBeNull();
+	});
+
 	it('frames the full-size view at a width, which the code it copies leaves out', async () => {
 		const user = userEvent.setup();
 		render(<Generated ui={tweakable.ui as Node} title="Password reset" values={tweakable.values} />);
