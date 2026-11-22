@@ -1,4 +1,4 @@
-import { type Size, type FieldVariant, TextField } from '../../src/index.js';
+import { ComboBox, type FieldVariant, ListBoxItem, NumberField, Select, type Size, TextField } from '../../src/index.js';
 import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
@@ -96,5 +96,26 @@ export function TextFieldPlayground() {
 				data-show-focus={isFocused || undefined}
 			/>
 		</Playground>
+	);
+}
+
+const developers = [
+	{ id: 'harbour', name: 'Harbour Homes' },
+	{ id: 'linden', name: 'Linden Estates' },
+];
+
+/** A text field beside the other fields, so their labels, boxes and help line up across a row */
+export function FieldsInARow() {
+	return (
+		<form className="grid w-full max-w-160 grid-cols-2 gap-4">
+			<TextField label="Name" description="As it’s written on the lead" defaultValue="Sam Smith" />
+			<Select label="Developer" description="Who the lead is with" items={developers} defaultSelectedKey="harbour">
+				{(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+			</Select>
+			<NumberField label="Budget" description="Before any deposit" defaultValue={240000} formatOptions={{ style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }} />
+			<ComboBox label="Town" description="Where they’d like to live" items={developers.map(({ id }) => ({ id, name: id === 'harbour' ? 'Whitby' : 'Malton' }))}>
+				{(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+			</ComboBox>
+		</form>
 	);
 }

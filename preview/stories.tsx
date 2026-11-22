@@ -97,7 +97,7 @@ import { SwitchPlayground } from './playgrounds/switch.js';
 import { EmptyTable, LoadingMoreTable, TablePlayground } from './playgrounds/table.js';
 import { TabsPlayground } from './playgrounds/tabs.js';
 import { TagGroupPlayground } from './playgrounds/tag-group.js';
-import { TextFieldPlayground } from './playgrounds/text-field.js';
+import { FieldsInARow, TextFieldPlayground } from './playgrounds/text-field.js';
 import { ToastPlayground } from './playgrounds/toast.js';
 import { ToggleButtonGroupPlayground } from './playgrounds/toggle-button-group.js';
 import { ToolbarPlayground } from './playgrounds/toolbar.js';
@@ -584,6 +584,7 @@ const groups: Group[] = [
 				exports: ['TextField'],
 				stories: [
 					{ name: 'Build one', render: TextFieldPlayground },
+					{ name: 'In a row', render: FieldsInARow },
 				],
 			},
 			{
