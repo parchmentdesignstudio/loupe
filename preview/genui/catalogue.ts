@@ -35,6 +35,8 @@ const oneOf = (values: readonly (string | number)[], description?: string): Sche
 export const gaps = [1, 2, 3, 4, 6, 8, 10] as const;
 // A date as text, since JSON has no dates: the renderer parses it into one
 const day = (description: string): Schema => ({ type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: `${description}, as YYYY-MM-DD` });
+const time = (description: string): Schema => ({ type: 'string', pattern: '^([01]\\d|2[0-3]):[0-5]\\d$', description: `${description}, as HH:MM on a 24 hour clock` });
+const number = (description: string): Schema => ({ type: 'number', description });
 const option = { type: 'object', properties: { id: text('Unique within the list'), name: text('What it says') }, required: ['id', 'name'], additionalProperties: false };
 
 export function blocksOf(details: Details): Record<string, Block> {
@@ -69,6 +71,24 @@ export function blocksOf(details: Details): Record<string, Block> {
 		Select: { doc: 'Picks one of 6 to 15 options', props: { label: text('Sentence case'), options: { type: 'array', items: option, minItems: 2 }, selected: text('The id picked to start with') }, required: ['label', 'options'] },
 		DatePicker: { doc: 'One date, such as a due date or a birthday. For a start and an end, a DateRangePicker', props: { label: text('Sentence case'), description: text('A hint under it'), value: day('The date it starts with'), minValue: day('The earliest it takes, such as today for a booking') }, required: ['label'] },
 		DateRangePicker: { doc: 'A start and an end in one field, such as a stay or a report’s period. Never two DatePickers', props: { label: text('Sentence case'), description: text('A hint under it'), start: day('The first day it starts with'), end: day('The last day it starts with'), minValue: day('The earliest it takes') }, required: ['label'] },
+		NumberField: { doc: 'A number to type or step, such as a quantity, a price or a percentage. For a rough value in a range, a Slider', props: { label: text('Sentence case'), description: text('A hint under it'), value: number('What it starts with'), minValue: number('The least it takes'), maxValue: number('The most it takes'), step: number('How far each step moves it'), format: oneOf(['plain', 'percent', 'currency'], 'percent takes 0.15 for 15%'), currency: text('An ISO code, such as GBP. Only with format currency') }, required: ['label'] },
+		Slider: { doc: 'A rough value between two limits, dragged, such as volume or a price range. For an exact number, a NumberField', props: { label: text('Sentence case'), description: text('A hint under it'), value: number('What it starts with'), end: number('Makes it a range from value to end'), minValue: number('The low limit, 0 if left out'), maxValue: number('The high limit, 100 if left out'), step: number('How far it moves at a time'), format: oneOf(['plain', 'percent', 'currency'], 'percent takes 0.15 for 15%'), currency: text('An ISO code, such as GBP. Only with format currency') }, required: ['label'] },
+		SearchField: { doc: 'A search over the view, above the list or table it searches', props: { label: text('Names it for a screen reader, such as Search invoices'), placeholder: text('What it searches, such as Search by name or email') }, required: ['label'] },
+		ComboBox: { doc: 'Picks one of many options, more than 15, filtered by typing, such as a country or a person', props: { label: text('Sentence case'), description: text('A hint under it'), placeholder: text('An example, never the label'), options: { type: 'array', items: option, minItems: 2 }, selected: text('The id picked to start with') }, required: ['label', 'options'] },
+		CheckboxGroup: { doc: 'Picks any of 2 to 8 options, all in view, under one label, such as which emails to get', props: { label: text('Sentence case'), description: text('A hint under it'), options: { type: 'array', items: option, minItems: 2, maxItems: 8 }, selected: { type: 'array', items: text('An option’s id'), description: 'The ids ticked to start with' } }, required: ['label', 'options'] },
+		ToggleButtonGroup: { doc: 'A segmented control: 2 to 5 views or modes of the same thing, switched straight away, such as List and Board, or Week and Month. Picking one of a form’s fields is a RadioGroup', props: { label: text('Names it for a screen reader'), options: { type: 'array', items: option, minItems: 2, maxItems: 5 }, selected: text('The id picked to start with, the first if left out'), size: oneOf(options('ToggleButtonGroup', 'size')), width: oneOf(options('ToggleButtonGroup', 'width'), 'fill to span its container, as on a phone') }, required: ['label', 'options'] },
+		TimeField: { doc: 'A time of day, such as an opening time or a reminder', props: { label: text('Sentence case'), description: text('A hint under it'), value: time('The time it starts with') }, required: ['label'] },
+		TagGroup: { doc: 'Short labels on a record, such as skills or topics, or with selectionMode multiple, filters to toggle above a list', props: { label: text('Sentence case'), description: text('A hint under it'), tags: { type: 'array', items: option, minItems: 1 }, selectionMode: oneOf(['none', 'single', 'multiple'], 'none for labels to read, multiple for filters'), selected: { type: 'array', items: text('A tag’s id'), description: 'The ids chosen to start with' } }, required: ['label', 'tags'] },
+		DropZone: { doc: 'Somewhere to drop files to upload, with a button to choose them as well', props: { label: text('What to drop, such as Drop your logo here'), button: text('Such as Choose a file'), isMultiple: { type: 'boolean', description: 'Takes several files' }, types: { type: 'array', items: text('A MIME type, such as image/png'), description: 'The kinds of file it takes' } }, required: ['label'] },
+		Link: { doc: 'Words that take you somewhere, in a sentence or a list, such as View all invoices. Something that changes data is a Button', props: { text: text('Says where it goes'), action: text('Sent back to you as the next message when it is pressed') }, required: ['text'] },
+		Breadcrumbs: { doc: 'Where a page sits, as a trail up to it, over the page heading. Only for pages two or more levels deep', props: { trail: { type: 'array', minItems: 2, items: text('A page’s name'), description: 'From the top down. The last is the page you’re on' } }, required: ['trail'] },
+		Pagination: { doc: 'Pages of a long list or table, under it', props: { page: { type: 'integer', minimum: 1, description: 'The page it starts on' }, count: { type: 'integer', minimum: 2, description: 'How many pages there are' } }, required: ['page', 'count'] },
+		Menu: { doc: 'More actions than fit, behind one button, such as a row’s Edit, Duplicate and Delete. Two or three actions that fit go as Buttons', props: { label: text('The button’s words, such as More, or Actions'), variant: oneOf(options('Button', 'variant'), 'secondary or ghost; never primary'), actions: { type: 'array', minItems: 2, items: { type: 'object', properties: { label: text('Says what happens'), action: text('Sent back to you as the next message when it is picked'), isDanger: { type: 'boolean', description: 'Deletes or can’t be undone. Goes last' } }, required: ['label'], additionalProperties: false } } }, required: ['label', 'actions'] },
+		GridList: { doc: 'Items to scan and open, such as projects, files or notifications, each with a line under it and an end to say where it’s up to. Records with several fields to compare are a Table', props: { label: text('Names the list for a screen reader'), layout: oneOf(options('GridList', 'layout'), 'grid for tiles, stack for rows'), items: { type: 'array', minItems: 1, items: { type: 'object', properties: { id: text('Unique'), title: text('Its name'), description: text('A line under it, such as when it changed'), status: { $ref: '#/$defs/status' }, action: text('Sent back to you as the next message when it is opened') }, required: ['id', 'title'], additionalProperties: false } }, empty: text('What it says when there are no items') }, required: ['label', 'items'] },
+		AvatarGroup: { doc: 'The people on something, such as a project’s members, overlapping in a row', props: { names: { type: 'array', minItems: 2, items: text('A person’s name') }, maxVisible: { type: 'integer', minimum: 2, description: 'How many show before a count of the rest' }, size: oneOf(options('AvatarGroup', 'size').map(Number)) }, required: ['names'] },
+		Disclosure: { doc: 'A section that opens and closes under its title, such as an FAQ answer or advanced settings. Several in a row make an accordion', props: { title: text('Sentence case, such as Advanced settings'), isExpanded: { type: 'boolean', description: 'Open to start with' } }, required: ['title'], children: true },
+		Code: { doc: 'Code to copy, such as how to install or use something', props: { code: text('The code, with real line breaks'), title: text('Such as the file name, or Terminal') }, required: ['code'] },
+		Dialog: { doc: 'Something to confirm or fill in over the page, opened by a button, such as Delete project or Invite someone. Its children are what it holds; the dialog’s own buttons are cancel and confirm', props: { trigger: { $ref: '#/$defs/button' }, heading: text('Sentence case, such as Delete this project?'), confirm: text('Says what happens, such as Delete project'), tone: oneOf(['default', 'danger'], 'danger when confirming deletes or can’t be undone'), action: text('Sent back to you as the next message when it is confirmed'), cancel: text('Cancel if left out'), size: oneOf(options('Modal', 'size')) }, required: ['trigger', 'heading', 'confirm'], children: true },
 		RadioGroup: { doc: 'Picks one of 2 to 5 options, all in view', props: { label: text('Sentence case'), options: { type: 'array', items: option, minItems: 2, maxItems: 5 }, selected: text('The id picked to start with') }, required: ['label', 'options'] },
 		Table: {
 			doc: 'Records with several fields to compare. Its own box, so never in a Card',
@@ -155,7 +175,7 @@ function check(value: unknown, schema: Schema, at: string, defs: Record<string, 
 	}
 	if ('const' in schema && value !== schema.const) return errors.push(`${at}: should be ${JSON.stringify(schema.const)}`);
 	if (Array.isArray(schema.enum) && !schema.enum.includes(value)) return errors.push(`${at}: ${JSON.stringify(value)} isn't one of ${schema.enum.map((v) => JSON.stringify(v)).join(', ')}`);
-	if (typeof schema.pattern === 'string' && typeof value === 'string' && !new RegExp(schema.pattern).test(value)) return errors.push(`${at}: ${JSON.stringify(value)} should be ${schema.description ?? `like ${schema.pattern}`}`);
+	if (typeof schema.pattern === 'string' && typeof value === 'string' && !new RegExp(schema.pattern).test(value)) return errors.push(`${at}: ${JSON.stringify(value)} should be ${/, as (.+)$/.exec(String(schema.description))?.[1] ?? `like ${schema.pattern}`}`);
 	const type = Array.isArray(value) ? 'array' : value === null ? 'null' : typeof value;
 	if (schema.type && schema.type !== type && !(schema.type === 'integer' && Number.isInteger(value))) return errors.push(`${at}: should be ${schema.type === 'array' ? 'an array' : `a ${schema.type}`}`);
 	if (typeof value === 'number') {
@@ -183,7 +203,7 @@ function rules(ui: Node, errors: string[]) {
 	let primaries = 0;
 	const visit = (item: Node, at: string) => {
 		if (!item || typeof item !== 'object') return;
-		if ((item.type === 'Button' && item.variant === 'primary') || (item.type === 'EmptyState' && (item.action as Node | undefined)?.variant === 'primary')) primaries++;
+		if ((item.type === 'Button' && item.variant === 'primary') || (item.type === 'EmptyState' && (item.action as Node | undefined)?.variant === 'primary') || (item.type === 'Dialog' && (item.trigger as Node | undefined)?.variant === 'primary')) primaries++;
 		if (item.type === 'Table') {
 			const columns = (item.columns as { id: string; isRowHeader?: boolean }[]) ?? [];
 			const headers = columns.filter((column) => column.isRowHeader).length;
@@ -192,7 +212,24 @@ function rules(ui: Node, errors: string[]) {
 				if (row.cells?.length !== columns.length) errors.push(`${at}.rows[${index}]: has ${row.cells?.length ?? 0} cells for ${columns.length} columns`);
 			});
 		}
-		if ((item.type === 'Select' || item.type === 'RadioGroup') && item.selected !== undefined && !(item.options as { id: string }[] | undefined)?.some((o) => o.id === item.selected)) errors.push(`${at}.selected: ${JSON.stringify(item.selected)} isn't one of the options' ids`);
+		// What's picked to start with must be one of the ids it picks from
+		const choices = (item.options ?? item.tags) as { id: string }[] | undefined;
+		const picked = typeof item.selected === 'string' ? [item.selected] : Array.isArray(item.selected) ? (item.selected as unknown[]) : [];
+		for (const id of picked) if (choices && !choices.some((o) => o.id === id)) errors.push(`${at}.selected: ${JSON.stringify(id)} isn't one of the ${item.tags ? 'tags' : 'options'}' ids`);
+		const numbers = (...keys: string[]) => keys.map((key) => (typeof item[key] === 'number' ? (item[key] as number) : undefined));
+		if (item.type === 'NumberField' || item.type === 'Slider') {
+			const isSlider = item.type === 'Slider';
+			const [value, end, min = isSlider ? 0 : undefined, max = isSlider ? 100 : undefined] = numbers('value', 'end', 'minValue', 'maxValue');
+			if (min !== undefined && max !== undefined && min >= max) errors.push(`${at}: minValue ${min} isn't below maxValue ${max}`);
+			for (const [key, n] of [['value', value], ['end', end]] as const) if (n !== undefined && ((min !== undefined && n < min) || (max !== undefined && n > max))) errors.push(`${at}.${key}: ${n} is outside ${min ?? '…'} to ${max ?? '…'}`);
+			if (value !== undefined && end !== undefined && value > end) errors.push(`${at}: value ${value} is after end ${end}`);
+			if (item.currency !== undefined && item.format !== 'currency') errors.push(`${at}: currency goes only with format currency`);
+		}
+		if (item.type === 'Pagination') {
+			const [page, count] = numbers('page', 'count');
+			if (page !== undefined && count !== undefined && page > count) errors.push(`${at}: page ${page} is past its count of ${count}`);
+		}
+		if (item.type === 'Menu' && item.variant === 'primary') errors.push(`${at}: a Menu's button is secondary or ghost, never primary`);
 		// Dates as YYYY-MM-DD sort as text. A bound value is checked once it has one
 		const dates = (...keys: string[]) => keys.map((key) => (typeof item[key] === 'string' ? (item[key] as string) : undefined));
 		if (item.type === 'DateRangePicker') {
@@ -205,7 +242,7 @@ function rules(ui: Node, errors: string[]) {
 			const first = value ?? start;
 			if (first && min && first < min) errors.push(`${at}: starts on ${first}, before its minValue ${min}`);
 		}
-		for (const key of ['options', 'columns', 'rows', 'tabs'] as const) {
+		for (const key of ['options', 'columns', 'rows', 'tabs', 'tags', 'items'] as const) {
 			// A Grid's columns is a count, not a list
 			const list = item[key];
 			if (!Array.isArray(list)) continue;

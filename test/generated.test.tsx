@@ -28,6 +28,37 @@ const invoices: Node = {
 	],
 };
 
+// A project page with a block of each kind a whole UI is made of
+const project: Node = {
+	type: 'Stack',
+	gap: 8,
+	children: [
+		{ type: 'Breadcrumbs', trail: ['Projects', 'Harlow & Finch', 'Rebrand'] },
+		{ type: 'Row', justify: 'between', children: [{ type: 'Heading', level: 'page', text: 'Rebrand' }, { type: 'AvatarGroup', names: ['Sam Smith', 'Alex Lee', 'Priya Shah'], size: 24 }, { type: 'Menu', label: 'More', variant: 'ghost', actions: [{ label: 'Archive project', action: 'Archive the project' }, { label: 'Leave', isDanger: true }] }] },
+		{ type: 'Row', justify: 'between', children: [{ type: 'SearchField', label: 'Search files', placeholder: 'Search by name' }, { type: 'ToggleButtonGroup', label: 'View', options: [{ id: 'list', name: 'List' }, { id: 'board', name: 'Board' }], selected: 'board' }] },
+		{ type: 'TagGroup', label: 'Filters', selectionMode: 'multiple', tags: [{ id: 'mine', name: 'Mine' }, { id: 'recent', name: 'Recent' }], selected: ['recent'] },
+		{ type: 'GridList', label: 'Files', items: [{ id: 'guide', title: 'Brand guidelines', description: 'Changed 2 hours ago', status: { type: 'Status', label: 'In review', tone: 'info', variant: 'dot' }, action: 'Open Brand guidelines' }, { id: 'logo', title: 'Logo', description: 'Changed yesterday' }] },
+		{ type: 'Pagination', page: 1, count: 6 },
+		{ type: 'DropZone', label: 'Drop files to add them', isMultiple: true },
+		{
+			type: 'Disclosure',
+			title: 'Settings',
+			isExpanded: true,
+			children: [
+				{ type: 'NumberField', label: 'Seats', value: 4, minValue: 1, maxValue: 20 },
+				{ type: 'NumberField', label: 'Budget', value: 12000, format: 'currency', currency: 'GBP' },
+				{ type: 'Slider', label: 'Discount', value: 0.1, minValue: 0, maxValue: 0.5, step: 0.05, format: 'percent' },
+				{ type: 'ComboBox', label: 'Owner', options: [{ id: 'sam', name: 'Sam Smith' }, { id: 'alex', name: 'Alex Lee' }], selected: 'sam' },
+				{ type: 'CheckboxGroup', label: 'Email me about', options: [{ id: 'comments', name: 'Comments' }, { id: 'uploads', name: 'Uploads' }], selected: ['comments'] },
+				{ type: 'TimeField', label: 'Daily summary at', value: '09:00' },
+				{ type: 'Link', text: 'See every setting', action: 'Show every setting' },
+			],
+		},
+		{ type: 'Code', title: 'Terminal', code: 'npm install @parchment/ui' },
+		{ type: 'Dialog', trigger: { type: 'Button', label: 'Delete project', variant: 'danger' }, heading: 'Delete this project?', confirm: 'Delete for good', tone: 'danger', action: 'Delete the project', children: [{ type: 'Text', text: 'Its 2 files go too.', tone: 'muted' }] },
+	],
+};
+
 describe('Generated views', () => {
 	it('takes its closed sets from the source', () => {
 		const button = (schema.$defs as Record<string, { properties: Record<string, { enum?: unknown[] }> }>).button;
@@ -82,6 +113,62 @@ describe('Generated views', () => {
 		expect(within(due).getByRole('spinbutton', { name: /day/i }).getAttribute('aria-valuenow')).toBe('1');
 		const stay = screen.getByRole('group', { name: 'Your stay' });
 		expect(within(stay).getAllByRole('spinbutton', { name: /day/i }).map((day) => day.getAttribute('aria-valuenow'))).toEqual(['4', '7']);
+	});
+
+	it('takes every block a whole page needs', () => {
+		expect(validate({ summary: 'A project page', ui: project }, schema)).toEqual([]);
+	});
+
+	it('says where picks, numbers and pages don’t add up', () => {
+		const errors = validate(
+			{
+				summary: 'Broken picks',
+				ui: {
+					type: 'Stack',
+					children: [
+						{ type: 'CheckboxGroup', label: 'Emails', options: [{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }], selected: ['c'] },
+						{ type: 'NumberField', label: 'Seats', value: 12, minValue: 1, maxValue: 10 },
+						{ type: 'Slider', label: 'Budget', value: 80, end: 20 },
+						{ type: 'NumberField', label: 'Price', currency: 'GBP' },
+						{ type: 'Pagination', page: 9, count: 4 },
+						{ type: 'Menu', label: 'More', variant: 'primary', actions: [{ label: 'Edit' }, { label: 'Delete', isDanger: true }] },
+					],
+				},
+			},
+			schema,
+		);
+		expect(errors).toEqual(
+			expect.arrayContaining([
+				expect.stringContaining('"c" isn\'t one of the options'),
+				expect.stringContaining('12 is outside 1 to 10'),
+				expect.stringContaining('value 80 is after end 20'),
+				expect.stringContaining('currency goes only with format currency'),
+				expect.stringContaining('page 9 is past its count of 4'),
+				expect.stringContaining('never primary'),
+			]),
+		);
+		expect(validate({ summary: 'Opening time', ui: { type: 'TimeField', label: 'Opens', value: '9am' } }, schema)).toEqual(['input.ui.value: "9am" should be HH:MM on a 24 hour clock']);
+	});
+
+	it('draws a whole page, and sends on what a menu, a list and a dialog do', async () => {
+		const onAction = vi.fn();
+		const user = userEvent.setup();
+		render(<Generated ui={project} onAction={onAction} />);
+		expect(screen.getByRole('navigation', { name: 'Breadcrumbs' })).toBeTruthy();
+		expect(screen.getByRole('searchbox', { name: 'Search files' })).toBeTruthy();
+		expect(screen.getByRole('radio', { name: 'Board' }).getAttribute('aria-checked')).toBe('true');
+		expect(screen.getByRole('checkbox', { name: 'Comments' })).toHaveProperty('checked', true);
+		expect(screen.getByRole('textbox', { name: 'Seats' })).toHaveProperty('value', '4');
+		expect(screen.getByText('npm install @parchment/ui')).toBeTruthy();
+		await user.click(screen.getByRole('row', { name: /Brand guidelines/ }));
+		expect(onAction).toHaveBeenLastCalledWith('Open Brand guidelines');
+		await user.click(screen.getByRole('button', { name: 'More' }));
+		await user.click(await screen.findByRole('menuitem', { name: 'Archive project' }));
+		expect(onAction).toHaveBeenLastCalledWith('Archive the project');
+		await user.click(screen.getByRole('button', { name: 'Delete project' }));
+		const dialog = await screen.findByRole('dialog', { name: 'Delete this project?' });
+		await user.click(within(dialog).getByRole('button', { name: 'Delete for good' }));
+		expect(onAction).toHaveBeenLastCalledWith('Delete the project');
 	});
 
 	it('draws with Loupe, and sends a button’s action on', async () => {
