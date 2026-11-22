@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@parchment/icons/react';
-import { Button, Composer, DialogClose, DialogHeading, Drawer, DrawerTrigger, Message, MessageList, Suggestion, Suggestions, TextEffect } from '../../src/index.js';
+import { Button, Composer, DialogClose, DialogHeading, Drawer, DrawerTrigger, Message, MessageList, Scribble, Suggestion, Suggestions, TextEffect } from '../../src/index.js';
 import { codeOf } from '../code.js';
 import type { Node, Panel, Values } from '../genui/catalogue.js';
 import { Generated } from '../genui/render.js';
@@ -244,9 +244,12 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 							{isThinking && (
 								<Message from="assistant">
 									{/* Each step as Claude takes it, the ray running on over the words as they change */}
-									<TextEffect variant="ray" loop className="text-muted">
-										{step ?? 'Thinking'}
-									</TextEffect>
+									<p className="flex items-center gap-2 text-muted">
+										<Scribble />
+										<TextEffect variant="ray" loop>
+											{step ?? 'Thinking'}
+										</TextEffect>
+									</p>
 								</Message>
 							)}
 						</MessageList>
