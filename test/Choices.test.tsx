@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, setOnOffLabels } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
 
-const trackOf = (name: string) => screen.getByRole('switch', { name }).closest('label')?.querySelector('.w-9');
+const trackOf = (name: string) => screen.getByRole('switch', { name }).closest('label')?.querySelector('.w-7');
 
 describe('Checkbox', () => {
 	it('ticks with a click on its label, and with Space', async () => {
@@ -102,7 +102,7 @@ describe('Choices', () => {
 			expect(label.className).toContain('text-muted');
 			expect(label.className).not.toContain('opacity-40');
 		}
-		const track = screen.getByText('Autosave').closest('label')!.querySelector('.w-9')!;
+		const track = screen.getByText('Autosave').closest('label')!.querySelector('.w-7')!;
 		expect(track.className).toContain('bg-bleed/12');
 		expect(track.className).not.toContain('inset-shadow-well');
 		expect(track.className).not.toContain('bg-green-68');
