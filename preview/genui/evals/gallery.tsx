@@ -4,8 +4,9 @@ import { type Node, type Panel, type Values } from '../catalogue.js';
 import { Generated } from '../render.js';
 
 // Ask Loupe's test asks, as a run of run.mjs answered them, one under another: what was asked and what good looks like,
-// what Claude said and drew, and what it took. Each can be marked good or not with a note, kept in this browser, and
-// the whole review copied to paste back into a conversation about what to fix
+// what Claude said and drew, and what it took. Each can be marked good or not with a note. While the preview runs
+// locally, reviews are saved beside the runs, in reviews/, where a conversation about what to fix can read them. The
+// whole review can still be copied, and the hosted preview keeps them in this browser
 
 interface Trace {
 	model: string;
@@ -59,7 +60,11 @@ interface Review {
 const files = import.meta.glob<Run>('./results/*.json', { import: 'default' });
 const names = Object.keys(files).toSorted().toReversed();
 
-// Reviews are this browser's own, so a private window or cleared storage just starts them empty
+// Run ids are when each started, as their files are named
+const idOf = (name: string) => name.replace(/^.*\//, '').replace(/\.json$/, '');
+
+// The browser's copy, for the hosted preview, which can't save files. A private window or cleared storage just starts
+// them empty
 const storeKey = (run: string) => `loupe-evals:${run}`;
 const load = (run: string): Record<string, Review> => {
 	try {
@@ -75,6 +80,22 @@ const save = (run: string, reviews: Record<string, Review>) => {
 		// Nowhere to keep it, so it lasts as long as the page
 	}
 };
+
+// Every run's reviews from the files, or nothing on the hosted preview, which doesn't have them
+async function fetchReviews(): Promise<Record<string, Record<string, Review>>> {
+	try {
+		const response = await fetch('/__loupe/reviews');
+		return response.ok ? await response.json() : {};
+	} catch {
+		return {};
+	}
+}
+const send = (run: string, reviews: Record<string, Review>) => void fetch('/__loupe/reviews', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ run, reviews }) }).catch(() => {});
+
+// How an ask went in the latest run before this one to mark it, to judge this one against
+interface Earlier extends Review {
+	run: string;
+}
 
 const seconds = (ms: number) => `${(ms / 1000).toFixed(0)}s`;
 const dollars = (cost = 0) => `$${cost.toFixed(cost < 0.1 ? 3 : 2)}`;
@@ -96,7 +117,7 @@ function Turn({ asked, answer }: { asked: string; answer: Answer }) {
 	);
 }
 
-function Case({ result, review, onReview }: { result: Result; review: Review; onReview: (review: Review) => void }) {
+function Case({ result, review, earlier, onReview }: { result: Result; review: Review; earlier?: Earlier; onReview: (review: Review) => void }) {
 	return (
 		<section id={result.id} aria-labelledby={`${result.id}-name`} className="flex scroll-mt-6 flex-col gap-4 border-t border-bleed/8 pt-8">
 			<div className="flex flex-wrap items-start justify-between gap-3">
@@ -107,6 +128,12 @@ function Case({ result, review, onReview }: { result: Result; review: Review; on
 					<p className="max-w-[65ch] text-label text-muted">
 						{result.page && <>From the {result.page.title} page. </>}Good looks like: {result.expect}
 					</p>
+					{earlier && (
+						<p className="max-w-[65ch] text-label text-muted">
+							Last marked in the run of {dateOf(earlier.run.replace(/T(\d+)-(\d+)-(\d+)-(\d+)Z$/, 'T$1:$2:$3.$4Z'))}: {earlier.verdict === 'good' ? 'good' : earlier.verdict === 'fix' ? 'needs work' : 'not marked'}
+							{earlier.note ? `. ${earlier.note}` : ''}
+						</p>
+					)}
 				</div>
 				<ToggleButtonGroup aria-label={`How ${result.name} went`} size="small" selectionMode="single" disallowEmptySelection={false} selectedKeys={review.verdict ? [review.verdict] : []} onSelectionChange={(keys) => onReview({ ...review, verdict: [...keys][0] as Verdict | undefined })}>
 					<ToggleButton id="good">Good</ToggleButton>
@@ -128,22 +155,40 @@ export function Evals() {
 	const [name, setName] = useState(names[0]);
 	const [run, setRun] = useState<Run>();
 	const [reviews, setReviews] = useState<Record<string, Review>>({});
+	const [saved, setSaved] = useState<Record<string, Record<string, Review>>>();
 	const [isCopied, setCopied] = useState(false);
+	// Reviews made before they were saved to files are still in this browser, so any the files don't have go to them
+	useEffect(() => {
+		void fetchReviews().then((files) => {
+			const all = { ...files };
+			try {
+				for (const key of Object.keys(localStorage).filter((each) => each.startsWith(storeKey('')))) {
+					const run = key.slice(storeKey('').length);
+					const local = load(run);
+					if (all[run] || Object.keys(local).length === 0) continue;
+					all[run] = local;
+					send(run, local);
+				}
+			} catch {}
+			setSaved(all);
+		});
+	}, []);
 	useEffect(() => {
 		document.title = 'Evals · loupe';
 	}, []);
+	// The saved reviews, or this browser's on the hosted preview
 	useEffect(() => {
-		if (!name) return;
+		if (!name || !saved) return;
 		let isCurrent = true;
 		void files[name]().then((loaded) => {
 			if (!isCurrent) return;
 			setRun(loaded);
-			setReviews(load(loaded.id));
+			setReviews(saved[loaded.id] ?? load(loaded.id));
 		});
 		return () => {
 			isCurrent = false;
 		};
-	}, [name]);
+	}, [name, saved]);
 	useEffect(() => {
 		if (!isCopied) return;
 		const timer = setTimeout(() => setCopied(false), 1500);
@@ -155,6 +200,16 @@ export function Evals() {
 		const all = { ...reviews, [id]: next };
 		setReviews(all);
 		save(run.id, all);
+		send(run.id, all);
+		setSaved((before) => ({ ...before, [run.id]: all }));
+	};
+	const earlierOf = (ask: string): Earlier | undefined => {
+		if (!run || !saved) return undefined;
+		for (const older of names.slice(names.indexOf(name) + 1).map(idOf)) {
+			const each = saved[older]?.[ask];
+			if (each?.verdict || each?.note) return { ...each, run: older };
+		}
+		return undefined;
 	};
 	// The review as text to paste: each ask that's been looked at, with its verdict and note
 	const copy = () => {
@@ -176,7 +231,7 @@ export function Evals() {
 				<header className="flex flex-col gap-4">
 					<div className="flex flex-col gap-1">
 						<h1 className="text-title">Ask Loupe evals</h1>
-						<p className="max-w-[65ch] text-muted">The test asks as a run answered them. Mark each one, say what to change, and copy the review to fix the guides rather than the answers.</p>
+						<p className="max-w-[65ch] text-muted">The test asks as a run answered them. Mark each one and say what to change, to fix the guides rather than the answers. Marks are saved beside the runs, where Claude can read them.</p>
 					</div>
 					{names.length > 0 && (
 						<div className="flex flex-wrap items-end gap-3">
@@ -199,7 +254,7 @@ export function Evals() {
 						Start the preview, then run the asks with node preview/genui/evals/run.mjs from packages/ui. Add --dry to check this page without spending anything.
 					</EmptyState>
 				) : (
-					run?.results.map((result) => <Case key={`${run.id}-${result.id}`} result={result} review={reviews[result.id] ?? { note: '' }} onReview={(next) => review(result.id, next)} />)
+					run?.results.map((result) => <Case key={`${run.id}-${result.id}`} result={result} review={reviews[result.id] ?? { note: '' }} earlier={earlierOf(result.id)} onReview={(next) => review(result.id, next)} />)
 				)}
 			</main>
 		</div>
