@@ -9,7 +9,7 @@ import {
 	type TimeFieldProps as AriaTimeFieldProps,
 	type TimeValue,
 } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, Label, readOnly } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, type FieldTextProps, Label, readOnly } from './Field.js';
 import { composeClassName, tv } from './tv.js';
 
 // The box a date sits in, sized and lifted like a text field. Each segment pads 2px for its focus fill, so the box pads
@@ -65,8 +65,8 @@ export interface DateFieldProps<T extends DateValue> extends AriaDateFieldProps<
  */
 export function DateField<T extends DateValue>({ label, description, errorMessage, ...props }: DateFieldProps<T>) {
 	return (
-		<AriaDateField {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
-			{label && <Label>{label}</Label>}
+		<AriaDateField {...props} className={composeClassName(props.className, boxField)}>
+			{label && <Label className={boxLabel}>{label}</Label>}
 			<DateSegments className={(state) => dateInput(state)} />
 			{description && <Description>{description}</Description>}
 			<FieldError>{errorMessage}</FieldError>
@@ -79,8 +79,8 @@ export interface TimeFieldProps<T extends TimeValue> extends AriaTimeFieldProps<
 /** A time of day typed a part at a time, on the user’s 12 or 24 hour clock unless hourCycle sets one */
 export function TimeField<T extends TimeValue>({ label, description, errorMessage, ...props }: TimeFieldProps<T>) {
 	return (
-		<AriaTimeField {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
-			{label && <Label>{label}</Label>}
+		<AriaTimeField {...props} className={composeClassName(props.className, boxField)}>
+			{label && <Label className={boxLabel}>{label}</Label>}
 			<DateSegments className={(state) => dateInput(state)} />
 			{description && <Description>{description}</Description>}
 			<FieldError>{errorMessage}</FieldError>

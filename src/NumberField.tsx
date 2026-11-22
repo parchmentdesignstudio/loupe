@@ -1,5 +1,5 @@
 import { Button, Group, Input, NumberField as AriaNumberField, type NumberFieldProps as AriaNumberFieldProps } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, type Size, type FieldVariant, Label, readOnly } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, type FieldTextProps, type Size, type FieldVariant, Label, readOnly } from './Field.js';
 import { Dash, Plus } from './glyphs.js';
 import { composeClassName, tv } from './tv.js';
 
@@ -47,12 +47,12 @@ export interface NumberFieldProps extends AriaNumberFieldProps, FieldTextProps {
 /** A number, typed or stepped. The arrow keys and its buttons move it by step, within minValue and maxValue, and formatOptions shows it as a percentage, currency or unit */
 export function NumberField({ label, description, errorMessage, placeholder, variant, size, ...props }: NumberFieldProps) {
 	return (
-		<AriaNumberField {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
+		<AriaNumberField {...props} className={composeClassName(props.className, boxField)}>
 			{({ isInvalid, isDisabled }) => {
 				const slots = numberField({ isInvalid, isDisabled, variant, size });
 				return (
 					<>
-						{label && <Label>{label}</Label>}
+						{label && <Label className={boxLabel}>{label}</Label>}
 						<Group className={(state) => slots.group(state)}>
 							<Input placeholder={placeholder} className={slots.input()} />
 							<Button slot="decrement" className={slots.stepper()}>

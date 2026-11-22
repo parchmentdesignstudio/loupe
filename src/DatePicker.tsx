@@ -12,7 +12,7 @@ import {
 import { Calendar, RangeCalendar, type VisibleDuration } from './Calendar.js';
 import { DateSegments, TimeField, dateInput } from './DateField.js';
 import { Dialog } from './Dialog.js';
-import { Description, FieldError, type FieldTextProps, Label } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, type FieldTextProps, Label } from './Field.js';
 import { CalendarGlyph } from './glyphs.js';
 import { Popover } from './Popover.js';
 import { composeClassName, tv } from './tv.js';
@@ -45,8 +45,8 @@ export interface DatePickerProps<T extends DateValue> extends AriaDatePickerProp
  */
 export function DatePicker<T extends DateValue>({ label, description, errorMessage, ...props }: DatePickerProps<T>) {
 	return (
-		<AriaDatePicker {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
-			{label && <Label>{label}</Label>}
+		<AriaDatePicker {...props} className={composeClassName(props.className, boxField)}>
+			{label && <Label className={boxLabel}>{label}</Label>}
 			<Group className={(state) => dateInput({ ...state, className: slots.group() })}>
 				<DateSegments className={slots.input()} />
 				<Button className={slots.button()}>
@@ -83,8 +83,8 @@ export interface DateRangePickerProps<T extends DateValue> extends AriaDateRange
 export function DateRangePicker<T extends DateValue>({ label, description, errorMessage, visibleDuration, ...props }: DateRangePickerProps<T>) {
 	const isWide = useWide();
 	return (
-		<AriaDateRangePicker {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
-			{label && <Label>{label}</Label>}
+		<AriaDateRangePicker {...props} className={composeClassName(props.className, boxField)}>
+			{label && <Label className={boxLabel}>{label}</Label>}
 			<Group className={(state) => dateInput({ ...state, className: slots.group() })}>
 				<DateSegments slot="start" className={slots.input()} />
 				<span aria-hidden="true" className={slots.dash()}>

@@ -84,6 +84,8 @@ also has room inside its own letters, above the capitals. So:
 
 - Parts of a unit share a type role where they can, so the same gap looks the same above and below. A field's label
   and help are both `text-control` for that reason.
+- Text under an edge looks further from it than text over it, as its capitals leave room above them that descenders
+  don't below. So a field's help sits 4px under its box, where the label sits 6px over it, and the two look equal.
 - Large type on a tight line needs less gap than small type to look as close. A stat's 28px figure sits 4px under
   its title, where a field's box sits 6px under its label.
 - Every field in a form uses the same gap, so the labels line up when two share a row.

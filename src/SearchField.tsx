@@ -1,5 +1,5 @@
 import { Button, Group, Input, SearchField as AriaSearchField, type SearchFieldProps as AriaSearchFieldProps } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, Label, readOnly } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, type FieldTextProps, Label, readOnly } from './Field.js';
 import { Cross, MagnifyingGlass } from './glyphs.js';
 import { composeClassName, tv } from './tv.js';
 
@@ -37,12 +37,12 @@ export interface SearchFieldProps extends AriaSearchFieldProps, FieldTextProps {
 /** A field to search with, and a button that clears it. Escape clears it too, and Enter calls onSubmit */
 export function SearchField({ label, description, errorMessage, placeholder, ...props }: SearchFieldProps) {
 	return (
-		<AriaSearchField {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
+		<AriaSearchField {...props} className={composeClassName(props.className, boxField)}>
 			{({ isEmpty, isInvalid, isDisabled }) => {
 				const slots = searchField({ isEmpty, isInvalid, isDisabled });
 				return (
 					<>
-						{label && <Label>{label}</Label>}
+						{label && <Label className={boxLabel}>{label}</Label>}
 						<Group className={(state) => slots.group(state)}>
 							<MagnifyingGlass className={slots.glass()} />
 							<Input placeholder={placeholder} className={slots.input()} />
