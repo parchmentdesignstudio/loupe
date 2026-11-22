@@ -1,7 +1,7 @@
 import { parseDate, parseTime } from '@internationalized/date';
 import { Icon } from '@parchment/icons/react';
 import { type ReactNode, useEffect, useId, useState } from 'react';
-import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, ListBoxItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, SearchField, Select, Separator, Slider, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
+import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, ListBoxItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, RowActions, SearchField, Select, Separator, Slider, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
 import { type Node, type Panel, type Values, resolve } from './catalogue.js';
 import { code as frame } from '../../src/Code.js';
 import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
@@ -69,15 +69,32 @@ const status = (p: Props, key?: string | number) => (
 	</Status>
 );
 
-const table = (p: Props, key?: string | number) => {
+// A Menu's items, or a table row's: the safe ones, then a line, then the ones that delete
+const menuItems = (actions: Action[], onAction?: (message: string) => void) => {
+	const safe = actions.filter((item) => !item.isDanger);
+	const danger = actions.filter((item) => item.isDanger);
+	const item = (entry: Action, index: number) => (
+		<MenuItem key={`${entry.label}-${index}`} id={`${entry.label}-${index}`} variant={entry.isDanger ? 'danger' : undefined} onAction={() => entry.action && onAction?.(entry.action)}>
+			{entry.label}
+		</MenuItem>
+	);
+	return [...safe.map(item), ...(safe.length > 0 && danger.length > 0 ? [<MenuSeparator key="separator" />] : []), ...danger.map(item)];
+};
+
+const table = (p: Props, key?: string | number, onAction?: (message: string) => void) => {
 	const cols = p.columns as { id: string; name: string; align?: 'start' | 'end'; isRowHeader?: boolean }[];
-	const rows = p.rows as { id: string; cells: (string | number | Props)[] }[];
+	const rows = p.rows as { id: string; cells: (string | number | Props)[]; actions?: Action[] }[];
+	// The actions column is there once any row has some, and a row without any leaves its cell empty
+	const hasActions = rows.some((row) => row.actions?.length);
+	const header = Math.max(0, cols.findIndex((column) => column.isRowHeader));
+	const nameOf = (cell: string | number | Props | undefined) => (typeof cell === 'object' ? String(cell.label) : String(cell ?? ''));
 	return (
 		<Table key={key} aria-label={p.label as string} density={p.density as never} variant={p.variant as never}>
 			<TableHeader>
 				{cols.map((column) => (
 					<Column key={column.id} id={column.id} isRowHeader={column.isRowHeader} align={column.align}>{column.name}</Column>
 				))}
+				{hasActions && <Column id="actions" aria-label="Actions" width={52} />}
 			</TableHeader>
 			<TableBody renderEmptyState={() => <p className="p-4 text-body text-muted">{(p.empty as string | undefined) ?? 'Nothing here yet'}</p>}>
 				{rows.map((row) => (
@@ -87,6 +104,7 @@ const table = (p: Props, key?: string | number) => {
 								{typeof cell === 'object' ? status(cell) : cell}
 							</Cell>
 						))}
+						{hasActions && <Cell key="actions">{row.actions?.length ? <RowActions aria-label={`Actions for ${nameOf(row.cells[header])}`}>{menuItems(row.actions, onAction)}</RowActions> : null}</Cell>}
 					</Row>
 				))}
 			</TableBody>
@@ -254,26 +272,13 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 				);
 			case 'Pagination':
 				return <Pages key={key} page={p.page as number} count={p.count as number} />;
-			case 'Menu': {
-				const actions = p.actions as Action[];
-				const safe = actions.filter((item) => !item.isDanger);
-				const danger = actions.filter((item) => item.isDanger);
-				const item = (entry: Action, index: number) => (
-					<MenuItem key={`${entry.label}-${index}`} id={`${entry.label}-${index}`} variant={entry.isDanger ? 'danger' : undefined} onAction={() => entry.action && onAction?.(entry.action)}>
-						{entry.label}
-					</MenuItem>
-				);
+			case 'Menu':
 				return (
 					<MenuTrigger key={key}>
 						<Button variant={(p.variant as never) ?? 'secondary'}>{p.label as string}</Button>
-						<Menu>
-							{safe.map(item)}
-							{safe.length > 0 && danger.length > 0 && <MenuSeparator />}
-							{danger.map(item)}
-						</Menu>
+						<Menu>{menuItems(p.actions as Action[], onAction)}</Menu>
 					</MenuTrigger>
 				);
-			}
 			case 'GridList': {
 				const items = p.items as { id: string; title: string; description?: string; status?: Props; action?: string }[];
 				return (
@@ -338,7 +343,7 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 					</RadioGroup>
 				);
 			case 'Table':
-				return table(p, key);
+				return table(p, key, onAction);
 			case 'Tabs': {
 				const tabs = p.tabs as { id: string; name: string; content: Node }[];
 				return (

@@ -171,6 +171,33 @@ describe('Generated views', () => {
 		expect(onAction).toHaveBeenLastCalledWith('Delete the project');
 	});
 
+	it('gives a row its own menu of actions, named by the row', async () => {
+		const onAction = vi.fn();
+		const user = userEvent.setup();
+		const team: Node = {
+			type: 'Table',
+			label: 'Members',
+			columns: [{ id: 'name', name: 'Name', isRowHeader: true }, { id: 'role', name: 'Role' }],
+			rows: [
+				{ id: 'ada', cells: ['Ada Lovelace', 'Admin'], actions: [{ label: 'Change role', action: 'Change Ada’s role' }, { label: 'Remove', action: 'Remove Ada', isDanger: true }] },
+				{ id: 'alan', cells: ['Alan Turing', 'Member'] },
+			],
+		};
+		expect(validate({ summary: 'Members', ui: team }, schema)).toEqual([]);
+		render(<Generated ui={team} onAction={onAction} />);
+		expect(screen.queryByRole('button', { name: 'Actions for Alan Turing' })).toBeNull();
+		await user.click(screen.getByRole('button', { name: 'Actions for Ada Lovelace' }));
+		await user.click(await screen.findByRole('menuitem', { name: 'Remove' }));
+		expect(onAction).toHaveBeenLastCalledWith('Remove Ada');
+	});
+
+	it('keeps a line between two things, and says what a block does take', () => {
+		const errors = validate({ summary: 'Danger zone', ui: { type: 'Stack', children: [{ type: 'Separator' }, { type: 'Heading', level: 'section', text: 'Danger zone' }] } }, schema);
+		expect(errors).toEqual([expect.stringContaining('never first in its group')]);
+		const option = validate({ summary: 'Role', ui: { type: 'RadioGroup', label: 'Role', options: [{ id: 'a', name: 'Admin' }, { id: 'm', name: 'Member', type: 'Radio' }] } }, schema);
+		expect(option).toEqual(['input.ui.options[1]: takes no type, only id, name']);
+	});
+
 	it('draws with Loupe, and sends a button’s action on', async () => {
 		const onAction = vi.fn();
 		render(<Generated ui={invoices} onAction={onAction} />);
@@ -282,7 +309,7 @@ describe('Generated views with controls', () => {
 	it('lays out a narrow column beside a wide one, holding just the two', () => {
 		const split = { type: 'Split', side: 'start', children: [{ type: 'Heading', level: 'group', text: 'Filters' }, { type: 'Stack', width: 'narrow', children: [{ type: 'TextField', label: 'Name' }] }] };
 		expect(validate({ summary: 'Filters and a form', ui: split as Node }, schema)).toEqual([]);
-		expect(validate({ summary: 'Three', ui: { ...split, children: [...split.children, { type: 'Separator' }] } as Node }, schema)).toEqual([expect.stringContaining('exactly two blocks')]);
+		expect(validate({ summary: 'Three', ui: { ...split, children: [...split.children, { type: 'Text', text: 'A third' }] } as Node }, schema)).toEqual([expect.stringContaining('exactly two blocks')]);
 		const { container } = render(<Generated ui={split as Node} />);
 		expect(container.querySelector('[class*="@2xl:grid-cols-[16rem_minmax(0,1fr)]"]')).toBeTruthy();
 		expect(container.querySelector('.max-w-xl')).toBeTruthy();
