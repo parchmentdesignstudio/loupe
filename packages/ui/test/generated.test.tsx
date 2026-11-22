@@ -171,6 +171,22 @@ describe('Generated views', () => {
 		expect(onAction).toHaveBeenLastCalledWith('Delete the project');
 	});
 
+	it('draws plans as Cards with their buttons at the foot, and a List of what each includes', async () => {
+		const onAction = vi.fn();
+		const user = userEvent.setup();
+		const plan = (name: string, variant: unknown) => ({ type: 'Card', title: name, actions: [{ type: 'Button', label: `Choose ${name}`, variant, action: `Choose the ${name} plan` }], children: [{ type: 'Text', size: 'title', text: '£12' }, { type: 'List', variant: 'plain', items: [{ title: 'Unlimited projects', icon: 'checkmark' }, { title: 'Guest access', icon: 'checkmark' }] }] });
+		const input = { summary: 'Plans', values: { featured: 'primary' }, controls: [{ group: 'Style', items: [{ label: 'Featured button', value: 'featured' }] }], ui: { type: 'Grid', columns: 2, children: [plan('Team', { $value: 'featured' }), plan('Starter', 'secondary')] } };
+		expect(validate(input, schema)).toEqual([]);
+		expect(validate({ summary: 'Two primaries', ui: { type: 'Grid', columns: 2, children: [plan('Team', 'primary'), plan('Starter', 'primary')] } }, schema)).toEqual([expect.stringContaining('primary')]);
+		render(<Generated ui={input.ui as Node} values={input.values} panel={panelOf(input, schema)} onAction={onAction} />);
+		expect(screen.getByRole('heading', { level: 4, name: 'Team' })).toBeTruthy();
+		expect(screen.getAllByRole('listitem')).toHaveLength(4);
+		const choose = screen.getByRole('button', { name: 'Choose Team' });
+		expect(choose.parentElement?.className).toContain('mt-auto');
+		await user.click(choose);
+		expect(onAction).toHaveBeenLastCalledWith('Choose the Team plan');
+	});
+
 	it('gives a row its own menu of actions, named by the row', async () => {
 		const onAction = vi.fn();
 		const user = userEvent.setup();

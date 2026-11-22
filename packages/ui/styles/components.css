@@ -514,6 +514,43 @@
 		/* The padding round what's in the box */
 		--alert-padding: --spacing(3);
 
+		/* Card */
+
+		/* Shape */
+
+		/* The corners */
+		--card-radius: var(--radius-xl);
+
+		/* Type */
+
+		/* The title's weight */
+		--card-title-font-weight: 500;
+
+		/* Space */
+
+		/* The padding round what's in it */
+		--card-padding: --spacing(4);
+		/* The space between its title, what it holds and its buttons */
+		--card-gap: --spacing(3);
+
+		/* List */
+
+		/* Space */
+
+		/* The space between an item's icon, words and value */
+		--list-item-gap: --spacing(2);
+		/* The padding above and below each row of a divided list, either side of its line */
+		--list-divided-padding-y: --spacing(3);
+		/* The space between the items of a plain list */
+		--list-plain-gap: --spacing(2);
+
+		/* Colour */
+
+		@media not all {
+			/* The icon before an item */
+			--list-icon: var(--color-muted);
+		}
+
 		/* EmptyState */
 
 		/* Shape */

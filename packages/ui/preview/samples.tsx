@@ -32,7 +32,10 @@ import {
 	DisclosureHeader,
 	DisclosurePanel,
 	DropZone,
+	Card,
 	EmptyState,
+	List,
+	ListItem,
 	FileList,
 	FileListItem,
 	GridList,
@@ -248,6 +251,22 @@ export const samples: Partial<Record<string, Sample>> = {
 		</DisclosureGroup>
 	),
 	DropZone: (props) => <DropZone label="Drop files here" className="w-56" {...props} />,
+	Card: (props) => (
+		<Card title="Team" description="For small teams" actions={<Button variant="secondary">Start free trial</Button>} className="w-56" {...props}>
+			<p className="text-title tabular-nums">£12</p>
+		</Card>
+	),
+	List: (props) => (
+		<List aria-label="Billing" className="w-64" {...props}>
+			<ListItem description="Billed yearly" end="£144.00">Team plan</ListItem>
+			<ListItem end="£12.00">Next invoice</ListItem>
+		</List>
+	),
+	ListItem: (props) => (
+		<List className="w-64">
+			<ListItem description="Billed yearly" end="£144.00" {...props}>Team plan</ListItem>
+		</List>
+	),
 	EmptyState: (props) => (
 		<EmptyState icon={<Icon name="square-on-square" />} title="No blocks yet" actions={<Button>New block</Button>} className="w-64" {...props}>
 			Blocks you make will show here

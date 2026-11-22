@@ -1,7 +1,8 @@
 import { parseDate, parseTime } from '@internationalized/date';
+import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { type ReactNode, useEffect, useId, useState } from 'react';
-import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, ListBoxItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, RowActions, SearchField, Select, Separator, Slider, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
+import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Card, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, List, ListBoxItem, ListItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, RowActions, SearchField, Select, Separator, Slider, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
 import { type Node, type Panel, type Values, resolve } from './catalogue.js';
 import { code as frame } from '../../src/Code.js';
 import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
@@ -170,8 +171,27 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 				return <div key={key} className={`flex min-w-0 flex-wrap ${gap[(p.gap as number) ?? 2]} ${justify[(p.justify as string) ?? 'start']} ${align[(p.align as string) ?? 'center']}`}>{kids()}</div>;
 			case 'Grid':
 				return <div key={key} className={`grid grid-cols-1 ${columns[p.columns as number]} ${gap[(p.gap as number) ?? 4]}`}>{kids()}</div>;
-			case 'Card':
-				return <div key={key} className="flex min-w-0 flex-col gap-2 rounded-xl bg-panel p-4 shadow-panel">{kids()}</div>;
+			case 'Card': {
+				const actions = (p.actions as Node[] | undefined) ?? [];
+				// A section's heading is h3, so a card's title under it is h4
+				return (
+					<Card key={key} title={p.title as string | undefined} headingLevel={4} description={p.description as string | undefined} fill={p.fill as never} actions={actions.length ? actions.map((action, index) => draw(action, index)) : undefined}>
+						{node.children?.length ? kids() : undefined}
+					</Card>
+				);
+			}
+			case 'List': {
+				const items = p.items as { title: string; description?: string; icon?: IconName; end?: string | number | Props }[];
+				return (
+					<List key={key} variant={p.variant as never} aria-label={p.label as string | undefined}>
+						{items.map((item, index) => (
+							<ListItem key={index} icon={item.icon && <Icon name={item.icon} />} description={item.description} end={typeof item.end === 'object' ? status(item.end) : item.end}>
+								{item.title}
+							</ListItem>
+						))}
+					</List>
+				);
+			}
 			case 'Heading': {
 				const Level = p.level === 'page' ? 'h2' : p.level === 'section' ? 'h3' : 'h4';
 				return <Level key={key} className={`text-pretty ${headings[p.level as keyof typeof headings]}`}>{p.text as string}</Level>;

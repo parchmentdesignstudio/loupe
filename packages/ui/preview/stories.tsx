@@ -71,8 +71,10 @@ import { DialogPlayground } from './playgrounds/dialog.js';
 import { DisclosurePlayground } from './playgrounds/disclosure.js';
 import { DropZonePlayground, FileStates } from './playgrounds/drop-zone.js';
 import { EmptyStatePlayground } from './playgrounds/empty-state.js';
+import { CardPlayground as LoupeCardPlayground, PricingCards, StatCards } from './playgrounds/card.js';
 import { FileTriggerPlayground } from './playgrounds/file-trigger.js';
 import { GridListPlayground } from './playgrounds/grid-list.js';
+import { ListPlayground } from './playgrounds/list.js';
 import { KeyboardPlayground } from './playgrounds/keyboard.js';
 import { CodePlayground } from './playgrounds/code.js';
 import { LinkPlayground } from './playgrounds/link.js';
@@ -834,6 +836,28 @@ const groups: Group[] = [
 				],
 			},
 			{
+				id: 'list',
+				name: 'List',
+				description: 'Things to read, one under another, such as what a plan includes or an account’s details, with a line between them or none. Nothing in it is picked or pressed: that’s a GridList',
+				summary: 'Things to read, one under another, with an icon or a value at the end',
+				exports: ['List', 'ListItem'],
+				stories: [
+					{ name: 'Build one', render: ListPlayground },
+				],
+			},
+			{
+				id: 'card',
+				name: 'Card',
+				description: 'A panel for one thing among others like it, such as a plan, a stat or a project. Its buttons sit at its foot, so a row of cards lines them up. A section on its own isn’t a card, and a Table never goes in one',
+				summary: 'A panel for one thing among others like it, with its buttons at the foot',
+				exports: ['Card'],
+				stories: [
+					{ name: 'Build one', render: LoupeCardPlayground },
+					{ name: 'Plans side by side', render: PricingCards },
+					{ name: 'Stats in a row', render: StatCards },
+				],
+			},
+			{
 				id: 'table',
 				name: 'Table',
 				description: 'Rows of records under sortable columns, such as customers, invoices or members, with rows to choose, open or act on',
@@ -1156,7 +1180,7 @@ const regrouped: Record<string, string[]> = {
 	Foundations: ['Colour', 'Prose', 'Text effect', 'Typography'],
 	Actions: ['Button', 'Chip', 'File trigger', 'Keyboard', 'Toggle button group', 'Toolbar'],
 	Forms: ['Calendar', 'Checkbox', 'Colour area', 'Colour field', 'Colour picker', 'Colour slider', 'Colour swatch picker', 'Combo box', 'Date field', 'Date picker', 'Drop zone', 'Number field', 'Radio group', 'Search field', 'Select', 'Slider', 'Switch', 'Text field'],
-	Data: ['Avatar', 'Code', 'Grid list', 'Swatch', 'Table', 'Tag group'],
+	Data: ['Avatar', 'Card', 'Code', 'Grid list', 'List', 'Swatch', 'Table', 'Tag group'],
 	Feedback: ['Alert', 'Empty state', 'Progress bar', 'Status', 'Toast'],
 	Writing: ['Aside', 'Quote'],
 	Conversation: ['Composer', 'Message', 'Suggestions'],
@@ -1240,8 +1264,8 @@ function Icons({ variant, size }: { variant: IconVariant; size: IconSize }) {
 // Pieces made from the components, each with its own page under Blocks, as #/blocks/sign-up-form
 export const blocks: Entry[] = [
 	{
-		id: 'card',
-		name: 'Card',
+		id: 'media-card',
+		name: 'Media card',
 		description: 'An image area, a title and a line under it, and a button or two, on a raised, quiet or brand fill. The image area’s corners are the card’s less its padding, so they stay concentric, and it can hold a component drawn live',
 		stories: [
 			{ name: 'Build one', render: CardPlayground },

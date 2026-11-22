@@ -15,7 +15,7 @@ There are three layers, and only the first is for components and pages:
 ```
 What is it?
  ├── The page itself → bg-ground
- ├── An area on the page, such as a side panel or a card → bg-panel
+ ├── An area on the page, such as a side panel → bg-panel (a card is a Card, which sets its own)
  ├── A control's fill → bg-raised (components already do this)
  ├── Something that floats: menu, popover, dialog, drawer → bg-overlay (the component sets it)
  ├── Ink as a surface, such as a toast or tooltip → bg-inverse with text-paper
