@@ -63,6 +63,31 @@ Tailwind's spacing steps, which are 4px each: `1` is 4px, `2` 8px, `3` 12px, `4`
 - Size bars by padding round their content, not a fixed height. A control is 32px because its 20px line has 6px
   above and below; set `py`, not `h-8`.
 
+## Grouping
+
+Space says what belongs together, so a layout needs no lines or boxes to be read. There are three distances, and each
+is at least twice the one inside it; closer than that and two levels read as one.
+
+| Distance | Space | For |
+| --- | --- | --- |
+| Within a unit | 4–6px (`gap-1`, `gap-1.5`) | A field's label, box and help; a stat's title and figure |
+| Between units | 16px (`gap-4`) | Fields in a form, settings in a list, cards in a grid |
+| Between groups | 32–40px (`gap-8`, `gap-10`) | Sections of a page |
+
+A part that is read after the unit, rather than with it, stands apart from it at 24px (`gap-6`): a stat's change sits
+under its figure that way, as a second reading of the number. Help that says how to fill a field is part of the
+field, so it stays at the field's gap.
+
+Judge a gap by the letters, not the boxes. A line of text carries half its leading above and below its letters:
+`text-control` (13 on 20) 3.5px each side, `text-label` (12 on 16) 2px, `text-title` (20 on 22) 1px. Large type
+also has room inside its own letters, above the capitals. So:
+
+- Parts of a unit share a type role where they can, so the same gap looks the same above and below. A field's label
+  and help are both `text-control` for that reason.
+- Large type on a tight line needs less gap than small type to look as close. A stat's 28px figure sits 4px under
+  its title, where a field's box sits 6px under its label.
+- Every field in a form uses the same gap, so the labels line up when two share a row.
+
 ## Corners
 
 `rounded-sm` 4px, `rounded-md` 6px, `rounded-lg` 8px, `rounded-xl` 12px, `rounded-3xl` 24px, and `rounded-full`.

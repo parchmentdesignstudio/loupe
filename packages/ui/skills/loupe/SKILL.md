@@ -29,7 +29,9 @@ Where a raw value is meant, say why on the line above: `// loupe-lint-ignore: a 
 
 - Text: `text-body` for reading, `text-control` inside controls, `text-label` for small labels and meta, `text-title`
   for a heading. Nothing else, and nothing below `text-label`'s 12px.
-- Space: Tailwind's steps (`gap-2`, `p-4`). Siblings get `gap` on the parent, not margins on each.
+- Space: Tailwind's steps (`gap-2`, `p-4`). Siblings get `gap` on the parent, not margins on each. Space groups
+  things: 4–6px within a unit, 16px between units, 32–40px between sections. See
+  [grouping](references/tokens.md#grouping).
 - Corners: `rounded-lg` (8px) for most things. Inside a rounded container, the container's radius less the space
   between them.
 - Secondary text is `text-muted`. Errors are `text-danger`, always with words that say what's wrong.
