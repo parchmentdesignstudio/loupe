@@ -6,31 +6,31 @@ import { focusRing, tv } from './tv.js';
 
 const toggle = tv({
 	slots: {
-		// Its height is the handle's 16px and 2px of padding each side, so it centres on the label's first line at 20px
-		track: 'relative my-[calc((1lh-1.25rem)/2)] flex w-9 shrink-0 items-center p-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none [[data-show-focus]>&]:outline-2',
+		// Its height is the handle's 12px and 2px of padding each side, so it centres on the label's first line
+		track: 'relative my-[calc((1lh-1rem)/2)] flex w-7 shrink-0 items-center p-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none [[data-show-focus]>&]:outline-2',
 		// It stretches by its width rather than a scale, so its corners stay round, and it moves and stretches on a spring.
 		// The colour changes without one, as a colour can't overshoot
-		// Each sits in the 10px the handle leaves at one end, so the handle covers whichever isn't true. Positioned, the handle
+		// Each sits in the 8px the handle leaves at one end, so the handle covers whichever isn't true. Positioned, the handle
 		// paints over them
-		on: 'absolute inset-y-0 start-0.5 hidden w-2.5 items-center justify-center text-white on-off-labels:flex',
-		off: 'absolute inset-y-0 end-0.5 hidden w-2.5 items-center justify-center on-off-labels:flex',
-		handle: 'relative h-4 w-5.5 shrink-0 bg-(--switch-handle,var(--color-knob)) shadow-handle [transition:translate_350ms_var(--ease-spring),width_350ms_var(--ease-spring),background-color_200ms_ease-out] motion-reduce:transition-none',
+		on: 'absolute inset-y-0 start-0.5 hidden w-2 items-center justify-center text-white on-off-labels:flex',
+		off: 'absolute inset-y-0 end-0.5 hidden w-2 items-center justify-center on-off-labels:flex',
+		handle: 'relative h-3 w-4 shrink-0 bg-(--switch-handle,var(--color-knob)) shadow-handle [transition:translate_350ms_var(--ease-spring),width_350ms_var(--ease-spring),background-color_200ms_ease-out] motion-reduce:transition-none',
 	},
 	variants: {
-		// On, it sits against the far end: the track's 32px inside less its own width, as a translate's percentage is of
+		// On, it sits against the far end: the track's 24px inside less its own width, as a translate's percentage is of
 		// the handle itself. So however wide it stretches, it stays against that end and reaches into the track, with
 		// nothing to flip as it crosses. On, the track turns the green a success status uses, under a white handle. Off in
 		// the dark, the track is a toggle group's tray, raised's fill with the dark edge, so the handle is what stands out
 		isSelected: {
 			false: { track: 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--color-raised))] [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),var(--dark-edge))]' },
-			true: { track: 'bg-(--switch-on-fill,var(--color-green-68))', handle: 'translate-x-[calc(2rem-100%)] bg-(--switch-on-handle,var(--color-white)) rtl:translate-x-[calc(100%-2rem)]' },
+			true: { track: 'bg-(--switch-on-fill,var(--color-green-68))', handle: 'translate-x-[calc(1.5rem-100%)] bg-(--switch-on-handle,var(--color-white)) rtl:translate-x-[calc(100%-1.5rem)]' },
 		},
 		// Anywhere on the switch or its label, not just the handle, stretches it a little, and a press a little further
 		isHovered: {
-			true: { handle: 'w-6' },
+			true: { handle: 'w-4.5' },
 		},
 		isPressed: {
-			true: { handle: 'w-6.5' },
+			true: { handle: 'w-5' },
 		},
 		// Flat, as a disabled button is: no well, no lift and no green, so only where the handle sits says it's on. The handle
 		// stays white in the light, and dims in the dark, where full white would look switched on
@@ -39,8 +39,8 @@ const toggle = tv({
 			false: { track: 'inset-shadow-well' },
 			true: { track: 'bg-bleed/12', on: 'text-muted', handle: 'bg-[light-dark(var(--color-white),color-mix(in_oklab,var(--color-knob)_50%,transparent))] shadow-none' },
 		},
-		// As a button's: rounded corners, the handle's 2px less than the track's so they sit concentric, at a checkbox's
-		// radius. Or full, a pill with a round handle
+		// As a button's: rounded corners, the handle's 2px less than the track's so they sit concentric. Or full, a pill
+		// with a round handle
 		shape: {
 			rounded: { track: 'rounded-(--switch-radius)', handle: 'rounded-[calc(var(--switch-radius)-2px)]' },
 			full: { track: 'rounded-full', handle: 'rounded-full' },
@@ -105,10 +105,10 @@ export function Switch({ shape, placement, description, ...props }: SwitchProps)
 					<>
 						<span className={slots.track({ className: focusRing({ isFocusVisible: state.isFocusVisible }) })}>
 							<span aria-hidden className={slots.on()}>
-								<span className="h-2 w-px rounded-full bg-current" />
+								<span className="h-1.5 w-px rounded-full bg-current" />
 							</span>
 							<span aria-hidden className={slots.off()}>
-								<span className="size-1.5 rounded-full border border-muted" />
+								<span className="size-1 rounded-full border border-muted" />
 							</span>
 							<span className={slots.handle()} />
 						</span>
