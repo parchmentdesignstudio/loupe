@@ -33,6 +33,8 @@ const text = (description: string): Schema => ({ type: 'string', description });
 const oneOf = (values: readonly (string | number)[], description?: string): Schema => ({ enum: [...values], ...(description && { description }) });
 // Loupe's 4px steps, as Tailwind's gap-1 to gap-10
 export const gaps = [1, 2, 3, 4, 6, 8, 10] as const;
+// A date as text, since JSON has no dates: the renderer parses it into one
+const day = (description: string): Schema => ({ type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: `${description}, as YYYY-MM-DD` });
 const option = { type: 'object', properties: { id: text('Unique within the list'), name: text('What it says') }, required: ['id', 'name'], additionalProperties: false };
 
 export function blocksOf(details: Details): Record<string, Block> {
@@ -65,6 +67,8 @@ export function blocksOf(details: Details): Record<string, Block> {
 		Switch: { doc: 'A setting that takes effect straight away, with no Save', props: { label: text('The setting'), isSelected: { type: 'boolean' } }, required: ['label'] },
 		Checkbox: { doc: 'One of several choices made together, or agreeing to something before a submit', props: { label: text('The choice'), isSelected: { type: 'boolean' } }, required: ['label'] },
 		Select: { doc: 'Picks one of 6 to 15 options', props: { label: text('Sentence case'), options: { type: 'array', items: option, minItems: 2 }, selected: text('The id picked to start with') }, required: ['label', 'options'] },
+		DatePicker: { doc: 'One date, such as a due date or a birthday. For a start and an end, a DateRangePicker', props: { label: text('Sentence case'), description: text('A hint under it'), value: day('The date it starts with'), minValue: day('The earliest it takes, such as today for a booking') }, required: ['label'] },
+		DateRangePicker: { doc: 'A start and an end in one field, such as a stay or a report’s period. Never two DatePickers', props: { label: text('Sentence case'), description: text('A hint under it'), start: day('The first day it starts with'), end: day('The last day it starts with'), minValue: day('The earliest it takes') }, required: ['label'] },
 		RadioGroup: { doc: 'Picks one of 2 to 5 options, all in view', props: { label: text('Sentence case'), options: { type: 'array', items: option, minItems: 2, maxItems: 5 }, selected: text('The id picked to start with') }, required: ['label', 'options'] },
 		Table: {
 			doc: 'Records with several fields to compare. Its own box, so never in a Card',
@@ -151,6 +155,7 @@ function check(value: unknown, schema: Schema, at: string, defs: Record<string, 
 	}
 	if ('const' in schema && value !== schema.const) return errors.push(`${at}: should be ${JSON.stringify(schema.const)}`);
 	if (Array.isArray(schema.enum) && !schema.enum.includes(value)) return errors.push(`${at}: ${JSON.stringify(value)} isn't one of ${schema.enum.map((v) => JSON.stringify(v)).join(', ')}`);
+	if (typeof schema.pattern === 'string' && typeof value === 'string' && !new RegExp(schema.pattern).test(value)) return errors.push(`${at}: ${JSON.stringify(value)} should be ${schema.description ?? `like ${schema.pattern}`}`);
 	const type = Array.isArray(value) ? 'array' : value === null ? 'null' : typeof value;
 	if (schema.type && schema.type !== type && !(schema.type === 'integer' && Number.isInteger(value))) return errors.push(`${at}: should be ${schema.type === 'array' ? 'an array' : `a ${schema.type}`}`);
 	if (typeof value === 'number') {
@@ -188,6 +193,18 @@ function rules(ui: Node, errors: string[]) {
 			});
 		}
 		if ((item.type === 'Select' || item.type === 'RadioGroup') && item.selected !== undefined && !(item.options as { id: string }[] | undefined)?.some((o) => o.id === item.selected)) errors.push(`${at}.selected: ${JSON.stringify(item.selected)} isn't one of the options' ids`);
+		// Dates as YYYY-MM-DD sort as text. A bound value is checked once it has one
+		const dates = (...keys: string[]) => keys.map((key) => (typeof item[key] === 'string' ? (item[key] as string) : undefined));
+		if (item.type === 'DateRangePicker') {
+			const [start, end] = dates('start', 'end');
+			if ((start === undefined) !== (end === undefined)) errors.push(`${at}: give both start and end, or neither`);
+			if (start && end && start > end) errors.push(`${at}: start ${start} is after end ${end}`);
+		}
+		if (item.type === 'DatePicker' || item.type === 'DateRangePicker') {
+			const [value, start, min] = dates('value', 'start', 'minValue');
+			const first = value ?? start;
+			if (first && min && first < min) errors.push(`${at}: starts on ${first}, before its minValue ${min}`);
+		}
 		for (const key of ['options', 'columns', 'rows', 'tabs'] as const) {
 			// A Grid's columns is a count, not a list
 			const list = item[key];

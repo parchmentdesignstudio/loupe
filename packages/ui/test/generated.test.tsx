@@ -67,6 +67,23 @@ describe('Generated views', () => {
 		expect(rules).toEqual(expect.arrayContaining([expect.stringContaining('2 primary buttons'), expect.stringContaining('never goes in a Card'), expect.stringContaining('exactly one column with isRowHeader'), expect.stringContaining('2 cells for 1 columns')]));
 	});
 
+	it('takes dates as YYYY-MM-DD, in order', () => {
+		const stay = (props: Record<string, unknown>) => validate({ summary: 'A stay', ui: { type: 'DateRangePicker', label: 'Your stay', ...props } }, schema);
+		expect(stay({ start: '2026-12-04', end: '2026-12-07', minValue: '2026-11-22' })).toEqual([]);
+		expect(stay({ start: '4 December', end: '2026-12-07' })).toEqual([expect.stringContaining('"4 December" should be')]);
+		expect(stay({ start: '2026-12-07', end: '2026-12-04' })).toEqual([expect.stringContaining('is after end')]);
+		expect(stay({ start: '2026-12-04' })).toEqual([expect.stringContaining('both start and end')]);
+		expect(validate({ summary: 'Due', ui: { type: 'DatePicker', label: 'Due date', value: '2026-11-01', minValue: '2026-11-22' } }, schema)).toEqual([expect.stringContaining('before its minValue')]);
+	});
+
+	it('draws a date picker and a range with the dates they start with', () => {
+		render(<Generated ui={{ type: 'Stack', children: [{ type: 'DatePicker', label: 'Due date', value: '2026-12-01' }, { type: 'DateRangePicker', label: 'Your stay', start: '2026-12-04', end: '2026-12-07' }] }} />);
+		const due = screen.getByRole('group', { name: 'Due date' });
+		expect(within(due).getByRole('spinbutton', { name: /day/i }).getAttribute('aria-valuenow')).toBe('1');
+		const stay = screen.getByRole('group', { name: 'Your stay' });
+		expect(within(stay).getAllByRole('spinbutton', { name: /day/i }).map((day) => day.getAttribute('aria-valuenow'))).toEqual(['4', '7']);
+	});
+
 	it('draws with Loupe, and sends a button’s action on', async () => {
 		const onAction = vi.fn();
 		render(<Generated ui={invoices} onAction={onAction} />);

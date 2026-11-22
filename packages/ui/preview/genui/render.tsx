@@ -1,6 +1,7 @@
+import { parseDate } from '@internationalized/date';
 import { Icon } from '@parchment/icons/react';
 import { type ReactNode, useEffect, useId, useState } from 'react';
-import { Alert, Avatar, Button, Tooltip, TooltipTrigger, Cell, Checkbox, Column, EmptyState, ListBoxItem, Meter, ProgressBar, Quote, Radio, RadioGroup, Row, Select, Separator, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, TextField } from '../../src/index.js';
+import { Alert, Avatar, Button, Tooltip, TooltipTrigger, Cell, Checkbox, Column, DatePicker, DateRangePicker, EmptyState, ListBoxItem, Meter, ProgressBar, Quote, Radio, RadioGroup, Row, Select, Separator, Status, Switch, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, TextField } from '../../src/index.js';
 import { type Node, type Panel, type Values, resolve } from './catalogue.js';
 import { code as frame } from '../../src/Code.js';
 import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from '../controls.js';
@@ -14,6 +15,15 @@ interface Option {
 	id: string;
 	name: string;
 }
+
+// The checker has passed it as YYYY-MM-DD, but a control can still type anything into one
+const dateOf = (value: unknown) => {
+	try {
+		return typeof value === 'string' ? parseDate(value) : undefined;
+	} catch {
+		return undefined;
+	}
+};
 
 const gap: Record<number, string> = { 1: 'gap-1', 2: 'gap-2', 3: 'gap-3', 4: 'gap-4', 6: 'gap-6', 8: 'gap-8', 10: 'gap-10' };
 const justify: Record<string, string> = { start: 'justify-start', between: 'justify-between', end: 'justify-end' };
@@ -141,6 +151,12 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 						{(option: Option) => <ListBoxItem id={option.id}>{option.name}</ListBoxItem>}
 					</Select>
 				);
+			case 'DatePicker':
+				return <DatePicker key={key} label={p.label as string} description={p.description as string | undefined} defaultValue={dateOf(p.value)} minValue={dateOf(p.minValue)} />;
+			case 'DateRangePicker': {
+				const [start, end] = [dateOf(p.start), dateOf(p.end)];
+				return <DateRangePicker key={key} label={p.label as string} description={p.description as string | undefined} defaultValue={start && end ? { start, end } : undefined} minValue={dateOf(p.minValue)} />;
+			}
 			case 'RadioGroup':
 				return (
 					<RadioGroup key={key} label={p.label as string} defaultValue={p.selected as string | undefined}>
