@@ -14,7 +14,7 @@ import {
 	useContextProps,
 	useLocale,
 } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, type FieldVariant, Label, type Size } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, type FieldTextProps, type FieldVariant, Label, type Size } from './Field.js';
 import { numberField } from './NumberField.js';
 import { formatOklch, fromOklch, type Oklch, parseAnyColor } from './parseAnyColor.js';
 import { Swatch } from './Swatch.js';
@@ -56,8 +56,8 @@ export function ColorField(props: ColorFieldProps) {
 
 function ChannelField({ label, description, errorMessage, placeholder, hasOpacity: _hasOpacity, format: _format, variant, size, onChange, ...props }: ColorFieldProps) {
 	return (
-		<AriaColorField {...props} onChange={(color) => onChange?.(color, oklchString(color))} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
-			{label && <Label>{label}</Label>}
+		<AriaColorField {...props} onChange={(color) => onChange?.(color, oklchString(color))} className={composeClassName(props.className, boxField)}>
+			{label && <Label className={boxLabel}>{label}</Label>}
 			<Input placeholder={placeholder} className={(state) => textFieldInput({ ...state, variant, size })} />
 			{description && <Description>{description}</Description>}
 			<FieldError>{errorMessage}</FieldError>
@@ -215,13 +215,13 @@ function AnyColorField({ ref: givenRef, ...given }: ColorFieldProps) {
 				onBlur?.(event);
 			}}
 			onKeyDown={keyDown}
-			className={composeClassName(className, 'flex flex-col gap-1.5')}
+			className={composeClassName(className, boxField)}
 		>
 			{({ isInvalid, isDisabled }) => {
 				const slots = numberField({ variant, size, isInvalid, isDisabled });
 				return (
 					<>
-						{label && <Label>{label}</Label>}
+						{label && <Label className={boxLabel}>{label}</Label>}
 						<Group isDisabled={isDisabled} isInvalid={isInvalid} className={(state) => slots.group({ ...state, className: ['pe-0 ps-(--inset)', inset] })}>
 							<Swatch color={css ?? undefined} size="field" />
 							{/* The name is the TextField's, for React Aria to find a form's errors by. The hidden input below submits

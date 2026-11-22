@@ -1,5 +1,5 @@
 import { Input, TextArea, TextField as AriaTextField, type TextFieldProps as AriaTextFieldProps } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, type Size, type FieldVariant, Label, readOnly } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, type FieldTextProps, type Size, type FieldVariant, Label, readOnly } from './Field.js';
 import { composeClassName, tv } from './tv.js';
 
 // Control text, which is 16px on touch screens, as iOS zooms into anything smaller. Like a button, the padding and the
@@ -49,8 +49,8 @@ export interface TextFieldProps extends AriaTextFieldProps, FieldTextProps {
 /** A labelled text input, with an optional description and the error React Aria's validation gives it */
 export function TextField({ label, description, errorMessage, placeholder, isMultiline = false, rows = 4, variant, size, ...props }: TextFieldProps) {
 	return (
-		<AriaTextField {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
-			{label && <Label>{label}</Label>}
+		<AriaTextField {...props} className={composeClassName(props.className, boxField)}>
+			{label && <Label className={boxLabel}>{label}</Label>}
 			{isMultiline ? (
 				<TextArea placeholder={placeholder} rows={rows} className={(state) => textFieldInput({ ...state, variant, size, className: 'resize-y leading-[1.5]' })} />
 			) : (

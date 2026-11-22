@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Button, ComboBox as AriaComboBox, type ComboBoxProps as AriaComboBoxProps, Group, Input } from 'react-aria-components';
-import { Description, FieldError, type FieldTextProps, Label, readOnly } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, type FieldTextProps, Label, readOnly } from './Field.js';
 import { ChevronDown } from './glyphs.js';
 import { ListBox } from './ListBox.js';
 import { Popover } from './Popover.js';
@@ -35,12 +35,12 @@ export interface ComboBoxProps<T extends object> extends Omit<AriaComboBoxProps<
 /** A text field that filters a list of options as you type */
 export function ComboBox<T extends object>({ label, description, errorMessage, placeholder, children, ...props }: ComboBoxProps<T>) {
 	return (
-		<AriaComboBox {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
+		<AriaComboBox {...props} className={composeClassName(props.className, boxField)}>
 			{({ isInvalid, isDisabled }) => {
 				const slots = combo({ isInvalid, isDisabled });
 				return (
 					<>
-						{label && <Label>{label}</Label>}
+						{label && <Label className={boxLabel}>{label}</Label>}
 						<Group className={(state) => slots.group(state)}>
 							<Input placeholder={placeholder} className={slots.input()} />
 							<Button className={slots.button()}>

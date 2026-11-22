@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Button, Select as AriaSelect, type SelectProps as AriaSelectProps, SelectValue } from 'react-aria-components';
-import { Description, FieldError, type Size, type FieldTextProps, type FieldVariant, Label } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, type Size, type FieldTextProps, type FieldVariant, Label } from './Field.js';
 import { ChevronDown } from './glyphs.js';
 import { ListBox } from './ListBox.js';
 import { Popover } from './Popover.js';
@@ -45,10 +45,10 @@ export interface SelectProps<T extends object> extends Omit<AriaSelectProps<T>, 
 /** Picks one option from a list that opens below it */
 export function Select<T extends object>({ label, description, errorMessage, items, children, variant, size, ...props }: SelectProps<T>) {
 	return (
-		<AriaSelect {...props} className={composeClassName(props.className, 'flex flex-col gap-1.5')}>
+		<AriaSelect {...props} className={composeClassName(props.className, boxField)}>
 			{({ isInvalid }) => (
 				<>
-					{label && <Label>{label}</Label>}
+					{label && <Label className={boxLabel}>{label}</Label>}
 					<Button className={(state) => selectTrigger({ ...state, isInvalid, variant, size })}>
 						<SelectValue className="min-w-0 flex-1 truncate data-[placeholder]:text-(color:--field-placeholder,var(--color-muted))">{({ isPlaceholder, selectedText, defaultChildren }) => (isPlaceholder ? defaultChildren : selectedText)}</SelectValue>
 						<ChevronDown className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" />
