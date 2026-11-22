@@ -24,6 +24,7 @@ import { useConversation } from './blocks/chat.js';
 import { SettingsDrawer, SettingsPanels, remember, remembered } from './settings.js';
 import { forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
+import { Evals } from './genui/evals/gallery.js';
 import { type Entry, areas, blocks, library } from './stories.js';
 import { Category, categoryId } from './blocks/card.js';
 import { useBuilt } from './playground.js';
@@ -295,10 +296,12 @@ function Overview({ entries }: { entries: Entry[] }) {
 
 // A screen fills the window on its own, without loupe's sidebar and bar around it
 function Root() {
-	const screen = screenAt(useAddress());
+	const address = useAddress();
+	const screen = screenAt(address);
 	useEffect(() => {
 		if (screen) document.title = `${screen.name} · loupe`;
 	}, [screen]);
+	if (address === 'evals') return <Evals />;
 	return screen ? <screen.render /> : <Preview />;
 }
 

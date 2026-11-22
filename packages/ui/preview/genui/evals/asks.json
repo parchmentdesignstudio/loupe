@@ -1,0 +1,95 @@
+[
+	{
+		"id": "invoices",
+		"name": "Overdue invoices",
+		"ask": "Show this month’s overdue invoices",
+		"expect": "A table with the client as row header, amounts aligned to the end, status as a Status in its own column, and one primary action such as sending reminders"
+	},
+	{
+		"id": "notifications",
+		"name": "Notification settings",
+		"ask": "A settings panel for notifications",
+		"expect": "Switches that take effect at once with no Save button, grouped by channel, in a narrow column"
+	},
+	{
+		"id": "dashboard",
+		"name": "Shop dashboard",
+		"ask": "How did the shop do this week?",
+		"expect": "Stat cards in a Grid with the figure as a title, a short answer in words, and a table or list of what sold, not a wall of cards"
+	},
+	{
+		"id": "sign-up",
+		"name": "Sign-up form",
+		"ask": "A sign-up form for a design newsletter",
+		"expect": "Few fields, labels not placeholders, a narrow column, one primary button that says what happens, no disabled button"
+	},
+	{
+		"id": "booking",
+		"name": "Booking from the date picker page",
+		"page": { "title": "Date picker", "path": "#/ui/date-picker" },
+		"ask": "Use this for a holiday cottage booking form",
+		"expect": "A DateRangePicker for the stay, not two DatePickers, a minimum date of today, guests as a NumberField, and one primary button"
+	},
+	{
+		"id": "team",
+		"name": "Team members",
+		"ask": "A page to manage my team’s members and invite someone new",
+		"expect": "Members in a table or list with their role and status, an invite action, per-row actions in a Menu, and a dialog or form for the invite"
+	},
+	{
+		"id": "filters",
+		"name": "Orders with filters",
+		"ask": "A list of orders I can search and filter by status, with pages",
+		"expect": "A SearchField over the table, filters as a TagGroup or segmented control, a table, and Pagination under it"
+	},
+	{
+		"id": "empty",
+		"name": "No projects yet",
+		"ask": "What should my projects page show before anyone has made a project?",
+		"expect": "An EmptyState that says what will be here and how to start, with one action; short words alongside"
+	},
+	{
+		"id": "delete",
+		"name": "Delete a workspace",
+		"ask": "A danger zone for deleting a workspace, with a confirmation",
+		"expect": "A danger Button opening a Dialog that names what will be lost, with a danger confirm that says what happens and a Cancel"
+	},
+	{
+		"id": "checkout",
+		"name": "Checkout summary",
+		"ask": "A checkout page with the order summary beside the delivery details",
+		"expect": "A Split with the summary in the narrow end column, amounts with tabular figures, a narrow form, and one primary button to pay"
+	},
+	{
+		"id": "faq",
+		"name": "Help page",
+		"ask": "A help page with common questions about billing",
+		"expect": "Disclosures for the questions, a search over them perhaps, and a way to contact support"
+	},
+	{
+		"id": "component-question",
+		"name": "A question about a component",
+		"page": { "title": "Select", "path": "#/ui/select" },
+		"ask": "When should I use this rather than a radio group?",
+		"expect": "Looks Select up rather than answering from memory, answers in words, and draws nothing or a small comparison"
+	},
+	{
+		"id": "impossible",
+		"name": "Something it can’t draw",
+		"ask": "Draw me a line chart of sign-ups over the last year",
+		"expect": "Says plainly that charts can’t be drawn here, offers the nearest it can, such as stats or a table by month, and doesn’t fake a chart"
+	},
+	{
+		"id": "tweak",
+		"name": "A view with controls",
+		"ask": "A pricing card I can tweak, with three plans",
+		"expect": "Values and controls for what’s worth adjusting, such as spacing and which plan is picked out, rather than buttons asking to redraw"
+	},
+	{
+		"id": "denser",
+		"name": "Changing a view",
+		"ask": "Show this month’s overdue invoices",
+		"then": "Make the table denser and add a column for how many days overdue",
+		"expect": "The second view keeps the first one’s data and layout, with a compact table and the new column, rather than a new design"
+	}
+]

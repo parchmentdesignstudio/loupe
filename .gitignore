@@ -7,3 +7,6 @@ elyx_deps
 .env.local
 .env.*.local
 .env
+
+# Ask Loupe eval runs, made locally by preview/genui/evals/run.mjs
+packages/ui/preview/genui/evals/results

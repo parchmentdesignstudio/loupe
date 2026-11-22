@@ -10,7 +10,12 @@ import { dirname, join } from 'node:path';
 import { loadEnv } from 'vite';
 
 export const path = '/__loupe/claude';
-const model = 'claude-opus-5-5';
+// The models and efforts a request may pick, for the evals to compare and, later, a picker in the composer. Opus at
+// medium unless it says otherwise. Haiku has no server-side fallback, and it's only been tried with Opus, so only Opus
+// asks for one
+export const models = ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-5-5'];
+export const efforts = ['low', 'medium', 'high'];
+const fallsBack = (model) => model.startsWith('claude-opus');
 // Drawing again after an error is rare, and three goes is plenty to tell a tree that won't come right
 const attempts = 3;
 // Every call in an answer, lookups and drawing together, so one that keeps looking things up still ends
@@ -128,7 +133,7 @@ const stepOf = (call) => {
 // Where the user is in the preview, so "this" and "here" mean something
 const placeOf = (page) => (page?.title ? ` They're on the preview's page for ${page.title}${page.path ? `, at ${page.path}` : ''}.` : '');
 
-async function answer(messages, page, onStep) {
+async function answer(messages, page, onStep, { model = models[0], effort = 'medium' } = {}) {
 	const conversation = historyOf(messages);
 	let ui;
 	let summary;
@@ -137,16 +142,22 @@ async function answer(messages, page, onStep) {
 	let panel;
 	let controls;
 	let drawn = 0;
-	const reply = (text) => ({ text, ui, summary, title, values, controls, panel });
-	for (let step = 0; step < steps; step++) {
+	// What the answer took, for the evals: each step and when it started, the trees sent back, and the tokens
+	const started = Date.now();
+	const trace = { model, effort, steps: [], problems: 0, errors: [], calls: 0, usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } };
+	const step = (label) => {
+		trace.steps.push({ label, at: Date.now() - started });
+		onStep(label);
+	};
+	const reply = (text) => ({ text, ui, summary, title, values, controls, panel, trace: { ...trace, drawn, ms: Date.now() - started } });
+	for (let turn = 0; turn < steps; turn++) {
 		const stream = client.beta.messages.stream({
 			model,
 			max_tokens: 64000,
-			// Opus 5.5 starts at medium; said here so a change of model doesn't quietly change it
-			output_config: { effort: 'medium' },
+			// Said outright, so a change of model doesn't quietly change it
+			output_config: { effort },
 			// A decline goes on to a model picked for its kind, rather than ending the reply
-			betas: ['server-side-fallback-2026-07-01'],
-			fallbacks: 'default',
+			...(fallsBack(model) && { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' }),
 			cache_control: { type: 'ephemeral' },
 			// The date and the page last, after what's cached, so made-up records are this month's rather than the model's
 			// guess at it
@@ -159,15 +170,20 @@ async function answer(messages, page, onStep) {
 		});
 		// Drawing is the long part, so it's said as it starts. A lookup is said once its input is whole
 		stream.on('streamEvent', (event) => {
-			if (event.type === 'content_block_start' && event.content_block.type === 'tool_use' && event.content_block.name === 'render_ui') onStep(drawn ? 'Drawing it again' : 'Drawing the view');
+			if (event.type === 'content_block_start' && event.content_block.type === 'tool_use' && event.content_block.name === 'render_ui') step(drawn ? 'Drawing it again' : 'Drawing the view');
 		});
 		stream.on('contentBlock', (block) => {
 			const label = block.type === 'tool_use' && stepOf(block);
-			if (label) onStep(label);
+			if (label) step(label);
 		});
 		const response = await stream.finalMessage();
+		trace.calls++;
+		trace.usage.input += response.usage.input_tokens ?? 0;
+		trace.usage.output += response.usage.output_tokens ?? 0;
+		trace.usage.cacheRead += response.usage.cache_read_input_tokens ?? 0;
+		trace.usage.cacheWrite += response.usage.cache_creation_input_tokens ?? 0;
 		const words = response.content.filter((block) => block.type === 'text').map((block) => block.text).join('\n\n').trim();
-		if (response.stop_reason === 'refusal') return { text: words || 'Claude couldn’t help with that one.' };
+		if (response.stop_reason === 'refusal') return { ...reply(words || 'Claude couldn’t help with that one.'), ui: undefined };
 		if (response.stop_reason === 'max_tokens') return reply(words || 'That reply ran too long to finish.');
 		const calls = response.content.filter((block) => block.type === 'tool_use');
 		if (response.stop_reason !== 'tool_use' || !calls.length) return reply(words);
@@ -183,6 +199,8 @@ async function answer(messages, page, onStep) {
 			const errors = validate(call.input);
 			if (errors.length) {
 				problems += errors.length;
+				trace.problems += errors.length;
+				trace.errors.push(...errors);
 				return result(`It can't be drawn:\n${errors.join('\n')}\nFix these and call render_ui again.`, true);
 			}
 			ui = call.input.ui;
@@ -193,9 +211,9 @@ async function answer(messages, page, onStep) {
 			panel = controls ? panelOf(call.input) : undefined;
 			return result('Drawn under your reply.');
 		});
-		if (problems) onStep(problems === 1 ? 'Fixing a problem' : `Fixing ${problems} problems`);
-		else if (calls.some((call) => call.name === 'render_ui')) onStep('Writing it up');
-		else onStep('Thinking it over');
+		if (problems) step(problems === 1 ? 'Fixing a problem' : `Fixing ${problems} problems`);
+		else if (calls.some((call) => call.name === 'render_ui')) step('Writing it up');
+		else step('Thinking it over');
 		conversation.push({ role: 'assistant', content: response.content }, { role: 'user', content: results });
 	}
 	return reply(ui ? 'Here’s the view. I ran out of steps before saying more about it.' : 'Claude couldn’t finish that in the steps it has. Try asking for less at once.');
@@ -228,10 +246,12 @@ export function claude() {
 					try {
 						let body = '';
 						for await (const chunk of req) body += chunk;
-						const { messages, page } = JSON.parse(body);
+						const { messages, page, model, effort } = JSON.parse(body);
 						if (!Array.isArray(messages) || !messages.length) return reply(400, { error: 'Send { messages: [{ role, text }] }' });
+						if (model !== undefined && !models.includes(model)) return reply(400, { error: `model is one of ${models.join(', ')}` });
+						if (effort !== undefined && !efforts.includes(effort)) return reply(400, { error: `effort is one of ${efforts.join(', ')}` });
 						await setUp(server);
-						line({ answer: await answer(messages, page, (step) => line({ step })) });
+						line({ answer: await answer(messages, page, (step) => line({ step }), { model, effort }) });
 						res.end();
 					} catch (error) {
 						if (error instanceof AuthenticationError || (!(error instanceof APIError) && /authentication method/i.test(String(error)))) return fail(503, 'No key for Claude. Put ANTHROPIC_API_KEY in packages/ui/.env.local');
