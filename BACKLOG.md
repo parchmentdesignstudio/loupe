@@ -7,6 +7,7 @@ What `@parchment/ui` is missing, found by building the device and favicon tools 
 | What | Found in | Why it matters |
 |---|---|---|
 | Drawers stack on resize | Preview | With a drawer open on desktop, resizing the window down past md sometimes shows a stack of side panels, one behind another, rather than the one overlay. Seen with Ask Loupe open on 21 November 2026. Likely the push drawer, the overlay it becomes, and the phone's own drawer all rendering through the switch |
+| Layouts follow the window, not their space | Library and preview | With the chat expanded, the page beside it keeps its two columns of component cards, crushed to slivers, as their grid answers the window's width. Generated views have the same gap: only Grid adapts to its container. Move grids and the components that switch on matchMedia (DateRangePicker's two months, Drawer's push, Navigation's sidebar) to container queries, so each drops columns or folds as its own space narrows. Seen on 22 November 2026 |
 | Focus after a click | Device | A control clicked with the mouse keeps focus, then takes Space and the arrows: Space pressed Add device again instead of panning. Device hands those keys back to its canvas in `shortcuts.ts`. A `Toolbar` gives the controls one Tab stop, but the handing back still needs a shared way to do it |
 
 ## Readability and typography, now

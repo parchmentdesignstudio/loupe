@@ -56,6 +56,8 @@ const modal = tv({
 			small: { panel: 'max-w-sm' },
 			medium: { panel: 'max-w-md' },
 			large: { panel: 'max-w-2xl' },
+			// The whole window but its margin, for a view that needs the room, such as a page drawn in a chat
+			full: { panel: 'h-full max-w-none' },
 		},
 		isEntering: {
 			true: { overlay: 'animate-fade-in', panel: 'animate-enter motion-reduce:animate-fade-in' },
@@ -70,7 +72,7 @@ const modal = tv({
 });
 
 export interface ModalProps extends ModalOverlayProps {
-	size?: 'small' | 'medium' | 'large';
+	size?: 'small' | 'medium' | 'large' | 'full';
 }
 
 /** A dialog over the page, which it dims. isDismissable lets a click outside close it */
