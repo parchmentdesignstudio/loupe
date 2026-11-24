@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>solid/16/checkmark-circle</title>
+    <g id="solid/16/checkmark-circle" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M15,8 C15,11.866 11.866,15 8,15 C4.134,15 1,11.866 1,8 C1,4.134 4.134,1 8,1 C11.866,1 15,4.134 15,8 Z M4.1313,8.4937 L6.3813,10.7437 C6.723,11.0854 7.277,11.0854 7.6187,10.7437 L11.8687,6.4937 C12.2104,6.152 12.2104,5.598 11.8687,5.2563 C11.527,4.9146 10.973,4.9146 10.6313,5.2563 L7,8.8876 L5.3687,7.2563 C5.027,6.9146 4.473,6.9146 4.1313,7.2563 C3.7896,7.598 3.7896,8.152 4.1313,8.4937 Z" id="fill" fill="color(display-p3 0.035 0.180 0.141)"></path>
+    </g>
+</svg>
