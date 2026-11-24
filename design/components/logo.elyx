@@ -1,0 +1,36 @@
+import "@icons/svg/solid/16/house.svg" as house
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "components/text.elyx" as styles
+
+// The CRM's logo: a house in pine on a marigold tile, beside its name in bold. Threshold stands in for the name until
+// the CRM has one, so set the wordmark's contents when it does
+file {}
+
+export logo = frame {
+  caption: "The tile keeps its marigold and pine in both themes, as a primary button does",
+  left: 0px,
+  top: 0px,
+  layout: {align-items: .center, item-gap: l.lengths.spacing-2},
+  children: [mark, wordmark],
+
+  mark = frame {
+    width: 24px,
+    height: 24px,
+    layout: {justify-content: .center, align-items: .center},
+    fill: c.colors.accent,
+    corner-radius: l.lengths.radius-md,
+    children: glyph,
+
+    glyph = asset {
+      width: 16px,
+      height: 16px,
+      fill: c.colors.on-primary,
+      contents: house
+    }
+  }
+
+  wordmark = text : styles.reading-subheading {
+    contents: "Threshold"
+  }
+}

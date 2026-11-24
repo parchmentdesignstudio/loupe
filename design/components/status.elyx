@@ -1,0 +1,72 @@
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "components/text.elyx" as styles
+
+// Where something is up to, as Status.tsx draws it in a table or list: a dot in the tone's colour beside the label.
+// The label stays ink and says it all, so the colour only backs it up, and the dots are the same in both themes.
+// Neutral is the base and each tone a variant, so pick one and set its label
+file {}
+
+export status = frame {
+  caption: "Neutral, for what's gone quiet",
+  left: 0px,
+  top: 0px,
+  layout: {align-items: .center, item-gap: l.lengths.spacing-2},
+  children: [dot, statusLabel],
+
+  dot = shape {
+    width: 8px,
+    height: 8px,
+    fill: c.colors.sand-66,
+    type: .ellipse
+  }
+
+  statusLabel = text : styles.control {
+    contents: "Unresponsive"
+  }
+}
+
+@variant
+export info = frame : status {
+  caption: "Info, for what's under way",
+  left: 208px,
+  top: 0px,
+
+  dot {
+    fill[0].color: c.colors.blue-56
+  }
+
+  statusLabel {
+    contents: "Referred"
+  }
+}
+
+@variant
+export success = frame : status {
+  caption: "Success, for what's gone well",
+  left: 416px,
+  top: 0px,
+
+  dot {
+    fill[0].color: c.colors.green-68
+  }
+
+  statusLabel {
+    contents: "Qualified"
+  }
+}
+
+@variant
+export warning = frame : status {
+  caption: "Warning, for what needs chasing",
+  left: 624px,
+  top: 0px,
+
+  dot {
+    fill[0].color: c.colors.yellow-76
+  }
+
+  statusLabel {
+    contents: "No answer"
+  }
+}

@@ -1,0 +1,64 @@
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "components/elevation.elyx" as elevation
+import "components/text.elyx" as styles
+
+// Parchment's buttons, as Button.tsx draws them: a label in control text and Medium, padded 6px above and below and
+// 12px at the sides, so each is 32px tall. Instance one and set its label, and give it width: 100% to fill a form.
+// The base is secondary, white and raised, as it's built on elevation.button
+file {}
+
+export button = frame : elevation.button {
+  caption: "Secondary: white and raised, for most actions",
+  left: 0px,
+  top: 0px,
+  width: .auto,
+  height: .auto,
+  padding-top: l.lengths.spacing-1-5,
+  padding-left: l.lengths.spacing-3,
+  padding-bottom: l.lengths.spacing-1-5,
+  padding-right: l.lengths.spacing-3,
+  layout.align-items: .center,
+  layout.justify-content: .center,
+  overrides: [insert(buttonLabel, after = .nil)],
+
+  buttonLabel = text : styles.control {
+    contents: "Secondary",
+    font-style: "Medium"
+  }
+}
+
+// Marigold, for what a page leads with, as foundations.elyx draws it: a fill 4% lighter at the top, a rim a sixth darker
+// as the 1px edge, a lighter line inside it and a bevel. The fills are hex until the filled buttons' lighting is tokens
+@variant
+export primary = frame : button {
+  caption: "Primary: marigold, for what a page leads with",
+  left: 208px,
+  top: 0px,
+  fill[0].linear-gradient.from: [50%, 0%],
+  fill[0].linear-gradient.stops[0].color: #f6c348,
+  fill[0].linear-gradient.stops[0].position: 0%,
+  fill[0].linear-gradient.stops[1].color: #f5c03b,
+  fill[0].linear-gradient.stops[1].position: 100%,
+  fill[0].linear-gradient.to: [50%, 100%],
+  shadow[3].drop-shadow.color: #da8a00,
+  shadow[4].inner-shadow.color: #f8cd6f,
+  shadow[4].inner-shadow.spread: 1px,
+  shadow[5].inner-shadow.blur-radius: 1px,
+  shadow[5].inner-shadow.color: #f8cd6f,
+  shadow[5].inner-shadow.offset: [0px, 1px],
+  shadow[5].inner-shadow.spread: -0.5px,
+  shadow[6].inner-shadow.blur-radius: 3px,
+  shadow[6].inner-shadow.color: #f8cd6f,
+  shadow[6].inner-shadow.offset: [0px, 1px],
+  shadow[6].inner-shadow.spread: -1.5px,
+  shadow[7].inner-shadow.blur-radius: 3px,
+  shadow[7].inner-shadow.color: #da8a0033,
+  shadow[7].inner-shadow.offset: [0px, -1px],
+  shadow[7].inner-shadow.spread: -1.5px,
+
+  buttonLabel {
+    fill[0].color: c.colors.on-primary,
+    contents: "Primary"
+  }
+}

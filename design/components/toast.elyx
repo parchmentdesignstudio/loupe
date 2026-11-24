@@ -1,0 +1,58 @@
+import "@icons/svg/solid/16/xmark.svg" as xmark
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "components/elevation.elyx" as elevation
+import "components/text.elyx" as styles
+
+// A short message at the foot of the screen, as Toast.tsx draws it: inverse with paper text, its title in Medium over a
+// line in paper at 70%, and a close button at the end. 352px wide, padded 16px at the start and 8px at the end, where
+// the close button brings room of its own. Instance one and set its title and line
+file {}
+
+export toast = frame : elevation.overlay {
+  caption: "Inverse in both themes, so it's pine in the light and cream in the dark",
+  left: 0px,
+  top: 0px,
+  width: 352px,
+  height: .auto,
+  padding-top: l.lengths.spacing-3,
+  padding-left: l.lengths.spacing-4,
+  padding-bottom: l.lengths.spacing-3,
+  padding-right: l.lengths.spacing-2,
+  fill[0].color: c.colors.inverse,
+  layout.item-gap: l.lengths.spacing-3,
+  layout.justify-content: .space-between,
+  overrides: [insert(message, after = .nil), insert(close, after = message)],
+
+  message = frame {
+    layout: {direction: .column, item-gap: l.lengths.spacing-0-5},
+    children: [toastTitle, toastText],
+
+    toastTitle = text : styles.body {
+      contents: "Export ready",
+      font-style: "Medium",
+      fill[0].color: c.colors.paper
+    }
+
+    toastText = text : styles.label {
+      opacity: 0.7,
+      contents: "Your favicons are in Downloads",
+      fill[0].color: c.colors.paper
+    }
+  }
+
+  // As tall as the title's line, so the cross centres on it
+  close = frame {
+    layout: {justify-content: .center, align-items: .center},
+    padding: [l.lengths.spacing-0-5, l.lengths.spacing-1],
+    children: closeGlyph,
+
+    closeGlyph = asset {
+      width: 16px,
+      height: 16px,
+      opacity: 0.7,
+      fill: c.colors.paper,
+      contents: xmark
+    }
+  }
+}

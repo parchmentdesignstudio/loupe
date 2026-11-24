@@ -1,0 +1,38 @@
+import "tokens/lengths.elyx" as l
+import "components/elevation.elyx" as elevation
+import "components/text.elyx" as styles
+
+// A checkbox and its label, as Checkbox.tsx draws them: a raised 16px box 8px from the label, centred on the label's
+// first line so it stays put when the label wraps. The label is part of what's pressed, so the row pads 4px above and
+// below. Instance one and set its label
+file {}
+
+export checkbox = frame {
+  caption: "Not ticked",
+  left: 0px,
+  top: 0px,
+  layout: {item-gap: l.lengths.spacing-2},
+  overflow: .visible,
+  padding: [l.lengths.spacing-1, 0px],
+  children: [boxLine, checkboxLabel],
+
+  // As tall as the label's line, so the box centres on its first line
+  boxLine = frame {
+    height: 20px,
+    layout: {direction: .column, justify-content: .center},
+    overflow: .visible,
+    children: box,
+
+    box = frame : elevation.raised {
+      width: 16px,
+      height: 16px,
+      corner-radius: l.lengths.radius-sm,
+      layout.align-items: .center,
+      layout.justify-content: .center
+    }
+  }
+
+  checkboxLabel = text : styles.control {
+    contents: "Send me the newsletter"
+  }
+}

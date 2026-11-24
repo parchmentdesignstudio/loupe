@@ -1,0 +1,140 @@
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "components/button.elyx" as buttons
+import "components/text.elyx" as styles
+import "components/checkbox.elyx" as checkboxes
+import "components/text-field.elyx" as fields
+
+// The form a team signs up to the CRM with: a name, work email, company and password, tips by email if they want
+// them, and Create account across the foot. The fields are empty, as a visitor first sees them, and the tips start
+// unticked, as marketing email has to be asked for
+file {}
+
+export signUpForm = frame {
+  title: "Sign-up form",
+  caption: "Starts a 14-day trial. The password's help shows from the start, so nobody's caught out after they've typed it",
+  left: 0px,
+  top: 0px,
+  width: 360px,
+  layout: {direction: .column, item-gap: l.lengths.spacing-6},
+  overflow: .visible,
+  children: [intro, details, actions],
+
+  intro = frame {
+    width: 100%,
+    layout: {direction: .column, item-gap: l.lengths.spacing-2},
+    children: [heading, lede],
+
+    heading = text : styles.title {
+      contents: "Create your account"
+    }
+
+    lede = text : styles.body {
+      width: 100%,
+      contents: "Try it free for 14 days. No card needed.",
+      fill[0].color: c.colors.muted
+    }
+  }
+
+  details = frame {
+    width: 100%,
+    layout: {direction: .column, item-gap: l.lengths.spacing-4},
+    overflow: .visible,
+    children: [nameField, emailField, companyField, passwordField, tips],
+
+    nameField = frame : fields.textField {
+      width: 100%,
+
+      labelRow {
+        fieldLabel {
+          contents: "Name"
+        }
+      }
+    }
+
+    emailField = frame : fields.textField {
+      width: 100%,
+
+      labelRow {
+        fieldLabel {
+          contents: "Work email"
+        }
+      }
+
+      box {
+        value {
+          contents: "sam@smithmortgages.co.uk"
+        }
+      }
+    }
+
+    companyField = frame : fields.textField {
+      width: 100%,
+
+      labelRow {
+        fieldLabel {
+          contents: "Company"
+        }
+      }
+
+      box {
+        value {
+          contents: "Smith Mortgages"
+        }
+      }
+    }
+
+    // No placeholder, so the box keeps the line's height with its value hidden
+    passwordField = frame : fields.textField {
+      width: 100%,
+
+      box {
+        value {
+          display: .hidden
+        }
+      }
+
+      labelRow {
+        fieldLabel {
+          contents: "Password"
+        }
+      }
+
+      description {
+        display: .visible,
+        contents: "At least 12 characters"
+      }
+    }
+
+    tips = frame : checkboxes.checkbox {
+      checkboxLabel {
+        contents: "Email me tips for getting set up"
+      }
+    }
+  }
+
+  actions = frame {
+    width: 100%,
+    layout: {direction: .column, item-gap: l.lengths.spacing-3},
+    overflow: .visible,
+    children: [submit, terms],
+
+    submit = frame : buttons.primary {
+      width: 100%,
+
+      buttonLabel {
+        contents: "Create account"
+      }
+    }
+
+    terms = text : styles.label {
+      width: 100%,
+      contents: "By creating an account, you agree to our terms and privacy policy.",
+      fill[0].color: c.colors.muted,
+      subrange[0].range: [41, 46],
+      subrange[0].underline: .single,
+      subrange[1].range: [51, 65],
+      subrange[1].underline: .single
+    }
+  }
+}

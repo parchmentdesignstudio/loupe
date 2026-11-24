@@ -1,0 +1,56 @@
+import "tokens/colors.elyx" as c
+import "tokens/lengths.elyx" as l
+import "components/elevation.elyx" as elevation
+import "components/text.elyx" as styles
+
+// A labelled text field, as TextField.tsx draws it: the label in Medium over a raised box, and help under it in muted.
+// The box is 32px tall, as a button is. The label sits 6px over the box and the help 4px under it, as the help's
+// capitals leave room above them that the label's descenders don't. Instance one, set its label and value, and show
+// the description where the field needs help. A value is ink, and a placeholder muted
+file {}
+
+export textField = frame {
+  caption: "Empty, with a placeholder. Its description is hidden until a field needs one",
+  left: 0px,
+  top: 0px,
+  width: 288px,
+  layout: {direction: .column, item-gap: l.lengths.spacing-1},
+  overflow: .visible,
+  children: [labelRow, box, description],
+
+  // Its 2px under the label and the column's 4px make the 6px over the box
+  labelRow = frame {
+    width: 100%,
+    layout: {align-items: .center},
+    padding-bottom: l.lengths.spacing-0-5,
+    children: fieldLabel,
+
+    fieldLabel = text : styles.control {
+      contents: "Your name",
+      font-style: "Medium"
+    }
+  }
+
+  box = frame : elevation.raised {
+    width: 100%,
+    height: .auto,
+    padding-top: l.lengths.spacing-1-5,
+    padding-left: l.lengths.spacing-3,
+    padding-bottom: l.lengths.spacing-1-5,
+    padding-right: l.lengths.spacing-3,
+    layout.align-items: .center,
+    overrides: [insert(value, after = .nil)],
+
+    value = text : styles.control {
+      contents: "Sam Smith",
+      fill[0].color: c.colors.muted
+    }
+  }
+
+  description = text : styles.control {
+    width: 100%,
+    display: .none,
+    contents: "We’ll only use it to reply to you.",
+    fill[0].color: c.colors.muted
+  }
+}

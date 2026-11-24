@@ -1,0 +1,256 @@
+import "tokens/colors.elyx" as c
+import "tokens/fonts.elyx" as f
+import "tokens/lengths.elyx" as l
+import "components/button.elyx" as buttons
+import "components/elevation.elyx" as elevation
+import "components/text.elyx" as styles
+import "components/lead-row.elyx" as leadRows
+import "components/status.elyx" as statuses
+import "components/logo.elyx" as logos
+import "components/toast.elyx" as toasts
+import "blocks/sign-up-form.elyx" as forms
+
+// Where a team starts a free trial of the CRM the Leads screen shows. The form sits on the ground, and beside it a panel
+// holds a glimpse of the leads list they're signing up for
+file {}
+
+export signUp = frame {
+  title: "Sign up",
+  caption: "A mortgage adviser starting a 14-day trial of Threshold, the CRM from the Leads screen",
+  left: 0px,
+  top: 0px,
+  width: 1440px,
+  height: 900px,
+  layout: {direction: .row},
+  fill: c.colors.ground,
+  padding: [l.lengths.spacing-4, l.lengths.spacing-4, l.lengths.spacing-4, 0px],
+  children: [formSide, showcase],
+
+  formSide = frame {
+    width: 50%,
+    height: 100%,
+    layout: {
+      direction: .column,
+      justify-content: .space-between,
+      align-items: .center
+    },
+    overflow: .visible,
+    padding: [l.lengths.spacing-4, l.lengths.spacing-10],
+    children: [topBar, form, footer],
+
+    topBar = frame {
+      width: 100%,
+      layout: {justify-content: .space-between, align-items: .center},
+      overflow: .visible,
+      children: [brand, signIn],
+
+      brand = frame : logos.logo {}
+
+      signIn = frame {
+        layout: {align-items: .center, item-gap: l.lengths.spacing-3},
+        overflow: .visible,
+        children: [signInPrompt, signInButton],
+
+        signInPrompt = text : styles.control {
+          contents: "Already have an account?",
+          fill[0].color: c.colors.muted
+        }
+
+        signInButton = frame : buttons.button {
+          buttonLabel {
+            contents: "Sign in"
+          }
+        }
+      }
+    }
+
+    form = frame : forms.signUpForm {}
+
+    footer = frame {
+      width: 100%,
+      layout: {justify-content: .space-between, align-items: .center},
+      children: [copyright, help],
+
+      copyright = text : styles.label {
+        contents: "© 2026 Threshold Ltd",
+        fill[0].color: c.colors.muted
+      }
+
+      help = text : styles.label {
+        contents: "Questions? Call 0161 496 0310",
+        fill[0].color: c.colors.muted
+      }
+    }
+  }
+
+  showcase = frame : elevation.panel {
+    width: 50%,
+    height: 100%,
+    corner-radius: l.lengths.radius-3xl,
+    padding-top: l.lengths.spacing-12,
+    padding-left: l.lengths.spacing-12,
+    padding-bottom: l.lengths.spacing-12,
+    padding-right: l.lengths.spacing-12,
+    layout.align-items: .center,
+    layout.direction: .column,
+    layout.item-gap: l.lengths.spacing-8,
+    layout.justify-content: .center,
+    overrides: [insert(pitch, after = .nil), insert(preview, after = pitch)],
+
+    pitch = frame {
+      width: 480px,
+      layout: {direction: .column, item-gap: l.lengths.spacing-3},
+      children: [headline, pitchText],
+
+      headline = text : styles.reading-display {
+        width: 100%,
+        contents: "Know where every buyer is up to"
+      }
+
+      pitchText = text : styles.body {
+        width: 100%,
+        contents: "Referrals from every developer land in one list. Book the first call, chase what’s missing and see who’s ready to reserve.",
+        fill[0].color: c.colors.muted
+      }
+    }
+
+    // The leads card, with a toast that's just come in over its last row. They overlap, so they're placed freely, in a
+    // frame as tall as the two together
+    preview = frame {
+      width: 480px,
+      height: 338px,
+      overflow: .visible,
+      children: [leadsCard, callBooked],
+
+      // A raised card, as Card.tsx draws one: raised's fill with the panel's edge and soft shadow
+      leadsCard = frame : elevation.panel {
+        left: 0px,
+        top: 0px,
+        width: 100%,
+        height: .auto,
+        fill[0].color: c.colors.raised,
+        layout.direction: .column,
+        overrides: [
+          insert(cardHeader, after = .nil),
+          insert(firstLead, after = cardHeader),
+          insert(secondLead, after = firstLead),
+          insert(thirdLead, after = secondLead),
+          insert(fourthLead, after = thirdLead),
+          insert(fifthLead, after = fourthLead)
+        ],
+
+        cardHeader = frame {
+          width: 100%,
+          layout: {justify-content: .space-between, align-items: .center},
+          padding: [l.lengths.spacing-3, l.lengths.spacing-4],
+          children: [cardTitle, cardCount],
+
+          cardTitle = text : styles.label {
+            contents: "New this week",
+            font-family: f.fonts.mono,
+            fill[0].color: c.colors.muted
+          }
+
+          cardCount = text : styles.label {
+            contents: "24 leads",
+            fill[0].color: c.colors.muted
+          }
+        }
+
+        firstLead = frame : leadRows.leadRow {
+          width: 100%,
+
+          lead {
+            client {
+              contents: "Imogen Chen"
+            }
+
+            site {
+              contents: "Persimmon, Kingsmead"
+            }
+          }
+        }
+
+        secondLead = frame : leadRows.leadRow {
+          width: 100%,
+
+          lead {
+            client {
+              contents: "Tomasz Byrne"
+            }
+
+            site {
+              contents: "Bellway, Ashton Valley"
+            }
+          }
+
+          leadStatus {
+            statusLabel {
+              contents: "Call arranged"
+            }
+          }
+        }
+
+        thirdLead = frame : leadRows.leadRow {
+          width: 100%,
+
+          @with-variant(statuses.success)
+          leadStatus {}
+
+          lead {
+            client {
+              contents: "Priya Nowak"
+            }
+          }
+        }
+
+        fourthLead = frame : leadRows.leadRow {
+          width: 100%,
+
+          @with-variant(statuses.warning)
+          leadStatus {}
+
+          lead {
+            site {
+              contents: "Taylor Wimpey, Hollins Park"
+            }
+
+            client {
+              contents: "Rhys Llewellyn"
+            }
+          }
+        }
+
+        fifthLead = frame : leadRows.leadRow {
+          width: 100%,
+
+          lead {
+            client {
+              contents: "Olu Rutherford"
+            }
+
+            site {
+              contents: "Bovis Homes, Church Lane"
+            }
+          }
+        }
+      }
+
+      // Over the last row, and 56px past the card's edge
+      callBooked = frame : toasts.toast {
+        left: 184px,
+        top: 276px,
+
+        message {
+          toastTitle {
+            contents: "Call booked with Tomasz Byrne"
+          }
+
+          toastText {
+            contents: "Thursday 26 November at 2pm"
+          }
+        }
+      }
+    }
+  }
+}
