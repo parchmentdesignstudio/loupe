@@ -1,6 +1,6 @@
 {
   "name": "@parchment/logos",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Company logos, with versions drawn for 16px where a company’s own doesn’t hold up, as SVG files and Astro and React components",
   "type": "module",
   "sideEffects": false,
