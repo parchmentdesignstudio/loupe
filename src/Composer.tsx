@@ -6,13 +6,16 @@ import { tv } from './tv.js';
 const composer = tv({
 	slots: {
 		// Context, when there is any, takes a row of its own above the text
-		group: 'flex flex-wrap items-end gap-x-2 rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) py-2 pr-3.5 pl-(--field-padding-x) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2',
+		group: 'flex flex-wrap items-end gap-x-2 rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) py-1 pr-2.5 pl-(--field-padding-x) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2',
 		// One line to begin with, growing with what's written up to about six, then it scrolls
 		context: 'flex basis-full flex-wrap gap-1 pt-1.5',
 		input: 'max-h-40 min-w-0 flex-1 resize-none bg-transparent py-2 text-control leading-6 text-(color:--field-text,var(--color-ink)) outline-none field-sizing-content placeholder:text-(color:--field-placeholder,var(--color-muted))',
 		// Centres the send button on the line of text. It sits further in than the box's radius, so it takes the smallest
 		// corner rather than a concentric one, which would be square
 		send: 'mb-1.5 [--button-radius:var(--radius-sm)]',
+		// Controls for how it's sent, under the field rather than in it, so the box holds only the message. At the end,
+		// under the send button, and drawn in a ghost button's padding, so their words line up with the box's edge
+		actions: 'mt-1 -me-2.5 flex justify-end gap-1',
 	},
 	variants: {
 		isFocusWithin: {
@@ -46,6 +49,8 @@ export interface ComposerProps {
 	onChange?: (message: string) => void;
 	/** What the message is about, such as Chips for a page or a file it's attached to, in a row above the text */
 	context?: ReactNode;
+	/** Controls for how it's sent, such as a Menu to pick who answers, in a row under the field, at its end */
+	actions?: ReactNode;
 	/** A hint for screen readers, read out with the field's name, such as how to send */
 	description?: string;
 	/** The most characters it takes */
@@ -65,7 +70,7 @@ function sendOnEnter(event: KeyboardEvent<HTMLTextAreaElement>) {
  * A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line. The button is
  * always live: an empty message isn't sent, and the field says so by taking focus with a shake
  */
-export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, context, description, maxLength, isDisabled = false, className }: ComposerProps) {
+export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, context, actions, description, maxLength, isDisabled = false, className }: ComposerProps) {
 	const [draft, setDraft] = useState(defaultValue);
 	const message = value ?? draft;
 	const empty = message.trim() === '';
@@ -106,6 +111,7 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
 					</Text>
 				)}
 			</AriaTextField>
+			{actions && <div className={slots.actions()}>{actions}</div>}
 		</Form>
 	);
 }

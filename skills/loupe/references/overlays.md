@@ -20,7 +20,8 @@ button's `aria-label`. Never put links or buttons in a tooltip, as it can't be r
 `<DialogTrigger>` holds the Button and the `Modal`, which holds a `Dialog`. The Dialog has a `DialogHeading` (or an
 `aria-label`), then its content, then `DialogActions` with its buttons.
 
-Sizes: `small` for a confirmation, `medium` (the default) for a short form, `large` for a long one.
+Sizes: `medium` (the default) for a confirmation or a short form, `large` for a long form. `small` only holds a sentence
+with one-word buttons, such as Remove and Cancel, as two buttons that say what happens fill it.
 
 - In `DialogActions`, the confirming button is last. Cancel is `secondary` with `slot="close"`.
 - The confirming button is `primary`, or `danger` if it deletes. Its label says what happens, such as "Delete lead".

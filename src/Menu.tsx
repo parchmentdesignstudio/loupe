@@ -41,8 +41,9 @@ export function MenuItem({ variant, ...props }: MenuItemProps) {
 		<AriaMenuItem {...props} textValue={textValue} className={composeRenderProps(props.className, (className, state) => menuItem({ ...state, variant, className }))}>
 			{composeRenderProps(props.children, (children, { selectionMode, isSelected, hasSubmenu }) => (
 				<>
-					{selectionMode !== 'none' && <span className="flex size-4 shrink-0">{isSelected && <Check />}</span>}
-					<span className="flex min-w-0 flex-1 items-center gap-2 [&>kbd]:ms-auto [&>kbd]:shrink-0">{truncateText(children)}</span>
+					<span className="flex min-w-0 flex-1 items-center gap-2 group-data-[selected]:font-(--option-selected-font-weight) [&>kbd]:ms-auto [&>kbd]:shrink-0">{truncateText(children)}</span>
+					{/* At the end, as a Select's option has it, so a choice in a menu reads the same as one in a Select */}
+					{selectionMode !== 'none' && isSelected && <Check />}
 					{hasSubmenu && <ChevronRight className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" />}
 				</>
 			))}

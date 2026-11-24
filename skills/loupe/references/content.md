@@ -46,5 +46,7 @@ A line between groups of controls or sections of a panel. Not between rows of a 
 ## Chat
 
 `MessageList` holds `Message`s, oldest first; each is `from="user"` or `from="assistant"`. `Composer` is the field and
-send button under them: Enter sends, Shift-Enter starts a line. `Suggestions` holds `Suggestion`s to ask, with
-variants `starter` (before the first message) and `follow-up` (after a reply).
+send button under them: Enter sends, Shift-Enter starts a line. Its `context` holds Chips for what the message is
+about, above the text, and its `actions` holds controls for how it's sent, such as a ghost Button opening a Menu of
+models, under the field. `Suggestions` holds `Suggestion`s to ask, with variants `starter` (before the first message)
+and `follow-up` (after a reply).

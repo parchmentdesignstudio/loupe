@@ -241,6 +241,7 @@
 		--shadow-light: var(--shadow-toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade);
 		--shadow-edge: 0 0 0 .5px var(--edge);
 		--shadow-rim: inset 0 0 0 .5px var(--sheen), var(--shadow-edge);
+		--shadow-shell-light: inset 0 .5px 0 var(--shell-toplight), inset 0 1px 3px -1.5px var(--shell-glow);
 		/* A button's edge is 1px, and it can set --fine-edge to draw a half-pixel one as well, or clear --edge to have
 		   only that one */
 		--shadow-rim-button: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge);
@@ -267,6 +268,8 @@
 	   modes, and the colours come from :root, below */
 	--shadow-raised: var(--shadow-light), var(--shadow-rim), var(--shadow-depth-raised);
 	--shadow-panel: var(--shadow-rim), var(--shadow-depth-raised);
+	/* The docs shell's card, a panel catching the light along its top, so the page reads as a sheet laid on the ground */
+	--shadow-shell: var(--shadow-shell-light), var(--shadow-panel);
 	--shadow-button: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-raised);
 	--shadow-button-lifted: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-lifted);
 	--shadow-floating: var(--shadow-rim), var(--shadow-depth-floating);
@@ -398,6 +401,10 @@
 		   coloured fill, such as a primary button, the light is a lighter tint of it */
 		--glow: light-dark(transparent, color-mix(in oklab, var(--color-white) 6%, transparent));
 		--shade: light-dark(transparent, color-mix(in oklab, var(--color-black) 16%, transparent));
+		/* The shell card's top. White in the light, as the panel is near white and a tint of it would barely show. In
+		   the dark, the same light a control's top catches */
+		--shell-toplight: light-dark(var(--color-white), var(--toplight));
+		--shell-glow: light-dark(color-mix(in oklab, var(--color-white) 50%, transparent), var(--glow));
 		--shadow-raised-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
 		--shadow-floating-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
 		/* Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it */
