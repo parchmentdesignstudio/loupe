@@ -1,6 +1,6 @@
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Button, Group, Input, NumberField as AriaNumberField } from 'react-aria-components';
-import { Description, FieldError, Label, readOnly } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, Label, readOnly } from './Field.js';
 import { Dash, Plus } from './glyphs.js';
 import { composeClassName, tv } from './tv.js';
 // Sized like a text field, with its steppers inside as the combo box has its button
@@ -37,8 +37,8 @@ export const numberField = tv({
 });
 /** A number, typed or stepped. The arrow keys and its buttons move it by step, within minValue and maxValue, and formatOptions shows it as a percentage, currency or unit */
 export function NumberField({ label, description, errorMessage, placeholder, variant, size, ...props }) {
-    return (_jsx(AriaNumberField, { ...props, className: composeClassName(props.className, 'flex flex-col gap-1.5'), children: ({ isInvalid, isDisabled }) => {
+    return (_jsx(AriaNumberField, { ...props, className: composeClassName(props.className, boxField), children: ({ isInvalid, isDisabled }) => {
             const slots = numberField({ isInvalid, isDisabled, variant, size });
-            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Group, { className: (state) => slots.group(state), children: [_jsx(Input, { placeholder: placeholder, className: slots.input() }), _jsx(Button, { slot: "decrement", className: slots.stepper(), children: _jsx(Dash, {}) }), _jsx(Button, { slot: "increment", className: slots.stepper(), children: _jsx(Plus, {}) })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
+            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { className: boxLabel, children: label }), _jsxs(Group, { className: (state) => slots.group(state), children: [_jsx(Input, { placeholder: placeholder, className: slots.input() }), _jsx(Button, { slot: "decrement", className: slots.stepper(), children: _jsx(Dash, {}) }), _jsx(Button, { slot: "increment", className: slots.stepper(), children: _jsx(Plus, {}) })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
         } }));
 }

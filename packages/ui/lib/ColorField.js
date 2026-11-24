@@ -1,7 +1,7 @@
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ColorField as AriaColorField, ColorFieldContext, Group, Input, NumberField as AriaNumberField, parseColor, TextField as AriaTextField, useContextProps, useLocale, } from 'react-aria-components';
-import { Description, FieldError, Label } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, Label } from './Field.js';
 import { numberField } from './NumberField.js';
 import { formatOklch, fromOklch, parseAnyColor } from './parseAnyColor.js';
 import { Swatch } from './Swatch.js';
@@ -18,7 +18,7 @@ export function ColorField(props) {
     return props.channel ? _jsx(ChannelField, { ...props }) : _jsx(AnyColorField, { ...props });
 }
 function ChannelField({ label, description, errorMessage, placeholder, hasOpacity: _hasOpacity, format: _format, variant, size, onChange, ...props }) {
-    return (_jsxs(AriaColorField, { ...props, onChange: (color) => onChange?.(color, oklchString(color)), className: composeClassName(props.className, 'flex flex-col gap-1.5'), children: [label && _jsx(Label, { children: label }), _jsx(Input, { placeholder: placeholder, className: (state) => textFieldInput({ ...state, variant, size }) }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
+    return (_jsxs(AriaColorField, { ...props, onChange: (color) => onChange?.(color, oklchString(color)), className: composeClassName(props.className, boxField), children: [label && _jsx(Label, { className: boxLabel, children: label }), _jsx(Input, { placeholder: placeholder, className: (state) => textFieldInput({ ...state, variant, size }) }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
 }
 // The opacity's format, which its box is sized to at 100%, the widest it gets
 const percent = { style: 'percent' };
@@ -138,9 +138,9 @@ function AnyColorField({ ref: givenRef, ...given }) {
         }, validate: validate && (() => validate(color)), onBlur: (event) => {
             commit();
             onBlur?.(event);
-        }, onKeyDown: keyDown, className: composeClassName(className, 'flex flex-col gap-1.5'), children: ({ isInvalid, isDisabled }) => {
+        }, onKeyDown: keyDown, className: composeClassName(className, boxField), children: ({ isInvalid, isDisabled }) => {
             const slots = numberField({ variant, size, isInvalid, isDisabled });
-            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { children: label }), _jsxs(Group, { isDisabled: isDisabled, isInvalid: isInvalid, className: (state) => slots.group({ ...state, className: ['pe-0 ps-(--inset)', inset] }), children: [_jsx(Swatch, { color: css ?? undefined, size: "field" }), _jsx(Input, { ref: input, dir: "ltr", name: name ? '' : undefined, placeholder: placeholder, spellCheck: false, autoComplete: "off", onPaste: onPaste, onKeyDown: (event) => cross(event, opacityInput.current, 'end'), className: slots.input({ className: ['truncate', behind] }) }), hasOpacity && _jsx("span", { className: "h-4 shrink-0 border-s border-bleed/8" }), hasOpacity && (_jsx(AriaNumberField, { "aria-label": "Opacity", value: color ? color.getChannelValue('alpha') : Number.NaN, onChange: (next) => {
+            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { className: boxLabel, children: label }), _jsxs(Group, { isDisabled: isDisabled, isInvalid: isInvalid, className: (state) => slots.group({ ...state, className: ['pe-0 ps-(--inset)', inset] }), children: [_jsx(Swatch, { color: css ?? undefined, size: "field" }), _jsx(Input, { ref: input, dir: "ltr", name: name ? '' : undefined, placeholder: placeholder, spellCheck: false, autoComplete: "off", onPaste: onPaste, onKeyDown: (event) => cross(event, opacityInput.current, 'end'), className: slots.input({ className: ['truncate', behind] }) }), hasOpacity && _jsx("span", { className: "h-4 shrink-0 border-s border-bleed/8" }), hasOpacity && (_jsx(AriaNumberField, { "aria-label": "Opacity", value: color ? color.getChannelValue('alpha') : Number.NaN, onChange: (next) => {
                                     if (!isResetting.current && color && !Number.isNaN(next))
                                         set(color.withChannelValue('alpha', next), exact);
                                 }, minValue: 0, maxValue: 1, step: 0.01, formatOptions: percent, isDisabled: isDisabled || !color, isReadOnly: props.isReadOnly, className: "contents", children: _jsxs("span", { className: "relative flex-none", children: [_jsx("span", { "aria-hidden": true, className: slots.input({ className: ['invisible block whitespace-pre', opacity] }), children: widest }), _jsx(Input, { ref: opacityInput, onKeyDown: (event) => cross(event, input.current, 'start'), className: slots.input({ className: ['absolute inset-0 size-full', opacity] }) })] }) }))] }), name && _jsx("input", { type: "hidden", name: name, form: form, disabled: isDisabled, value: color && css ? (format === 'hex' ? color.toString('hexa') : css) : '' }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));

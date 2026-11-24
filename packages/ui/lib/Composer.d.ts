@@ -16,6 +16,8 @@ export interface ComposerProps {
     onChange?: (message: string) => void;
     /** What the message is about, such as Chips for a page or a file it's attached to, in a row above the text */
     context?: ReactNode;
+    /** Controls for how it's sent, such as a Menu to pick who answers, in a row under the field, at its end */
+    actions?: ReactNode;
     /** A hint for screen readers, read out with the field's name, such as how to send */
     description?: string;
     /** The most characters it takes */
@@ -23,5 +25,8 @@ export interface ComposerProps {
     isDisabled?: boolean;
     className?: string;
 }
-/** A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line, and an empty message can't be sent */
-export declare function Composer({ 'aria-label': label, placeholder, submitLabel, submitIcon, onSubmit, value, defaultValue, onChange, context, description, maxLength, isDisabled, className }: ComposerProps): import("react").JSX.Element;
+/**
+ * A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line. The button is
+ * always live: an empty message isn't sent, and the field says so by taking focus with a shake
+ */
+export declare function Composer({ 'aria-label': label, placeholder, submitLabel, submitIcon, onSubmit, value, defaultValue, onChange, context, actions, description, maxLength, isDisabled, className }: ComposerProps): import("react").JSX.Element;

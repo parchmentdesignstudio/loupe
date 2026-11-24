@@ -1,5 +1,11 @@
 import { type DialogProps, type SheetOverlayProps } from 'react-aria-components';
 export { SheetTrigger as DrawerTrigger } from 'react-aria-components';
+/**
+ * Changes an open pushing drawer's width, as change sets --drawer-push-width, in time with how it opens: the page
+ * rewraps once, what follows glides to its new place, and the panel grows or shrinks from its inner edge over the same
+ * 350ms. For the preview's own drawers, such as a chat that widens for a larger view, so it's not in the index
+ */
+export declare function resizePushDrawer(within: HTMLElement, change: () => void): void;
 declare const breakpoints: {
     readonly md: '48rem';
     readonly lg: '64rem';

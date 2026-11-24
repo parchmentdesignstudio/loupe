@@ -4,7 +4,7 @@ import { Button, DatePicker as AriaDatePicker, DatePickerStateContext, DateRange
 import { Calendar, RangeCalendar } from './Calendar.js';
 import { DateSegments, TimeField, dateInput } from './DateField.js';
 import { Dialog } from './Dialog.js';
-import { Description, FieldError, Label } from './Field.js';
+import { boxField, boxLabel, Description, FieldError, Label } from './Field.js';
 import { CalendarGlyph } from './glyphs.js';
 import { Popover } from './Popover.js';
 import { composeClassName, tv } from './tv.js';
@@ -31,7 +31,7 @@ function PickerTime({ granularity, hourCycle }) {
  * granularity of hour or minute it takes a time too, typed in the field or under the calendar
  */
 export function DatePicker({ label, description, errorMessage, ...props }) {
-    return (_jsxs(AriaDatePicker, { ...props, className: composeClassName(props.className, 'flex flex-col gap-1.5'), children: [label && _jsx(Label, { children: label }), _jsxs(Group, { className: (state) => dateInput({ ...state, className: slots.group() }), children: [_jsx(DateSegments, { className: slots.input() }), _jsx(Button, { className: slots.button(), children: _jsx(CalendarGlyph, {}) })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage }), _jsx(Popover, { placement: "bottom start", children: _jsxs(Dialog, { children: [_jsx(Calendar, {}), _jsx(PickerTime, { granularity: props.granularity, hourCycle: props.hourCycle })] }) })] }));
+    return (_jsxs(AriaDatePicker, { ...props, className: composeClassName(props.className, boxField), children: [label && _jsx(Label, { className: boxLabel, children: label }), _jsxs(Group, { className: (state) => dateInput({ ...state, className: slots.group() }), children: [_jsx(DateSegments, { className: slots.input() }), _jsx(Button, { className: slots.button(), children: _jsx(CalendarGlyph, {}) })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage }), _jsx(Popover, { placement: "bottom start", children: _jsxs(Dialog, { children: [_jsx(Calendar, {}), _jsx(PickerTime, { granularity: props.granularity, hourCycle: props.hourCycle })] }) })] }));
 }
 // Two months side by side where there's room for them, or one on a phone
 const wide = '(min-width: 40rem)';
@@ -44,5 +44,5 @@ const useWide = () => useSyncExternalStore(subscribe, () => matchMedia(wide).mat
 /** A start and end date, typed in one field or picked from a calendar that opens below it, two months at a time on wider screens */
 export function DateRangePicker({ label, description, errorMessage, visibleDuration, ...props }) {
     const isWide = useWide();
-    return (_jsxs(AriaDateRangePicker, { ...props, className: composeClassName(props.className, 'flex flex-col gap-1.5'), children: [label && _jsx(Label, { children: label }), _jsxs(Group, { className: (state) => dateInput({ ...state, className: slots.group() }), children: [_jsx(DateSegments, { slot: "start", className: slots.input() }), _jsx("span", { "aria-hidden": "true", className: slots.dash(), children: "\u2013" }), _jsx(DateSegments, { slot: "end", className: slots.input() }), _jsx(Button, { className: slots.button(), children: _jsx(CalendarGlyph, {}) })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage }), _jsx(Popover, { placement: "bottom start", children: _jsx(Dialog, { children: _jsx(RangeCalendar, { visibleDuration: visibleDuration ?? { months: isWide ? 2 : 1 }, pageBehavior: "single" }) }) })] }));
+    return (_jsxs(AriaDateRangePicker, { ...props, className: composeClassName(props.className, boxField), children: [label && _jsx(Label, { className: boxLabel, children: label }), _jsxs(Group, { className: (state) => dateInput({ ...state, className: slots.group() }), children: [_jsx(DateSegments, { slot: "start", className: slots.input() }), _jsx("span", { "aria-hidden": "true", className: slots.dash(), children: "\u2013" }), _jsx(DateSegments, { slot: "end", className: slots.input() }), _jsx(Button, { className: slots.button(), children: _jsx(CalendarGlyph, {}) })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage }), _jsx(Popover, { placement: "bottom start", children: _jsx(Dialog, { children: _jsx(RangeCalendar, { visibleDuration: visibleDuration ?? { months: isWide ? 2 : 1 }, pageBehavior: "single" }) }) })] }));
 }
