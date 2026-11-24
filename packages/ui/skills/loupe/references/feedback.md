@@ -48,7 +48,8 @@ them up. Use one Alert per region at most.
 ## EmptyState
 
 Where there's nothing to show yet. `title` says what will be here, the children say how to start, and `actions` holds
-the first step as a Button. `icon` is an `<Icon />`.
+the first step as a Button. `icon` is an `<Icon />` for the kind of thing that will be here, such as `folder` for
+projects.
 
 ```tsx
 // Correct

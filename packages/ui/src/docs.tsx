@@ -1,4 +1,4 @@
-import { type ReactNode, type Ref, useEffect, useState } from 'react';
+import { type CSSProperties, type ReactNode, type Ref, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Autocomplete, useFilter } from 'react-aria-components';
 import { Breadcrumb, Breadcrumbs } from './Breadcrumbs.js';
 import { Button } from './Button.js';
@@ -37,8 +37,15 @@ export interface DocsShellProps {
 	phoneActions?: ReactNode;
 	/** Under the pages in the phone's drawer */
 	drawerEnd?: ReactNode;
-	/** Beside the page under the bar, such as settings */
+	/** Beside the page, the card's full height, such as settings. Its own bar, 48px tall, sits level with the page's */
 	aside?: ReactNode;
+	/**
+	 * At the card's top end on wider screens, such as the buttons that open what's in aside. They stay put as one opens,
+	 * over the end of the page's bar or of the aside's, which leaves them room by reading --docs-toggles, their width
+	 */
+	toggles?: ReactNode;
+	/** Whether what's in aside is open, so the page's bar stops leaving room for the toggles, as they're over the aside */
+	isAsideOpen?: boolean;
 	/** The page's address. When it changes, the phone's drawer closes to show it */
 	current?: string;
 	/** The panel that scrolls, for anything that follows its scroll */
@@ -46,8 +53,20 @@ export interface DocsShellProps {
 	children: ReactNode;
 }
 
-export function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phoneActions, drawerEnd, aside, current, scrollerRef, children }: DocsShellProps) {
+export function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phoneActions, drawerEnd, aside, toggles, isAsideOpen = false, current, scrollerRef, children }: DocsShellProps) {
 	const [isOpen, setOpen] = useState(false);
+	const [togglesWidth, setTogglesWidth] = useState(0);
+	const togglesRef = useRef<HTMLDivElement>(null);
+	useLayoutEffect(() => {
+		const element = togglesRef.current;
+		if (!element) return;
+		const measure = () => setTogglesWidth(element.offsetWidth);
+		measure();
+		const observer = new ResizeObserver(measure);
+		observer.observe(element);
+		return () => observer.disconnect();
+	}, [toggles]);
+	const hasToggles = toggles != null && toggles !== false;
 	const [shown, setShown] = useState(current);
 	if (shown !== current) {
 		setShown(current);
@@ -82,34 +101,45 @@ export function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phon
 			</header>
 			{/* On wider screens the page is a card as tall as the window, so what's beside it stays in view. Raised over the
 			    sticky columns either side, which would otherwise paint over its shadow */}
-			<div className="min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:mr-2 md:h-[calc(100dvh-1rem)] md:overflow-hidden md:rounded-xl md:shadow-panel">
-				{/* The card's own bleed, so lines inside suit it, while its shadow keeps the ground's */}
-				<div className="flex min-h-full flex-col [--bleed:var(--panel-bleed)] md:h-full">
-					{/* Sticks below the phone's header, which is as tall as its 28px buttons and its padding */}
-					<div className="sticky top-11 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-bleed/8 bg-panel px-4 md:top-0 md:px-5">
-						<div className="flex min-w-0 flex-1 items-center gap-2">
-							{barStart}
-							<Breadcrumbs>
-								{trail.map((crumb, index) => (
-									<Breadcrumb key={`${index}${crumb.name}`} href={crumb.href} className="first:max-md:hidden">
-										{crumb.name}
-									</Breadcrumb>
-								))}
-							</Breadcrumbs>
+			<div
+				className="min-w-0 flex-1 bg-panel md:relative md:z-1 md:my-2 md:mr-2 md:h-[calc(100dvh-1rem)] md:overflow-hidden md:rounded-xl md:shadow-shell"
+				style={hasToggles ? ({ '--docs-toggles': `${togglesWidth}px` } as CSSProperties) : undefined}
+			>
+				{/* The card's own bleed, so lines inside suit it, while its shadow keeps the ground's. Clipped, not hidden, so an
+				    aside past the card's edge can't scroll it sideways */}
+				<div className="flex min-h-full overflow-x-clip [--bleed:var(--panel-bleed)] md:h-full">
+					<div className="flex min-w-0 flex-1 flex-col">
+						{/* Sticks below the phone's header, which is as tall as its 28px buttons and its padding */}
+						<div className="sticky top-11 z-10 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-bleed/8 bg-panel px-4 md:top-0 md:px-5">
+							<div className="flex min-w-0 flex-1 items-center gap-2">
+								{barStart}
+								<Breadcrumbs>
+									{trail.map((crumb, index) => (
+										<Breadcrumb key={`${index}${crumb.name}`} href={crumb.href} className="first:max-md:hidden">
+											{crumb.name}
+										</Breadcrumb>
+									))}
+								</Breadcrumbs>
+							</div>
+							{/* The toggles are 14px in from the card's end, as a ghost button's 6px pulls them out of the bar's 20px,
+							    so with them over this bar, the actions stop 4px before them */}
+							{actions && <div className={`-mr-1.5 flex items-center gap-1 max-md:hidden ${hasToggles && !isAsideOpen ? 'md:mr-[calc(var(--docs-toggles)-2px)]' : ''}`}>{actions}</div>}
 						</div>
-						{actions && <div className="-mr-1.5 flex items-center gap-1 max-md:hidden">{actions}</div>}
-					</div>
-					{/* Clipped, not hidden, so an aside past the card's edge can't scroll it sideways */}
-					<div className="flex flex-1 overflow-x-clip md:min-h-0">
 						{/* A container, so the page lays itself out by the room it has, which a drawer beside it takes some of, rather
 						    than by the window. On wider screens it scrolls on its own, under the bar, so its scrollbar is beside the
 						    page rather than past a drawer, and a drawer scrolls apart from it */}
-						<main ref={scrollerRef} data-docs-page className="@container/page min-w-0 flex-1 md:overflow-y-auto md:overscroll-contain">
+						<main ref={scrollerRef} data-docs-page className="@container/page min-w-0 flex-1 md:min-h-0 md:overflow-y-auto md:overscroll-contain">
 							{children}
 						</main>
-						{aside}
 					</div>
+					{aside}
 				</div>
+				{/* Over whichever bar is at the end, so they don't move as a drawer opens, and keep focus as they're pressed */}
+				{hasToggles && (
+					<div ref={togglesRef} className="absolute end-3.5 top-0 z-20 flex h-12 items-center gap-1 max-md:hidden">
+						{toggles}
+					</div>
+				)}
 			</div>
 		</div>
 	);

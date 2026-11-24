@@ -23,15 +23,19 @@ import { composeClassName, focusRing, tv } from './tv.js';
 // between and flicker. Each link reports its press here, and shows as current until selectedRoute moves on
 export type { NavigationTreeHeaderProps, NavigationTreeItemProps, NavigationTreeSectionProps };
 
-const TreeContext = createContext<{ press: (event: PressEvent) => void; hasTitles: boolean } | null>(null);
+const TreeContext = createContext<{ press: (event: PressEvent) => void; hasTitles: boolean; hasIcons: boolean; hasFolderTriangles: boolean } | null>(null);
 
 export interface NavigationTreeProps<T extends object> extends AriaNavigationTreeProps<T> {
 	/** The top-level items are small titles that fold what's under them, and what's under them starts at the edge */
 	hasTitles?: boolean;
+	/** The top-level items have icons, so what's under them lines up with their text rather than their icon */
+	hasIcons?: boolean;
+	/** A folder shows a triangle to open it. Without one, pressing the folder opens it, so give it no href. A title keeps its triangle */
+	hasFolderTriangles?: boolean;
 }
 
 /** Links to the pages of a site or tool, in sections. The item whose href matches selectedRoute is the current page */
-export function NavigationTree<T extends object>({ hasTitles = false, ...props }: NavigationTreeProps<T>) {
+export function NavigationTree<T extends object>({ hasTitles = false, hasIcons = false, hasFolderTriangles = true, ...props }: NavigationTreeProps<T>) {
 	const [pressed, setPressed] = useState<{ href: string; from: string | null | undefined } | null>(null);
 	const selectedRoute = pressed && pressed.from === props.selectedRoute ? pressed.href : props.selectedRoute;
 
@@ -42,7 +46,7 @@ export function NavigationTree<T extends object>({ hasTitles = false, ...props }
 	};
 
 	return (
-		<TreeContext.Provider value={{ press, hasTitles }}>
+		<TreeContext.Provider value={{ press, hasTitles, hasIcons, hasFolderTriangles }}>
 			<AriaNavigationTree {...props} selectedRoute={selectedRoute} className={composeClassName(props.className, 'flex flex-col gap-0.5 outline-0')} />
 		</TreeContext.Provider>
 	);
@@ -90,80 +94,43 @@ export const navigationTreeLink = tv({
 
 // What React Aria hands an item's content, for its tree's state
 type Values = Parameters<Extract<AriaNavigationTreeItemContentProps['children'], (...args: never[]) => unknown>>[0];
-type State = Values['state'];
 
-// Where each depth's text and fill start, in px. Each depth steps in 12px, and its line runs down under the first letter
-// of the parent, with the fill starting 6px after it so the line stays clear of it
-const textAt = (depth: number) => 12 * Math.max(depth, 1);
-const fillAt = (depth: number) => (depth < 2 ? 0 : textAt(depth) - 6);
+// Where each depth's text and fill start, in px. Each depth steps in 12px, and its fill starts 6px before its text,
+// clear of the current page's mark under the parent's first letter. Under an item with an icon, its 14px and 4px gap take
+// the text 6px further, so it lines up with the item's name
+const textAt = (depth: number, hasIcons = false) => 12 * Math.max(depth, 1) + (hasIcons && depth > 1 ? 6 : 0);
+const fillAt = (depth: number, hasIcons = false) => (depth < 2 ? 0 : textAt(depth, hasIcons) - 6);
 
-// Where the cap height and the baseline fall in a row, from Elza's ascent and descent in ems and the row's 4px padding.
-// A line takes the text's size, so these hold at any text size
-const baseline = 'calc(4px + (1lh - 1.231em) / 2 + 1em)';
-const capTop = `calc(${baseline} - 0.716em)`;
-
-/** The item beside this one under the same parent, after it or before it, skipping the content node React Aria keeps among them */
-function sibling(collection: State['collection'], key: Key | null | undefined, way: 'nextKey' | 'prevKey') {
-	let next = key == null ? null : collection.getItem(key)?.[way];
+/** The item before this one under the same parent, skipping the content node React Aria keeps among them */
+function previous(collection: Values['state']['collection'], key: Key) {
+	let next = collection.getItem(key)?.prevKey;
 	while (next != null) {
 		const node = collection.getItem(next);
 		if (node?.type === 'item') return node;
-		next = node?.[way];
+		next = node?.prevKey;
 	}
 	return null;
 }
 
-const rail = 'pointer-events-none absolute text-control';
+// The current page's mark, in the accent, under the first letter of its folder's name, or its icon, as tall as its text.
+// Nothing at the top depth, which has no folder to sit under
+function CurrentMark({ depth, hasIcons }: { depth: number; hasIcons: boolean }) {
+	if (depth < 2) return null;
+	return <span aria-hidden="true" className="pointer-events-none absolute inset-y-1 w-0.5 rounded-full bg-accent" style={{ insetInlineStart: textAt(depth - 1, hasIcons) - 0.5 }} />;
+}
 
 // The triangle is drawn at 12px rather than its 16px, so it sits quietly by the text. It points along the line while
 // closed, and turns down to open
 const triangle = 'size-3 shrink-0 fill-current transition-transform duration-150 ease-out motion-reduce:transition-none';
 
 /**
- * The line down each open folder, from the cap height of its first item to the baseline of its last, so it spans the
- * text rather than the rows, and the current page marked on it in the accent. A folder's line carries on past the items
- * of a folder inside it. Nothing at the top depth, apart from the accent
- */
-function Rails({ state, id, depth, isCurrent }: { state: State; id: Key; depth: number; isCurrent: boolean }) {
-	const { collection } = state;
-	const lines: { at: number; top: string; bottom: string }[] = [];
-	// Climbing from the item, it's at the end of each folder above while it and each folder between are the last in theirs
-	let node: Key | null | undefined = id;
-	let isAtEnd = true;
-	for (let level = depth; level >= 2 && node != null; level--) {
-		isAtEnd &&= !sibling(collection, node, 'nextKey');
-		const isFirst = level === depth && !sibling(collection, node, 'prevKey');
-		// Rows are 2px apart, so a line reaches up over the gap to meet the one above
-		lines.push({ at: textAt(level - 1), top: isFirst ? capTop : '-2px', bottom: isAtEnd ? baseline : '100%' });
-		node = collection.getItem(node)?.parentKey;
-	}
-	const own = lines[0];
-	const top = own?.top === capTop ? capTop : '2px';
-	const bottom = own?.bottom === baseline ? baseline : '100% - 2px';
-	return (
-		<>
-			{lines.map((line) => (
-				<span key={line.at} aria-hidden="true" className={`${rail} w-px bg-bleed/16`} style={{ insetInlineStart: line.at, top: line.top, height: `calc(${line.bottom} - ${line.top})` }} />
-			))}
-			{isCurrent && (
-				<span
-					aria-hidden="true"
-					className={`${rail} w-0.5 rounded-full bg-accent`}
-					style={{ insetInlineStart: own ? own.at - 0.5 : 0, top, height: `calc(${bottom} - ${top})` }}
-				/>
-			)}
-		</>
-	);
-}
-
-/**
  * An item’s text, with the link React Aria gives each item laid over its row, so the text can sit beside the triangle that
  * opens it. The triangle is a button of its own, over the link rather than in it, so a screen reader can open and close it.
- * Each depth steps in 12px, under a line down its folder. In a tree with titles, the top level are titles, and a title that
- * isn't a link folds when it's pressed
+ * Each depth steps in 12px. In a tree with titles, the top level are titles, and a title that isn't a link folds when it's
+ * pressed
  */
 export interface NavigationTreeItemContentProps extends AriaNavigationTreeItemContentProps {
-	/** An icon before the text, in its colour, such as one for each title */
+	/** An icon before the text, in its colour: 14px beside an item's name, and 12px beside a title's smaller text */
 	icon?: ReactNode;
 }
 
@@ -175,7 +142,7 @@ export function NavigationTreeItemContent({ children, icon }: NavigationTreeItem
 				const text = typeof children === 'function' ? children(values) : children;
 				const isTitle = !!tree?.hasTitles && values.level === 1;
 				const depth = tree?.hasTitles ? values.level - 1 : values.level;
-				const isFirst = !sibling(values.state.collection, values.id, 'prevKey');
+				const isFirst = !previous(values.state.collection, values.id);
 				// Pages inside a folder are muted, so the folders and the current page stand out
 				const isPage = depth > 1 && !values.hasChildItems;
 				return (
@@ -183,11 +150,11 @@ export function NavigationTreeItemContent({ children, icon }: NavigationTreeItem
 						<AriaLink
 							onPress={tree?.press}
 							className={(state) => navigationTreeLink({ ...state, className: 'absolute inset-y-0 end-0' })}
-							style={{ insetInlineStart: fillAt(depth) }}
+							style={{ insetInlineStart: fillAt(depth, tree?.hasIcons) }}
 						>
 							<span className="sr-only">{text}</span>
 						</AriaLink>
-						{!isTitle && <Rails state={values.state} id={values.id} depth={depth} isCurrent={values.isCurrent} />}
+						{!isTitle && values.isCurrent && <CurrentMark depth={depth} hasIcons={!!tree?.hasIcons} />}
 						<span
 							aria-hidden="true"
 							className={[
@@ -198,12 +165,12 @@ export function NavigationTreeItemContent({ children, icon }: NavigationTreeItem
 										? 'text-control text-muted group-hover/row:text-ink group-has-[[aria-current=page]]/row:font-medium group-has-[[aria-current=page]]/row:text-ink'
 										: 'text-control font-medium text-ink',
 							].join(' ')}
-							style={{ paddingInlineStart: textAt(depth) }}
+							style={{ paddingInlineStart: textAt(depth, tree?.hasIcons) }}
 						>
-							{icon && <span className="flex shrink-0 [&>svg]:size-3">{icon}</span>}
+							{icon && <span className={isTitle ? 'flex shrink-0 [&>svg]:size-3' : 'flex shrink-0 [&>svg]:size-3.5'}>{icon}</span>}
 							<span className="min-w-0 truncate">{text}</span>
 						</span>
-						{values.hasChildItems && (
+						{values.hasChildItems && (isTitle || tree?.hasFolderTriangles !== false) && (
 							<AriaButton
 								slot="chevron"
 								className={(state) =>
