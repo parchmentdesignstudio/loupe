@@ -8,13 +8,13 @@ import Anthropic, { AnthropicError, APIError, AuthenticationError, RateLimitErro
 import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { loadEnv } from 'vite';
+import { models as choices, efforts } from './models.mjs';
 
 export const path = '/__loupe/claude';
-// The models and efforts a request may pick, for the evals to compare and, later, a picker in the composer. Opus at
-// medium unless it says otherwise. Haiku has no server-side fallback, and it's only been tried with Opus, so only Opus
-// asks for one
-export const models = ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-5-5'];
-export const efforts = ['low', 'medium', 'high'];
+// The ids a request may pick, for the evals to compare and the composer's picker. Haiku has no server-side fallback,
+// and it's only been tried with Opus, so only Opus asks for one
+export const models = choices.map((model) => model.id);
+export { efforts };
 const fallsBack = (model) => model.startsWith('claude-opus');
 // Drawing again after an error is rare, and three goes is plenty to tell a tree that won't come right
 const attempts = 3;

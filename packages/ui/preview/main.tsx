@@ -1,5 +1,6 @@
 import { Component, type ReactNode, StrictMode, useEffect, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
+import type { SolidIconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 // Loupe's one version, which every package is released at (pnpm bump)
 import manifest from '../../../package.json?raw';
@@ -58,38 +59,58 @@ const loupePages = [...areas.filter((area) => area.id !== 'blocks'), ...(foundat
 	a.name.localeCompare(b.name),
 );
 
+const navIcons: Record<string, SolidIconName> = {
+	Brand: 'paintpalette',
+	Foundations: 'ruler',
+	Icons: 'star',
+	Screens: 'display',
+	Skills: 'graduationcap',
+	Actions: 'cursorarrow',
+	Forms: 'checkmark-square',
+	Data: 'tablecells',
+	Feedback: 'info-circle',
+	Writing: 'pencil-tip',
+	Conversation: 'message',
+	Overlays: 'square-on-square',
+	Navigation: 'sidebar-left',
+};
+const navIcon = (name: string) => (navIcons[name] ? <Icon name={navIcons[name]} /> : undefined);
+
 // Three titles that fold: Loupe's own pages, the components in their groups and the blocks. Components and Blocks are
-// pages too, so their titles link to them, and everything starts open so it's all in view
+// pages too, so their titles link to them. The titles start open and the folders closed, bar the one holding the page
+// you land on, so the list is short and you can still see where you are
 function Tree({ current }: { current: string }) {
 	return (
 		<NavigationTree
 			hasTitles
+			hasIcons
+			hasFolderTriangles={false}
 			aria-label="Loupe"
 			selectedRoute={`#/${current}`}
-			defaultExpandedKeys={['loupe', 'components', 'blocks', ...library.map((group) => groupKey(group.name))]}
+			defaultExpandedKeys={['loupe', 'components', 'blocks', ...library.filter((group) => group.components.some((entry) => href(entry) === `#/${current}`)).map((group) => groupKey(group.name))]}
 		>
 			<NavigationTreeItem id="loupe" textValue="Loupe">
-				<NavigationTreeItemContent icon={<Icon name="books-vertical" />}>Loupe</NavigationTreeItemContent>
+				<NavigationTreeItemContent>Loupe</NavigationTreeItemContent>
 				{loupePages.map((page) =>
 					page.id === groupKey('Foundations') && foundations ? (
 						<NavigationTreeItem key={page.id} id={page.id} textValue={page.name}>
-							<NavigationTreeItemContent>{page.name}</NavigationTreeItemContent>
+							<NavigationTreeItemContent icon={navIcon(page.name)}>{page.name}</NavigationTreeItemContent>
 							{foundations.components.map((entry) => (
 								<Page key={entry.id} entry={entry} />
 							))}
 						</NavigationTreeItem>
 					) : (
 						<NavigationTreeItem key={page.id} id={page.id} href={`#/${page.id}`} textValue={page.name}>
-							<NavigationTreeItemContent>{page.name}</NavigationTreeItemContent>
+							<NavigationTreeItemContent icon={navIcon(page.name)}>{page.name}</NavigationTreeItemContent>
 						</NavigationTreeItem>
 					),
 				)}
 			</NavigationTreeItem>
 			<NavigationTreeItem id="components" href="#/ui" textValue="Components">
-				<NavigationTreeItemContent icon={<Icon name="component" />}>Components</NavigationTreeItemContent>
+				<NavigationTreeItemContent>Components</NavigationTreeItemContent>
 				{componentGroups.map((group) => (
 					<NavigationTreeItem key={group.name} id={groupKey(group.name)} textValue={group.name}>
-						<NavigationTreeItemContent>{group.name}</NavigationTreeItemContent>
+						<NavigationTreeItemContent icon={navIcon(group.name)}>{group.name}</NavigationTreeItemContent>
 						{group.components.map((entry) => (
 							<Page key={entry.id} entry={entry} />
 						))}
@@ -97,7 +118,7 @@ function Tree({ current }: { current: string }) {
 				))}
 			</NavigationTreeItem>
 			<NavigationTreeItem id="blocks" href="#/blocks" textValue="Blocks">
-				<NavigationTreeItemContent icon={<Icon name="batteryblock" />}>Blocks</NavigationTreeItemContent>
+				<NavigationTreeItemContent>Blocks</NavigationTreeItemContent>
 				{blocks.map((entry) => (
 					<Page key={entry.id} entry={entry} />
 				))}
@@ -182,12 +203,11 @@ function ChatButton({ isOpen, onToggle, tooltip }: { isOpen: boolean; onToggle: 
 	);
 }
 
-// Search, Claude, and the settings beside the page, at the bar's end
-function Actions({ isOpen, onToggle, isChatting, onChat, onSearch }: { isOpen: boolean; onToggle: () => void; isChatting: boolean; onChat: () => void; onSearch: () => void }) {
+// Claude and the settings beside the page, at the card's top end, where they stay as either opens
+function Toggles({ isOpen, onToggle, isChatting, onChat }: { isOpen: boolean; onToggle: () => void; isChatting: boolean; onChat: () => void }) {
 	const label = isOpen ? 'Hide settings' : 'Show settings';
 	return (
 		<>
-			<DocsSearchButton onPress={onSearch} icon={searchIcon} tooltip="Search ⌘K" />
 			{hasClaude && <ChatButton isOpen={isChatting} onToggle={onChat} tooltip />}
 			<TooltipTrigger>
 				<Button variant="ghost" shape="full" size="small" aria-label={label} aria-expanded={isOpen} onPress={onToggle}>
@@ -375,7 +395,9 @@ function Preview() {
 				navLabel="Components"
 				trail={[{ name: 'loupe', href: '#/' }, ...(page?.trail ?? [])]}
 				barStart={headings.length > 0 && <ContentsMenu headings={headings} />}
-				actions={<Actions isOpen={isOpen} onToggle={toggle} isChatting={isChatting} onChat={() => openChat(!isChatting)} onSearch={search} />}
+				actions={<DocsSearchButton onPress={search} icon={searchIcon} tooltip="Search ⌘K" />}
+				toggles={<Toggles isOpen={isOpen} onToggle={toggle} isChatting={isChatting} onChat={() => openChat(!isChatting)} />}
+				isAsideOpen={isOpen || isChatting}
 				phoneActions={
 					<>
 						<DocsSearchButton onPress={search} icon={searchIcon} />

@@ -1,5 +1,5 @@
 import { parseDate, parseTime } from '@internationalized/date';
-import type { IconName } from '@parchment/icons';
+import { type IconName, resolveIcon } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
 import { type ReactNode, useEffect, useId, useState } from 'react';
 import { Alert, Avatar, AvatarGroup, Breadcrumb, Breadcrumbs, Button, Card, Cell, Checkbox, CheckboxGroup, Code, Column, ComboBox, DatePicker, DateRangePicker, Dialog, DialogActions, DialogClose, DialogHeading, DialogTrigger, Disclosure, DisclosureHeader, DisclosurePanel, DropZone, EmptyState, FileTrigger, GridList, GridListItem, Link, List, ListBoxItem, ListItem, Menu, MenuItem, MenuSeparator, MenuTrigger, Meter, Modal, NumberField, Pagination, ProgressBar, Quote, Radio, RadioGroup, Row, RowActions, SearchField, Select, Separator, Slider, Status, Switch, SwitchGroup, Tab, TabList, TabPanel, Table, TableBody, TableHeader, Tabs, Tag, TagGroup, TextField, TimeField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '../../src/index.js';
@@ -12,6 +12,9 @@ import { Choice, ControlGroup, SliderControl, SwitchControl, TextControl } from 
 // since a view can be drawn in a narrow drawer as well as across a page
 
 type Props = Record<string, unknown>;
+
+// Solid where it's drawn at 16px, else its line, as the catalogue's icons aren't all drawn both ways
+const icon = (name: IconName) => <Icon name={name} variant={resolveIcon(name, { variant: 'solid', size: 16 }) ? 'solid' : 'line'} />;
 interface Option {
 	id: string;
 	name: string;
@@ -185,7 +188,7 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 				return (
 					<List key={key} variant={p.variant as never} aria-label={p.label as string | undefined}>
 						{items.map((item, index) => (
-							<ListItem key={index} icon={item.icon && <Icon name={item.icon} />} description={item.description} end={typeof item.end === 'object' ? status(item.end) : item.end}>
+							<ListItem key={index} icon={item.icon && icon(item.icon)} description={item.description} end={typeof item.end === 'object' ? status(item.end) : item.end}>
 								{item.title}
 							</ListItem>
 						))}
@@ -207,7 +210,7 @@ export function Generated({ ui, title, onAction, values: initial, panel, onValue
 			case 'Alert':
 				return <Alert key={key} tone={p.tone as never} variant={p.variant as never} title={p.title as string | undefined}>{p.text as string}</Alert>;
 			case 'EmptyState':
-				return <EmptyState key={key} title={p.title as string} actions={p.action ? button(p.action as Props) : undefined}>{p.text as string | undefined}</EmptyState>;
+				return <EmptyState key={key} icon={p.icon ? icon(p.icon as IconName) : undefined} title={p.title as string} actions={p.action ? button(p.action as Props) : undefined}>{p.text as string | undefined}</EmptyState>;
 			case 'ProgressBar':
 				return <ProgressBar key={key} label={p.label as string} value={p.value as number | undefined} isIndeterminate={p.value === undefined} valueLabel={p.valueLabel as string | undefined} />;
 			case 'Meter':

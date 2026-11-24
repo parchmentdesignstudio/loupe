@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { IconName } from '@parchment/icons';
 import { Icon } from '@parchment/icons/react';
-import { Chip, Composer } from '../../src/index.js';
+import { Button, Chip, Composer, Menu, MenuItem, MenuTrigger } from '../../src/index.js';
 import { Choice, ControlGroup, IconPicker, Playground, ShowFocus, SwitchControl, TextControl, longWords, pick, solidIcons, useRemembered } from '../playground.js';
 
 const lengths = ['none', 'short', 'long'] as const;
@@ -22,12 +22,15 @@ export function ComposerPlayground() {
 	const [message, setMessage] = useRemembered('message', '');
 	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [hasContext, setContext] = useRemembered('hasContext', false);
+	const [hasActions, setActions] = useRemembered('hasActions', false);
+	const [model, setModel] = useState('Opus 5.5');
 	const shuffle = () => {
 		setPlaceholder(pick(lengths));
 		setSubmitIcon(pick(solidIcons()));
 		setWidth(pick(Object.keys(widths) as Width[]));
 		setMessage(drafts[pick(lengths)]);
 		setContext(Math.random() < 0.4);
+		setActions(Math.random() < 0.4);
 	};
 	return (
 		<Playground
@@ -40,6 +43,7 @@ export function ComposerPlayground() {
 						<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
 						<Choice label="Draft" options={lengths} value={(Object.keys(drafts) as Length[]).find((key) => drafts[key] === message) ?? 'short'} onChange={(next) => setMessage(drafts[next])} />
 						<SwitchControl label="Context" value={hasContext} onChange={setContext} />
+						<SwitchControl label="Actions" value={hasActions} onChange={setActions} />
 						<IconPicker label="Send icon" value={submitIcon} onChange={setSubmitIcon} />
 						<TextControl label="Send button, read out" value={submitLabel} onChange={setSubmitLabel} />
 					</ControlGroup>
@@ -61,6 +65,22 @@ export function ComposerPlayground() {
 							<Chip size="small" onPress={() => setContext(false)}>
 								Leek and potato soup
 							</Chip>
+						) : undefined
+					}
+					actions={
+						hasActions ? (
+							<MenuTrigger>
+								<Button variant="ghost" size="small">
+									{model}
+								</Button>
+								<Menu placement="top end" selectionMode="single" selectedKeys={[model]} onSelectionChange={(keys) => keys !== 'all' && keys.size && setModel(String([...keys][0]))}>
+									{['Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5'].map((name) => (
+										<MenuItem key={name} id={name}>
+											{name}
+										</MenuItem>
+									))}
+								</Menu>
+							</MenuTrigger>
 						) : undefined
 					}
 					description="Enter sends, Shift-Enter starts a new line"
