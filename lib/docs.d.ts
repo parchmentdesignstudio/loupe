@@ -21,15 +21,22 @@ export interface DocsShellProps {
     phoneActions?: ReactNode;
     /** Under the pages in the phone's drawer */
     drawerEnd?: ReactNode;
-    /** Beside the page under the bar, such as settings */
+    /** Beside the page, the card's full height, such as settings. Its own bar, 48px tall, sits level with the page's */
     aside?: ReactNode;
+    /**
+     * At the card's top end on wider screens, such as the buttons that open what's in aside. They stay put as one opens,
+     * over the end of the page's bar or of the aside's, which leaves them room by reading --docs-toggles, their width
+     */
+    toggles?: ReactNode;
+    /** Whether what's in aside is open, so the page's bar stops leaving room for the toggles, as they're over the aside */
+    isAsideOpen?: boolean;
     /** The page's address. When it changes, the phone's drawer closes to show it */
     current?: string;
     /** The panel that scrolls, for anything that follows its scroll */
-    scrollerRef?: Ref<HTMLDivElement>;
+    scrollerRef?: Ref<HTMLElement>;
     children: ReactNode;
 }
-export declare function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phoneActions, drawerEnd, aside, current, scrollerRef, children }: DocsShellProps): import("react").JSX.Element;
+export declare function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phoneActions, drawerEnd, aside, toggles, isAsideOpen, current, scrollerRef, children }: DocsShellProps): import("react").JSX.Element;
 export interface DocsPageProps {
     /** The page's name and what it is */
     header: ReactNode;

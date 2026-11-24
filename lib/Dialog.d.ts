@@ -13,11 +13,13 @@ export declare function DialogActions({ children }: DialogActionsProps): import(
 export interface DialogCloseProps {
     /** Names the button for screen readers */
     'aria-label'?: string;
+    /** In place of its corner, such as static in a bar of its own */
+    className?: string;
 }
 /** A close button for a dialog's corner */
-export declare function DialogClose({ 'aria-label': label }: DialogCloseProps): import("react").JSX.Element;
+export declare function DialogClose({ 'aria-label': label, className }: DialogCloseProps): import("react").JSX.Element;
 export interface ModalProps extends ModalOverlayProps {
-    size?: 'small' | 'medium' | 'large';
+    size?: 'small' | 'medium' | 'large' | 'full';
 }
 /** A dialog over the page, which it dims. isDismissable lets a click outside close it */
 export declare function Modal({ size, ...props }: ModalProps): import("react").JSX.Element;

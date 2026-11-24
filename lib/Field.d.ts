@@ -5,6 +5,10 @@ export declare const field: import("tailwind-variants").TVReturnType<{}, {
     description: string;
     error: string;
 }, undefined, undefined, undefined, undefined>;
+/** A box field stacks its label, box and help. The help sits 4px under the box and the label 6px over it, as the help's
+ * capitals leave room above them that the label's descenders don't, so the two read as the same distance */
+export declare const boxField = "flex flex-col gap-1";
+export declare const boxLabel = "pb-0.5";
 /** A read-only field keeps its edge but loses its fill and lift, so it reads as set rather than waiting for input */
 export declare const readOnly = "in-data-readonly:bg-transparent in-data-readonly:shadow-[0_0_0_.5px_var(--edge)]";
 /** How a field's box looks. Raised is white with a lift, for a form. Filled is flat and grey, as a design tool's

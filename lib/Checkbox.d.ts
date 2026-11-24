@@ -5,7 +5,7 @@ export declare const choice: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "group relative flex cursor-default items-start gap-3 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]", undefined, undefined, undefined>;
+}, undefined, "group relative flex cursor-default items-start gap-2 py-1 text-control text-ink [-webkit-tap-highlight-color:transparent]", undefined, undefined, undefined>;
 export declare const checkboxBox: import("tailwind-variants").TVReturnType<{
     isPressed: {
         true: string;
@@ -16,7 +16,7 @@ export declare const checkboxBox: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "my-[calc((1lh-1.25rem)/2)] flex size-5 shrink-0 items-center justify-center rounded-(--checkbox-radius) bg-(--checkbox-fill,var(--color-raised)) text-(color:--checkbox-mark,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--checkbox-shadow)] transition-[scale] duration-150 ease-out motion-reduce:transition-none [[data-show-focus]>&]:outline-2", {
+}, undefined, "my-[calc((1lh-1rem)/2)] flex size-4 shrink-0 items-center justify-center rounded-(--checkbox-radius) bg-(--checkbox-fill,var(--color-raised)) text-(color:--checkbox-mark,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--checkbox-shadow)] transition-[scale] duration-150 ease-out motion-reduce:transition-none [[data-show-focus]>&]:outline-2", {
     isFocusVisible: {
         false: string;
         true: string;
