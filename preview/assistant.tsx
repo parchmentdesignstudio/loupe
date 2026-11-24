@@ -23,9 +23,10 @@ export function ChatDrawer({ isOpen, onOpenChange, conversation }: { isOpen: boo
 	const element = useRef<HTMLDivElement>(null);
 	const expand = (next: boolean) => (element.current ? resizePushDrawer(element.current, () => setExpanded(next)) : setExpanded(next));
 	return (
-		<div ref={element} className="shrink-0 self-start [--drawer-push-fill:var(--color-panel)] [--drawer-push-width:32rem] data-expanded:[--drawer-push-width:min(56rem,calc(100vw-24rem))] [--ground-bleed:var(--panel-bleed)] md:h-[calc(100dvh-4rem)]" data-expanded={isExpanded || undefined}>
+		<div ref={element} className="shrink-0 self-start [--drawer-push-fill:var(--color-panel)] [--drawer-push-width:32rem] data-expanded:[--drawer-push-width:min(56rem,calc(100vw-24rem))] [--ground-bleed:var(--panel-bleed)] md:h-full" data-expanded={isExpanded || undefined}>
 			<Drawer mode="push" position="end" isOpen={isOpen} onOpenChange={onOpenChange} className="[--drawer-fill:var(--color-panel)] [--overlay-bleed:var(--panel-bleed)]" aria-label="Ask Loupe">
-				<Chat title="Ask Loupe" conversation={conversation} isExpanded={isExpanded} onExpandedChange={isWide ? expand : undefined} />
+				{/* Beside the page, the shell's chat button closes it, at the end of its bar. Below md it's an overlay, which keeps its own */}
+				<Chat title="Ask Loupe" conversation={conversation} isExpanded={isExpanded} onExpandedChange={isWide ? expand : undefined} isClosable={!isWide} />
 			</Drawer>
 		</div>
 	);

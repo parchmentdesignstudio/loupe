@@ -2,7 +2,7 @@ import { Icon } from '@parchment/icons/react';
 import { useState, useSyncExternalStore } from 'react';
 import { ShadowSettings } from './shadows.js';
 import { ThemeSettings } from './theme.js';
-import { type Appearance as Scheme, Drawer, Switch, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger, useAppearance, useOnOffLabels } from '../src/index.js';
+import { type Appearance as Scheme, DialogHeading, Drawer, Switch, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger, useAppearance, useOnOffLabels } from '../src/index.js';
 
 // Kept between visits where the browser lets it, and forgotten quietly where it doesn't
 export function remembered<T extends string>(key: string, fallback: T): T {
@@ -132,8 +132,12 @@ export function SettingsDrawer({ isOpen, onOpenChange }: { isOpen: boolean; onOp
 	const isWide = useSyncExternalStore(subscribe, () => matchMedia(wide).matches, () => true);
 	if (!isWide) return null;
 	return (
-		<div className="h-[calc(100dvh-4rem)] shrink-0 max-md:sticky max-md:top-12 self-start [--drawer-push-fill:var(--color-panel)] [--ground-bleed:var(--panel-bleed)]">
+		<div className="h-full shrink-0 max-md:sticky max-md:top-12 self-start [--drawer-push-fill:var(--color-panel)] [--ground-bleed:var(--panel-bleed)]">
 			<Drawer mode="push" position="end" isOpen={isOpen} onOpenChange={onOpenChange} aria-label="Preview settings">
+				{/* A bar as the chat's is, level with the page's, so the shell's toggles over its end sit on a bar rather than the panels */}
+				<div className="-mx-(--dialog-padding) -mt-(--dialog-padding) mb-(--dialog-padding) flex h-12 shrink-0 items-center border-b border-bleed/8 ps-(--dialog-padding) pe-[calc(var(--docs-toggles,-0.375rem)+1.125rem)]">
+					<DialogHeading className="min-w-0 flex-1 truncate pr-0 text-body font-medium">Settings</DialogHeading>
+				</div>
 				<SettingsPanels />
 			</Drawer>
 		</div>

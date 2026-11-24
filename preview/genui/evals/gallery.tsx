@@ -118,6 +118,16 @@ function Turn({ asked, answer }: { asked: string; answer: Answer }) {
 }
 
 function Case({ result, review, earlier, onReview }: { result: Result; review: Review; earlier?: Earlier; onReview: (review: Review) => void }) {
+	// The note keeps its own text as it's typed, and hands it up once typing pauses, as each review redraws every view
+	const [note, setNote] = useState(review.note);
+	const commit = () => {
+		if (note !== review.note) onReview({ ...review, note });
+	};
+	useEffect(() => {
+		if (note === review.note) return;
+		const timer = setTimeout(() => onReview({ ...review, note }), 400);
+		return () => clearTimeout(timer);
+	}, [note, review, onReview]);
 	return (
 		<section id={result.id} aria-labelledby={`${result.id}-name`} className="flex scroll-mt-6 flex-col gap-4 border-t border-bleed/8 pt-8">
 			<div className="flex flex-wrap items-start justify-between gap-3">
@@ -145,7 +155,7 @@ function Case({ result, review, earlier, onReview }: { result: Result; review: R
 			) : (
 				result.turns.map((answer, index) => <Turn key={index} asked={index === 0 ? result.ask : (result.then ?? '')} answer={answer} />)
 			)}
-			<TextField label="Note" description="What to change, in the guides, a block’s doc or the checker" isMultiline value={review.note} onChange={(note) => onReview({ ...review, note })} />
+			<TextField label="Note" description="What to change, in the guides, a block’s doc or the checker" isMultiline value={note} onChange={setNote} onBlur={commit} />
 		</section>
 	);
 }
@@ -176,7 +186,9 @@ export function Evals() {
 	useEffect(() => {
 		document.title = 'Evals · loupe';
 	}, []);
-	// The saved reviews, or this browser's on the hosted preview
+	// The saved reviews, or this browser's on the hosted preview. Only a new run or the first load of reviews loads one,
+	// not each review saved
+	const hasSaved = saved !== undefined;
 	useEffect(() => {
 		if (!name || !saved) return;
 		let isCurrent = true;
@@ -188,7 +200,7 @@ export function Evals() {
 		return () => {
 			isCurrent = false;
 		};
-	}, [name, saved]);
+	}, [name, hasSaved]);
 	useEffect(() => {
 		if (!isCopied) return;
 		const timer = setTimeout(() => setCopied(false), 1500);

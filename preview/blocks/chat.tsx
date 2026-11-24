@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@parchment/icons/react';
-import { Button, Composer, DialogClose, DialogHeading, Drawer, DrawerTrigger, Message, MessageList, Scribble, Suggestion, Suggestions, TextEffect } from '../../src/index.js';
+import { Button, Composer, DialogClose, Header, Menu, MenuItem, MenuSection, MenuTrigger, DialogHeading, Drawer, DrawerTrigger, Message, MessageList, Scribble, Suggestion, Suggestions, TextEffect } from '../../src/index.js';
 import { codeOf } from '../code.js';
 import type { Node, Panel, Values } from '../genui/catalogue.js';
 import { Generated } from '../genui/render.js';
+import { efforts, models } from '../genui/models.mjs';
 import { bodyOf } from '../playgrounds/overlay.js';
 import { Choice, ControlGroup, Playground, TextControl, pick, useRemembered } from '../playground.js';
 
@@ -48,10 +49,10 @@ const failed = (text: string): Turn => ({ from: 'assistant', text, isError: true
 
 // The conversation so far, as the endpoint takes it, and its reply: words, and a view when one says it better. The
 // endpoint sends each step it takes as a line of JSON as it starts, and the answer last, so onStep hears each in turn
-async function askClaude(turns: Turn[], onStep: (step: string) => void): Promise<Turn> {
+async function askClaude(turns: Turn[], onStep: (step: string) => void, { model, effort }: Pick<Conversation, 'model' | 'effort'>): Promise<Turn> {
 	const messages = turns.filter((turn) => !turn.isError).map(({ from, text, ui, values, controls, note }) => ({ role: from, text: note ? `${text}\n\n${note}` : text, ui, values, controls }));
 	try {
-		const response = await fetch('/__loupe/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages, page: pageOf() }) });
+		const response = await fetch('/__loupe/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages, page: pageOf(), model, effort }) });
 		if (!response.ok || !response.body) {
 			const reply = (await response.json().catch(() => ({}))) as { error?: string };
 			return failed(reply.error ?? `Claude didn’t answer (${response.status})`);
@@ -87,7 +88,7 @@ type Source = 'samples' | 'claude';
 
 // Kept in the browser, so a refresh, or a reload as the preview rebuilds, doesn't lose the conversation or a question
 // half written. A browser that won't keep it, as a private window may not, just starts afresh
-const keyOf = (source: Source, part: 'turns' | 'draft') => `loupe:chat:${source}:${part}`;
+const keyOf = (source: Source, part: 'turns' | 'draft' | 'model' | 'effort') => `loupe:chat:${source}:${part}`;
 function recall<T>(key: string, fallback: T): T {
 	try {
 		const stored = localStorage.getItem(key);
@@ -126,7 +127,14 @@ export interface Conversation {
 	/** What's written in the field and not yet sent */
 	draft: string;
 	setDraft: (draft: string) => void;
+	/** Who answers, and how hard it thinks, when Claude does */
+	model: string;
+	setModel: (model: string) => void;
+	effort: Effort;
+	setEffort: (effort: Effort) => void;
 }
+
+type Effort = (typeof efforts)[number];
 
 /**
  * A conversation, held where it's made rather than in the drawer, which lets go of what it holds once it has slid shut.
@@ -142,6 +150,12 @@ export function useConversation(source: Source = 'samples', isRemembered = true)
 	useEffect(() => {
 		if (isRemembered) keep(keyOf(source, 'draft'), draft, draft === '');
 	}, [isRemembered, source, draft]);
+	// Remembered whatever isRemembered says, as it's a setting rather than part of the conversation. One that's since
+	// left the list goes back to the first
+	const [model, setModel] = useState(() => models.find((each) => each.id === recall<string>(keyOf(source, 'model'), ''))?.id ?? models[0].id);
+	const [effort, setEffort] = useState<Effort>(() => efforts.find((each) => each === recall<string>(keyOf(source, 'effort'), '')) ?? 'medium');
+	useEffect(() => keep(keyOf(source, 'model'), model, model === models[0].id), [source, model]);
+	useEffect(() => keep(keyOf(source, 'effort'), effort, effort === 'medium'), [source, effort]);
 	const [isThinking, setThinking] = useState(false);
 	const [step, setStep] = useState<string>();
 	const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -169,7 +183,7 @@ export function useConversation(source: Source = 'samples', isRemembered = true)
 				shownUntil = Date.now() + wait + STEP;
 				setTimeout(() => id === conversation.current && setStep(next), wait);
 			};
-			void askClaude([...turns, asked], show).then((reply) => {
+			void askClaude([...turns, asked], show, { model, effort }).then((reply) => {
 				if (id !== conversation.current) return;
 				setThinking(false);
 				setStep(undefined);
@@ -190,7 +204,7 @@ export function useConversation(source: Source = 'samples', isRemembered = true)
 		setTurns([]);
 	};
 	const tweak = (turn: Turn, values: Values) => setTurns((list) => list.map((item) => (item === turn ? { ...item, tweaked: values } : item)));
-	return { source, turns, isThinking, step, ask, restart, tweak, draft, setDraft };
+	return { source, turns, isThinking, step, ask, restart, tweak, draft, setDraft, model, setModel, effort, setEffort };
 }
 
 export interface ChatProps {
@@ -202,14 +216,17 @@ export interface ChatProps {
 	/** Wider, for a view with more to it. With onExpandedChange, the bar has a button to widen it and back */
 	isExpanded?: boolean;
 	onExpandedChange?: (isExpanded: boolean) => void;
+	/** Whether the bar has its own button to close it. Off where something outside it does, such as a shell's toggle */
+	isClosable?: boolean;
 }
 
 /** The drawer's contents: the conversation, what to ask, and the field to ask it in */
-export function Chat({ title = 'Ask the kitchen', source = 'samples', conversation, isExpanded = false, onExpandedChange }: ChatProps) {
+export function Chat({ title = 'Ask the kitchen', source = 'samples', conversation, isExpanded = false, onExpandedChange, isClosable = true }: ChatProps) {
 	// Unused when one's kept outside, so it mustn't remember over that one
 	const own = useConversation(source, !conversation);
 	const { turns, isThinking, step, ask, restart, tweak, draft, setDraft } = conversation ?? own;
-	const isClaude = (conversation ?? own).source === 'claude';
+	const current = conversation ?? own;
+	const isClaude = current.source === 'claude';
 	const log = useRef<HTMLDivElement>(null);
 
 	// The newest message stays in view as the conversation grows, and in view again as the drawer opens on it
@@ -232,8 +249,9 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 			{/* The drawer's padding given back, so the conversation scrolls its full height, under the bar and the field */}
 			<div ref={log} className="-m-(--dialog-padding) flex min-h-0 flex-1 flex-col overflow-auto overscroll-contain">
 				{/* A toolbar, pinned over the conversation in the drawer's colour, see-through, so what scrolls under it shows
-				    blurred. Inside the scroller, so the scrollbar runs over it rather than under */}
-				<div className="sticky top-0 z-1 flex items-center gap-1 border-b border-bleed/8 bg-[color-mix(in_oklab,var(--drawer-surface,var(--color-panel))_80%,transparent)] py-2 ps-(--dialog-padding) pe-3 backdrop-blur-md">
+				    blurred. Inside the scroller, so the scrollbar runs over it rather than under. 48px, level with a shell's bar
+				    beside it, and in a shell its end leaves room for the toggles over it, 14px in, with 4px before them */}
+				<div className="sticky top-0 z-1 flex h-12 shrink-0 items-center gap-1 border-b border-bleed/8 bg-[color-mix(in_oklab,var(--drawer-surface,var(--color-panel))_80%,transparent)] ps-(--dialog-padding) pe-[calc(var(--docs-toggles,-0.375rem)+1.125rem)] backdrop-blur-md">
 					<DialogHeading className="min-w-0 flex-1 truncate pr-0 text-body font-medium">{title}</DialogHeading>
 					{/* Only once there's a conversation to start over from */}
 					{!isEmpty && (
@@ -246,7 +264,7 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 							<Icon name={isExpanded ? 'arrow-down-left-and-arrow-up-right' : 'arrow-up-right-and-arrow-down-left'} />
 						</Button>
 					)}
-					<DialogClose className="" />
+					{isClosable && <DialogClose className="" />}
 				</div>
 				<div className="flex flex-1 flex-col gap-6 px-(--dialog-padding) pt-4 pb-6">
 					{isEmpty ? (
@@ -309,6 +327,8 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 					<Composer aria-label="Your question" placeholder="Ask anything" submitIcon={<Icon name="arrow-up" />} description="Enter sends, Shift-Enter starts a new line"
 						value={draft}
 						onChange={setDraft}
+						// Only while it runs locally, on the key of whoever's running it. The hosted preview has no Claude to pick
+						actions={isClaude && import.meta.env.DEV ? <ModelPicker conversation={current} /> : undefined}
 						onSubmit={(question) => {
 							setDraft('');
 							ask(question);
@@ -317,6 +337,37 @@ export function Chat({ title = 'Ask the kitchen', source = 'samples', conversati
 				</div>
 			</div>
 		</>
+	);
+}
+
+// Who answers and how hard it thinks, in one menu, named on its button as Opus 5.5 Medium
+function ModelPicker({ conversation: { model, setModel, effort, setEffort } }: { conversation: Conversation }) {
+	const name = models.find((each) => each.id === model)?.name ?? model;
+	return (
+		<MenuTrigger>
+			{/* The model in ink and its effort muted, as Claude's own composer has them */}
+			<Button variant="ghost" size="small">
+				{name} <span className="text-muted">{effort[0].toUpperCase() + effort.slice(1)}</span>
+			</Button>
+			<Menu placement="top end">
+				<MenuSection selectionMode="single" selectedKeys={[model]} onSelectionChange={(keys) => keys !== 'all' && keys.size && setModel(String([...keys][0]))}>
+					<Header>Model</Header>
+					{models.map((each) => (
+						<MenuItem key={each.id} id={each.id}>
+							{each.name}
+						</MenuItem>
+					))}
+				</MenuSection>
+				<MenuSection selectionMode="single" selectedKeys={[effort]} onSelectionChange={(keys) => keys !== 'all' && keys.size && setEffort([...keys][0] as Effort)}>
+					<Header>Effort</Header>
+					{efforts.map((each) => (
+						<MenuItem key={each} id={each}>
+							{each[0].toUpperCase() + each.slice(1)}
+						</MenuItem>
+					))}
+				</MenuSection>
+			</Menu>
+		</MenuTrigger>
 	);
 }
 
