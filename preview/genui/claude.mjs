@@ -113,13 +113,23 @@ async function setUp(server) {
 	panelOf = (input) => catalogue.panelOf(input, schema);
 }
 
-// What the page sends: each turn's words, and the view it was shown, with its values and controls, which Claude is
-// told of as words of its own
+// A file sent with a question, as Claude takes it: an image or a PDF as itself, and text inside a tag with its name. One
+// whose contents the page no longer has, as after a reload, is named so Claude knows it was there
+const images = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+const blockOf = ({ name, type, data }) => {
+	if (data === undefined) return { type: 'text', text: `[${name} was attached here, but isn't kept after the page reloads]` };
+	if (images.includes(type)) return [{ type: 'text', text: `[The image ${name}]` }, { type: 'image', source: { type: 'base64', media_type: type, data } }];
+	if (type === 'application/pdf') return { type: 'document', title: name, source: { type: 'base64', media_type: type, data } };
+	return { type: 'text', text: `<file name="${name}">\n${data}\n</file>` };
+};
+
+// What the page sends: each turn's words, the files sent with it, and the view it was shown, with its values and
+// controls, which Claude is told of as words of its own
 const historyOf = (messages) =>
-	messages.map(({ role, text, ui, values, controls }) => ({
-		role,
-		content: ui ? `${text}\n\n[The view drawn with render_ui]\n${JSON.stringify({ ui, values, controls })}` : text,
-	}));
+	messages.map(({ role, text, ui, values, controls, files }) => {
+		const words = ui ? `${text}\n\n[The view drawn with render_ui]\n${JSON.stringify({ ui, values, controls })}` : text;
+		return { role, content: files?.length ? [...files.flatMap(blockOf), { type: 'text', text: words }] : words };
+	});
 
 // What the user watches while Claude works, as each step starts
 const guideNames = { actions: 'the actions guide', collections: 'the collections guide', content: 'the content guide', feedback: 'the feedback guide', forms: 'the forms guide', overlays: 'the overlays guide', tokens: 'the tokens guide', 'product-design': 'the product design guide' };
@@ -153,8 +163,8 @@ async function answer(messages, page, onStep, { model = models[0], effort = 'med
 		const stream = client.beta.messages.stream({
 			model,
 			max_tokens: 64000,
-			// Said outright, so a change of model doesn't quietly change it
-			output_config: { effort },
+			// Said outright when one's picked. Default leaves it to the model
+			...(effort !== 'default' && { output_config: { effort } }),
 			// A decline goes on to a model picked for its kind, rather than ending the reply
 			...(fallsBack(model) && { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' }),
 			cache_control: { type: 'ephemeral' },

@@ -13,11 +13,18 @@ const composer = tv({
 		// Centres the send button on the line of text. It sits further in than the box's radius, so it takes the smallest
 		// corner rather than a concentric one, which would be square
 		send: 'mb-1.5 [--button-radius:var(--radius-sm)]',
-		// Controls for how it's sent, under the field rather than in it, so the box holds only the message. At the end,
-		// under the send button, and drawn in a ghost button's padding, so their words line up with the box's edge
-		actions: 'mt-1 -me-2.5 flex justify-end gap-1',
+		// With a start or actions, the text takes the box's width and a toolbar under it holds them and the send button,
+		// as Claude's composer does: what to add at the start, how it's sent at the end, by the button that sends it
+		toolbar: 'flex basis-full items-center gap-1 pb-1.5',
+		// Mirrors the send button: as far in from the start as it is from the end, and with its corner, so both sit in the
+		// box's corners alike. Too far in for a concentric radius, so the smallest, as send has
+		start: '-ms-[calc(var(--field-padding-x)-0.625rem)] flex items-center gap-1 [--button-radius:var(--radius-sm)]',
+		actions: 'ms-auto flex items-center gap-1',
 	},
 	variants: {
+		hasToolbar: {
+			true: { input: 'basis-full', send: 'mb-0' },
+		},
 		isFocusWithin: {
 			false: { group: 'outline-0' },
 			true: { group: 'outline-2' },
@@ -49,7 +56,9 @@ export interface ComposerProps {
 	onChange?: (message: string) => void;
 	/** What the message is about, such as Chips for a page or a file it's attached to, in a row above the text */
 	context?: ReactNode;
-	/** Controls for how it's sent, such as a Menu to pick who answers, in a row under the field, at its end */
+	/** What to add to the message, such as a Menu behind a plus to attach a file, at the start of a row under the text */
+	start?: ReactNode;
+	/** Controls for how it's sent, such as a Menu to pick who answers, in that row, before the send button */
 	actions?: ReactNode;
 	/** A hint for screen readers, read out with the field's name, such as how to send */
 	description?: string;
@@ -70,11 +79,12 @@ function sendOnEnter(event: KeyboardEvent<HTMLTextAreaElement>) {
  * A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line. The button is
  * always live: an empty message isn't sent, and the field says so by taking focus with a shake
  */
-export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, context, actions, description, maxLength, isDisabled = false, className }: ComposerProps) {
+export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, context, start, actions, description, maxLength, isDisabled = false, className }: ComposerProps) {
 	const [draft, setDraft] = useState(defaultValue);
 	const message = value ?? draft;
 	const empty = message.trim() === '';
-	const slots = composer();
+	const hasToolbar = Boolean(start || actions);
+	const slots = composer({ hasToolbar });
 	const field = useRef<HTMLTextAreaElement>(null);
 
 	const change = (next: string) => {
@@ -94,6 +104,12 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
 		if (value === undefined) setDraft('');
 	};
 
+	const sendButton = (
+		<Button type="submit" variant="secondary" aria-label={submitLabel} size="small" isDisabled={isDisabled} className={slots.send()}>
+			{submitIcon}
+		</Button>
+	);
+
 	return (
 		<Form onSubmit={send} className={className}>
 			<AriaTextField aria-label={label} value={message} onChange={change} maxLength={maxLength} isDisabled={isDisabled}>
@@ -101,9 +117,17 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
 					{context && <div className={slots.context()}>{context}</div>}
 					{/* A phone's return key says Send, as that's what it does */}
 					<TextArea ref={field} rows={1} placeholder={placeholder} enterKeyHint="send" onKeyDown={sendOnEnter} className={slots.input()} />
-					<Button type="submit" variant="secondary" aria-label={submitLabel} size="small" isDisabled={isDisabled} className={slots.send()}>
-						{submitIcon}
-					</Button>
+					{hasToolbar ? (
+						<div className={slots.toolbar()}>
+							{start && <div className={slots.start()}>{start}</div>}
+							<div className={slots.actions()}>
+								{actions}
+								{sendButton}
+							</div>
+						</div>
+					) : (
+						sendButton
+					)}
 				</Group>
 				{description && (
 					<Text slot="description" className="sr-only">
@@ -111,7 +135,6 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
 					</Text>
 				)}
 			</AriaTextField>
-			{actions && <div className={slots.actions()}>{actions}</div>}
 		</Form>
 	);
 }

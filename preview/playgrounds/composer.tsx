@@ -23,6 +23,7 @@ export function ComposerPlayground() {
 	const [isFocused, setFocused] = useRemembered('isFocused', false);
 	const [hasContext, setContext] = useRemembered('hasContext', false);
 	const [hasActions, setActions] = useRemembered('hasActions', false);
+	const [hasStart, setStart] = useRemembered('hasStart', false);
 	const [model, setModel] = useState('Opus 5.5');
 	const shuffle = () => {
 		setPlaceholder(pick(lengths));
@@ -31,6 +32,7 @@ export function ComposerPlayground() {
 		setMessage(drafts[pick(lengths)]);
 		setContext(Math.random() < 0.4);
 		setActions(Math.random() < 0.4);
+		setStart(Math.random() < 0.4);
 	};
 	return (
 		<Playground
@@ -43,6 +45,7 @@ export function ComposerPlayground() {
 						<Choice label="Placeholder" options={lengths} value={placeholder} onChange={setPlaceholder} />
 						<Choice label="Draft" options={lengths} value={(Object.keys(drafts) as Length[]).find((key) => drafts[key] === message) ?? 'short'} onChange={(next) => setMessage(drafts[next])} />
 						<SwitchControl label="Context" value={hasContext} onChange={setContext} />
+						<SwitchControl label="Start" value={hasStart} onChange={setStart} />
 						<SwitchControl label="Actions" value={hasActions} onChange={setActions} />
 						<IconPicker label="Send icon" value={submitIcon} onChange={setSubmitIcon} />
 						<TextControl label="Send button, read out" value={submitLabel} onChange={setSubmitLabel} />
@@ -65,6 +68,19 @@ export function ComposerPlayground() {
 							<Chip size="small" onPress={() => setContext(false)}>
 								Leek and potato soup
 							</Chip>
+						) : undefined
+					}
+					start={
+						hasStart ? (
+							<MenuTrigger>
+								<Button variant="ghost" size="small" aria-label="Add">
+									<Icon name="plus" />
+								</Button>
+								<Menu placement="top start">
+									<MenuItem>Attach a file</MenuItem>
+									<MenuItem>Add a recipe</MenuItem>
+								</Menu>
+							</MenuTrigger>
 						) : undefined
 					}
 					actions={
