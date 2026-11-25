@@ -27,6 +27,7 @@ import { forward, href, pageAt } from './routes.js';
 import { screenAt } from './screens/index.js';
 import { Evals } from './genui/evals/gallery.js';
 import { type Entry, areas, blocks, library } from './stories.js';
+import { skillPages } from './skills.js';
 import { Category, categoryId } from './blocks/card.js';
 import { useBuilt } from './playground.js';
 import { highlight, useHighlight } from '../src/shiki.js';
@@ -87,7 +88,7 @@ function Tree({ current }: { current: string }) {
 			hasFolderTriangles={false}
 			aria-label="Loupe"
 			selectedRoute={`#/${current}`}
-			defaultExpandedKeys={['loupe', 'components', 'blocks', ...library.filter((group) => group.components.some((entry) => href(entry) === `#/${current}`)).map((group) => groupKey(group.name))]}
+			defaultExpandedKeys={['loupe', 'components', 'blocks', ...library.filter((group) => group.components.some((entry) => href(entry) === `#/${current}`)).map((group) => groupKey(group.name)), ...(current.split('/')[0] === 'skills' ? [groupKey('Skills')] : [])]}
 		>
 			<NavigationTreeItem id="loupe" textValue="Loupe">
 				<NavigationTreeItemContent>Loupe</NavigationTreeItemContent>
@@ -96,6 +97,17 @@ function Tree({ current }: { current: string }) {
 						<NavigationTreeItem key={page.id} id={page.id} textValue={page.name}>
 							<NavigationTreeItemContent icon={navIcon(page.name)}>{page.name}</NavigationTreeItemContent>
 							{foundations.components.map((entry) => (
+								<Page key={entry.id} entry={entry} />
+							))}
+						</NavigationTreeItem>
+					) : page.id === 'skills' ? (
+						// The skill's rules, then a page for each of its references, as the whole skill is too long for one
+						<NavigationTreeItem key={page.id} id={groupKey(page.name)} textValue={page.name}>
+							<NavigationTreeItemContent icon={navIcon(page.name)}>{page.name}</NavigationTreeItemContent>
+							<NavigationTreeItem id="skills" href="#/skills" textValue="Rules">
+								<NavigationTreeItemContent>Rules</NavigationTreeItemContent>
+							</NavigationTreeItem>
+							{skillPages.map((entry) => (
 								<Page key={entry.id} entry={entry} />
 							))}
 						</NavigationTreeItem>
