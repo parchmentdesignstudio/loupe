@@ -13,11 +13,18 @@ const composer = tv({
         // Centres the send button on the line of text. It sits further in than the box's radius, so it takes the smallest
         // corner rather than a concentric one, which would be square
         send: 'mb-1.5 [--button-radius:var(--radius-sm)]',
-        // Controls for how it's sent, under the field rather than in it, so the box holds only the message. At the end,
-        // under the send button, and drawn in a ghost button's padding, so their words line up with the box's edge
-        actions: 'mt-1 -me-2.5 flex justify-end gap-1',
+        // With a start or actions, the text takes the box's width and a toolbar under it holds them and the send button,
+        // as Claude's composer does: what to add at the start, how it's sent at the end, by the button that sends it
+        toolbar: 'flex basis-full items-center gap-1 pb-1.5',
+        // Mirrors the send button: as far in from the start as it is from the end, and with its corner, so both sit in the
+        // box's corners alike. Too far in for a concentric radius, so the smallest, as send has
+        start: '-ms-[calc(var(--field-padding-x)-0.625rem)] flex items-center gap-1 [--button-radius:var(--radius-sm)]',
+        actions: 'ms-auto flex items-center gap-1',
     },
     variants: {
+        hasToolbar: {
+            true: { input: 'basis-full', send: 'mb-0' },
+        },
         isFocusWithin: {
             false: { group: 'outline-0' },
             true: { group: 'outline-2' },
@@ -41,11 +48,12 @@ function sendOnEnter(event) {
  * A message field with its send button, as in the chat. Enter sends, Shift-Enter starts a new line. The button is
  * always live: an empty message isn't sent, and the field says so by taking focus with a shake
  */
-export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, context, actions, description, maxLength, isDisabled = false, className }) {
+export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send', submitIcon, onSubmit, value, defaultValue = '', onChange, context, start, actions, description, maxLength, isDisabled = false, className }) {
     const [draft, setDraft] = useState(defaultValue);
     const message = value ?? draft;
     const empty = message.trim() === '';
-    const slots = composer();
+    const hasToolbar = Boolean(start || actions);
+    const slots = composer({ hasToolbar });
     const field = useRef(null);
     const change = (next) => {
         if (value === undefined)
@@ -66,5 +74,6 @@ export function Composer({ 'aria-label': label, placeholder, submitLabel = 'Send
         if (value === undefined)
             setDraft('');
     };
-    return (_jsxs(Form, { onSubmit: send, className: className, children: [_jsxs(AriaTextField, { "aria-label": label, value: message, onChange: change, maxLength: maxLength, isDisabled: isDisabled, children: [_jsxs(Group, { className: (state) => slots.group(state), children: [context && _jsx("div", { className: slots.context(), children: context }), _jsx(TextArea, { ref: field, rows: 1, placeholder: placeholder, enterKeyHint: "send", onKeyDown: sendOnEnter, className: slots.input() }), _jsx(Button, { type: "submit", variant: "secondary", "aria-label": submitLabel, size: "small", isDisabled: isDisabled, className: slots.send(), children: submitIcon })] }), description && (_jsx(Text, { slot: "description", className: "sr-only", children: description }))] }), actions && _jsx("div", { className: slots.actions(), children: actions })] }));
+    const sendButton = (_jsx(Button, { type: "submit", variant: "secondary", "aria-label": submitLabel, size: "small", isDisabled: isDisabled, className: slots.send(), children: submitIcon }));
+    return (_jsx(Form, { onSubmit: send, className: className, children: _jsxs(AriaTextField, { "aria-label": label, value: message, onChange: change, maxLength: maxLength, isDisabled: isDisabled, children: [_jsxs(Group, { className: (state) => slots.group(state), children: [context && _jsx("div", { className: slots.context(), children: context }), _jsx(TextArea, { ref: field, rows: 1, placeholder: placeholder, enterKeyHint: "send", onKeyDown: sendOnEnter, className: slots.input() }), hasToolbar ? (_jsxs("div", { className: slots.toolbar(), children: [start && _jsx("div", { className: slots.start(), children: start }), _jsxs("div", { className: slots.actions(), children: [actions, sendButton] })] })) : (sendButton)] }), description && (_jsx(Text, { slot: "description", className: "sr-only", children: description }))] }) }));
 }
