@@ -43,24 +43,24 @@ import doris from '../assets/doris.jpg';
 
 // Dummy leads for a CRM, to put the components under the load of a real screen: long names, empty cells, many pages
 
-type StatusName = 'Referred' | 'Call arranged' | 'No answer' | 'Qualified' | 'Cash' | 'Pending' | 'Unresponsive' | 'Unsuccessful';
+type StatusName = 'New' | 'Contacted' | 'No answer' | 'Qualified' | 'Won' | 'On hold' | 'Unresponsive' | 'Lost';
 
 const tones: Record<StatusName, StatusTone> = {
-	Referred: 'info',
-	'Call arranged': 'info',
+	New: 'info',
+	Contacted: 'info',
 	'No answer': 'warning',
 	Qualified: 'success',
-	Cash: 'success',
-	Pending: 'warning',
+	Won: 'success',
+	'On hold': 'warning',
 	Unresponsive: 'neutral',
-	Unsuccessful: 'danger',
+	Lost: 'danger',
 };
 
 interface Lead {
 	id: string;
 	client: string;
-	developer: string;
-	site?: string;
+	company: string;
+	source?: string;
 	plot?: string;
 	status: StatusName;
 	call?: { date: string; isOverdue: boolean };
@@ -78,24 +78,20 @@ function seeded(seed: number) {
 	};
 }
 
-const developers: Record<string, string[]> = {
-	'Barratt Homes': ['Oakwood Gardens', 'Mill Lane'],
-	Bellway: ['Ashton Valley'],
-	'Bovis Homes': ['Church Lane', 'The Paddocks'],
-	'Christie Residential Developments': [],
-	Persimmon: ['Riverside Quarter', 'Kingsmead'],
-	'Taylor Wimpey': ['Hollins Park'],
-};
+// One name long enough to be cut short
+const companies = ['Hartwell & Co', 'Quillfield', 'Fernmoor Studio', 'Pembury Thornton Consulting Partners', 'Calder & Vane', 'Brackenholt'];
+const sources = ['Website', 'Referral', 'Event', 'Outbound', 'Partner'];
+const routes = ['Direct', 'Partner', 'Online'];
 
 const firsts = ['Ada', 'Alan', 'Barbara', 'Grace', 'Katherine', 'Ted', 'Sarina', 'Gunner', 'Florence', 'Anissa', 'Duane', 'Priya', 'Tomasz', 'Olu', 'Mei', 'Siobhan', 'Rhys', 'Imogen'];
 const lasts = ['Lovelace', 'Dijkstra', 'Hopper', 'Liskov', 'Hamilton', 'Cremin', 'Will', 'Kling', 'Hegmann', 'Schaefer', 'Rutherford', 'Okafor', 'Nowak', 'Chen', 'Byrne', 'Llewellyn', 'Fairweather-Smith'];
 // Some names the way a team actually types them in
 const oddities = [
-	'Kitchen Sink (First contact, retired and downsizing)',
-	'Kitchen Sink (Call arranged) & Amy Fairweather-Smith',
-	'Kitchen Sink (Qualification pending a second income)',
-	'Kitchen Sink (Follow-ups: every kind of reminder)',
-	'Walkthrough Self Assign',
+	'Sample Client (First contact, via the website)',
+	'Sample Client (Contacted) & Amy Fairweather-Smith',
+	'Sample Client (Qualified, waiting on budget sign-off)',
+	'Sample Client (Follow-ups: every kind of reminder)',
+	'Training Record Self Assign',
 	'Prof. Gunner Kling',
 	'Florence Hegmann MD',
 	'Mr & Mrs O’Sullivan-Whitaker',
@@ -108,35 +104,33 @@ const leads: Lead[] = (() => {
 	const pick = <T,>(list: readonly T[]) => list[Math.floor(random() * list.length)];
 	const statuses = Object.keys(tones) as StatusName[];
 	return Array.from({ length: 190 }, (_, index) => {
-		const developer = pick(Object.keys(developers));
-		const sites = developers[developer];
 		const status = pick(statuses);
 		const day = pick(days);
 		const date = Number.parseInt(day);
 		return {
 			id: `REF-${String(256 - index).padStart(4, '0')}`,
 			client: random() < 0.12 ? pick(oddities) : `${pick(firsts)} ${pick(lasts)}`,
-			developer,
-			site: sites.length ? pick(sites) : undefined,
-			plot: random() < 0.15 ? undefined : random() < 0.1 ? 'TBC' : random() < 0.5 ? `Plot ${1 + Math.floor(random() * 40)}` : `KS-${String(1 + Math.floor(random() * 40)).padStart(2, '0')}`,
+			company: pick(companies),
+			source: random() < 0.15 ? undefined : pick(sources),
+			plot: random() < 0.15 ? undefined : random() < 0.1 ? 'TBC' : random() < 0.5 ? `Plot ${1 + Math.floor(random() * 40)}` : `U-${String(1 + Math.floor(random() * 40)).padStart(2, '0')}`,
 			status,
-			call: status === 'Call arranged' && random() < 0.8 ? { date: day, isOverdue: day.endsWith('Nov') && date < today } : undefined,
+			call: status === 'Contacted' && random() < 0.8 ? { date: day, isOverdue: day.endsWith('Nov') && date < today } : undefined,
 			attempts: status === 'No answer' || random() < 0.15 ? 1 + Math.floor(random() * 5) : undefined,
-			route: status === 'Qualified' || status === 'Cash' ? 'Using us' : status === 'Pending' ? 'TBC' : undefined,
+			route: random() < 0.25 ? undefined : pick(routes),
 		};
 	});
 })();
 
 const tabs: { id: string; name: string; statuses?: StatusName[] }[] = [
 	{ id: 'all', name: 'All' },
-	{ id: 'new', name: 'New', statuses: ['Referred'] },
-	{ id: 'call', name: 'Call arranged', statuses: ['Call arranged'] },
+	{ id: 'new', name: 'New', statuses: ['New'] },
+	{ id: 'contacted', name: 'Contacted', statuses: ['Contacted'] },
 	{ id: 'no-answer', name: 'No answer', statuses: ['No answer'] },
 	{ id: 'qualified', name: 'Qualified', statuses: ['Qualified'] },
-	{ id: 'cash', name: 'Cash', statuses: ['Cash'] },
-	{ id: 'pending', name: 'Pending', statuses: ['Pending'] },
+	{ id: 'won', name: 'Won', statuses: ['Won'] },
+	{ id: 'on-hold', name: 'On hold', statuses: ['On hold'] },
 	{ id: 'unresponsive', name: 'Unresponsive', statuses: ['Unresponsive'] },
-	{ id: 'unsuccessful', name: 'Unsuccessful', statuses: ['Unsuccessful'] },
+	{ id: 'lost', name: 'Lost', statuses: ['Lost'] },
 ];
 
 interface ColumnSpec {
@@ -153,8 +147,8 @@ interface ColumnSpec {
 const allColumns: ColumnSpec[] = [
 	{ id: 'id', name: 'Reference', width: 120, sorts: true },
 	{ id: 'client', name: 'Client', isRowHeader: true, defaultWidth: '2fr', minWidth: 200, sorts: true },
-	{ id: 'developer', name: 'Developer', defaultWidth: '1fr', minWidth: 140, sorts: true },
-	{ id: 'site', name: 'Site', defaultWidth: '1fr', minWidth: 130, sorts: true },
+	{ id: 'company', name: 'Company', defaultWidth: '1fr', minWidth: 140, sorts: true },
+	{ id: 'source', name: 'Source', width: 112, sorts: true },
 	{ id: 'plot', name: 'Plot', width: 96, sorts: true },
 	{ id: 'status', name: 'Status', defaultWidth: '1.5fr', minWidth: 180, sorts: true },
 	{ id: 'attempts', name: 'Attempts', align: 'end', width: 100, sorts: true },
@@ -229,7 +223,7 @@ function Sidebar({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: (isO
 				</Button>
 			</div>
 			{/* Enough to try counts, a section and pages under a page, not the whole app's menu */}
-			<NavigationTree aria-label="Menu" selectedRoute="#/screens/leads/qualification" defaultExpandedKeys={['leads']}>
+			<NavigationTree aria-label="Menu" selectedRoute="#/screens/leads/open" defaultExpandedKeys={['leads']}>
 				<NavigationTreeSection id="you">
 					<NavItem id="tasks" href="#/screens/leads/tasks" icon="checkmark-square" count={17}>
 						Tasks
@@ -244,15 +238,15 @@ function Sidebar({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: (isO
 						id="leads"
 						icon="person"
 						items={[
-							{ id: 'qualification', name: 'Qualification' },
-							{ id: 'progression', name: 'Progression' },
+							{ id: 'open', name: 'Open' },
+							{ id: 'archived', name: 'Archived' },
 							{ id: 'calls', name: 'Calls' },
 						]}
 					>
 						Leads
 					</NavItem>
-					<NavItem id="partners" href="#/screens/leads/partners" icon="building">
-						Partners
+					<NavItem id="companies" href="#/screens/leads/companies" icon="building">
+						Companies
 					</NavItem>
 				</NavigationTreeSection>
 			</NavigationTree>
@@ -279,7 +273,7 @@ function Toolbar({ onMenu, search, onSearch, filters, onFilters, period, onPerio
 	density: 'compact' | 'comfortable';
 	onDensity: (density: 'compact' | 'comfortable') => void;
 }) {
-	const filterCount = filters === 'all' ? Object.keys(developers).length : filters.size;
+	const filterCount = filters === 'all' ? companies.length : filters.size;
 	const isPhone = usePhone();
 	const [isSearching, setSearching] = useState(false);
 	// On phones each button is its icon alone, named for screen readers, as a square
@@ -287,7 +281,7 @@ function Toolbar({ onMenu, search, onSearch, filters, onFilters, period, onPerio
 	const searchField = (
 		<SearchField
 			aria-label="Search leads"
-			placeholder="Search name, reference, developer, site…"
+			placeholder="Search name, reference, company…"
 			value={search}
 			onChange={onSearch}
 			autoFocus={isPhone}
@@ -326,9 +320,9 @@ function Toolbar({ onMenu, search, onSearch, filters, onFilters, period, onPerio
 				</Button>
 				<Menu>
 					<SubmenuTrigger>
-						<MenuItem>Developer</MenuItem>
+						<MenuItem>Company</MenuItem>
 						<Menu selectionMode="multiple" selectedKeys={filters} onSelectionChange={onFilters}>
-							{Object.keys(developers).map((name) => (
+							{companies.map((name) => (
 								<MenuItem key={name} id={name}>
 									{name}
 								</MenuItem>
@@ -391,7 +385,7 @@ function Toolbar({ onMenu, search, onSearch, filters, onFilters, period, onPerio
 }
 
 function StatusCell({ lead }: { lead: Lead }) {
-	const parts = [lead.attempts != null && lead.status === 'Call arranged' ? `${lead.attempts} ${lead.attempts === 1 ? 'call' : 'calls'}` : null].filter(Boolean);
+	const parts = [lead.attempts != null && lead.status === 'Contacted' ? `${lead.attempts} ${lead.attempts === 1 ? 'call' : 'calls'}` : null].filter(Boolean);
 	const detail = lead.call ? (
 		<>
 			{parts.length > 0 && <>{parts.join(' · ')} · </>}
@@ -418,8 +412,8 @@ function LeadDrawer({ lead, onClose }: { lead?: Lead; onClose: () => void }) {
 					<dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-control">
 						{(
 							[
-								['Developer', lead.developer],
-								['Site', lead.site],
+								['Company', lead.company],
+								['Source', lead.source],
 								['Plot', lead.plot],
 								['Attempts', lead.attempts],
 								['Route', lead.route],
@@ -463,8 +457,8 @@ export function LeadsScreen() {
 		const query = search.trim().toLowerCase();
 		return leads.filter(
 			(lead) =>
-				(filters === 'all' || filters.size === 0 || filters.has(lead.developer)) &&
-				(!query || [lead.id, lead.client, lead.developer, lead.site].some((value) => value?.toLowerCase().includes(query))),
+				(filters === 'all' || filters.size === 0 || filters.has(lead.company)) &&
+				(!query || [lead.id, lead.client, lead.company, lead.source].some((value) => value?.toLowerCase().includes(query))),
 		);
 	}, [search, filters]);
 

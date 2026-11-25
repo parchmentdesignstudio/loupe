@@ -3,13 +3,13 @@ import "tokens/lengths.elyx" as l
 import "components/status.elyx" as statuses
 import "components/text.elyx" as styles
 
-// A lead in a list, as the Leads screen has one: the client in Medium over the developer and site, and where the lead is
+// A lead in a list, as the Leads screen has one: the client in Medium over their company, and where the lead is
 // up to at the end. A hairline along the top parts it from what's above, in a raised card's tint. Instance one, set the
-// client and site, and pick the status's variant with @with-variant
+// client and company, and pick the status's variant with @with-variant
 file {}
 
 export leadRow = frame {
-  caption: "A buyer a developer has just referred",
+  caption: "A lead that has just come in",
   left: 0px,
   top: 0px,
   width: 400px,
@@ -24,15 +24,15 @@ export leadRow = frame {
 
   lead = frame {
     layout: {direction: .column},
-    children: [client, site],
+    children: [client, company],
 
     client = text : styles.control {
       contents: "Ada Lovelace",
       font-style: "Medium"
     }
 
-    site = text : styles.label {
-      contents: "Barratt Homes, Oakwood Gardens",
+    company = text : styles.label {
+      contents: "Hartwell & Co",
       fill[0].color: c.colors.muted
     }
   }

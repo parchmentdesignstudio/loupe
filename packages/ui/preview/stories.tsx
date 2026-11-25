@@ -1369,4 +1369,4 @@ export const areas: Entry[] = [
 		description: 'What an agent needs to know to build with loupe: which component to use over its alternative, which variant applies where, and which tokens are allowed. It’s skills/loupe in the ui package, to be shipped as a plugin',
 		stories: skillStories,
 	},
-];
+].filter((area) => area.id !== 'screens' || import.meta.env.DEV);

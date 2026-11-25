@@ -16,7 +16,7 @@ file {}
 
 export signUp = frame {
   title: "Sign up",
-  caption: "A mortgage adviser starting a 14-day trial of Threshold, the CRM from the Leads screen",
+  caption: "A sales team starting a 14-day trial of Threshold, the CRM from the Leads screen",
   left: 0px,
   top: 0px,
   width: 1440px,
@@ -104,12 +104,12 @@ export signUp = frame {
 
       headline = text : styles.reading-display {
         width: 100%,
-        contents: "Know where every buyer is up to"
+        contents: "Know where every lead is up to"
       }
 
       pitchText = text : styles.body {
         width: 100%,
-        contents: "Referrals from every developer land in one list. Book the first call, chase what’s missing and see who’s ready to reserve.",
+        contents: "Every new lead lands in one list. Book the first call, chase the ones that go quiet and see who’s ready to sign.",
         fill[0].color: c.colors.muted
       }
     }
@@ -165,8 +165,8 @@ export signUp = frame {
               contents: "Imogen Chen"
             }
 
-            site {
-              contents: "Persimmon, Kingsmead"
+            company {
+              contents: "Calder & Vane"
             }
           }
         }
@@ -179,14 +179,14 @@ export signUp = frame {
               contents: "Tomasz Byrne"
             }
 
-            site {
-              contents: "Bellway, Ashton Valley"
+            company {
+              contents: "Quillfield"
             }
           }
 
           leadStatus {
             statusLabel {
-              contents: "Call arranged"
+              contents: "Contacted"
             }
           }
         }
@@ -211,8 +211,8 @@ export signUp = frame {
           leadStatus {}
 
           lead {
-            site {
-              contents: "Taylor Wimpey, Hollins Park"
+            company {
+              contents: "Brackenholt"
             }
 
             client {
@@ -229,8 +229,8 @@ export signUp = frame {
               contents: "Olu Rutherford"
             }
 
-            site {
-              contents: "Bovis Homes, Church Lane"
+            company {
+              contents: "Fernmoor Studio"
             }
           }
         }
