@@ -2,7 +2,8 @@ import type { ComponentType } from 'react';
 import { LeadsScreen } from './leads.js';
 
 // Whole screens built from loupe alone, each at its own address and filling the window, to see how the components hold
-// up together. They're dummies: nothing is saved
+// up together. They're dummies: nothing is saved. They stay out of the published preview, as their made-up data still
+// reads like a real business's
 
 export interface Screen {
 	id: string;
@@ -11,7 +12,7 @@ export interface Screen {
 	render: ComponentType;
 }
 
-export const screens: Screen[] = [
+export const screens: Screen[] = !import.meta.env.DEV ? [] : [
 	{
 		id: 'leads',
 		name: 'Leads',
