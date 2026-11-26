@@ -139,7 +139,7 @@
 	/* Popovers, menus, dialogs, drawers and floating toolbars. In the dark it's a control's fill, and its edges and shadow lift it */
 	--color-overlay: light-dark(var(--color-white), var(--color-pine-24));
 	/* Ink as a surface, such as a toast or a tooltip, with paper text */
-	--color-inverse: var(--color-ink);
+	--color-inverse: light-dark(var(--color-pine-26), var(--color-cream-95));
 	/* A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track */
 	--color-knob: var(--color-white);
 	/* What marks the one chosen in a segmented control, white in the light, and in the dark a step lighter than raised,
@@ -153,8 +153,8 @@
 
 	/* Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
 	   and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one */
-	--color-code-text: var(--color-ink);
-	--color-code-comment: var(--color-muted);
+	--color-code-text: light-dark(var(--color-pine-26), var(--color-cream-95));
+	--color-code-comment: light-dark(var(--color-pine-50), var(--color-linen-90));
 	/* Keywords, and storage such as const and function */
 	--color-code-keyword: light-dark(var(--color-jade-49), var(--color-violet-82));
 	--color-code-string: light-dark(var(--color-plum-55), var(--color-green-89));
@@ -228,32 +228,6 @@
 	}
 }
 
-/* The parts each shadow is built from. Set on every element rather than :root, so each works its colours out where
-   it's drawn: a component that sets its own --edge or shadow colour, as a button does, gets its own. Light falls from
-   above: a fine line along the top, a soft glow under it and a shade along the bottom, as a rounded, glossy surface
-   catches it. Then the rim, a faint line inside the edge and the edge itself, and under it all the shadow, deeper at
-   each level. Every colour is a role in :root, below, which is where to change how strong each is */
-@layer base {
-	*,
-	::before,
-	::after {
-		--shadow-toplight: inset 0 .5px 0 var(--toplight);
-		--shadow-light: var(--shadow-toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade);
-		--shadow-edge: 0 0 0 .5px var(--edge);
-		--shadow-rim: inset 0 0 0 .5px var(--sheen), var(--shadow-edge);
-		--shadow-shell-light: inset 0 .5px 0 var(--shell-toplight), inset 0 1px 3px -1.5px var(--shell-glow);
-		/* A button's edge is 1px, and it can set --fine-edge to draw a half-pixel one as well, or clear --edge to have
-		   only that one */
-		--shadow-rim-button: inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge);
-		--shadow-depth-raised: 0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
-		--shadow-depth-lifted: var(--shadow-depth-raised), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color);
-		--shadow-depth-floating: 0 1px 1px -.5px var(--shadow-floating-color), 0 1px 3px -1.5px var(--shadow-floating-color), 0 2px 4px -2px var(--shadow-floating-color), 0 3px 6px -3px var(--shadow-floating-color), 0 6px 12px -6px var(--shadow-floating-color), 0 12px 24px -12px var(--shadow-floating-color);
-		/* Only in the dark, the last two are a wide soft shade, as fills there are too close together to part it */
-		--shadow-depth-overlay: 0 1px 1px -.5px var(--shadow-overlay-color), 0 1px 3px -1.5px var(--shadow-overlay-color), 0 2px 4px -2px var(--shadow-overlay-color), 0 3px 6px -3px var(--shadow-overlay-color), 0 8px 16px -12px var(--shadow-overlay-color), 0 12px 32px -24px var(--shadow-overlay-color), 0 12px 24px -6px var(--shadow-deep-color), 0 24px 48px -12px var(--shadow-deep-color);
-		--shadow-depth-handle: 0 1px 1px -.5px var(--shadow-handle-color), 0 1px 3px -1.5px var(--shadow-handle-color), 0 2px 4px -2px var(--shadow-handle-color), 0 3px 6px -3px var(--shadow-handle-color), 0 6px 12px -6px var(--shadow-handle-color), 0 12px 24px -12px var(--shadow-handle-color);
-	}
-}
-
 /* What reads a variable a layer or component sets for itself, such as --bleed and a button's --edge. Inline, so
    Tailwind writes the value into each utility, and the variable is read where the utility is used rather than on :root */
 @theme inline {
@@ -261,22 +235,57 @@
 	/* Code's ground, a control's fill unless a theme sets --code-ground, read where it's used so it takes the raised of
 	   the ground it's on, a step lighter than it in the dark, as a button is */
 	--color-code-ground: var(--code-ground, var(--color-raised));
-	/* A level for controls, one for floating toolbars and one for overlays, each built from the parts below, in the
-	   order they paint, top first. Raised's edge is half a pixel, a hint of depth for fields, chips and checkboxes. A
-	   button is raised with a 1px edge, as it's pressed, and lifted a little on hover by a deeper shadow, short of
-	   floating. A panel or card has the rim and a raised shadow, without the light. The geometry is the same in both
-	   modes, and the colours come from :root, below */
-	--shadow-raised: var(--shadow-light), var(--shadow-rim), var(--shadow-depth-raised);
-	--shadow-panel: var(--shadow-rim), var(--shadow-depth-raised);
+
+	/* The shadows, each written out in full so it can be read and changed where it is. Every one is built the same
+	   way, in the order it paints, top first, one line a part:
+	   - Light, falling from above: a fine line along the top, a soft glow under it and a shade along the bottom, as a
+	     rounded, glossy surface catches it
+	   - Rim: a faint line inside the edge, then the edge itself
+	   - Depth: the shadow under it all, deeper at each level
+	   The colours are the parts in :root, below, which is where to change how strong each is. A component can set its
+	   own, as a button sets its --edge. To change a part across the levels, change it in one and copy it to the rest.
+
+	   Raised is for fields, chips and checkboxes, with a half-pixel edge, a hint of depth */
+	--shadow-raised:
+		inset 0 .5px 0 var(--toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade),
+		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge),
+		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+	/* A panel or card: the rim and a raised shadow, without the light */
+	--shadow-panel:
+		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge),
+		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
 	/* The docs shell's card, a panel catching the light along its top, so the page reads as a sheet laid on the ground */
-	--shadow-shell: var(--shadow-shell-light), var(--shadow-panel);
-	--shadow-button: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-raised);
-	--shadow-button-lifted: var(--shadow-light), var(--shadow-rim-button), var(--shadow-depth-lifted);
-	--shadow-floating: var(--shadow-rim), var(--shadow-depth-floating);
-	--shadow-overlay: var(--shadow-toplight), var(--shadow-rim), var(--shadow-depth-overlay);
+	--shadow-shell:
+		inset 0 .5px 0 var(--shell-toplight), inset 0 1px 3px -1.5px var(--shell-glow),
+		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge),
+		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+	/* A button is raised with a 1px edge, as it's pressed. It can set --fine-edge to draw a half-pixel one as well, or
+	   clear --edge to have only that one */
+	--shadow-button:
+		inset 0 .5px 0 var(--toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade),
+		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge),
+		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+	/* A button on hover, lifted a little by a deeper shadow, short of floating */
+	--shadow-button-lifted:
+		inset 0 .5px 0 var(--toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade),
+		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge),
+		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color);
+	/* Floating toolbars */
+	--shadow-floating:
+		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge),
+		0 1px 1px -.5px var(--shadow-floating-color), 0 1px 3px -1.5px var(--shadow-floating-color), 0 2px 4px -2px var(--shadow-floating-color), 0 3px 6px -3px var(--shadow-floating-color), 0 6px 12px -6px var(--shadow-floating-color), 0 12px 24px -12px var(--shadow-floating-color);
+	/* Popovers, menus, dialogs and drawers: the top line without the glow and shade. Only in the dark, the last two are
+	   a wide soft shade, as fills there are too close together to part it */
+	--shadow-overlay:
+		inset 0 .5px 0 var(--toplight),
+		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge),
+		0 1px 1px -.5px var(--shadow-overlay-color), 0 1px 3px -1.5px var(--shadow-overlay-color), 0 2px 4px -2px var(--shadow-overlay-color), 0 3px 6px -3px var(--shadow-overlay-color), 0 8px 16px -12px var(--shadow-overlay-color), 0 12px 32px -24px var(--shadow-overlay-color), 0 12px 24px -6px var(--shadow-deep-color), 0 24px 48px -12px var(--shadow-deep-color);
 	/* For the handle of a switch or slider that lifts off its well. In the dark its shadow is darker than a raised
-	   one's, so the handle stands off the track rather than sitting in it */
-	--shadow-handle: var(--shadow-light), var(--shadow-edge), var(--shadow-depth-handle);
+	   one's, so the handle stands off the track rather than sitting in it. Its edge has no sheen inside it */
+	--shadow-handle:
+		inset 0 .5px 0 var(--toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade),
+		0 0 0 .5px var(--edge),
+		0 1px 1px -.5px var(--shadow-handle-color), 0 1px 3px -1.5px var(--shadow-handle-color), 0 2px 4px -2px var(--shadow-handle-color), 0 3px 6px -3px var(--shadow-handle-color), 0 6px 12px -6px var(--shadow-handle-color), 0 12px 24px -12px var(--shadow-handle-color);
 	/* In place of a field's shadow when what's in it is wrong */
 	--shadow-invalid: 0 0 0 1px var(--color-danger);
 	/* The opposite of raised, for a well that controls sit in, such as a switch's track or a toggle group's tray: a soft
@@ -385,14 +394,15 @@
 		--raised-bleed: light-dark(var(--color-pine-26), var(--color-pine-95));
 		--overlay-bleed: light-dark(var(--color-pine-26), var(--color-pine-95));
 		--inverse-bleed: light-dark(var(--color-white), var(--color-umber-30));
-		--bleed: var(--ground-bleed);
+		/* The ground's, until a layer sets its own */
+		--bleed: light-dark(var(--color-linen-30), var(--color-pine-95));
 
 		/* Shadows have their own colours, so they stay dark in the dark. In the light, the edge is the ground's line
 		   colour, and the shadows take the ground's hue, as the tints do. In the dark, the edge is a shade darker than
 		   what's behind it, so it's crisp without being bright. A component that sets its own edge takes --dark-edge for
-		   the dark */
+		   the dark, which is the same black as the edge's dark side */
 		--dark-edge: color-mix(in oklab, var(--color-black) 32%, transparent);
-		--edge: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), var(--dark-edge));
+		--edge: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
 		/* In the dark, a faint light line just inside the edge, and on controls a little more along the top, as if lit
 		   from above. They're shadows, so they go when something is disabled or pressed flat */
 		--sheen: light-dark(transparent, color-mix(in oklab, var(--bleed) 5%, transparent));
@@ -402,9 +412,9 @@
 		--glow: light-dark(transparent, color-mix(in oklab, var(--color-white) 6%, transparent));
 		--shade: light-dark(transparent, color-mix(in oklab, var(--color-black) 16%, transparent));
 		/* The shell card's top. White in the light, as the panel is near white and a tint of it would barely show. In
-		   the dark, the same light a control's top catches */
-		--shell-toplight: light-dark(var(--color-white), var(--toplight));
-		--shell-glow: light-dark(color-mix(in oklab, var(--color-white) 50%, transparent), var(--glow));
+		   the dark, the same light a control's top catches, as --toplight and --glow have it */
+		--shell-toplight: light-dark(var(--color-white), color-mix(in oklab, var(--bleed) 6%, transparent));
+		--shell-glow: light-dark(color-mix(in oklab, var(--color-white) 50%, transparent), color-mix(in oklab, var(--color-white) 6%, transparent));
 		--shadow-raised-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
 		--shadow-floating-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
 		/* Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it */

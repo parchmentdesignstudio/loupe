@@ -112,3 +112,17 @@ mode on their own.
 | `inset-shadow-well` | A well that controls sit in, such as a track |
 
 Borders are for separation, not depth: a line between rows is `border-b border-bleed/8`.
+
+## Setting a token
+
+When you set a token, in Loupe or in a brand's own CSS, set it to a value. A literal, or one token that is itself a literal, such as a role that picks two palette colours:
+
+```css
+/* Correct */
+--color-inverse: light-dark(var(--color-pine-26), var(--color-cream-95));
+
+/* Incorrect: a role read from a role, so editing it means following it */
+--color-inverse: var(--color-ink);
+```
+
+A role never reads another role, and a palette colour never reads another. A shadow is written out in full in one place, reading only the parts a layer or component sets (`--bleed`, `--edge`, `--toplight` and the rest) and roles. Repeating a value is the price of seeing it where it's used: change one shadow, then copy the change to the others. `pnpm lint` fails on a token more than one hop from its value.

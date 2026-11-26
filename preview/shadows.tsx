@@ -40,7 +40,11 @@ const groups: { name: string; knobs: Knob[] }[] = [
 	},
 	{
 		name: 'Edge',
-		knobs: [{ label: 'Edge', light: { name: 'edge', part: 0, base: bleed }, dark: { name: 'dark-edge', part: null, base: black } }],
+		knobs: [
+			{ label: 'Edge', ...both('edge', bleed, black) },
+			// The dark edge a component draws for itself, such as a switch's or a swatch's, kept the same as the edge's
+			{ label: 'Control edge', dark: { name: 'dark-edge', part: null, base: black } },
+		],
 	},
 	{
 		name: 'Depth',
