@@ -19,11 +19,11 @@
 
 		@media not all {
 			/* The ray's colours, from its leading edge to its trailing one. Either side of them is the text's own colour */
-			--text-effect-ray-1: light-dark(var(--color-red-67), var(--color-red-81));
-			--text-effect-ray-2: light-dark(var(--color-orange-72), var(--color-orange-89));
-			--text-effect-ray-3: light-dark(var(--color-green-68), var(--color-green-89));
-			--text-effect-ray-4: light-dark(var(--color-sky-69), var(--color-sky-85));
-			--text-effect-ray-5: light-dark(var(--color-pink-70), var(--color-pink-87));
+			--text-effect-ray-1: var(--color-ray-1);
+			--text-effect-ray-2: var(--color-ray-2);
+			--text-effect-ray-3: var(--color-ray-3);
+			--text-effect-ray-4: var(--color-ray-4);
+			--text-effect-ray-5: var(--color-ray-5);
 		}
 
 		/* Button */
@@ -61,9 +61,9 @@
 			/* The text on quiet, ink */
 			--button-quiet-text: var(--color-on-quiet);
 			/* Danger's fill, red in both themes */
-			--button-danger-fill: var(--color-red-50);
+			--button-danger-fill: var(--color-danger-fill);
 			/* The text on danger, white in both themes */
-			--button-danger-text: var(--color-white);
+			--button-danger-text: var(--color-on-danger-fill);
 		}
 
 		/* Shadow */
@@ -346,7 +346,7 @@
 
 		@media not all {
 			/* The track when on, the green a success status uses */
-			--switch-on-fill: var(--color-green-68);
+			--switch-on-fill: var(--color-tone-success);
 			/* The handle when off */
 			--switch-handle: var(--color-knob);
 			/* The handle when on, white in both themes */
@@ -536,15 +536,15 @@
 
 		@media not all {
 			/* Nothing to act on, sand */
-			--tone-neutral: var(--color-sand-66);
+			--tone-neutral: var(--color-tone-neutral);
 			/* Worth knowing, blue */
-			--tone-info: var(--color-blue-56);
+			--tone-info: var(--color-tone-info);
 			/* Done or well, green, as an avatar is online */
-			--tone-success: var(--color-green-68);
+			--tone-success: var(--color-tone-success);
 			/* Needs a look, yellow, as an avatar is away */
-			--tone-warning: var(--color-yellow-76);
+			--tone-warning: var(--color-tone-warning);
 			/* Gone wrong, red, as an avatar is busy */
-			--tone-danger: var(--color-red-67);
+			--tone-danger: var(--color-tone-danger);
 		}
 
 		/* Alert */

@@ -41,8 +41,8 @@ export const button = tv({
 			],
 			// For an action that destroys something. Red in both themes, as the danger token turns light in the dark
 			danger: [
-				'text-(color:--button-danger-text,var(--color-white))',
-				'[--fill:var(--button-danger-fill,var(--color-red-50))]',
+				'text-(color:--button-danger-text,var(--color-on-danger-fill))',
+				'[--fill:var(--button-danger-fill,var(--color-danger-fill))]',
 				'[--rim:oklch(from_var(--fill)_calc(l*var(--button-filled-rim))_c_h)]',
 				'shadow-button-danger before:shadow-button-danger-bevel',
 				'[--top-line-strength:var(--button-danger-top-line-dark-strength)] [--bottom-line-strength:var(--button-danger-bottom-line-dark-strength)]',

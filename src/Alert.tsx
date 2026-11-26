@@ -23,11 +23,11 @@ export const alert = tv({
 	},
 	variants: {
 		tone: {
-			neutral: { base: '[--alert-icon:light-dark(var(--color-sand-46),var(--color-sand-84))] [--alert:var(--tone-neutral,var(--color-sand-66))]' },
-			info: { base: '[--alert-icon:light-dark(var(--color-blue-56),var(--color-blue-82))] [--alert:var(--tone-info,var(--color-blue-56))]' },
-			success: { base: '[--alert-icon:light-dark(var(--color-green-46),var(--color-green-89))] [--alert:var(--tone-success,var(--color-green-68))]' },
-			warning: { base: '[--alert-icon:light-dark(var(--color-yellow-40),var(--color-yellow-91))] [--alert:var(--tone-warning,var(--color-yellow-76))]' },
-			danger: { base: '[--alert-icon:light-dark(var(--color-red-50),var(--color-red-81))] [--alert:var(--tone-danger,var(--color-red-67))]' },
+			neutral: { base: '[--alert-icon:var(--color-tone-neutral-mark)] [--alert:var(--tone-neutral,var(--color-tone-neutral))]' },
+			info: { base: '[--alert-icon:var(--color-tone-info-mark)] [--alert:var(--tone-info,var(--color-tone-info))]' },
+			success: { base: '[--alert-icon:var(--color-tone-success-mark)] [--alert:var(--tone-success,var(--color-tone-success))]' },
+			warning: { base: '[--alert-icon:var(--color-tone-warning-mark)] [--alert:var(--tone-warning,var(--color-tone-warning))]' },
+			danger: { base: '[--alert-icon:var(--color-tone-danger-mark)] [--alert:var(--tone-danger,var(--color-tone-danger))]' },
 		},
 		// An alert is a box tinted in the tone, edged a little deeper, to draw the eye. A notice is a line in the flow,
 		// with no box: the icon in the tone and muted text, for something worth knowing that needn't stop anyone

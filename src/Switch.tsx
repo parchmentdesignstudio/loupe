@@ -23,7 +23,7 @@ const toggle = tv({
 		// the dark, the track is a toggle group's tray, raised's fill with the dark edge, so the handle is what stands out
 		isSelected: {
 			false: { track: 'bg-[light-dark(color-mix(in_oklab,var(--bleed)_16%,transparent),var(--color-raised))] [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),var(--dark-edge))]' },
-			true: { track: 'bg-(--switch-on-fill,var(--color-green-68))', handle: 'translate-x-[calc(1.5rem-100%)] bg-(--switch-on-handle,var(--color-white)) rtl:translate-x-[calc(100%-1.5rem)]' },
+			true: { track: 'bg-(--switch-on-fill,var(--color-tone-success))', handle: 'translate-x-[calc(1.5rem-100%)] bg-(--switch-on-handle,var(--color-white)) rtl:translate-x-[calc(100%-1.5rem)]' },
 		},
 		// Anywhere on the switch or its label, not just the handle, stretches it a little, and a press a little further
 		isHovered: {

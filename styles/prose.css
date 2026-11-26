@@ -86,14 +86,14 @@
 			&:where(mark) {
 				border-radius: .125rem;
 				/* A tint rather than a blend: multiply took the text with it, and darkened it out of sight on the dark ground */
-				background: color-mix(in oklab, var(--color-marigold-83), transparent 80%);
+				background: color-mix(in oklab, var(--color-accent), transparent 80%);
 				color: inherit;
 			}
 			&:where(del, s) {
 				color: var(--color-muted);
 			}
 			&:where(ins) {
-				background-color: color-mix(in oklch, var(--color-green-68), transparent 80%);
+				background-color: color-mix(in oklch, var(--color-tone-success), transparent 80%);
 				text-decoration: none;
 				border-radius: .125rem;
 			}

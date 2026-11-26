@@ -66,24 +66,24 @@ export const avatar = tv({
 		},
 		// The dot's gap, a circle cut from the face around where the dot sits
 		status: {
-			online: { base: dotMask, dot: 'bg-(--tone-success,var(--color-green-68))' },
-			away: { base: dotMask, dot: 'bg-(--tone-warning,var(--color-yellow-76))' },
-			busy: { base: dotMask, dot: 'bg-(--tone-danger,var(--color-red-67))' },
+			online: { base: dotMask, dot: 'bg-(--tone-success,var(--color-tone-success))' },
+			away: { base: dotMask, dot: 'bg-(--tone-warning,var(--color-tone-warning))' },
+			busy: { base: dotMask, dot: 'bg-(--tone-danger,var(--color-tone-danger))' },
 		},
 		// A badge's colour, from the same tones as a status. Its icon is white on blue and red, and pine on the lighter
 		// three, so it passes 3:1 on each in the light and the dark alike
 		badgeTone: {
-			neutral: { base: dotMask, dot: 'bg-(--tone-neutral,var(--color-sand-66)) text-(--color-pine-20)' },
-			info: { base: dotMask, dot: 'bg-(--tone-info,var(--color-blue-56)) text-(--color-white)' },
-			success: { base: dotMask, dot: 'bg-(--tone-success,var(--color-green-68)) text-(--color-pine-20)' },
-			warning: { base: dotMask, dot: 'bg-(--tone-warning,var(--color-yellow-76)) text-(--color-pine-20)' },
-			danger: { base: dotMask, dot: 'bg-(--tone-danger,var(--color-red-67)) text-(--color-white)' },
+			neutral: { base: dotMask, dot: 'bg-(--tone-neutral,var(--color-tone-neutral)) text-(--color-on-tone-neutral)' },
+			info: { base: dotMask, dot: 'bg-(--tone-info,var(--color-tone-info)) text-(--color-on-tone-info)' },
+			success: { base: dotMask, dot: 'bg-(--tone-success,var(--color-tone-success)) text-(--color-on-tone-success)' },
+			warning: { base: dotMask, dot: 'bg-(--tone-warning,var(--color-tone-warning)) text-(--color-on-tone-warning)' },
+			danger: { base: dotMask, dot: 'bg-(--tone-danger,var(--color-tone-danger)) text-(--color-on-tone-danger)' },
 		},
 		// A badge with an icon is a dot grown to fit it, so its place and its gap follow from --avatar-dot as a status's do
 		hasIcon: {
 			true: { base: '[--avatar-dot:var(--avatar-badge)]' },
 		},
-		// The tint is a light step from the palette. In the light it's lifted to one lightness and softened, so every hue
+		// The tint is one of the brand's, a light colour. In the light it's lifted to one lightness and softened, so every hue
 		// is as pale as the next, under a dark shade of its own hue, and in the dark the two swap, so the initials pass
 		// 4.5:1 in both. The count in a group is an opaque tint of what it sits on instead, so it hides what it overlaps
 		isCount: {
@@ -105,8 +105,8 @@ export type AvatarShape = 'circle' | 'square';
 export type AvatarStatus = 'online' | 'away' | 'busy';
 export type AvatarBadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
-// Soft, light steps from the palette, a few calm hues rather than the whole wheel
-const tints = ['--color-olive-91', '--color-teal-88', '--color-sky-85', '--color-violet-82', '--color-orange-89', '--color-red-87', '--color-yellow-91'];
+// The brand's tints, soft, light colours, a few calm hues rather than the whole wheel
+const tints = ['--color-tint-1', '--color-tint-2', '--color-tint-3', '--color-tint-4', '--color-tint-5', '--color-tint-6', '--color-tint-7'];
 
 /** The tint a name always gets, the same on every visit, as a CSS variable from the palette */
 export function avatarTint(name: string) {

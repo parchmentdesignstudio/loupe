@@ -149,6 +149,42 @@
 		/* Behind a drawer */
 		--color-scrim: light-dark(color-mix(in oklab, var(--color-pine-26) 32%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 
+		/* The tones a status, an alert or an avatar's dot takes: sand for nothing to act on, blue for worth knowing, green for
+		   done, yellow for needs a look and red for gone wrong. Each fill is the same in both themes, with the text on it,
+		   and a mark, a tone's colour for an icon or a line on the ground, darker in the light and lighter in the dark */
+		--color-tone-neutral: var(--color-sand-66);
+		--color-tone-info: var(--color-blue-56);
+		--color-tone-success: var(--color-green-68);
+		--color-tone-warning: var(--color-yellow-76);
+		--color-tone-danger: var(--color-red-67);
+		--color-on-tone-neutral: var(--color-pine-20);
+		--color-on-tone-info: var(--color-white);
+		--color-on-tone-success: var(--color-pine-20);
+		--color-on-tone-warning: var(--color-pine-20);
+		--color-on-tone-danger: var(--color-white);
+		--color-tone-neutral-mark: light-dark(var(--color-sand-46), var(--color-sand-84));
+		--color-tone-info-mark: light-dark(var(--color-blue-56), var(--color-blue-82));
+		--color-tone-success-mark: light-dark(var(--color-green-46), var(--color-green-89));
+		--color-tone-warning-mark: light-dark(var(--color-yellow-40), var(--color-yellow-91));
+		--color-tone-danger-mark: light-dark(var(--color-red-50), var(--color-red-81));
+		/* A danger button's fill, red in both themes, and the white on it */
+		--color-danger-fill: var(--color-red-50);
+		--color-on-danger-fill: var(--color-white);
+		/* An avatar's tint behind its initials, picked by name. Soft, light steps, a few calm hues rather than the whole
+		   wheel, as Avatar lifts each to one lightness in the light and darkens it in the dark */
+		--color-tint-1: var(--color-olive-91);
+		--color-tint-2: var(--color-teal-88);
+		--color-tint-3: var(--color-sky-85);
+		--color-tint-4: var(--color-violet-82);
+		--color-tint-5: var(--color-orange-89);
+		--color-tint-6: var(--color-red-87);
+		--color-tint-7: var(--color-yellow-91);
+		/* The ray TextEffect draws across text, from its leading edge to its trailing one */
+		--color-ray-1: light-dark(var(--color-red-67), var(--color-red-81));
+		--color-ray-2: light-dark(var(--color-orange-72), var(--color-orange-89));
+		--color-ray-3: light-dark(var(--color-green-68), var(--color-green-89));
+		--color-ray-4: light-dark(var(--color-sky-69), var(--color-sky-85));
+		--color-ray-5: light-dark(var(--color-pink-70), var(--color-pink-87));
 		/* Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
 		   and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one */
 		--color-code-text: light-dark(var(--color-pine-26), var(--color-cream-95));
