@@ -1,4 +1,4 @@
-// Saves the Shadows panel's colours into styles/theme.css as the preview runs locally, so a tweak in the browser comes
+// Saves the Shadows panel's colours into the brand, styles/brands/parchment.css, as the preview runs locally, so a tweak in the browser comes
 // back as a diff, then brings the Elyx tokens up to date with it. Only the dev server has it, so the hosted preview
 // can't write
 import { execFile } from 'node:child_process';
@@ -17,7 +17,7 @@ export function saveTokens() {
 		name: 'save-tokens',
 		apply: 'serve',
 		configureServer(server) {
-			const file = join(server.config.root, '../styles/theme.css');
+			const file = join(server.config.root, '../styles/brands/parchment.css');
 			const repo = join(server.config.root, '../../..');
 			// Every failure is answered, so a bad save can't stop the server
 			const save = async (request, response) => {
@@ -30,7 +30,7 @@ export function saveTokens() {
 					for (const [name, value] of Object.entries(changes)) {
 						if (!names.test(name) || typeof value !== 'string' || !values.test(value)) throw new Error(`Can't save --${name}: ${value}`);
 						const declaration = new RegExp(`^(\\t+--${name}: ).*;$`, 'm');
-						if (!declaration.test(css)) throw new Error(`No --${name} in styles/theme.css`);
+						if (!declaration.test(css)) throw new Error(`No --${name} in styles/brands/parchment.css`);
 						css = css.replace(declaration, `$1${value};`);
 					}
 					await writeFile(file, css);

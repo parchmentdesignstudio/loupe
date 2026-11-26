@@ -1,188 +1,56 @@
-/* The values everything is built from: what a role, a component or a site reaches for. Values only, set on :root or
-   as Tailwind's theme, with a selector only where a value depends on where it's used: the pointer, the screen's
-   gamut or an overlay's side. A token named for a component, such as --button-radius, goes in components.css.
-   In order: colours and type, the P3 colours, shadows, corners and spacing, motion, then what each layer sets */
-/* The colours and type, as Tailwind's own variables, so each value is set once, beside its dark one: --color-ink is
-   bg-ink and text-ink, and --text-label is text-label. Static, so every variable is written out, for CSS and inline
-   styles that read one by name, such as var(--color-paper) */
+/* What every brand shares: the roles' names, the type, the shadows, corners, spacing and motion. A brand's colours
+   are its own, in styles/brands, as Parchment's are in parchment.css, and a site imports one before this. Values only,
+   set on :root or as Tailwind's theme, with a selector only where a value depends on where it's used: the pointer or
+   an overlay's side. A token named for a component, such as --button-radius, goes in components.css.
+   In order: the roles' names, type, shadows, corners and spacing, motion, then what :root sets */
+/* The roles, as Tailwind's colours, so --color-ink is bg-ink and text-ink. Their values are a brand's, set in
+   styles/brands, as Parchment's are in parchment.css. Inline, so a utility reads the role by name where it's used, and
+   a reference, so the names alone are here and the brand's :root sets them */
+@theme inline reference {
+	--color-ink: var(--color-ink);
+	--color-muted: var(--color-muted);
+	--color-danger: var(--color-danger);
+	--color-paper: var(--color-paper);
+	--color-accent: var(--color-accent);
+	--color-highlight: var(--color-highlight);
+	--color-primary: var(--color-primary);
+	--color-on-primary: var(--color-on-primary);
+	--color-quiet: var(--color-quiet);
+	--color-on-quiet: var(--color-on-quiet);
+	--color-ground: var(--color-ground);
+	--color-panel: var(--color-panel);
+	--color-raised: var(--color-raised);
+	--color-surface: var(--color-surface);
+	--color-overlay: var(--color-overlay);
+	--color-inverse: var(--color-inverse);
+	--color-knob: var(--color-knob);
+	--color-chosen: var(--color-chosen);
+	--color-chosen-tint: var(--color-chosen-tint);
+	--color-on-chosen-tint: var(--color-on-chosen-tint);
+	--color-scrim: var(--color-scrim);
+	--color-code-text: var(--color-code-text);
+	--color-code-comment: var(--color-code-comment);
+	--color-code-keyword: var(--color-code-keyword);
+	--color-code-string: var(--color-code-string);
+	--color-code-quote: var(--color-code-quote);
+	--color-code-constant: var(--color-code-constant);
+	--color-code-number: var(--color-code-number);
+	--color-code-function: var(--color-code-function);
+	--color-code-type: var(--color-code-type);
+	--color-code-builtin: var(--color-code-builtin);
+	--color-code-tag: var(--color-code-tag);
+	--color-code-attribute: var(--color-code-attribute);
+	--color-code-mark: var(--color-code-mark);
+	--color-code-mark-edge: var(--color-code-mark-edge);
+	--color-code-add: var(--color-code-add);
+	--color-code-add-edge: var(--color-code-add-edge);
+	--color-code-remove: var(--color-code-remove);
+	--color-code-remove-edge: var(--color-code-remove-edge);
+}
+
+/* The type, as Tailwind's own variables, so --text-label is text-label. Static, so every variable is written out, for
+   CSS and inline styles that read one by name */
 @theme static {
-	/* The palette: the raw colours, named by hue and lightness, so pine-26 is oklch(0.26 …). The further apart
-	   two numbers, the stronger the contrast. Components use the roles below rather than these, though each is a
-	   utility too, as in bg-teal-48. First the colours the roles work out from, then Parchment's own */
-	--color-white: oklch(1 0 0);
-	--color-black: oklch(0 0 0);
-	--color-cream-95: oklch(0.95 0.011 76.6);
-	--color-cream-80: oklch(0.8 0.014 76.6);
-	--color-umber-30: oklch(0.3 0.055 77);
-	/* A paler, greyer cream for the light mode's ground and panels, so white controls stand out on them, and a
-	   dark in its hue for their tints and lines */
-	--color-linen-99: oklch(0.986 0.002 67.8);
-	--color-linen-97: oklch(0.966 0.004 67.8);
-	/* Muted text in the dark: linen taken darker and a touch warmer, so it reads as quieter ink rather than beige */
-	--color-linen-90: oklch(0.903 0.013 56.2);
-	--color-linen-30: oklch(0.3 0.024 67.8);
-	--color-linen-18: oklch(0.18 0.024 67.8);
-	--color-pine-95: oklch(0.95 0.054 169.9);
-	--color-pine-50: oklch(0.5 0.025 169.9);
-	--color-pine-35: oklch(0.35 0.038 169.9);
-	--color-pine-32: oklch(0.32 0.036 169.9);
-	--color-pine-29: oklch(0.29 0.035 169.9);
-	--color-pine-26: oklch(0.256 0.039 169.9);
-	--color-pine-24: oklch(0.24 0.035 169.9);
-	--color-pine-20: oklch(0.2 0.027 169.9);
-	--color-pine-16: oklch(0.16 0.022 169.9);
-	--color-red-81: oklch(0.81 0.108 28.7);
-	--color-red-50: oklch(0.501 0.178 28.7);
-	/* For code's roles in the light, on Nova's rules: one hue for keywords, tags and booleans, the rest a walk round
-	   the wheel from it at one lightness, and each string's quotes a darker shade of it. Jade, cyan and sky as vivid as
-	   sRGB holds, and more on a wide-gamut screen, at the end of this file */
-	--color-jade-49: oklch(0.49 0.092 175);
-	--color-mint-58: oklch(0.58 0.1 160);
-	--color-cyan-50: oklch(0.5 0.085 206);
-	--color-sky-52: oklch(0.52 0.115 238);
-	--color-violet-58: oklch(0.58 0.2 289);
-	--color-plum-55: oklch(0.55 0.19 316);
-	--color-plum-43: oklch(0.43 0.15 316);
-	--color-moss-45: oklch(0.45 0.06 130);
-	/* Parchment's own, as the parchment-brand board in Sketch has them, with linen-99, linen-97 and pine-26 above */
-	--color-marigold-83: oklch(0.834 0.1525 85.6);
-	--color-apricot-73: oklch(0.731 0.159 48.5);
-	--color-claret-79: oklch(0.788 0.089 19.3);
-	--color-claret-36: oklch(0.361 0.09 17.9);
-	--color-olive-47: oklch(0.473 0.09 124.1);
-	--color-slate-86: oklch(0.858 0.027 196.7);
-	/* Worked out from them for the roles: olive light enough to sit behind ink */
-	--color-olive-91: oklch(0.909 0.099 124.1);
-	/* Nine hues, each light, mid and dark, for designs to draw on. No role uses them yet */
-	--color-red-87: oklch(0.874 0.057 17);
-	--color-red-67: oklch(0.675 0.194 21.2);
-	--color-red-35: oklch(0.347 0.1416 27.3);
-	--color-orange-89: oklch(0.894 0.047 36.3);
-	--color-orange-72: oklch(0.718 0.161 36.2);
-	--color-orange-41: oklch(0.409 0.139 34.6);
-	--color-yellow-91: oklch(0.913 0.099 87.7);
-	--color-yellow-76: oklch(0.76 0.1517 76.4);
-	--color-yellow-40: oklch(0.402 0.102 52.7);
-	--color-green-89: oklch(0.893 0.112 124.8);
-	--color-green-68: oklch(0.676 0.1817 131.1);
-	--color-green-46: oklch(0.459 0.147 140.9);
-	--color-teal-88: oklch(0.877 0.06 186.9);
-	--color-teal-69: oklch(0.6923 0.1262 178.66);
-	--color-teal-48: oklch(0.482 0.087 179.9);
-	--color-sky-85: oklch(0.854 0.064 237.1);
-	--color-sky-69: oklch(0.686 0.1427 241.9);
-	--color-sky-37: oklch(0.37 0.091 244.9);
-	--color-blue-82: oklch(0.819 0.075 270.3);
-	--color-blue-56: oklch(0.557 0.208 266.3);
-	--color-blue-29: oklch(0.286 0.125 265.3);
-	--color-violet-82: oklch(0.823 0.088 301.8);
-	--color-violet-54: oklch(0.543 0.247 288.9);
-	--color-violet-27: oklch(0.27 0.146 284.1);
-	--color-pink-87: oklch(0.866 0.071 343.1);
-	--color-pink-70: oklch(0.699 0.193 349.8);
-	--color-pink-56: oklch(0.56 0.19 350);
-	--color-pink-33: oklch(0.335 0.128 354.9);
-	/* Greys for the cream ground, in the light yellow's hue. As they darken they warm towards the yellow's mid and
-	   gain a little chroma, as the ground's bleed does, so they stay warm rather than dull */
-	--color-sand-97: oklch(0.97 0.007 87.7);
-	--color-sand-94: oklch(0.94 0.008 87.2);
-	--color-sand-90: oklch(0.9 0.009 86.6);
-	--color-sand-84: oklch(0.84 0.011 85.6);
-	--color-sand-76: oklch(0.76 0.014 84.4);
-	--color-sand-66: oklch(0.66 0.017 82.8);
-	--color-sand-56: oklch(0.56 0.02 81.2);
-	--color-sand-46: oklch(0.46 0.024 79.6);
-	--color-sand-36: oklch(0.36 0.027 78);
-	--color-sand-26: oklch(0.26 0.03 76.4);
-	/* Neutral greys for white, at sand's steps. On the layer each is for, 56 and darker pass 4.5:1 for text, and 66
-	   and darker 3:1 for a control's edge */
-	--color-grey-97: oklch(0.97 0 0);
-	--color-grey-94: oklch(0.94 0 0);
-	--color-grey-90: oklch(0.9 0 0);
-	--color-grey-84: oklch(0.84 0 0);
-	--color-grey-76: oklch(0.76 0 0);
-	--color-grey-66: oklch(0.66 0 0);
-	--color-grey-56: oklch(0.56 0 0);
-	--color-grey-46: oklch(0.46 0 0);
-	--color-grey-36: oklch(0.36 0 0);
-	--color-grey-26: oklch(0.26 0 0);
-
-	/* The roles components use, each light-dark(light, dark). The dark mode inverts the light one: the ground
-	   takes ink's pine, and ink takes the ground's cream */
-	--color-ink: light-dark(var(--color-pine-26), var(--color-cream-95));
-	--color-muted: light-dark(var(--color-pine-50), var(--color-linen-90));
-	--color-danger: light-dark(var(--color-red-50), var(--color-red-81));
-	/* Marks on ink, such as a button's text or a checkbox's tick */
-	--color-paper: light-dark(var(--color-white), var(--color-pine-20));
-	/* What a page leads with, and what marks the current page or today: marigold, as a primary button is, in both themes */
-	--color-accent: var(--color-marigold-83);
-	/* The light accent, a fill behind ink to mark something out. In the dark it's an olive tint over what it sits on */
-	--color-highlight: light-dark(var(--color-olive-91), color-mix(in oklab, var(--color-olive-91) 24%, transparent));
-	/* A primary button's fill, marigold, and a quiet button's, slate, each with the ink on it. Both themes share them,
-	   as the fills stay light */
-	--color-primary: var(--color-marigold-83);
-	--color-on-primary: var(--color-pine-26);
-	--color-quiet: var(--color-slate-86);
-	--color-on-quiet: var(--color-pine-26);
-
-	/* The layers, from the page up. In the light, the ground and panel are off-white linen, raised and
-	   overlay are white, and shadows part them. In the dark, each is lighter than the one below, starting near black
-	   so there's room above the controls for hover and what's chosen */
-	--color-ground: light-dark(var(--color-linen-97), var(--color-pine-16));
-	/* An area on the page, such as a tool's side panel */
-	--color-panel: light-dark(var(--color-linen-99), var(--color-pine-20));
-	/* A control's fill, such as a button's, a field's or a checkbox's */
-	--color-raised: light-dark(var(--color-white), var(--color-pine-24));
-	/* What raised turns on hover. In the light, a see-through dark linen, so it suits the ground or a panel under it
-	   rather than one of them. In the dark, a step lighter than raised, as each layer there is lighter than the last */
-	--color-surface: light-dark(color-mix(in oklab, var(--color-linen-18) 4%, transparent), var(--color-pine-29));
-	/* Popovers, menus, dialogs, drawers and floating toolbars. In the dark it's a control's fill, and its edges and shadow lift it */
-	--color-overlay: light-dark(var(--color-white), var(--color-pine-24));
-	/* Ink as a surface, such as a toast or a tooltip, with paper text */
-	--color-inverse: light-dark(var(--color-pine-26), var(--color-cream-95));
-	/* A switch's handle and a slider's thumb: white in both themes, so it's the brightest thing on its track */
-	--color-knob: var(--color-white);
-	/* What marks the one chosen in a segmented control, white in the light, and in the dark a step lighter than raised,
-	   so it stands off the well it sits in */
-	--color-chosen: light-dark(var(--color-white), var(--color-pine-29));
-	/* A pink tint that marks each chosen where several can be, and the text on it, a darker pink in the light so it reads on white */
-	--color-chosen-tint: light-dark(color-mix(in oklab, var(--color-pink-56) 12%, transparent), color-mix(in oklab, var(--color-pink-70) 18%, transparent));
-	--color-on-chosen-tint: light-dark(var(--color-pink-56), var(--color-pink-70));
-	/* Behind a drawer */
-	--color-scrim: light-dark(color-mix(in oklab, var(--color-pine-26) 32%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
-
-	/* Code, by what each part of it is rather than its grammar, so Loupe's Shiki theme (lib/shiki.js) only names these,
-	   and a site restyles its code by setting them, or with data-code-theme, below. Comments and line numbers share one */
-	--color-code-text: light-dark(var(--color-pine-26), var(--color-cream-95));
-	--color-code-comment: light-dark(var(--color-pine-50), var(--color-linen-90));
-	/* Keywords, and storage such as const and function */
-	--color-code-keyword: light-dark(var(--color-jade-49), var(--color-violet-82));
-	--color-code-string: light-dark(var(--color-plum-55), var(--color-green-89));
-	/* A string's quotes */
-	--color-code-quote: light-dark(var(--color-plum-43), var(--color-green-89));
-	/* Booleans, hex colours and the other constants */
-	--color-code-constant: light-dark(var(--color-jade-49), var(--color-orange-89));
-	/* Numbers and their units */
-	--color-code-number: light-dark(var(--color-violet-58), var(--color-orange-89));
-	/* Functions, and the names given values: properties and custom properties */
-	--color-code-function: light-dark(var(--color-sky-52), var(--color-blue-82));
-	/* Types, classes and at-rules */
-	--color-code-type: light-dark(var(--color-moss-45), var(--color-yellow-91));
-	/* CSS's own functions, such as calc() and light-dark() */
-	--color-code-builtin: light-dark(var(--color-cyan-50), var(--color-teal-88));
-	/* JSX and HTML tags, and their attributes */
-	--color-code-tag: light-dark(var(--color-jade-49), var(--color-pink-87));
-	--color-code-attribute: light-dark(var(--color-mint-58), var(--color-blue-82));
-	/* Lines marked out: highlighted, added and removed. Each ground tints the line, and a word marked in it again, and
-	   its edge colours the bar, a removal's stripes and the line's number. Errors take remove's, and warnings mark's */
-	--color-code-mark: color-mix(in oklch, var(--color-yellow-76) 20%, transparent);
-	--color-code-mark-edge: light-dark(var(--color-yellow-40), var(--color-yellow-91));
-	--color-code-add: color-mix(in oklch, var(--color-green-68) 16%, transparent);
-	--color-code-add-edge: light-dark(var(--color-green-46), var(--color-green-89));
-	/* A removal is tinted at 40% of an addition's strength, as its stripes already set it apart */
-	--color-code-remove: color-mix(in oklch, var(--color-red-67) 6.4%, transparent);
-	--color-code-remove-edge: light-dark(var(--color-red-50), var(--color-red-81));
-
 	--font-sans: elza-round-variable, 'Helvetica Neue', Arial, sans-serif;
 	--font-mono: auger-mono, 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
 	/* Quotes, in italic. Loupe only uses Livory's italic, so a kit needs no more of it */
@@ -216,17 +84,6 @@
 	--text-reading-display--letter-spacing: -0.02em;
 }
 
-/* Code's jade, cyan and sky at their full strength where the screen shows P3. Apart from @theme, so the palette and
-   Elyx keep the sRGB colour, and in the base layer, so it wins over Tailwind's theme layer */
-@layer base {
-	@media (color-gamut: p3) {
-		:root {
-			--color-jade-49: oklch(0.49 0.12 175);
-			--color-cyan-50: oklch(0.5 0.15 206);
-			--color-sky-52: oklch(0.52 0.15 238);
-		}
-	}
-}
 
 /* What reads a variable a layer or component sets for itself, such as --bleed and a button's --edge. Inline, so
    Tailwind writes the value into each utility, and the variable is read where the utility is used rather than on :root */
@@ -385,43 +242,6 @@
 @layer base {
 	:root {
 		color-scheme: light dark;
-
-		/* Tints and lines mix from bleed at 4, 8, 12, 16, 24 or 32%, such as bg-bleed/8 for a line. See-through
-		   ink would grey the linen ground, so on the ground it's ink in the ground's hue. Every layer sets its own,
-		   as in bg-overlay [--bleed:var(--overlay-bleed)], so a tint suits what it sits on */
-		--ground-bleed: light-dark(var(--color-linen-30), var(--color-pine-95));
-		--panel-bleed: light-dark(var(--color-linen-30), var(--color-pine-95));
-		--raised-bleed: light-dark(var(--color-pine-26), var(--color-pine-95));
-		--overlay-bleed: light-dark(var(--color-pine-26), var(--color-pine-95));
-		--inverse-bleed: light-dark(var(--color-white), var(--color-umber-30));
-		/* The ground's, until a layer sets its own */
-		--bleed: light-dark(var(--color-linen-30), var(--color-pine-95));
-
-		/* Shadows have their own colours, so they stay dark in the dark. In the light, the edge is the ground's line
-		   colour, and the shadows take the ground's hue, as the tints do. In the dark, the edge is a shade darker than
-		   what's behind it, so it's crisp without being bright. A component that sets its own edge takes --dark-edge for
-		   the dark, which is the same black as the edge's dark side */
-		--dark-edge: color-mix(in oklab, var(--color-black) 32%, transparent);
-		--edge: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
-		/* In the dark, a faint light line just inside the edge, and on controls a little more along the top, as if lit
-		   from above. They're shadows, so they go when something is disabled or pressed flat */
-		--sheen: light-dark(transparent, color-mix(in oklab, var(--bleed) 5%, transparent));
-		--toplight: light-dark(transparent, color-mix(in oklab, var(--bleed) 6%, transparent));
-		/* Light under the top edge and shade along the bottom, as on a rounded, glossy surface. White and black, so on a
-		   coloured fill, such as a primary button, the light is a lighter tint of it */
-		--glow: light-dark(transparent, color-mix(in oklab, var(--color-white) 6%, transparent));
-		--shade: light-dark(transparent, color-mix(in oklab, var(--color-black) 16%, transparent));
-		/* The shell card's top. White in the light, as the panel is near white and a tint of it would barely show. In
-		   the dark, the same light a control's top catches, as --toplight and --glow have it */
-		--shell-toplight: light-dark(var(--color-white), color-mix(in oklab, var(--bleed) 6%, transparent));
-		--shell-glow: light-dark(color-mix(in oklab, var(--color-white) 50%, transparent), color-mix(in oklab, var(--color-white) 6%, transparent));
-		--shadow-raised-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 24%, transparent));
-		--shadow-floating-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 32%, transparent));
-		/* Only in the dark, a wide soft shade under an overlay, as fills there are too close together to part it */
-		--shadow-deep-color: light-dark(transparent, color-mix(in oklab, var(--color-black) 32%, transparent));
-		--shadow-overlay-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
-		--shadow-handle-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 40%, transparent));
-		--shadow-well-color: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), transparent);
 	}
 
 	/* 16px on touch screens, as iOS zooms into a field with smaller text. The line stays 20px, so controls keep their height */

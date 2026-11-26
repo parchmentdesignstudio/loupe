@@ -237,9 +237,12 @@ const stateOf = (variant) => variant.slice(2).replace(/[A-Z]/g, (letter, at) => 
 
 // The theme, by kind, each name with its value
 const kinds = { color: 'colours', text: 'text', font: 'fonts', shadow: 'shadows', radius: 'corners', animate: 'animations' };
-function themeOf(path) {
+function themeOf(path, brand) {
 	const theme = Object.fromEntries(Object.values(kinds).map((kind) => [kind, new Map()]));
 	if (!existsSync(path)) return theme;
+	// The brand's palette isn't a utility, but a component reads it as a token, as Alert does var(--color-sand-46)
+	if (brand && existsSync(brand))
+		for (const [, name, value] of readFileSync(brand, 'utf8').matchAll(/--color-([\w-]+)\s*:\s*(oklch\([^;]+\));/g)) theme.colours.set(name, value.trim());
 	const css = readFileSync(path, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 	// A block can hold @keyframes, so its end is found by counting braces
 	for (const match of css.matchAll(/@theme\b[^{]*\{/g)) {
@@ -280,7 +283,13 @@ function declarationsOf(paths, root, declarations = new Map()) {
 	}
 	for (const match of css.matchAll(/(?<=[{;\s])--([\w-]+)\s*:\s*([^;{}]+);/g)) {
 		const theme = themes.some(([start, end]) => match.index > start && match.index < end);
-		if (!declarations.has(match[1])) declarations.set(match[1], { value: match[2].replace(/\s+/g, ' ').trim(), place: placeOf(source, match.index), theme });
+		const value = match[2].replace(/\s+/g, ' ').trim();
+		// A role theme.css only names for Tailwind, as --color-ink: var(--color-ink), is set by the brand, read first
+		if (value === `var(--${match[1]})`) {
+			if (theme && declarations.has(match[1])) declarations.get(match[1]).theme = true;
+			continue;
+		}
+		if (!declarations.has(match[1])) declarations.set(match[1], { value, place: placeOf(source, match.index), theme });
 	}
 	return declarations;
 }
@@ -457,7 +466,10 @@ function fill(props, defaults) {
 
 function read(root, ui, packages) {
 	const sheet = join(ui, 'styles', 'theme.css');
-	const theme = themeOf(sheet);
+	// The brand sets the colours theme.css names, so it's read first
+	const brand = join(ui, 'styles', 'brands', 'parchment.css');
+	const sheets = [brand, sheet];
+	const theme = themeOf(sheet, brand);
 	const packageName = JSON.parse(readFileSync(join(ui, 'package.json'), 'utf8')).name;
 	const library = new Map();
 	for (const path of filesIn(join(ui, 'src'))) {
@@ -737,7 +749,7 @@ function read(root, ui, packages) {
 	// A shared token belongs to each component that draws with it, itself or through the library’s components it draws,
 	// as TextField takes the label’s weight through Label. No further, as beyond are other components’ own, such as the
 	// checkbox in a table’s row
-	const componentTokens = componentTokensOf(join(ui, 'styles', 'components.css'), sheet, root, Object.keys(components));
+	const componentTokens = componentTokensOf(join(ui, 'styles', 'components.css'), sheets, root, Object.keys(components));
 	const sharedTokens = componentTokens[shared] ?? [];
 	delete componentTokens[shared];
 	for (const [name, strings] of drawn) {
@@ -746,5 +758,5 @@ function read(root, ui, packages) {
 		if (reads.length) componentTokens[name] = [...reads, ...(componentTokens[name] ?? [])];
 	}
 
-	return { project: own, components, colours: coloursOf(theme, sheet, root), type: typographyOf(theme, sheet, root), componentTokens };
+	return { project: own, components, colours: coloursOf(theme, sheets, root), type: typographyOf(theme, sheet, root), componentTokens };
 }

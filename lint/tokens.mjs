@@ -55,6 +55,8 @@ function hops(name, path = []) {
 	let deepest = { count: 0, chain: [name] };
 	for (const { value } of tokens.get(name))
 		for (const read of reads(value)) {
+			// A name registered with Tailwind, as --color-ink: var(--color-ink), is the brand's value by another route
+			if (read === name) continue;
 			if (context.test(read)) continue;
 			// A shadow is a recipe, so it takes its colours from the roles and the parts as a component would
 			if (/^--(?:inset-)?shadow-/.test(name) && read.startsWith('--color-')) continue;

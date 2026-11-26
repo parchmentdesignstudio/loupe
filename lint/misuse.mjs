@@ -13,7 +13,7 @@ import { extname, join, relative } from 'node:path';
 import { parseAst } from 'vite';
 
 const ui = join(import.meta.dirname, '..');
-const theme = readFileSync(join(ui, 'styles/theme.css'), 'utf8');
+const theme = readFileSync(join(ui, 'styles/brands/parchment.css'), 'utf8');
 
 // Loupe's palette, by name, and Tailwind's own, which a site still has unless it clears it
 const loupePalette = new Set([...theme.matchAll(/--color-([a-z]+)-\d+:/g)].map(([, name]) => name));

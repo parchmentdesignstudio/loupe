@@ -1,7 +1,9 @@
 # Tokens
 
-Every value lives in `styles/theme.css` as a Tailwind theme variable, so each is a utility: `--color-raised` is
-`bg-raised`, `--text-label` is `text-label`, `--radius-lg` is `rounded-lg`.
+Every token is named in `styles/theme.css` as a Tailwind theme variable, so each is a utility: `--color-raised` is
+`bg-raised`, `--text-label` is `text-label`, `--radius-lg` is `rounded-lg`. A colour's value is set in the brand,
+`styles/brands/parchment.css`, and the palette there isn't a utility, so read a palette colour as
+`var(--color-teal-48)`.
 
 There are three layers, and only the first is for components and pages:
 

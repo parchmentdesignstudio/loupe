@@ -1,10 +1,10 @@
 import { useState, useSyncExternalStore } from 'react';
-import tokens from '../styles/theme.css?raw';
+import tokens from '../styles/brands/parchment.css?raw';
 import { Button, Slider } from '../src/index.js';
 
 // The colours the shadows are built from, each as strong as it is in the light and in the dark. The shadows themselves
 // stay as styles/theme.css layers them, so a slider changes every surface that has that part. Locally, Save writes
-// the strengths into styles/theme.css
+// the strengths into the brand, styles/brands/parchment.css
 
 type Part = 0 | 1 | null;
 
@@ -78,7 +78,7 @@ function args(text: string) {
 
 const declared = (name: string) => {
 	const match = new RegExp(`^\\t+--${name}: (.*);$`, 'm').exec(tokens);
-	if (!match) throw new Error(`No --${name} in styles/theme.css`);
+	if (!match) throw new Error(`No --${name} in styles/brands/parchment.css`);
 	return match[1];
 };
 
@@ -203,7 +203,7 @@ export function ShadowSettings() {
 			{import.meta.env.DEV && (
 				<div className="flex flex-col gap-2">
 					<Button variant="secondary" size="small" isDisabled={!isChanged || isSaving} onPress={() => void save()}>
-						{isSaving ? 'Saving' : 'Save to theme.css'}
+						{isSaving ? 'Saving' : 'Save to parchment.css'}
 					</Button>
 					{error && <p className="text-label text-danger">{error}</p>}
 				</div>

@@ -1,5 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { parseColor } from 'react-aria-components';
+import brand from '../styles/brands/parchment.css?raw';
 import tokens from '../styles/theme.css?raw';
 import { Button, ColorPicker, ListBoxItem, Select, Slider } from '../src/index.js';
 
@@ -26,14 +27,14 @@ const typefaces: { id: Typeface; name: string; stack?: string }[] = [
 	{ id: 'mono', name: 'Mono', stack: 'var(--font-mono)' },
 ];
 
-// The tokens as styles/theme.css has them, so each override works from the real value
+// The tokens as the brand and styles/theme.css have them, so each override works from the real value
 const oklchOf = (name: string) => {
-	const match = new RegExp(`--color-${name}:\\s*oklch\\(([\\d.]+) ([\\d.]+) ([\\d.]+)\\)`).exec(tokens);
-	if (!match) throw new Error(`No --color-${name} in styles/theme.css`);
+	const match = new RegExp(`--color-${name}:\\s*oklch\\(([\\d.]+) ([\\d.]+) ([\\d.]+)\\)`).exec(brand);
+	if (!match) throw new Error(`No --color-${name} in styles/brands/parchment.css`);
 	return match.slice(1).map(Number) as [number, number, number];
 };
 // The neutrals: pine for ink and the dark layers, linen and cream for the light ones, and umber under them
-const neutrals = [...tokens.matchAll(/--color-((?:pine|linen|cream|umber)-\d+):\s*oklch\(([\d.]+) ([\d.]+) ([\d.]+)\)/g)].map(([, name, l, c, h]) => ({ name, l: +l, c: +c, h: +h }));
+const neutrals = [...brand.matchAll(/--color-((?:pine|linen|cream|umber)-\d+):\s*oklch\(([\d.]+) ([\d.]+) ([\d.]+)\)/g)].map(([, name, l, c, h]) => ({ name, l: +l, c: +c, h: +h }));
 const pineHue = oklchOf('pine-26')[2];
 const radii = [...tokens.matchAll(/--radius-([\w-]+):\s*([\d.]+)rem/g)].map(([, name, value]) => ({ name, value: +value }));
 // Sizes, and the line heights set in rem, as the others are a multiple of their size already

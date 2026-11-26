@@ -274,7 +274,7 @@ export function Save() {
 				</footer>
 			</blockquote>
 			<figure>
-				<div className="aspect-[3/1] bg-linear-to-br from-marigold-83 to-green-68" />
+				<div className="aspect-[3/1] bg-linear-to-br from-(--color-marigold-83) to-(--color-green-68)" />
 				<figcaption>Figure 1. The brand’s marigold, warming into green</figcaption>
 			</figure>
 

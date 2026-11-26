@@ -1,7 +1,7 @@
 /* Component tokens: the few choices on each component that a site may want to restyle, named --component-what. Each
-   starts at a value from theme.css, so they agree until one is changed, and sets no value of its own the theme could
-   hold. Set one on :root to restyle every button, or on an element to restyle the buttons inside it. In the base
-   layer, so a site's own :root wins without !important.
+   starts at a value from the brand or theme.css, so they agree until one is changed, and sets no value of its own
+   they could hold. Set one on :root to restyle every button, or on an element to restyle the buttons inside it. In
+   the base layer, so a site's own :root wins without !important.
 
    A colour starts at a role, which a section can re-set, as a brand band sets its own --color-raised. Set here, a
    colour would take :root's role rather than the section's, so the colours are left unset: each component reads one

@@ -3,13 +3,16 @@
    or scheme-dark sets one for part of a page.
 
    This file only gathers the others, and each has one job:
-   - theme.css: the values everything is built from, and only values. The palette, the roles, the layers' bleed,
-     shadows, type, corners, spacing and motion. A new value the system needs goes here.
+   - brands/parchment.css: Parchment's palette and the value of every colour role, the layers' bleed and the shadows'
+     colours. Another brand is a copy of it, imported in its place.
+   - theme.css: what every brand shares, and only values. The roles' names, type, shadows, corners, spacing and
+     motion. A new value the system needs goes here, or in the brand if it's a colour.
    - code-themes.css: code coloured as another of Parchment's sites colours it, with data-code-theme.
    - prose.css: styles for HTML no component renders, such as a post from Markdown, with the prose and quote classes.
      The only file with rules for elements.
    - components.css: each component's own tokens, the choices a site may restyle, each starting at a theme value.
      A component's new token goes here, never a new value: one the theme lacks goes in theme.css first */
+@import './styles/brands/parchment.css';
 @import './styles/theme.css';
 @import './styles/code-themes.css';
 @import './styles/prose.css';
