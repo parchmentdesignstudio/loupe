@@ -8,6 +8,7 @@ Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. 
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
 | `@parchment/ui` | Accessible React components, built on React Aria |
 | `@parchment/logos` | Company logos, with versions drawn for 16px where a company’s own doesn’t hold up |
+| `@parchment/compose` | Rearranges a page’s layout in the browser, on its own CSS grid, and hands the changes to whoever writes the source |
 
 | Tool | What it does | Command |
 |---|---|---|
@@ -358,6 +359,58 @@ import { Logo } from '@parchment/logos/react'
 
 Logos are 16px tall by default, and as wide as their proportions make them. `size` sets the height. A version drawn for that size is used when there is one, otherwise the original scales to it, and asking for a size a logo has neither for is an error. Without `label` the logo is hidden from screen readers.
 
+## Compose
+
+Compose works on a page that’s already running in a dev server. It groups elements, lays a group out as a grid, a subgrid or flex, and moves things about on the grid, all as changes to the live page. Nothing is written to the source. Copy changes gives a list of what changed, each element named by its tag, classes, words and the file and line it was written at, to paste to an agent or make by hand.
+
+`pnpm compose` opens a page of loose, stacked elements to try it on, at localhost:5191.
+
+| To | Do |
+|---|---|
+| Open or close it | ⌥G, the Compose button, or its button in Astro’s toolbar |
+| Select | Click. A click stays at the level of what’s selected, and clicking inside what’s selected goes one level in. ⇧↩ selects the parent, ↩ the first child and ⇥ the next sibling, and the panel’s header lists the way down to it |
+| Select several | ⌘-click or ⇧-click |
+| Group, ungroup | ⌘G wraps what’s selected in a new `div`. ⇧⌘G takes a wrapper away and leaves what it held |
+| Lay out | Block, Grid or Flex in the panel. A new grid has 12 columns, with every child across all of them, so nothing moves until it’s dragged. A grid inside a grid can take its columns or rows as a subgrid |
+| Move on a grid | Drag, or the arrow keys. The handles, or ⇧ with an arrow, change what it spans. Drag past the last row to start a new one |
+| Reorder | Outside a grid, dragging or the arrow keys change the order |
+| Name a line | Double-click its number. A place then uses the name, as in `grid-column: content-start / content-end` |
+| Undo, redo | ⌘Z and ⇧⌘Z. Reset puts the page back as it was |
+
+The first time an item is moved on a grid, every item in that grid is given the place it has. The browser moves an item it placed itself when another is put in its way, so without this, dragging one thing would shuffle the rest, and nothing could overlap.
+
+The changes last until the page reloads, and they’re for the width the browser is at. Compose doesn’t yet write breakpoints, move an element from one parent to another, or keep changes through a reload.
+
+### Using it in a site
+
+```sh
+pnpm add -D github:parchmentdesignstudio/loupe#compose
+```
+
+In Astro it’s an integration, which adds Compose to the dev toolbar and keeps the file and line Astro gives each element:
+
+```js
+import compose from '@parchment/compose/astro'
+
+export default defineConfig({ integrations: [compose()] })
+```
+
+With Vite alone it’s a plugin, which adds a Compose button to every page of the dev server. Run `locate` from `scripts/locate.mjs` beside it, as Loupe’s tools do, and each element in the list has its file and line as well:
+
+```js
+import { compose } from '@parchment/compose/vite'
+
+export default defineConfig({ plugins: [compose()] })
+```
+
+Anywhere else, such as Next.js, whose dev menu can’t be added to, call `mount()` from code that only runs in development. This hasn’t been tried in Next.js yet, and without a file and line each element is named by a path of selectors instead:
+
+```js
+if (process.env.NODE_ENV === 'development') import('@parchment/compose').then(({ mount }) => mount())
+```
+
+`window.parchmentCompose.changes()` returns the same list Copy changes gives, for an agent that can drive the browser to read for itself.
+
 ## Releasing
 
 Each package is published to its own branch, so npm and pnpm can both install it from GitHub.
@@ -369,7 +422,7 @@ pnpm bump 0.9.0
 pnpm release icons
 ```
 
-Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`, and the logos with `pnpm release logos`, to the `logos` branch.
+Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`, and the logos with `pnpm release logos`, to the `logos` branch. Compose goes to the `compose` branch with `pnpm release compose`. It has nothing to build.
 
 ## Device
 

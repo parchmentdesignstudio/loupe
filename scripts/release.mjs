@@ -24,7 +24,8 @@ if (versionOf(`packages/${name}/package.json`) !== loupe) {
   process.exit(1)
 }
 
-run(`pnpm --filter ./packages/${name} build`)
+// --if-present, as a package of plain source, such as compose, has nothing to build
+run(`pnpm --filter ./packages/${name} run --if-present build`)
 if (read(`git status --porcelain packages/${name}`)) {
   console.error(`packages/${name} has uncommitted changes after building. Commit them first.`)
   process.exit(1)

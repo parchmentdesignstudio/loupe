@@ -1,0 +1,49 @@
+{
+  "name": "@parchment/compose",
+  "version": "0.11.0",
+  "description": "Rearrange a page’s layout in the browser, on its own CSS grid, and hand the changes to whoever writes the source",
+  "type": "module",
+  "files": [
+    "src",
+    "vite.js",
+    "astro.js",
+    "astro-app.js",
+    "index.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./src/client.js"
+    },
+    "./vite": {
+      "types": "./index.d.ts",
+      "default": "./vite.js"
+    },
+    "./astro": {
+      "types": "./index.d.ts",
+      "default": "./astro.js"
+    },
+    "./astro-app": "./astro-app.js"
+  },
+  "scripts": {
+    "dev": "vite demo",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "astro": ">=4",
+    "vite": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

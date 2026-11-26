@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compose</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --ground: light-dark(oklch(0.966 0.004 67.8), oklch(0.16 0.022 169.9));
+    --ink: light-dark(oklch(0.256 0.039 169.9), oklch(0.95 0.011 76.6));
+    --muted: light-dark(oklch(0.5 0.025 169.9), oklch(0.903 0.013 56.2));
+    --rule: light-dark(oklch(0.18 0.024 67.8 / 0.14), oklch(0.95 0.054 169.9 / 0.16));
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 48px clamp(16px, 5vw, 72px) 96px; background: var(--ground); color: var(--ink); font: 17px/1.55 ui-serif, Georgia, serif; }
+  h1, h2, .kicker, .byline, figcaption, .fact { font-family: system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif; }
+  h1 { margin: 0; font-size: clamp(40px, 7vw, 96px); line-height: 0.98; letter-spacing: -0.03em; text-wrap: balance; }
+  h2 { margin: 0; font-size: 28px; line-height: 1.15; letter-spacing: -0.01em; }
+  p { margin: 0; }
+  .kicker, .byline { color: var(--muted); font-size: 14px; }
+  .standfirst { font-size: 24px; line-height: 1.35; text-wrap: pretty; }
+  img { display: block; width: 100%; height: auto; border-radius: 6px; }
+  blockquote { margin: 0; font-size: 34px; line-height: 1.2; font-style: italic; text-wrap: balance; }
+  .fact { padding-top: 12px; border-top: 1px solid var(--rule); font-size: 14px; }
+  .fact strong { display: block; font-size: 32px; line-height: 1.2; letter-spacing: -0.02em; }
+  main > * + * { margin-top: 24px; }
+  /* Once something lays its children out, the gap does the spacing */
+  main [style*='display'] > * { margin-top: 0; }
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">Journal, no. 14</p>
+  <h1>The press that prints the tide tables</h1>
+  <p class="standfirst">For ninety years a two-room workshop above the harbour has set, proofed and printed the booklet every boat on this coast keeps in its wheelhouse.</p>
+  <p class="byline">Words by Imogen Hale, photographs by Tom Arkwright</p>
+  <img alt="The workshop’s window over the harbour at low water" width="1600" height="1000" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000'%3E%3Crect width='1600' height='1000' fill='%23294a44'/%3E%3Crect y='560' width='1600' height='440' fill='%231d3531'/%3E%3Ccircle cx='1180' cy='330' r='150' fill='%23f0bd4f'/%3E%3Cpath d='M0 640q200-60 400 0t400 0 400 0 400 0v60H0z' fill='%23aecfc9' opacity='.5'/%3E%3Cpath d='M240 560 420 300l180 260z' fill='%23f3eee6'/%3E%3C/svg%3E">
+  <p>The first thing you notice is the smell, which is ink and paraffin and something older underneath, and the second is that nobody in the room is in a hurry. The tables for next year were calculated in March, and the type has been standing in its formes since June, waiting on the paper.</p>
+  <p>Each page holds a month of high and low water for the six harbours between the two headlands. A mistake of a single digit could put a keel on the sand, so every figure is read aloud twice, once by the compositor and once by somebody who has never seen the page before.</p>
+  <blockquote>“We have never once been late, and we have never once been early either.”</blockquote>
+  <img alt="A forme of tide tables locked up on the stone" width="1200" height="1500" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 1500'%3E%3Crect width='1200' height='1500' fill='%23d9a441'/%3E%3Crect x='150' y='180' width='900' height='1140' fill='%23213d38'/%3E%3Cg fill='%23f3eee6' opacity='.85'%3E%3Crect x='230' y='270' width='740' height='36'/%3E%3Crect x='230' y='360' width='740' height='14'/%3E%3Crect x='230' y='410' width='740' height='14'/%3E%3Crect x='230' y='460' width='740' height='14'/%3E%3Crect x='230' y='510' width='740' height='14'/%3E%3Crect x='230' y='560' width='740' height='14'/%3E%3Crect x='230' y='610' width='740' height='14'/%3E%3Crect x='230' y='660' width='520' height='14'/%3E%3C/g%3E%3C/svg%3E">
+  <p class="kicker">A forme for March, locked up on the stone and ready for its first proof</p>
+  <h2>Counting the copies</h2>
+  <p>The run has hardly changed since the war. What has changed is who buys it: fewer working boats each year, and more people who simply like to know when the causeway will be dry.</p>
+  <p class="fact"><strong>4,200</strong> copies printed each November</p>
+  <p class="fact"><strong>312</strong> pages of figures, all set by hand</p>
+  <p class="fact"><strong>1934</strong> the year of the first edition</p>
+  <img alt="Bundles of finished booklets tied with string" width="1600" height="900" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23e9c9c4'/%3E%3Cg fill='%23632a2f'%3E%3Crect x='180' y='300' width='360' height='440'/%3E%3Crect x='620' y='220' width='360' height='520'/%3E%3Crect x='1060' y='360' width='360' height='380'/%3E%3C/g%3E%3Cg stroke='%23f3eee6' stroke-width='10'%3E%3Cpath d='M180 520h360M360 300v440M620 480h360M800 220v520M1060 550h360M1240 360v380'/%3E%3C/g%3E%3C/svg%3E">
+  <p>By the first week of December the bundles are on the quay, tied in twenties, and the workshop goes quiet until the spring calculations arrive.</p>
+</main>
+</body>
+</html>
