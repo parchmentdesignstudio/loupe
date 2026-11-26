@@ -49,6 +49,15 @@
 		/* A small button's padding above and below, so it's 28px tall */
 		--button-small-padding-y: --spacing(1);
 
+		/* A tray round a filled button's fill, as a well with a face sitting in it. The button grows by it on every side,
+		   and its corners by it too, so --button-radius stays the face's. The variant's shadow paints it, with an inset ring
+		   as wide. Unset, so 0, and the fill covers the whole button */
+		@media not all {
+			--button-primary-tray: 4px;
+			--button-quiet-tray: 4px;
+			--button-danger-tray: 4px;
+		}
+
 		/* Colour */
 
 		@media not all {

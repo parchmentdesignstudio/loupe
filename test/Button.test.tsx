@@ -71,10 +71,10 @@ describe('Button', () => {
 		expect(start.firstElementChild?.firstElementChild).toBe(screen.getByTestId('plus'));
 		expect(start.textContent).toBe('New project');
 		// The label carries 4px each side, so the icon's side pads only the button's own padding
-		expect(start.className.split(' ')).toContain('px-(--button-padding-x)');
+		expect(start.className.split(' ')).toContain('px-[calc(var(--button-padding-x)+var(--tray))]');
 		expect(start.querySelector('span span')?.className.split(' ')).toContain('px-[round(1em*4/13,1px)]');
 		expect(end.firstElementChild?.lastElementChild).toBe(screen.getByTestId('arrow'));
-		expect(end.className.split(' ')).toContain('px-(--button-small-padding-x)');
+		expect(end.className.split(' ')).toContain('px-[calc(var(--button-small-padding-x)+var(--tray))]');
 	});
 
 	it('keeps a circle round at either size', () => {
@@ -91,8 +91,8 @@ describe('Button', () => {
 		const [medium, small] = screen.getAllByRole('button').map((button) => button.className.split(' '));
 		expect(medium).toContain('rounded-full');
 		expect(small).toContain('rounded-full');
-		expect(medium).toEqual(expect.arrayContaining(['px-(--button-padding-x)', 'py-(--button-padding-y)']));
-		expect(small).toEqual(expect.arrayContaining(['px-(--button-small-padding-x)', 'py-(--button-small-padding-y)']));
+		expect(medium).toEqual(expect.arrayContaining(['px-[calc(var(--button-padding-x)+var(--tray))]', 'py-[calc(var(--button-padding-y)+var(--tray))]']));
+		expect(small).toEqual(expect.arrayContaining(['px-[calc(var(--button-small-padding-x)+var(--tray))]', 'py-[calc(var(--button-small-padding-y)+var(--tray))]']));
 	});
 
 	it('fills primary with marigold and quiet with slate', () => {

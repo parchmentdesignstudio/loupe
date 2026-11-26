@@ -6,11 +6,14 @@ import { focusRing, tv } from './tv.js';
 
 // The states are React Aria's render props, so each variant is named for the one it answers to. The fill sits on a
 // ::before. Secondary insets it 1px so the root's background is a faux border; primary and quiet fill the whole button
-// and take their edge from a shadow. Either way every variant is the same size, with a border or without
+// and take their edge from a shadow. Either way every variant is the same size, with a border or without, unless a brand
+// gives a filled variant a tray: --button-primary-tray, or quiet's or danger's, sets it in a gap round the fill, as a well
+// with a face sitting in it. The button grows by it, so the label keeps its room, and --button-radius stays the face's.
+// The variant's shadow paints the tray, so it's 0 unless a brand sets it, and every other button is as it was
 export const button = tv({
 	extend: focusRing,
 	base: [
-		'relative z-0 inline-flex shrink-0 cursor-default items-center justify-center rounded-(--button-radius) font-(family-name:--typeface-body) text-control font-(--button-font-weight) [--shadow-raised-color:var(--button-shadow)] transition-[background-color,box-shadow,opacity] duration-fast ease-standard motion-reduce:transition-none',
+		'relative z-0 [--tray:0px] inline-flex shrink-0 cursor-default items-center justify-center rounded-(--button-radius) font-(family-name:--typeface-body) text-control font-(--button-font-weight) [--shadow-raised-color:var(--button-shadow)] transition-[background-color,box-shadow,opacity] duration-fast ease-standard motion-reduce:transition-none',
 		// What's inside presses in as one, so the button's edge and shadow stay where they are
 		'*:transition-[scale] *:duration-fast *:ease-standard motion-reduce:*:transition-none',
 		'before:absolute before:inset-px before:-z-1 before:rounded-[calc(var(--button-radius)-1px)] before:transition-[background-color,box-shadow] before:duration-fast before:ease-standard motion-reduce:before:transition-none',
@@ -25,7 +28,7 @@ export const button = tv({
 		variant: {
 			primary: [
 				'text-(color:--button-primary-text,var(--color-on-primary))',
-				'[--fill:var(--button-primary-fill,var(--color-primary))]',
+				'[--fill:var(--button-primary-fill,var(--color-primary))] [--tray:var(--button-primary-tray,0px)]',
 				'[--rim:oklch(from_var(--fill)_calc(l*var(--button-filled-rim))_c_calc(h-16))]',
 				'shadow-button-primary before:shadow-button-primary-bevel',
 			],
@@ -35,14 +38,14 @@ export const button = tv({
 				'bg-[light-dark(var(--color-raised),var(--color-surface))] text-ink shadow-button [--edge:light-dark(color-mix(in_oklab,var(--bleed)_12%,transparent),transparent)] [--fine-edge:light-dark(transparent,var(--dark-edge))] before:bg-[light-dark(var(--color-raised),var(--color-surface))]',
 			quiet: [
 				'text-(color:--button-quiet-text,var(--color-on-quiet))',
-				'[--fill:var(--button-quiet-fill,var(--color-quiet))]',
+				'[--fill:var(--button-quiet-fill,var(--color-quiet))] [--tray:var(--button-quiet-tray,0px)]',
 				'[--rim:oklch(from_var(--fill)_calc(l*var(--button-filled-rim))_calc(c*0.84)_h)]',
 				'shadow-button-quiet before:shadow-button-quiet-bevel',
 			],
 			// For an action that destroys something. Red in both themes, as the danger token turns light in the dark
 			danger: [
 				'text-(color:--button-danger-text,var(--color-on-danger-fill))',
-				'[--fill:var(--button-danger-fill,var(--color-danger-fill))]',
+				'[--fill:var(--button-danger-fill,var(--color-danger-fill))] [--tray:var(--button-danger-tray,0px)]',
 				'[--rim:oklch(from_var(--fill)_calc(l*var(--button-filled-rim))_c_h)]',
 				'shadow-button-danger before:shadow-button-danger-bevel',
 				'[--top-line-strength:var(--button-danger-top-line-dark-strength)] [--bottom-line-strength:var(--button-danger-bottom-line-dark-strength)]',
@@ -60,8 +63,8 @@ export const button = tv({
 		// so a button with only an icon is as tall. The label brings 4px of its own each side, tucking an icon closer to the
 		// corner than text. A button with just an icon pads it evenly, so it's square, or a circle when full
 		size: {
-			medium: 'px-(--button-padding-x) py-(--button-padding-y)',
-			small: 'px-(--button-small-padding-x) py-(--button-small-padding-y)',
+			medium: 'px-[calc(var(--button-padding-x)+var(--tray))] py-[calc(var(--button-padding-y)+var(--tray))]',
+			small: 'px-[calc(var(--button-small-padding-x)+var(--tray))] py-[calc(var(--button-small-padding-y)+var(--tray))]',
 		},
 		isHovered: {
 			true: '',
@@ -86,7 +89,7 @@ export const button = tv({
 				// do its job. Under it, raised's shadow, whose first layer in the light is a fainter, wider contact shadow
 				'[--contact:light-dark(color-mix(in_oklab,var(--shadow-raised-color)_var(--button-filled-contact),transparent),transparent)] [--close:light-dark(transparent,var(--shadow-raised-color))]',
 				'[--edge:light-dark(var(--rim),transparent)]',
-				'before:inset-0 before:rounded-[inherit]',
+				'before:inset-(--tray) before:rounded-[inherit]',
 				// The fill: lighter at the top, to its colour at the bottom, or in the light a touch deeper than it
 				'[--fill-bottom:light-dark(oklch(from_var(--fill)_calc(l_-_var(--button-filled-depth))_calc(c*var(--button-filled-depth-chroma))_h),var(--fill))]',
 				'before:bg-linear-to-b before:from-[color-mix(in_oklab,var(--fill),white_var(--button-filled-light))] before:to-(color:--fill-bottom)',
@@ -101,6 +104,9 @@ export const button = tv({
 				'[--bottom-line:light-dark(transparent,color-mix(in_oklab,color-mix(in_oklab,var(--fill),white_var(--button-filled-bottom-line-dark))_var(--bottom-line-strength,var(--button-filled-bottom-line-dark-strength)),transparent))]',
 			],
 		},
+		// With a tray, the button's corners are the face's plus the tray, so the two curves run side by side. A full button's
+		// face inherits its rounding, which stays round
+		{ variant: ['primary', 'quiet', 'danger'], shape: 'rounded', class: 'rounded-[calc(var(--button-radius)+var(--tray))] before:rounded-(--button-radius)' },
 		{
 			variant: ['primary', 'quiet', 'danger'],
 			isHovered: true,
