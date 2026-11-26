@@ -56,7 +56,7 @@ const row = tv({
 	slots: {
 		base: '',
 		text: 'flex min-w-0 flex-col',
-		description: 'text-control text-muted',
+		description: 'font-(family-name:--typeface-body) text-control text-muted',
 	},
 	variants: {
 		// At the end, the label leads and the switches line up down the far side, however long the labels, as a phone's

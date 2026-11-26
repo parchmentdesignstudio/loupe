@@ -28,7 +28,7 @@ export function TagGroup<T extends object>({ label, description, errorMessage, i
 	return (
 		<AriaTagGroup {...props} className={group({ className: props.className })}>
 			{label && <Label>{label}</Label>}
-			<TagList items={items} renderEmptyState={renderEmptyState && ((state) => <span className="text-label text-muted">{renderEmptyState(state)}</span>)} className="flex flex-wrap gap-1.5 outline-0">
+			<TagList items={items} renderEmptyState={renderEmptyState && ((state) => <span className="font-(family-name:--typeface-body) text-label text-muted">{renderEmptyState(state)}</span>)} className="flex flex-wrap gap-1.5 outline-0">
 				{children}
 			</TagList>
 			{description && <Description>{description}</Description>}
@@ -43,7 +43,7 @@ export function TagGroup<T extends object>({ label, description, errorMessage, i
 
 export const tag = tv({
 	extend: focusRing,
-	base: 'inline-flex max-w-full cursor-default items-center gap-1 rounded-(--tag-radius) bg-bleed/8 px-(--tag-padding-x) py-(--tag-padding-y) text-label leading-4 text-ink transition-colors duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
+	base: 'inline-flex max-w-full cursor-default items-center gap-1 rounded-(--tag-radius) bg-bleed/8 px-(--tag-padding-x) py-(--tag-padding-y) font-(family-name:--typeface-body) text-label leading-4 text-ink transition-colors duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
 	variants: {
 		// Only a tag that can be chosen or acted on takes the hover
 		isHovered: {

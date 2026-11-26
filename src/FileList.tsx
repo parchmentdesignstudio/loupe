@@ -30,8 +30,8 @@ export const fileListItem = tv({
 		thumbnail: 'relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-md bg-bleed/8 text-muted after:absolute after:inset-0 after:rounded-[inherit] after:inset-ring after:inset-ring-bleed/8',
 		image: 'size-full object-cover',
 		body: 'flex min-w-0 flex-1 flex-col',
-		name: 'flex min-w-0 text-control text-ink',
-		meta: 'flex min-w-0 items-center gap-2 text-label text-muted tabular-nums',
+		name: 'flex min-w-0 font-(family-name:--typeface-body) text-control text-ink',
+		meta: 'flex min-w-0 items-center gap-2 font-(family-name:--typeface-body) text-label text-muted tabular-nums',
 		actions: 'flex shrink-0 items-center gap-0.5',
 		done: 'flex size-7 items-center justify-center text-ink',
 		// Why it failed wraps rather than truncates, as it's no use cut short

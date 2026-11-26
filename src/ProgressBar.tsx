@@ -15,14 +15,14 @@ export const progressBar = tv({
 	slots: {
 		base: 'grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5',
 		label: 'min-w-0 truncate',
-		value: 'text-control whitespace-nowrap text-muted tabular-nums',
+		value: 'font-(family-name:--typeface-body) text-control whitespace-nowrap text-muted tabular-nums',
 		track: 'relative h-(--progress-bar-height) overflow-hidden rounded-full bg-bleed/12 inset-shadow-well',
 		fill: 'h-full rounded-full bg-(--progress-bar-fill,var(--color-ink)) transition-[width] duration-fast ease-standard motion-reduce:transition-none',
 	},
 	variants: {
 		hasLabel: {
 			true: { track: 'col-span-full' },
-			false: { value: 'text-label' },
+			false: { value: 'font-(family-name:--typeface-body) text-label' },
 		},
 		// The fill slides across and out, flipped for a right-to-left language. Without motion it stays put, full width
 		// and faint, and breathes rather than slides

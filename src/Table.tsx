@@ -59,7 +59,7 @@ const inset = tv({ extend: focusRing, base: '-outline-offset-2' });
 export const tableColumn = tv({
 	extend: inset,
 	// Opaque and sticky, so rows scroll under the header when the box has a height
-	base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label font-(--table-column-font-weight) text-(color:--table-column-text,var(--color-muted)) transition-[color] duration-fast ease-standard select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
+	base: 'sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start font-(family-name:--typeface-body) text-label font-(--table-column-font-weight) text-(color:--table-column-text,var(--color-muted)) transition-[color] duration-fast ease-standard select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'text-ink',
@@ -73,7 +73,7 @@ export const tableColumn = tv({
 // Chrome draws a row's outline over the rows beside it, and the box clips its ends, so the row's ring is drawn by its
 // cells instead, as below. Forced colours drop shadows, so there the outline stays
 export const tableRow = tv({
-	base: 'group/row cursor-default text-control text-ink transition-[background-color] duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
+	base: 'group/row cursor-default font-(family-name:--typeface-body) text-control text-ink transition-[background-color] duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'bg-bleed/4',
@@ -216,7 +216,7 @@ export function TableBody<T extends object>({ renderEmptyState, ...props }: Tabl
 				renderEmptyState &&
 				((state) => {
 					const empty = renderEmptyState(state);
-					return typeof empty === 'string' ? <div className="px-4 py-3 text-center text-control text-muted">{empty}</div> : empty;
+					return typeof empty === 'string' ? <div className="px-4 py-3 text-center font-(family-name:--typeface-body) text-control text-muted">{empty}</div> : empty;
 				})
 			}
 		/>
@@ -288,7 +288,7 @@ export function RowActions<T extends object>({ 'aria-label': label, placement = 
 /** The last thing in a TableBody when there's more to load: onLoadMore runs as it scrolls into view, and isLoading shows a row saying so */
 export function TableLoadMoreItem({ children = 'Loading more…', className, ...props }: TableLoadMoreItemProps) {
 	return (
-		<AriaTableLoadMoreItem {...props} className={['text-label text-muted [&>td]:border-t [&>td]:border-bleed/8 [&>td]:px-4 [&>td]:py-2.5 [&>td]:text-center', className].filter(Boolean).join(' ')}>
+		<AriaTableLoadMoreItem {...props} className={['font-(family-name:--typeface-body) text-label text-muted [&>td]:border-t [&>td]:border-bleed/8 [&>td]:px-4 [&>td]:py-2.5 [&>td]:text-center', className].filter(Boolean).join(' ')}>
 			{children}
 		</AriaTableLoadMoreItem>
 	);

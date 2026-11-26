@@ -25,7 +25,7 @@ const trigger = tv({
 		size: {
 			medium: 'py-(--disclosure-header-padding-y) text-base',
 			// The chevron follows the title, so it stays put when a wider panel opens
-			small: 'justify-start gap-1.5 py-(--disclosure-header-small-padding-y) text-body',
+			small: 'justify-start gap-1.5 py-(--disclosure-header-small-padding-y) font-(family-name:--typeface-body) text-body',
 		},
 		isDisabled: {
 			true: 'text-muted',

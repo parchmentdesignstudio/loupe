@@ -3,6 +3,13 @@
 @source '../src';
 @source './';
 
+/* Loupe's own site, set in the brand's typefaces as Tailwind's font-sans, font-mono and font-serif */
+@theme inline {
+	--font-sans: var(--typeface-body);
+	--font-mono: var(--typeface-mono);
+	--font-serif: var(--typeface-quote);
+}
+
 
 /* Thin bars in the layer's own bleed, so each scroll area's bar takes the colour of the ground it sits on */
 @layer base {

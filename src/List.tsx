@@ -16,12 +16,12 @@ export const list = tv({
 
 export const listItem = tv({
 	slots: {
-		base: 'flex min-w-0 items-start gap-(--list-item-gap) text-control',
+		base: 'flex min-w-0 items-start gap-(--list-item-gap) font-(family-name:--typeface-body) text-control',
 		// On the first line's 20px, so it stays beside the title when the description wraps
 		icon: 'flex h-5 shrink-0 items-center text-(color:--list-icon,var(--color-muted)) *:size-4',
 		body: 'flex min-w-0 flex-1 flex-col',
 		title: 'text-pretty text-ink',
-		description: 'text-label text-pretty text-muted',
+		description: 'font-(family-name:--typeface-body) text-label text-pretty text-muted',
 		end: 'shrink-0 text-end text-ink tabular-nums',
 	},
 	variants: {

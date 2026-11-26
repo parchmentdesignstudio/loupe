@@ -8,9 +8,9 @@ export const chip = tv({
 	variants: {
 		// Small and medium share the label's 16px line, so a swatch or 12px icon sits level with the text
 		size: {
-			small: 'gap-1 rounded-(--chip-small-radius) px-(--chip-small-padding-x) py-(--chip-small-padding-y) text-label',
-			medium: 'gap-1 rounded-(--chip-medium-radius) px-(--chip-medium-padding-x) py-(--chip-medium-padding-y) text-label',
-			large: 'gap-1.5 rounded-(--chip-radius) px-(--chip-padding-x) py-(--chip-padding-y) text-control',
+			small: 'gap-1 rounded-(--chip-small-radius) px-(--chip-small-padding-x) py-(--chip-small-padding-y) font-(family-name:--typeface-body) text-label',
+			medium: 'gap-1 rounded-(--chip-medium-radius) px-(--chip-medium-padding-x) py-(--chip-medium-padding-y) font-(family-name:--typeface-body) text-label',
+			large: 'gap-1.5 rounded-(--chip-radius) px-(--chip-padding-x) py-(--chip-padding-y) font-(family-name:--typeface-body) text-control',
 		},
 		isHovered: {
 			true: 'bg-(--chip-hover-fill,var(--color-surface))',

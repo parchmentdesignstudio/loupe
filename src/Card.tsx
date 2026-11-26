@@ -7,9 +7,9 @@ export const card = tv({
 		header: 'flex min-w-0 flex-col gap-0.5',
 		// The title and its figure read as one, a label and its value, so they sit closer than anything else in the card
 		lead: 'flex min-w-0 flex-col gap-(--card-figure-title-gap)',
-		title: 'text-control font-(--card-title-font-weight) text-pretty',
+		title: 'font-(family-name:--typeface-body) text-control font-(--card-title-font-weight) text-pretty',
 		figure: 'text-(length:--card-figure-size) leading-(--card-figure-line-height) font-(--weight-bold) tracking-(--card-figure-letter-spacing) text-pretty',
-		description: 'text-control text-pretty text-muted',
+		description: 'font-(family-name:--typeface-body) text-control text-pretty text-muted',
 		body: 'flex min-w-0 flex-col gap-(--card-gap)',
 		// Pushed to the foot, so in a row of cards that stretch to the tallest, their buttons line up whatever's above them
 		actions: 'mt-auto flex flex-wrap gap-2 *:flex-1',

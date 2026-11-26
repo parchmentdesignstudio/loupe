@@ -4,7 +4,7 @@
 
    This file only gathers the others, and each has one job:
    - brands/parchment.css: Parchment's palette and the value of every colour role, the layers' bleed and the shadows'
-     colours. Another brand is a copy of it, imported in its place.
+     colours, with its typefaces, weights and motion. Another brand is a copy of it, imported in its place.
    - theme.css: what every brand shares, and only values. The roles' names, type, shadows, corners, spacing and
      motion. A new value the system needs goes here, or in the brand if it's a colour.
    - code-themes.css: code coloured as another of Parchment's sites colours it, with data-code-theme.

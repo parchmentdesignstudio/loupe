@@ -8,7 +8,7 @@ const slider = tv({
 	slots: {
 		base: 'flex flex-col gap-1.5',
 		header: 'flex flex-wrap items-baseline justify-between gap-x-3',
-		output: 'ms-auto text-control whitespace-nowrap text-muted tabular-nums',
+		output: 'ms-auto font-(family-name:--typeface-body) text-control whitespace-nowrap text-muted tabular-nums',
 		track: 'relative',
 		rail: 'absolute rounded-full bg-bleed/12',
 		fill: 'rounded-full bg-(--slider-fill,var(--color-ink))',

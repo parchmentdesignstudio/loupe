@@ -52,9 +52,14 @@ button's fill. Don't use either for text: marigold doesn't pass contrast on line
 
 These four are all there is. Don't use Tailwind's `text-sm`, `text-lg` and so on, and don't add weights: `title` is
 bold and the rest are regular, with `font-(--weight-medium)` for a label that names a group. The weights are the
-brand's, `--weight-regular`, `--weight-medium` and `--weight-bold`, so Tailwind's `font-medium` won't follow it. Fonts are `font-sans` (Elza Round),
-`font-mono` for code and references such as `REF-0256`, and `font-serif` only through Quote. Long writing goes in
-Prose, which sets its own type.
+brand's, `--weight-regular`, `--weight-medium` and `--weight-bold`, so Tailwind's `font-medium` won't follow it.
+
+The typefaces are the brand's too: `--typeface-body` (Elza Round), `--typeface-mono` for code and references such as
+`REF-0256`, and `--typeface-quote` only through Quote. Every component sets its own, so a site's own font never reaches
+a component and nothing needs `font-sans` around it. Text of your own beside components takes the brand's with
+`font-(family-name:--typeface-body)` or `font-(family-name:--typeface-mono)`. Tailwind's `font-sans` and `font-mono`
+are the site's, and are Loupe's only where the site sets them to the brand's, as Loupe's own preview does. Long writing
+goes in Prose, which sets its own type.
 
 ## Space
 

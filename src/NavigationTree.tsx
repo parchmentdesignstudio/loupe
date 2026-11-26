@@ -75,7 +75,7 @@ export function NavigationTreeItem<T extends object>(props: NavigationTreeItemPr
 // The link fills its row, so the row's states are the link's: hovered, the current page and the focus ring
 export const navigationTreeLink = tv({
 	extend: focusRing,
-	base: 'flex cursor-default items-center gap-2 rounded-(--navigation-tree-item-radius) px-(--navigation-tree-item-padding-x) py-(--navigation-tree-item-padding-y) text-control font-(--navigation-tree-item-font-weight) text-(color:--navigation-tree-item-text,var(--color-ink)) in-data-[show-focus]:outline-2',
+	base: 'flex cursor-default items-center gap-2 rounded-(--navigation-tree-item-radius) px-(--navigation-tree-item-padding-x) py-(--navigation-tree-item-padding-y) font-(family-name:--typeface-body) text-control font-(--navigation-tree-item-font-weight) text-(color:--navigation-tree-item-text,var(--color-ink)) in-data-[show-focus]:outline-2',
 	variants: {
 		isHovered: {
 			true: 'bg-bleed/4',
@@ -160,10 +160,10 @@ export function NavigationTreeItemContent({ children, icon }: NavigationTreeItem
 							className={[
 								'pointer-events-none relative flex min-w-0 items-center gap-1 py-1 group-has-[[data-disabled]]/row:text-muted',
 								isTitle
-									? 'font-mono text-label text-muted group-has-[[aria-current=page]]/row:text-ink'
+									? 'font-(family-name:--typeface-mono) text-label text-muted group-has-[[aria-current=page]]/row:text-ink'
 									: isPage
-										? 'text-control text-muted group-hover/row:text-ink group-has-[[aria-current=page]]/row:font-(--weight-medium) group-has-[[aria-current=page]]/row:text-ink'
-										: 'text-control font-(--weight-medium) text-ink',
+										? 'font-(family-name:--typeface-body) text-control text-muted group-hover/row:text-ink group-has-[[aria-current=page]]/row:font-(--weight-medium) group-has-[[aria-current=page]]/row:text-ink'
+										: 'font-(family-name:--typeface-body) text-control font-(--weight-medium) text-ink',
 							].join(' ')}
 							style={{ paddingInlineStart: textAt(depth, tree?.hasIcons) }}
 						>

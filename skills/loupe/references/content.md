@@ -21,7 +21,7 @@ its children. Keep its column to 40rem (`max-w-160`), as Loupe's docs pages do.
 ## Quote
 
 Variants: `quote` (the default) and `testimonial` (the person's photo beside their name). It sets the words in
-Livory's italic, the only place `font-serif` is used.
+Livory's italic, the brand's `--typeface-quote`, the only place it's used.
 
 ## Aside
 

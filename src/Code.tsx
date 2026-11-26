@@ -15,12 +15,12 @@ export const code = tv({
 		// The title, what's changed and Copy, on a line of their own above the code, as an editor's tab bar has them.
 		// The ground under the block shows through it, lightened in the light, and as it is in the dark, where the code is a
 		// step lighter, as a button is. The code casts the line between them, so it sits a little above the bar
-		bar: 'flex items-center gap-3 bg-[light-dark(color-mix(in_oklab,var(--color-white)_40%,transparent),transparent)] py-1 ps-4 pe-1 text-control font-(--weight-medium)',
+		bar: 'flex items-center gap-3 bg-[light-dark(color-mix(in_oklab,var(--color-white)_40%,transparent),transparent)] py-1 ps-4 pe-1 font-(family-name:--typeface-body) text-control font-(--weight-medium)',
 		// Padded as a small button is, so the bar's the same height with Copy at its end or without it
 		title: 'min-w-0 flex-1 truncate py-(--button-small-padding-y)',
 		// A path's folders, quieter than its file
 		folder: 'font-(--weight-regular) text-code-comment',
-		changes: 'flex gap-1.5 font-mono text-label tabular-nums',
+		changes: 'flex gap-1.5 font-(family-name:--typeface-mono) text-label tabular-nums',
 		// Copy's icon and the one that takes its place, stacked, so one blurs, fades and shrinks a little as it goes while
 		// the other comes in from as small. Only the fade with reduced motion. A line high, as Button gives an icon of its
 		// own, so the button stays square
@@ -31,7 +31,7 @@ export const code = tv({
 		body: [
 			// The ground is the code's alone, so the bar's shade is over whatever's behind the block
 			'bg-code-ground',
-			'[&_pre]:m-0 [&_pre]:max-h-[24lh] [&_pre]:overflow-auto [&_pre]:overscroll-contain [&_pre]:bg-transparent! [&_pre]:py-3 [&_pre]:font-mono [&_pre]:text-label/5 [&_pre]:[tab-size:2]',
+			'[&_pre]:m-0 [&_pre]:max-h-[24lh] [&_pre]:overflow-auto [&_pre]:overscroll-contain [&_pre]:bg-transparent! [&_pre]:py-3 [&_pre]:font-(family-name:--typeface-mono) [&_pre]:text-label/5 [&_pre]:[tab-size:2]',
 			'[&_code]:flex [&_code]:min-w-max [&_code]:flex-col',
 			'[&_.line]:relative [&_.line]:min-h-[1lh] [&_.line]:px-4',
 			'[&_code[data-line-numbers]]:grid [&_code[data-line-numbers]]:min-w-0 [&_code[data-line-numbers]]:grid-cols-[auto_1fr]',
@@ -71,7 +71,7 @@ export const code = tv({
 		// the code is, with Copy centred on a line's height, so it's level with the first line. Outlined, on the code's
 		// ground, so a line that runs under it stops at its edge. The ground is under Copy rather than on it, where it
 		// would cover the tint Copy takes on hover
-		aside: 'pointer-events-none absolute end-0 top-0 py-3 pe-2 font-mono text-label/5',
+		aside: 'pointer-events-none absolute end-0 top-0 py-3 pe-2 font-(family-name:--typeface-mono) text-label/5',
 		line: 'flex h-[1lh] items-center',
 		ground: 'pointer-events-auto flex rounded-(--button-radius) bg-code-ground',
 	},

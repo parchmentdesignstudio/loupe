@@ -9,7 +9,7 @@ export type { DialogProps };
 
 // In a popover the padding is --dialog-popover-padding, 16px, not 24px. DialogActions reads it to sit flush to the edges either way
 const dialog = tv({ base: 'relative max-h-[inherit] overflow-auto rounded-[inherit] p-(--dialog-padding) outline-0 [[data-placement]>&]:[--dialog-padding:var(--dialog-popover-padding)]' });
-const heading = tv({ base: 'pr-10 text-title text-balance text-ink' });
+const heading = tv({ base: 'pr-10 font-(family-name:--typeface-body) text-title text-balance text-ink' });
 
 /** What a Modal or Popover holds. Give it a DialogHeading, or an aria-label */
 export function Dialog(props: DialogProps) {

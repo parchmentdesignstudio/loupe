@@ -243,6 +243,8 @@ function themeOf(path, brand) {
 	// The brand's palette isn't a utility, but a component reads it as a token, as Alert does var(--color-sand-46)
 	if (brand && existsSync(brand))
 		for (const [, name, value] of readFileSync(brand, 'utf8').matchAll(/--color-([\w-]+)\s*:\s*(oklch\([^;]+\));/g)) theme.colours.set(name, value.trim());
+	// So are its typefaces, which components read as font-(family-name:--typeface-mono)
+	if (brand && existsSync(brand)) for (const [, name, value] of readFileSync(brand, 'utf8').matchAll(/--typeface-([\w-]+)\s*:\s*([^;]+);/g)) theme.fonts.set(name, value.trim());
 	const css = readFileSync(path, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 	// A block can hold @keyframes, so its end is found by counting braces
 	for (const match of css.matchAll(/@theme\b[^{]*\{/g)) {
@@ -414,7 +416,7 @@ function typographyOf(theme, path, root) {
 		const size = declarations.get(`text-${name}`);
 		return { name, size: size?.value, lineHeight: declarations.get(`text-${name}--line-height`)?.value, place: size?.place };
 	});
-	const families = [...theme.fonts.keys()].map((name) => ({ name, value: declarations.get(`font-${name}`)?.value, place: declarations.get(`font-${name}`)?.place }));
+	const families = [...theme.fonts.keys()].map((name) => ({ name, value: declarations.get(`typeface-${name}`)?.value, place: declarations.get(`typeface-${name}`)?.place }));
 	return { sizes, families };
 }
 
@@ -441,6 +443,7 @@ function tokensOf(strings, theme) {
 	for (const string of strings) {
 		for (const candidate of string.split(/\s+/)) {
 			for (const [, namespace, name] of candidate.matchAll(/\(--(color|text|font|shadow|radius|animate)-([\w-]+)/g)) add(kinds[namespace], name);
+			for (const [, name] of candidate.matchAll(/\(family-name:--typeface-([\w-]+)\)/g)) add('fonts', name);
 			const utility = utilityOf(candidate);
 			let match;
 			if ((match = /^text-(.+)$/.exec(utility))) add(theme.text.has(match[1]) ? 'text' : 'colours', match[1]);
@@ -758,5 +761,5 @@ function read(root, ui, packages) {
 		if (reads.length) componentTokens[name] = [...reads, ...(componentTokens[name] ?? [])];
 	}
 
-	return { project: own, components, colours: coloursOf(theme, sheets, root), type: typographyOf(theme, sheet, root), componentTokens };
+	return { project: own, components, colours: coloursOf(theme, sheets, root), type: typographyOf(theme, sheets, root), componentTokens };
 }

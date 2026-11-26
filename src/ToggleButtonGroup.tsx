@@ -66,7 +66,7 @@ const ringAbove = 'outline-0 data-[show-focus]:outline-0 after:pointer-events-no
 
 export const toggleButton = tv({
 	extend: focusRing,
-	base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control font-(--toggle-button-group-font-weight) text-muted [&>svg]:my-[calc((1lh-1rem)/2)] transition-[color,background-color] duration-fast ease-standard group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
+	base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 font-(family-name:--typeface-body) text-control font-(--toggle-button-group-font-weight) text-muted [&>svg]:my-[calc((1lh-1rem)/2)] transition-[color,background-color] duration-fast ease-standard group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
 	variants: {
 		isSelected: {
 			true: 'text-ink',

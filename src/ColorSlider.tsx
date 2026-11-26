@@ -10,7 +10,7 @@ const colorSlider = tv({
 	slots: {
 		base: 'flex flex-col gap-1.5',
 		header: 'flex items-baseline justify-between gap-3',
-		output: 'ms-auto text-control text-muted tabular-nums',
+		output: 'ms-auto font-(family-name:--typeface-body) text-control text-muted tabular-nums',
 		well: 'rounded-(--color-slider-radius) bg-center',
 		track: 'relative size-full rounded-[inherit] inset-ring inset-ring-bleed/12',
 		thumb: '',

@@ -1,4 +1,4 @@
-/* Parchment, as a brand: its palette, the values of the roles Loupe's components use, its weights and its motion. Every role is set here, so
+/* Parchment, as a brand: its palette, the values of the roles Loupe's components use, its typefaces, weights and motion. Every role is set here, so
    another brand starts from a copy of this file and changes what it wants. Each is a value, a literal or a palette
    colour, never another role, so the place to change a colour is the place it's set. Plain CSS in the base layer, so
    it needs no Tailwind and a site's own :root, after it, wins. styles/theme.css gives the roles their utilities */
@@ -218,6 +218,13 @@
 		--shadow-overlay-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 		--shadow-handle-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 40%, transparent));
 		--shadow-well-color: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), transparent);
+
+		/* The typefaces. Every component sets its own, so a page set in another face doesn't reach Loupe's text: body
+		   for everything, mono for code, keys and figures that line up, and quote for quotes, in italic. Loupe only
+		   uses Livory's italic, so a kit needs no more of it */
+		--typeface-body: elza-round-variable, 'Helvetica Neue', Arial, sans-serif;
+		--typeface-mono: auger-mono, 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
+		--typeface-quote: livory, Georgia, serif;
 
 		/* The weights, as Elza Round has them: regular for running text, medium for controls and labels, and bold for
 		   titles and figures */

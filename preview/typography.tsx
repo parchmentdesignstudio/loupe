@@ -23,7 +23,7 @@ const uses: Record<string, string> = {
 
 // Written out, as Tailwind only finds whole class names
 const classes: Record<string, string> = { title: 'text-title', body: 'text-body', control: 'text-control', label: 'text-label' };
-const faces: Record<string, string> = { sans: 'font-sans', mono: 'font-mono', serif: 'font-serif italic' };
+const faces: Record<string, string> = { body: 'font-(family-name:--typeface-body)', mono: 'font-(family-name:--typeface-mono)', quote: 'font-(family-name:--typeface-quote) italic' };
 
 const samples: Record<string, string> = {
 	title: 'Quarterly review',
@@ -57,9 +57,9 @@ export function Scale() {
 }
 
 const families: Record<string, { name: string; role: string }> = {
-	sans: { name: 'Elza Round', role: 'Everything, in 400 and 500, and 700 for titles' },
+	body: { name: 'Elza Round', role: 'Everything, in 400 and 500, and 700 for titles' },
 	mono: { name: 'Auger Mono', role: 'Code, tokens and file names' },
-	serif: { name: 'Livory', role: 'Quotes, in italic' },
+	quote: { name: 'Livory', role: 'Quotes, in italic' },
 };
 
 /** Each family, its alphabet and figures */

@@ -56,7 +56,7 @@ export const avatar = tv({
 		size: {
 			'20': { base: '[--avatar-dot:6px] [--avatar-radius:var(--radius-sm)] [--avatar-size:1.25rem]', face: 'text-[length:0.625rem] leading-none' },
 			'24': { base: '[--avatar-dot:8px] [--avatar-radius:var(--radius-md)] [--avatar-size:1.5rem]', face: 'text-[length:0.625rem] leading-none' },
-			'32': { base: '[--avatar-badge:16px] [--avatar-badge-icon:10px] [--avatar-dot:10px] [--avatar-radius:var(--radius-lg)] [--avatar-size:2rem]', face: 'text-label leading-none' },
+			'32': { base: '[--avatar-badge:16px] [--avatar-badge-icon:10px] [--avatar-dot:10px] [--avatar-radius:var(--radius-lg)] [--avatar-size:2rem]', face: 'font-(family-name:--typeface-body) text-label leading-none' },
 			'48': { base: '[--avatar-badge:20px] [--avatar-badge-icon:12px] [--avatar-dot:12px] [--avatar-radius:var(--radius-xl)] [--avatar-size:3rem]', face: 'text-[length:1.125rem] leading-none' },
 			'64': { base: '[--avatar-badge:24px] [--avatar-badge-icon:16px] [--avatar-dot:16px] [--avatar-radius:1rem] [--avatar-size:4rem]', face: 'text-[length:1.5rem] leading-none' },
 		},

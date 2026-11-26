@@ -55,7 +55,7 @@ export function Pagination({ page, count, onChange, siblings, 'aria-label': labe
 						</li>
 					) : item === page ? (
 						// The current page isn't a button, as there's nowhere for it to go
-						<li key={item} aria-current="page" className="min-w-7 rounded-(--pagination-current-radius) bg-bleed/8 px-1.5 py-1 text-center text-control font-(--weight-medium) tabular-nums">
+						<li key={item} aria-current="page" className="min-w-7 rounded-(--pagination-current-radius) bg-bleed/8 px-1.5 py-1 text-center font-(family-name:--typeface-body) text-control font-(--weight-medium) tabular-nums">
 							<span className="sr-only">Page </span>
 							{item}
 						</li>

@@ -9,7 +9,7 @@ import { composeClassName, tv } from './tv.js';
 const combo = tv({
 	slots: {
 		group: ['flex items-center rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) [--bleed:var(--raised-bleed)] pr-1 shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2', readOnly],
-		input: 'min-w-0 flex-1 bg-transparent py-(--field-padding-y) pl-(--field-padding-x) text-control text-(color:--field-text,var(--color-ink)) outline-none placeholder:text-(color:--field-placeholder,var(--color-muted))',
+		input: 'min-w-0 flex-1 bg-transparent py-(--field-padding-y) pl-(--field-padding-x) font-(family-name:--typeface-body) text-control text-(color:--field-text,var(--color-ink)) outline-none placeholder:text-(color:--field-placeholder,var(--color-muted))',
 		button: 'flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
 	},
 	variants: {

@@ -111,7 +111,7 @@ const surface = tv({
 
 const action = tv({
 	extend: focusRing,
-	base: '-my-0.5 shrink-0 cursor-default rounded-md px-2 py-1 text-control font-(--weight-medium) text-paper outline-paper transition-[background-color] duration-fast ease-standard motion-reduce:transition-none',
+	base: '-my-0.5 shrink-0 cursor-default rounded-md px-2 py-1 font-(family-name:--typeface-body) text-control font-(--weight-medium) text-paper outline-paper transition-[background-color] duration-fast ease-standard motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'bg-bleed/12',
@@ -153,11 +153,11 @@ export function Toast<T>({ children, ...props }: ToastProps<T>) {
 			<ToastContent className="flex min-w-0 flex-1 flex-col gap-0.5">
 				{children ?? (
 					<>
-						<Text slot="title" className="text-body font-(--toast-title-font-weight)">
+						<Text slot="title" className="font-(family-name:--typeface-body) text-body font-(--toast-title-font-weight)">
 							{message.title}
 						</Text>
 						{message.description && (
-							<Text slot="description" className="text-label text-paper/70">
+							<Text slot="description" className="font-(family-name:--typeface-body) text-label text-paper/70">
 								{message.description}
 							</Text>
 						)}

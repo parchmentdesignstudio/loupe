@@ -170,7 +170,7 @@ function Makeup({ detail }: { detail: Detail }) {
 const kinds = [
 	{ kind: 'colours', name: 'Colours', variable: '--color-', prefix: '' },
 	{ kind: 'text', name: 'Text', variable: '--text-', prefix: 'text-' },
-	{ kind: 'fonts', name: 'Fonts', variable: '--font-', prefix: 'font-' },
+	{ kind: 'fonts', name: 'Fonts', variable: '--typeface-', prefix: 'font-(family-name:--typeface-', suffix: ')' },
 	{ kind: 'shadows', name: 'Shadows', variable: '--shadow-', prefix: 'shadow-' },
 	{ kind: 'corners', name: 'Corners', variable: '--radius-', prefix: 'rounded-' },
 	{ kind: 'animations', name: 'Animations', variable: '--animate-', prefix: 'animate-' },
@@ -181,13 +181,13 @@ function Theme({ tokens }: { tokens: NonNullable<Detail['tokens']> }) {
 		<div className="flex flex-col gap-2 text-label">
 			<p className="text-muted">From the theme</p>
 			<dl className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 gap-y-2">
-				{kinds.map(({ kind, name, variable, prefix }) =>
+				{kinds.map(({ kind, name, variable, prefix, ...rest }) =>
 					tokens[kind]?.length ? (
 						<div key={kind} className="col-span-2 grid grid-cols-subgrid items-baseline">
 							<dt className="text-muted">{name}</dt>
 							<dd className="flex flex-wrap gap-1.5">
 								{tokens[kind].map((token) => (
-									<CopyChip key={token} name={prefix + token} property={variable + token} colour={kind === 'colours' ? details.colours[token]?.value : undefined} />
+									<CopyChip key={token} name={prefix + token + ('suffix' in rest ? rest.suffix : '')} property={variable + token} colour={kind === 'colours' ? details.colours[token]?.value : undefined} />
 								))}
 							</dd>
 						</div>

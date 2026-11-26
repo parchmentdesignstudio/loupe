@@ -24,7 +24,7 @@ import { composeClassName, tv } from './tv.js';
 // previous button on the first and the next on the last, so two months read as one spread
 export const calendar = tv({
 	slots: {
-		root: 'flex w-fit max-w-full flex-col gap-3 text-control text-ink data-[disabled]:text-muted',
+		root: 'flex w-fit max-w-full flex-col gap-3 font-(family-name:--typeface-body) text-control text-ink data-[disabled]:text-muted',
 		months: 'flex flex-wrap items-start gap-x-6 gap-y-4',
 		month: 'flex flex-col gap-2',
 		header: 'flex items-center gap-1',
@@ -32,7 +32,7 @@ export const calendar = tv({
 		// The width of a small square button, holding the place of a missing one so the headings line up
 		spacer: 'size-7 shrink-0',
 		grid: 'border-collapse [&_td]:p-0',
-		weekday: 'size-8 pb-1 text-label font-(--weight-regular) text-muted',
+		weekday: 'size-8 pb-1 font-(family-name:--typeface-body) text-label font-(--weight-regular) text-muted',
 	},
 });
 
@@ -42,7 +42,7 @@ export const calendar = tv({
 // For data-show-focus on the calendar, the ring goes on the day focus would land on, the one React Aria gives tabindex 0
 export const calendarDay = tv({
 	slots: {
-		cell: 'size-8 cursor-default text-control tabular-nums outline-0 data-[outside-month]:invisible [td:first-child_&]:rounded-s-(--calendar-day-radius) [td:last-child_&]:rounded-e-(--calendar-day-radius)',
+		cell: 'size-8 cursor-default font-(family-name:--typeface-body) text-control tabular-nums outline-0 data-[outside-month]:invisible [td:first-child_&]:rounded-s-(--calendar-day-radius) [td:last-child_&]:rounded-e-(--calendar-day-radius)',
 		mark: 'relative flex size-full items-center justify-center rounded-(--calendar-day-radius) outline-offset-2 outline-ink transition-[background-color,color] duration-fast ease-standard forced-color-adjust-none motion-reduce:transition-none forced-colors:outline-[Highlight] [[data-show-focus]_[tabindex="0"]>&]:outline-2',
 	},
 	variants: {

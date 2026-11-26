@@ -213,7 +213,7 @@ function Type({ token, kind }: { token: TypeToken; kind: 'text' | 'fonts' }) {
 	const used = (users.get(`${kind}:${token.name}`) ?? []).toSorted((a, b) => a.localeCompare(b));
 	return (
 		<section className="flex flex-col gap-4 py-6 first:pt-0 last:pb-0">
-			<Header name={`${kind === 'text' ? 'text' : 'font'}-${token.name}`} place={token.place}>
+			<Header name={kind === 'text' ? `text-${token.name}` : `--typeface-${token.name}`} place={token.place}>
 				{kind === 'text' ? `${pixels(token.size)} on ${lineOf(token)}` : token.value}
 			</Header>
 			<UsedBy used={used} />

@@ -23,7 +23,7 @@ many columns or rows). Nothing else exists.
 
 - Numbers and amounts: `align="end"` on the Column and its Cells, with `tabular-nums`. Dates stay at the start,
   with `tabular-nums`.
-- References and codes: `font-mono`.
+- References and codes: `font-(family-name:--typeface-mono)`.
 - Status: a `Status` dot in its own column, never a coloured word.
 - Row actions: `RowActions` in the last cell, holding MenuItems. Not a row of buttons.
 - No rows: `renderEmptyState={() => <EmptyState … />}` on TableBody, alongside `items`.

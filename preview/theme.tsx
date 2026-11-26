@@ -24,7 +24,7 @@ const typefaces: { id: Typeface; name: string; stack?: string }[] = [
 	{ id: 'elza', name: 'Elza Round' },
 	{ id: 'system', name: 'System', stack: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" },
 	{ id: 'serif', name: 'Serif', stack: "ui-serif, 'New York', Georgia, serif" },
-	{ id: 'mono', name: 'Mono', stack: 'var(--font-mono)' },
+	{ id: 'mono', name: 'Mono', stack: 'var(--typeface-mono)' },
 ];
 
 // The tokens as the brand and styles/theme.css have them, so each override works from the real value
@@ -92,7 +92,7 @@ function cssOf(theme: Theme) {
 	if (theme.spacing !== 1) lines.push(`--spacing: ${round(0.25 * theme.spacing)}rem;`);
 	if (theme.text !== 1) for (const { name, value } of sizes) lines.push(`--text-${name}: ${round(value * theme.text)}rem;`);
 	const stack = typefaces.find((face) => face.id === theme.typeface)?.stack;
-	if (stack) lines.push(`--font-sans: ${stack};`);
+	if (stack) lines.push(`--typeface-body: ${stack};`);
 	return lines.length ? `:root {\n\t${lines.join('\n\t')}\n}\n` : '';
 }
 

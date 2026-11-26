@@ -720,7 +720,7 @@
 		/* Type */
 
 		/* The family, Livory, in its italic. A quote in prose takes it too */
-		--quote-font-family: var(--font-serif);
+		--quote-font-family: var(--typeface-quote);
 		/* The size */
 		--quote-font-size: 1.5rem;
 

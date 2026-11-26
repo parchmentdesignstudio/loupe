@@ -48,13 +48,10 @@
 	--color-code-remove-edge: var(--color-code-remove-edge);
 }
 
-/* The type, as Tailwind's own variables, so --text-label is text-label. Static, so every variable is written out, for
-   CSS and inline styles that read one by name */
+/* The type's sizes, as Tailwind's own variables, so --text-label is text-label. Static, so every variable is written
+   out, for CSS and inline styles that read one by name. The typefaces are the brand's, as --typeface-body and the
+   like, rather than font-sans, so a site keeps its own */
 @theme static {
-	--font-sans: elza-round-variable, 'Helvetica Neue', Arial, sans-serif;
-	--font-mono: auger-mono, 'SF Mono', SFMono-Regular, ui-monospace, Menlo, monospace;
-	/* Quotes, in italic. Loupe only uses Livory's italic, so a kit needs no more of it */
-	--font-serif: livory, Georgia, serif;
 	--text-body: 0.875rem;
 	--text-body--line-height: 1.25rem;
 	/* Text in buttons, fields, labels, options and tabs, on a 20px line at either size. A control's padding adds to

@@ -73,7 +73,7 @@ export function DocsShell({ brand, nav, navLabel, trail, barStart, actions, phon
 		setOpen(false);
 	}
 	return (
-		<div className="font-sans text-body text-ink md:flex">
+		<div className="font-(family-name:--typeface-body) text-body text-ink md:flex">
 			{/* Navigation has its own button for phones, which the phone bar takes the place of */}
 			<div className="contents max-md:hidden">
 				<Navigation aria-label={navLabel} className="md:border-r-0">
@@ -174,7 +174,7 @@ export function DocsPage({ header, contents, isWide, children }: DocsPageProps) 
 
 /** A small pill beside the brand, such as its version */
 export function DocsBadge({ children }: { children: ReactNode }) {
-	return <span className="rounded-full bg-bleed/8 px-2 py-0.5 font-mono text-label text-muted">{children}</span>;
+	return <span className="rounded-full bg-bleed/8 px-2 py-0.5 font-(family-name:--typeface-mono) text-label text-muted">{children}</span>;
 }
 
 export interface DocsSearchButtonProps {
@@ -234,7 +234,7 @@ export function DocsSearch({ pages, isOpen, onOpenChange, placeholder = 'Search 
 	// It opens over the page, outside DocsShell, so it sets its own type
 	return (
 		<Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable className="items-start pt-[12vh]">
-			<Dialog aria-label="Search" className="flex max-h-[min(28rem,70vh)] flex-col gap-2 p-3 font-sans text-body">
+			<Dialog aria-label="Search" className="flex max-h-[min(28rem,70vh)] flex-col gap-2 p-3 font-(family-name:--typeface-body) text-body">
 				{({ close }) => (
 					<Autocomplete filter={contains}>
 						<SearchField aria-label="Search" placeholder={placeholder} autoFocus />
@@ -245,13 +245,13 @@ export function DocsSearch({ pages, isOpen, onOpenChange, placeholder = 'Search 
 								window.location.assign(String(key));
 								close();
 							}}
-							renderEmptyState={() => <p className="px-3 py-1.5 text-control text-muted">Nothing called that</p>}
+							renderEmptyState={() => <p className="px-3 py-1.5 font-(family-name:--typeface-body) text-control text-muted">Nothing called that</p>}
 							className="-mx-1 -mb-1 min-h-0 flex-1"
 						>
 							{(page) => (
 								<ListBoxItem id={page.href} textValue={page.name}>
 									{page.name}
-									<span className="ms-auto text-label text-muted">{page.group}</span>
+									<span className="ms-auto font-(family-name:--typeface-body) text-label text-muted">{page.group}</span>
 								</ListBoxItem>
 							)}
 						</ListBox>

@@ -9,8 +9,8 @@ export const message = tv({
 	base: 'motion-reduce:transition-none',
 	variants: {
 		from: {
-			user: 'max-w-[85%] origin-bottom-right self-end rounded-(--message-radius) bg-(--message-fill,color-mix(in_oklab,var(--color-bleed)_8%,transparent)) px-(--message-padding-x) pt-(--message-padding-top) pb-(--message-padding-bottom) text-body text-pretty whitespace-pre-line text-ink transition-[opacity,translate,scale] duration-base ease-spring rtl:origin-bottom-left starting:translate-y-2 starting:scale-96 starting:opacity-0',
-			assistant: 'flex flex-col gap-3 text-body text-pretty text-ink transition-[opacity,translate] delay-75 duration-300 ease-standard starting:translate-y-1 starting:opacity-0',
+			user: 'max-w-[85%] origin-bottom-right self-end rounded-(--message-radius) bg-(--message-fill,color-mix(in_oklab,var(--color-bleed)_8%,transparent)) px-(--message-padding-x) pt-(--message-padding-top) pb-(--message-padding-bottom) font-(family-name:--typeface-body) text-body text-pretty whitespace-pre-line text-ink transition-[opacity,translate,scale] duration-base ease-spring rtl:origin-bottom-left starting:translate-y-2 starting:scale-96 starting:opacity-0',
+			assistant: 'flex flex-col gap-3 font-(family-name:--typeface-body) text-body text-pretty text-ink transition-[opacity,translate] delay-75 duration-300 ease-standard starting:translate-y-1 starting:opacity-0',
 		},
 	},
 });

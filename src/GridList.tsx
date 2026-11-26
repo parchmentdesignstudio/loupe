@@ -36,8 +36,8 @@ export const gridListItem = tv({
 	variants: {
 		layout: {
 			// The ring sits inside a row, clear of the rows next to it
-			stack: 'flex items-center gap-3 px-(--grid-list-item-padding-x) py-(--grid-list-item-padding-y) text-control -outline-offset-2',
-			grid: 'flex flex-col gap-2 border border-bleed/8 p-2 text-control',
+			stack: 'flex items-center gap-3 px-(--grid-list-item-padding-x) py-(--grid-list-item-padding-y) font-(family-name:--typeface-body) text-control -outline-offset-2',
+			grid: 'flex flex-col gap-2 border border-bleed/8 p-2 font-(family-name:--typeface-body) text-control',
 		},
 		isHovered: {
 			true: '',
@@ -63,7 +63,7 @@ export const gridListItem = tv({
 });
 
 const empty = tv({
-	base: 'col-span-full py-2 text-label text-muted',
+	base: 'col-span-full py-2 font-(family-name:--typeface-body) text-label text-muted',
 	variants: {
 		layout: {
 			stack: 'px-3',
@@ -135,7 +135,7 @@ export function GridListSection<T extends object>(props: GridListSectionProps<T>
 }
 
 const header = tv({
-	base: 'font-mono text-label text-muted',
+	base: 'font-(family-name:--typeface-mono) text-label text-muted',
 	variants: {
 		layout: {
 			stack: 'px-3 pt-2 pb-1',

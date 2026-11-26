@@ -45,7 +45,7 @@ const tabList = tv({
 
 const tab = tv({
 	extend: focusRing,
-	base: 'relative flex cursor-default items-center gap-2 rounded-sm py-1.5 text-control font-(--tab-font-weight) whitespace-nowrap text-(color:--tab-text,var(--color-muted)) transition-colors duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
+	base: 'relative flex cursor-default items-center gap-2 rounded-sm py-1.5 font-(family-name:--typeface-body) text-control font-(--tab-font-weight) whitespace-nowrap text-(color:--tab-text,var(--color-muted)) transition-colors duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
 	variants: {
 		// 32px tall, as a button is
 		orientation: {

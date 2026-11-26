@@ -11,7 +11,7 @@ export type AlertTone = StatusTone;
 // status's does, so it reads the same in every tone and theme
 export const alert = tv({
 	slots: {
-		base: 'flex items-start gap-3 text-body text-ink',
+		base: 'flex items-start gap-3 font-(family-name:--typeface-body) text-body text-ink',
 		// On the text's first line, as an icon in a button is
 		icon: 'flex shrink-0 text-(--alert-icon) *:my-[calc((1lh-1rem)/2)]',
 		content: 'flex min-w-0 flex-1 flex-col gap-0.5 wrap-break-word',

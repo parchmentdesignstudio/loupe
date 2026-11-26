@@ -10,7 +10,7 @@ import { focusRing, tv } from './tv.js';
 export const button = tv({
 	extend: focusRing,
 	base: [
-		'relative z-0 inline-flex shrink-0 cursor-default items-center justify-center rounded-(--button-radius) text-control font-(--button-font-weight) [--shadow-raised-color:var(--button-shadow)] transition-[background-color,box-shadow,opacity] duration-fast ease-standard motion-reduce:transition-none',
+		'relative z-0 inline-flex shrink-0 cursor-default items-center justify-center rounded-(--button-radius) font-(family-name:--typeface-body) text-control font-(--button-font-weight) [--shadow-raised-color:var(--button-shadow)] transition-[background-color,box-shadow,opacity] duration-fast ease-standard motion-reduce:transition-none',
 		// What's inside presses in as one, so the button's edge and shadow stay where they are
 		'*:transition-[scale] *:duration-fast *:ease-standard motion-reduce:*:transition-none',
 		'before:absolute before:inset-px before:-z-1 before:rounded-[calc(var(--button-radius)-1px)] before:transition-[background-color,box-shadow] before:duration-fast before:ease-standard motion-reduce:before:transition-none',

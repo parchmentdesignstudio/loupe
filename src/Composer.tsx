@@ -9,7 +9,7 @@ const composer = tv({
 		group: 'flex flex-wrap items-end gap-x-2 rounded-(--field-radius) bg-(--field-fill,var(--color-raised)) py-1 pr-2.5 pl-(--field-padding-x) shadow-raised [--shadow-raised-color:var(--field-shadow)] outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2',
 		// One line to begin with, growing with what's written up to about six, then it scrolls
 		context: 'flex basis-full flex-wrap gap-1 pt-1.5',
-		input: 'max-h-40 min-w-0 flex-1 resize-none bg-transparent py-2 text-control leading-6 text-(color:--field-text,var(--color-ink)) outline-none field-sizing-content placeholder:text-(color:--field-placeholder,var(--color-muted))',
+		input: 'max-h-40 min-w-0 flex-1 resize-none bg-transparent py-2 font-(family-name:--typeface-body) text-control leading-6 text-(color:--field-text,var(--color-ink)) outline-none field-sizing-content placeholder:text-(color:--field-placeholder,var(--color-muted))',
 		// Centres the send button on the line of text. It sits further in than the box's radius, so it takes the smallest
 		// corner rather than a concentric one, which would be square
 		send: 'mb-1.5 [--button-radius:var(--radius-sm)]',

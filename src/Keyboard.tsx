@@ -11,7 +11,7 @@ export interface KeyboardProps extends ComponentProps<typeof AriaKeyboard> {
 export const KeyboardVariantContext = createContext<NonNullable<KeyboardProps['variant']>>('raised');
 
 const keyboard = tv({
-	base: 'font-sans whitespace-nowrap',
+	base: 'font-(family-name:--typeface-body) whitespace-nowrap',
 	variants: {
 		variant: {
 			// At least as wide as it's tall, so a key of one character is square, like a key on a keyboard

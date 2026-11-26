@@ -24,8 +24,8 @@ export const status = tv({
 		// A dot beside the text for a table or list, or a badge, a pill tinted in the tone, to stand out on a card or a heading.
 		// The badge is 20px tall, on the label's 16px line, so it fits a 20px line of text without growing it
 		variant: {
-			dot: { base: 'text-control' },
-			badge: { base: 'gap-1.5 rounded-full bg-[color-mix(in_oklab,var(--status)_16%,transparent)] px-(--status-badge-padding-x) py-(--status-badge-padding-y) text-label font-(--status-badge-font-weight)', dot: 'size-1.5' },
+			dot: { base: 'font-(family-name:--typeface-body) text-control' },
+			badge: { base: 'gap-1.5 rounded-full bg-[color-mix(in_oklab,var(--status)_16%,transparent)] px-(--status-badge-padding-x) py-(--status-badge-padding-y) font-(family-name:--typeface-body) text-label font-(--status-badge-font-weight)', dot: 'size-1.5' },
 		},
 	},
 	defaultVariants: { tone: 'neutral', variant: 'dot' },
