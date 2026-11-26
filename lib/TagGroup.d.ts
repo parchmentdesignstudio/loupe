@@ -21,7 +21,7 @@ export declare const tag: import("tailwind-variants").TVReturnType<{
     allowsRemoving: {
         true: string;
     };
-}, undefined, "inline-flex max-w-full cursor-default items-center gap-1 rounded-(--tag-radius) bg-bleed/8 px-(--tag-padding-x) py-(--tag-padding-y) text-label leading-4 text-ink transition-colors duration-150 ease-out [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none", {
+}, undefined, "inline-flex max-w-full cursor-default items-center gap-1 rounded-(--tag-radius) bg-bleed/8 px-(--tag-padding-x) py-(--tag-padding-y) font-(family-name:--typeface-body) text-label leading-4 text-ink transition-colors duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

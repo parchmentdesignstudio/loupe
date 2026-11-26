@@ -14,7 +14,7 @@ export declare const chip: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "relative inline-flex cursor-default after:absolute after:top-1/2 after:left-1/2 after:size-full after:min-h-11 after:min-w-11 after:-translate-1/2 items-center bg-(--chip-fill,var(--color-raised)) text-(color:--chip-text,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--chip-shadow)] transition-[scale,background-color,opacity] duration-150 ease-out motion-reduce:transition-none", {
+}, undefined, "relative inline-flex cursor-default after:absolute after:top-1/2 after:left-1/2 after:size-full after:min-h-11 after:min-w-11 after:-translate-1/2 items-center bg-(--chip-fill,var(--color-raised)) text-(color:--chip-text,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--chip-shadow)] transition-[scale,background-color,opacity] duration-fast ease-standard motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

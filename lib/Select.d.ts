@@ -16,7 +16,7 @@ export declare const selectTrigger: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "flex w-full cursor-default items-center gap-2 rounded-(--field-radius) text-left text-control font-medium text-(color:--field-text,var(--color-ink)) [-webkit-tap-highlight-color:transparent] in-data-[show-focus]:outline-2", {
+}, undefined, "flex w-full cursor-default items-center gap-2 rounded-(--field-radius) text-left font-(family-name:--typeface-body) text-control font-(--weight-medium) text-(color:--field-text,var(--color-ink)) [-webkit-tap-highlight-color:transparent] in-data-[show-focus]:outline-2", {
     isFocusVisible: {
         false: string;
         true: string;

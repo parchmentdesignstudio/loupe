@@ -24,7 +24,7 @@ export declare const gridListItem: import("tailwind-variants").TVReturnType<{
     isDisabled: {
         true: string;
     };
-}, undefined, "group/item relative cursor-default rounded-(--grid-list-item-radius) text-ink transition-[background-color,border-color,box-shadow] duration-150 ease-out [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none", {
+}, undefined, "group/item relative cursor-default rounded-(--grid-list-item-radius) text-ink transition-[background-color,border-color,box-shadow] duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;

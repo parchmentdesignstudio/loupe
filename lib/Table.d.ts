@@ -23,7 +23,7 @@ export declare const tableColumn: import("tailwind-variants").TVReturnType<{
     isSorted: {
         true: string;
     };
-}, undefined, "sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start text-label font-(--table-column-font-weight) text-(color:--table-column-text,var(--color-muted)) transition-[color] duration-150 ease-out select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none", {
+}, undefined, "sticky top-0 z-1 cursor-default border-b border-bleed/8 bg-(--table-fill) px-3 py-2 text-start font-(family-name:--typeface-body) text-label font-(--table-column-font-weight) text-(color:--table-column-text,var(--color-muted)) transition-[color] duration-fast ease-standard select-none first:pl-4 last:pr-4 in-data-[density=compact]:py-1.5 motion-reduce:transition-none", {
     isFocusVisible: {
         false: string;
         true: string;
@@ -56,7 +56,7 @@ export declare const tableRow: import("tailwind-variants").TVReturnType<{
         false: string;
         true: string;
     };
-}, undefined, "group/row cursor-default text-control text-ink transition-[background-color] duration-150 ease-out [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none", undefined, undefined, undefined>;
+}, undefined, "group/row cursor-default font-(family-name:--typeface-body) text-control text-ink transition-[background-color] duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none", undefined, undefined, undefined>;
 export declare const tableCell: import("tailwind-variants").TVReturnType<{}, undefined, string[], {
     isFocusVisible: {
         false: string;
