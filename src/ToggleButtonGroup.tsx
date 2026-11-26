@@ -52,7 +52,7 @@ export const toggleButtonGroup = tv({
 // and the pressed one, as the fill marks those edges already, from beside the hovered one where hovering fills it, and
 // from beside the focused one, where it would stand between the button and its ring
 const divider = [
-	'before:pointer-events-none before:absolute before:inset-y-1 before:left-[calc(var(--gap)/-2-0.5px)] before:w-px before:rounded-full before:bg-(--divider) before:opacity-0 before:transition-opacity before:duration-150 motion-reduce:before:transition-none',
+	'before:pointer-events-none before:absolute before:inset-y-1 before:left-[calc(var(--gap)/-2-0.5px)] before:w-px before:rounded-full before:bg-(--divider) before:opacity-0 before:transition-opacity before:duration-fast motion-reduce:before:transition-none',
 	'group-data-[orientation=vertical]/toggle:before:inset-x-3 group-data-[orientation=vertical]/toggle:before:inset-y-auto group-data-[orientation=vertical]/toggle:before:top-[calc(var(--gap)/-2-0.5px)] group-data-[orientation=vertical]/toggle:before:h-px group-data-[orientation=vertical]/toggle:before:w-auto',
 	'group-data-[divided]/toggle:not-first:before:opacity-100',
 	'data-[selected]:before:opacity-0! data-[pressed]:before:opacity-0! [[data-selected]+&]:before:opacity-0! [[data-pressed]+&]:before:opacity-0!',
@@ -66,7 +66,7 @@ const ringAbove = 'outline-0 data-[show-focus]:outline-0 after:pointer-events-no
 
 export const toggleButton = tv({
 	extend: focusRing,
-	base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control font-(--toggle-button-group-font-weight) text-muted [&>svg]:my-[calc((1lh-1rem)/2)] transition-[color,background-color] duration-150 ease-out group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
+	base: 'relative inline-flex cursor-default items-center justify-center gap-1.5 group-data-[width=fill]/toggle:flex-1 rounded-[calc(var(--toggle-button-group-radius)-var(--inset,0px))] px-2.5 py-1 text-control font-(--toggle-button-group-font-weight) text-muted [&>svg]:my-[calc((1lh-1rem)/2)] transition-[color,background-color] duration-fast ease-standard group-data-[size=small]/toggle:px-2 group-data-[size=small]/toggle:py-0.5 motion-reduce:transition-none',
 	variants: {
 		isSelected: {
 			true: 'text-ink',
@@ -111,7 +111,7 @@ export const toggleButton = tv({
 
 // React Aria moves the fill to the chosen button by its translate and size, so those are what transition. Flat in a
 // disabled group, as a disabled button is
-const indicator = 'absolute top-0 left-0 -z-10 size-full rounded-[inherit] bg-(--chosen) shadow-raised [--edge:var(--chosen-edge)] transition-[translate,width,height] duration-250 ease-in-out group-data-[disabled]/toggle:bg-bleed/12 group-data-[disabled]/toggle:shadow-none motion-reduce:transition-none';
+const indicator = 'absolute top-0 left-0 -z-10 size-full rounded-[inherit] bg-(--chosen) shadow-raised [--edge:var(--chosen-edge)] transition-[translate,width,height] duration-base ease-move group-data-[disabled]/toggle:bg-bleed/12 group-data-[disabled]/toggle:shadow-none motion-reduce:transition-none';
 
 // Which look the group has, for its buttons to follow. A toggle on its own is a well's, filling itself when chosen
 const VariantContext = createContext<'well' | 'raised'>('well');

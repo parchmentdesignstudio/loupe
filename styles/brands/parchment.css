@@ -1,4 +1,4 @@
-/* Parchment, as a brand: its palette and the values of the roles Loupe's components use. Every role is set here, so
+/* Parchment, as a brand: its palette, the values of the roles Loupe's components use, its weights and its motion. Every role is set here, so
    another brand starts from a copy of this file and changes what it wants. Each is a value, a literal or a palette
    colour, never another role, so the place to change a colour is the place it's set. Plain CSS in the base layer, so
    it needs no Tailwind and a site's own :root, after it, wins. styles/theme.css gives the roles their utilities */
@@ -218,6 +218,25 @@
 		--shadow-overlay-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 48%, transparent));
 		--shadow-handle-color: light-dark(color-mix(in oklab, var(--bleed) 12%, transparent), color-mix(in oklab, var(--color-black) 40%, transparent));
 		--shadow-well-color: light-dark(color-mix(in oklab, var(--bleed) 16%, transparent), transparent);
+
+		/* The weights, as Elza Round has them: regular for running text, medium for controls and labels, and bold for
+		   titles and figures */
+		--weight-regular: 400;
+		--weight-medium: 500;
+		--weight-bold: 700;
+
+		/* Motion. Fast is feedback, such as a hover or a press. Base is something moving or changing size, such as a
+		   tab's bar or a disclosure opening, and slow a large move, such as a drawer or a switch's handle. Standard
+		   eases out, for what settles into place, move eases both ways, for what travels, and exit eases in, for what
+		   leaves. Reduced motion turns them off where they're used */
+		--duration-fast: 150ms;
+		--duration-base: 250ms;
+		--duration-slow: 350ms;
+		--ease-standard: cubic-bezier(0, 0, 0.2, 1);
+		--ease-move: cubic-bezier(0.4, 0, 0.2, 1);
+		--ease-exit: cubic-bezier(0.4, 0, 1, 1);
+		/* A small spring, overshooting by about a twentieth and settling over 350ms, for a switch's handle */
+		--ease-spring: linear(0, 0.046, 0.157, 0.299, 0.449, 0.591, 0.716, 0.819, 0.899, 0.959, 1, 1.026, 1.04, 1.046, 1.045, 1.041, 1.035, 1.028, 1.021, 1.015, 1);
 	}
 
 	/* Code's jade, cyan and sky at their full strength where the screen shows P3. Apart from the palette above, so Elyx

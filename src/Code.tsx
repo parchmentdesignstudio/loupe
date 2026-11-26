@@ -15,16 +15,16 @@ export const code = tv({
 		// The title, what's changed and Copy, on a line of their own above the code, as an editor's tab bar has them.
 		// The ground under the block shows through it, lightened in the light, and as it is in the dark, where the code is a
 		// step lighter, as a button is. The code casts the line between them, so it sits a little above the bar
-		bar: 'flex items-center gap-3 bg-[light-dark(color-mix(in_oklab,var(--color-white)_40%,transparent),transparent)] py-1 ps-4 pe-1 text-control font-medium',
+		bar: 'flex items-center gap-3 bg-[light-dark(color-mix(in_oklab,var(--color-white)_40%,transparent),transparent)] py-1 ps-4 pe-1 text-control font-(--weight-medium)',
 		// Padded as a small button is, so the bar's the same height with Copy at its end or without it
 		title: 'min-w-0 flex-1 truncate py-(--button-small-padding-y)',
 		// A path's folders, quieter than its file
-		folder: 'font-normal text-code-comment',
+		folder: 'font-(--weight-regular) text-code-comment',
 		changes: 'flex gap-1.5 font-mono text-label tabular-nums',
 		// Copy's icon and the one that takes its place, stacked, so one blurs, fades and shrinks a little as it goes while
 		// the other comes in from as small. Only the fade with reduced motion. A line high, as Button gives an icon of its
 		// own, so the button stays square
-		swap: 'grid h-[1lh] place-items-center *:col-start-1 *:row-start-1 *:transition-[opacity,filter,scale] *:duration-250 *:ease-out motion-reduce:*:transition-opacity',
+		swap: 'grid h-[1lh] place-items-center *:col-start-1 *:row-start-1 *:transition-[opacity,filter,scale] *:duration-base *:ease-standard motion-reduce:*:transition-opacity',
 		gone: 'scale-90 opacity-0 blur-[3px] motion-reduce:scale-100 motion-reduce:blur-none',
 		// Shiki's <pre>, or a plain one before it's highlighted, laid out the same, so nothing moves when it is. Its own
 		// background goes, for the block's. Line numbers, from Loupe's transformer, sit in a column that stays as the lines scroll

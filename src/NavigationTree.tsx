@@ -121,7 +121,7 @@ function CurrentMark({ depth, hasIcons }: { depth: number; hasIcons: boolean }) 
 
 // The triangle is drawn at 12px rather than its 16px, so it sits quietly by the text. It points along the line while
 // closed, and turns down to open
-const triangle = 'size-3 shrink-0 fill-current transition-transform duration-150 ease-out motion-reduce:transition-none';
+const triangle = 'size-3 shrink-0 fill-current transition-transform duration-fast ease-standard motion-reduce:transition-none';
 
 /**
  * An item’s text, with the link React Aria gives each item laid over its row, so the text can sit beside the triangle that
@@ -162,8 +162,8 @@ export function NavigationTreeItemContent({ children, icon }: NavigationTreeItem
 								isTitle
 									? 'font-mono text-label text-muted group-has-[[aria-current=page]]/row:text-ink'
 									: isPage
-										? 'text-control text-muted group-hover/row:text-ink group-has-[[aria-current=page]]/row:font-medium group-has-[[aria-current=page]]/row:text-ink'
-										: 'text-control font-medium text-ink',
+										? 'text-control text-muted group-hover/row:text-ink group-has-[[aria-current=page]]/row:font-(--weight-medium) group-has-[[aria-current=page]]/row:text-ink'
+										: 'text-control font-(--weight-medium) text-ink',
 							].join(' ')}
 							style={{ paddingInlineStart: textAt(depth, tree?.hasIcons) }}
 						>

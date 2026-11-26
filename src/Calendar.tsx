@@ -32,7 +32,7 @@ export const calendar = tv({
 		// The width of a small square button, holding the place of a missing one so the headings line up
 		spacer: 'size-7 shrink-0',
 		grid: 'border-collapse [&_td]:p-0',
-		weekday: 'size-8 pb-1 text-label font-normal text-muted',
+		weekday: 'size-8 pb-1 text-label font-(--weight-regular) text-muted',
 	},
 });
 
@@ -43,7 +43,7 @@ export const calendar = tv({
 export const calendarDay = tv({
 	slots: {
 		cell: 'size-8 cursor-default text-control tabular-nums outline-0 data-[outside-month]:invisible [td:first-child_&]:rounded-s-(--calendar-day-radius) [td:last-child_&]:rounded-e-(--calendar-day-radius)',
-		mark: 'relative flex size-full items-center justify-center rounded-(--calendar-day-radius) outline-offset-2 outline-ink transition-[background-color,color] duration-150 ease-out forced-color-adjust-none motion-reduce:transition-none forced-colors:outline-[Highlight] [[data-show-focus]_[tabindex="0"]>&]:outline-2',
+		mark: 'relative flex size-full items-center justify-center rounded-(--calendar-day-radius) outline-offset-2 outline-ink transition-[background-color,color] duration-fast ease-standard forced-color-adjust-none motion-reduce:transition-none forced-colors:outline-[Highlight] [[data-show-focus]_[tabindex="0"]>&]:outline-2',
 	},
 	variants: {
 		isBand: {
@@ -56,7 +56,7 @@ export const calendarDay = tv({
 			true: { cell: 'rounded-e-(--calendar-day-radius)' },
 		},
 		isEnd: {
-			true: { mark: 'bg-(--calendar-selected-fill,var(--color-ink)) font-medium text-(color:--calendar-selected-text,var(--color-paper)) forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]' },
+			true: { mark: 'bg-(--calendar-selected-fill,var(--color-ink)) font-(--weight-medium) text-(color:--calendar-selected-text,var(--color-paper)) forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]' },
 		},
 		isToday: {
 			true: { mark: 'after:absolute after:bottom-1 after:size-1 after:rounded-full after:bg-(--calendar-today,var(--color-accent))' },

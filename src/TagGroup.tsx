@@ -43,7 +43,7 @@ export function TagGroup<T extends object>({ label, description, errorMessage, i
 
 export const tag = tv({
 	extend: focusRing,
-	base: 'inline-flex max-w-full cursor-default items-center gap-1 rounded-(--tag-radius) bg-bleed/8 px-(--tag-padding-x) py-(--tag-padding-y) text-label leading-4 text-ink transition-colors duration-150 ease-out [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
+	base: 'inline-flex max-w-full cursor-default items-center gap-1 rounded-(--tag-radius) bg-bleed/8 px-(--tag-padding-x) py-(--tag-padding-y) text-label leading-4 text-ink transition-colors duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
 	variants: {
 		// Only a tag that can be chosen or acted on takes the hover
 		isHovered: {

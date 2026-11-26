@@ -36,7 +36,7 @@
 		/* Type */
 
 		/* The label's weight. Its size is text-control, which every control shares */
-		--button-font-weight: 500;
+		--button-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -67,6 +67,23 @@
 		}
 
 		/* Shadow */
+
+		/* Each variant's whole shadow, its hover's and, on a filled button, the bevel inside its fill. Unset, so each is
+		   its recipe in styles/theme.css, where the variants sit side by side. Set one to replace it, or none for a
+		   flat button. A recipe set here reads the roles at :root, as the parts Button works out from a fill are its own */
+		@media not all {
+			--button-secondary-shadow: var(--shadow-button);
+			--button-secondary-shadow-lifted: var(--shadow-button-lifted);
+			--button-primary-shadow: var(--shadow-button-primary);
+			--button-primary-shadow-lifted: var(--shadow-button-primary-lifted);
+			--button-primary-bevel: var(--shadow-button-primary-bevel);
+			--button-quiet-shadow: var(--shadow-button-quiet);
+			--button-quiet-shadow-lifted: var(--shadow-button-quiet-lifted);
+			--button-quiet-bevel: var(--shadow-button-quiet-bevel);
+			--button-danger-shadow: var(--shadow-button-danger);
+			--button-danger-shadow-lifted: var(--shadow-button-danger-lifted);
+			--button-danger-bevel: var(--shadow-button-danger-bevel);
+		}
 
 		/* The shadow's colour under a raised button, which grows on hover. Transparent makes it flat and keeps its edge */
 		--button-shadow: var(--shadow-raised-color);
@@ -197,7 +214,7 @@
 		/* Type */
 
 		/* The buttons' weight */
-		--toggle-button-group-font-weight: 500;
+		--toggle-button-group-font-weight: var(--weight-medium);
 
 		/* Colour */
 
@@ -227,7 +244,7 @@
 		/* Type */
 
 		/* A field's label's weight. Its size is text-control, which every control shares */
-		--field-label-font-weight: 500;
+		--field-label-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -346,7 +363,7 @@
 		/* Type */
 
 		/* The month's weight over each grid */
-		--calendar-heading-font-weight: 500;
+		--calendar-heading-font-weight: var(--weight-medium);
 
 		/* Colour */
 
@@ -415,7 +432,7 @@
 		/* Type */
 
 		/* The initials' weight, bold as a page's title */
-		--avatar-font-weight: 700;
+		--avatar-font-weight: var(--weight-bold);
 
 		/* Code */
 
@@ -468,7 +485,7 @@
 		/* Type */
 
 		/* A column heading's weight */
-		--table-column-font-weight: 500;
+		--table-column-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -540,7 +557,7 @@
 		/* Type */
 
 		/* The title's weight */
-		--alert-title-font-weight: 500;
+		--alert-title-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -557,7 +574,7 @@
 		/* Type */
 
 		/* The title's weight */
-		--card-title-font-weight: 500;
+		--card-title-font-weight: var(--weight-medium);
 		/* A figure that leads, a step past prose's display, drawn in as large type sits loose */
 		--card-figure-size: 1.75rem;
 		--card-figure-line-height: 2rem;
@@ -608,7 +625,7 @@
 		/* Type */
 
 		/* The title's weight */
-		--empty-state-title-font-weight: 500;
+		--empty-state-title-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -645,7 +662,7 @@
 		/* Type */
 
 		/* A badge's weight */
-		--status-badge-font-weight: 500;
+		--status-badge-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -664,7 +681,7 @@
 		/* Type */
 
 		/* The title's weight */
-		--toast-title-font-weight: 500;
+		--toast-title-font-weight: var(--weight-medium);
 
 		/* Colour */
 
@@ -749,7 +766,7 @@
 		/* Type */
 
 		/* A chosen option's weight, in a select or combo box */
-		--option-selected-font-weight: 500;
+		--option-selected-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -878,7 +895,7 @@
 		/* Type */
 
 		/* The weight. Its size is text-control, which every control shares */
-		--breadcrumbs-font-weight: 500;
+		--breadcrumbs-font-weight: var(--weight-medium);
 
 		/* Colour */
 
@@ -894,7 +911,7 @@
 		/* Type */
 
 		/* The trigger's weight */
-		--disclosure-header-font-weight: 500;
+		--disclosure-header-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -931,7 +948,7 @@
 		/* Type */
 
 		/* A link's weight. Its size is text-control, which every control shares */
-		--navigation-tree-item-font-weight: 500;
+		--navigation-tree-item-font-weight: var(--weight-medium);
 
 		/* Space */
 
@@ -989,7 +1006,7 @@
 		/* Type */
 
 		/* A tab's weight. Its size is text-control, which every control shares */
-		--tab-font-weight: 500;
+		--tab-font-weight: var(--weight-medium);
 
 		/* Colour */
 

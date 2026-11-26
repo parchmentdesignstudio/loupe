@@ -7,14 +7,14 @@ import { focusRing, tv } from './tv.js';
 const toggle = tv({
 	slots: {
 		// Its height is the handle's 12px and 2px of padding each side, so it centres on the label's first line
-		track: 'relative my-[calc((1lh-1rem)/2)] flex w-7 shrink-0 items-center p-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none [[data-show-focus]>&]:outline-2',
+		track: 'relative my-[calc((1lh-1rem)/2)] flex w-7 shrink-0 items-center p-0.5 transition-colors duration-fast ease-standard motion-reduce:transition-none [[data-show-focus]>&]:outline-2',
 		// It stretches by its width rather than a scale, so its corners stay round, and it moves and stretches on a spring.
 		// The colour changes without one, as a colour can't overshoot
 		// Each sits in the 8px the handle leaves at one end, so the handle covers whichever isn't true. Positioned, the handle
 		// paints over them
 		on: 'absolute inset-y-0 start-0.5 hidden w-2 items-center justify-center text-white on-off-labels:flex',
 		off: 'absolute inset-y-0 end-0.5 hidden w-2 items-center justify-center on-off-labels:flex',
-		handle: 'relative h-3 w-4 shrink-0 bg-(--switch-handle,var(--color-knob)) shadow-handle [transition:translate_350ms_var(--ease-spring),width_350ms_var(--ease-spring),background-color_200ms_ease-out] motion-reduce:transition-none',
+		handle: 'relative h-3 w-4 shrink-0 bg-(--switch-handle,var(--color-knob)) shadow-handle [transition:translate_var(--duration-slow)_var(--ease-spring),width_var(--duration-slow)_var(--ease-spring),background-color_200ms_var(--ease-standard)] motion-reduce:transition-none',
 	},
 	variants: {
 		// On, it sits against the far end: the track's 24px inside less its own width, as a translate's percentage is of

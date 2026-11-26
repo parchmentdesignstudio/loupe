@@ -67,20 +67,20 @@
 	/* Bold, as the brand's own lettering is, and drawn in a touch, as bold at this size sits loose */
 	--text-title: 1.25rem;
 	--text-title--line-height: 1.375rem;
-	--text-title--font-weight: 700;
+	--text-title--font-weight: var(--weight-bold);
 	--text-title--letter-spacing: -0.0125em;
 	/* Prose's headings, each a step up, on lines of 4px steps, so a heading of any length ends on Loupe's grid as
 	   prose's text does */
 	--text-reading-subheading: 1rem;
 	--text-reading-subheading--line-height: 1.5rem;
-	--text-reading-subheading--font-weight: 700;
+	--text-reading-subheading--font-weight: var(--weight-bold);
 	--text-reading-heading: 1.25rem;
 	--text-reading-heading--line-height: 1.75rem;
-	--text-reading-heading--font-weight: 700;
+	--text-reading-heading--font-weight: var(--weight-bold);
 	--text-reading-heading--letter-spacing: -0.0125em;
 	--text-reading-display: 1.5rem;
 	--text-reading-display--line-height: 2rem;
-	--text-reading-display--font-weight: 700;
+	--text-reading-display--font-weight: var(--weight-bold);
 	--text-reading-display--letter-spacing: -0.02em;
 }
 
@@ -116,17 +116,55 @@
 		inset 0 .5px 0 var(--shell-toplight), inset 0 1px 3px -1.5px var(--shell-glow),
 		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge),
 		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
-	/* A button is raised with a 1px edge, as it's pressed. It can set --fine-edge to draw a half-pixel one as well, or
+	/* Buttons. A brand sets --button-secondary-shadow and -shadow-lifted, or the same for primary, quiet and danger and
+	   their -bevel, to replace one, or none for a flat button.
+
+	   Secondary is raised with a 1px edge, as it's pressed. It can set --fine-edge to draw a half-pixel one as well, or
 	   clear --edge to have only that one */
-	--shadow-button:
+	--shadow-button: var(--button-secondary-shadow,
 		inset 0 .5px 0 var(--toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade),
 		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge),
-		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color);
+		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color));
 	/* A button on hover, lifted a little by a deeper shadow, short of floating */
-	--shadow-button-lifted:
+	--shadow-button-lifted: var(--button-secondary-shadow-lifted,
 		inset 0 .5px 0 var(--toplight), inset 0 4px 6px -4px var(--glow), inset 0 -4px 6px -4px var(--shade),
 		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--fine-edge, transparent), 0 0 0 1px var(--edge),
-		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color);
+		0 1px 1px -1px var(--shadow-raised-color), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color));
+	/* The filled buttons, each with its shadow, the deeper one it lifts to on hover, and the bevel drawn inside its fill.
+	   They're the same today, so a change to one is copied to the others where it suits them. Button works out their
+	   colours from the variant's fill: the edge is its --rim in the light, --contact the shadow's colour close under it
+	   in the light and --close the same in the dark, and the bevel's lines are lighter and darker shades of the fill.
+	   The edge is the only line, so there's no rim of half a pixel */
+	/* Primary, the page's lead */
+	--shadow-button-primary: var(--button-primary-shadow,
+		0 0 0 1px var(--edge),
+		0 1px 1.5px 1px var(--contact), 0 1px 1px -1px var(--close), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color));
+	--shadow-button-primary-lifted: var(--button-primary-shadow-lifted,
+		0 0 0 1px var(--edge),
+		0 1px 1px var(--contact), 0 1px 1px -1px var(--close), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color));
+	--shadow-button-primary-bevel: var(--button-primary-bevel,
+		inset 0 -1px 1px -.5px var(--highlight-bottom), inset 0 1px 1px -.5px var(--highlight), inset 0 1px 1px -.5px var(--bevel-line), inset 0 1px 3px -1.5px var(--bevel),
+		inset 0 -1px 3px -1.5px var(--rim-shade), inset 0 1px 0 var(--top-line), inset 0 -1px 0 var(--bottom-line), inset 0 -2px 4px -2px var(--rim-deep));
+	/* Quiet, a lead quieter than primary */
+	--shadow-button-quiet: var(--button-quiet-shadow,
+		0 0 0 1px var(--edge),
+		0 1px 1.5px 1px var(--contact), 0 1px 1px -1px var(--close), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color));
+	--shadow-button-quiet-lifted: var(--button-quiet-shadow-lifted,
+		0 0 0 1px var(--edge),
+		0 1px 1px var(--contact), 0 1px 1px -1px var(--close), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color));
+	--shadow-button-quiet-bevel: var(--button-quiet-bevel,
+		inset 0 -1px 1px -.5px var(--highlight-bottom), inset 0 1px 1px -.5px var(--highlight), inset 0 1px 1px -.5px var(--bevel-line), inset 0 1px 3px -1.5px var(--bevel),
+		inset 0 -1px 3px -1.5px var(--rim-shade), inset 0 1px 0 var(--top-line), inset 0 -1px 0 var(--bottom-line), inset 0 -2px 4px -2px var(--rim-deep));
+	/* Danger, for an action that destroys something */
+	--shadow-button-danger: var(--button-danger-shadow,
+		0 0 0 1px var(--edge),
+		0 1px 1.5px 1px var(--contact), 0 1px 1px -1px var(--close), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color));
+	--shadow-button-danger-lifted: var(--button-danger-shadow-lifted,
+		0 0 0 1px var(--edge),
+		0 1px 1px var(--contact), 0 1px 1px -1px var(--close), 0 1px 3px -1.5px var(--shadow-raised-color), 0 2px 4px -2px var(--shadow-raised-color), 0 3px 6px -3px var(--shadow-raised-color), 0 4px 8px -4px var(--shadow-raised-color));
+	--shadow-button-danger-bevel: var(--button-danger-bevel,
+		inset 0 -1px 1px -.5px var(--highlight-bottom), inset 0 1px 1px -.5px var(--highlight), inset 0 1px 1px -.5px var(--bevel-line), inset 0 1px 3px -1.5px var(--bevel),
+		inset 0 -1px 3px -1.5px var(--rim-shade), inset 0 1px 0 var(--top-line), inset 0 -1px 0 var(--bottom-line), inset 0 -2px 4px -2px var(--rim-deep));
 	/* Floating toolbars */
 	--shadow-floating:
 		inset 0 0 0 .5px var(--sheen), 0 0 0 .5px var(--edge),
@@ -167,6 +205,18 @@
 	--spacing: 0.25rem;
 }
 
+/* The brand's motion, as Tailwind's, so --duration-fast is duration-fast and --ease-standard is ease-standard. Their
+   values are the brand's, as the roles' are */
+@theme inline reference {
+	--transition-duration-fast: var(--duration-fast);
+	--transition-duration-base: var(--duration-base);
+	--transition-duration-slow: var(--duration-slow);
+	--ease-standard: var(--ease-standard);
+	--ease-move: var(--ease-move);
+	--ease-exit: var(--ease-exit);
+	--ease-spring: var(--ease-spring);
+}
+
 /* How overlays come and go. React Aria waits for an exit to finish before removing the overlay */
 @theme {
 	--animate-enter: enter 160ms cubic-bezier(0.2, 0.9, 0.3, 1);
@@ -178,8 +228,6 @@
 	--animate-toast-out: toast-out 150ms ease-in forwards;
 	/* An indeterminate progress bar's fill, two fifths of its track, sliding across it and out the far side */
 	--animate-indeterminate: indeterminate 1.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-	/* A small spring, overshooting by about a twentieth and settling over 350ms, for a switch's handle */
-	--ease-spring: linear(0, 0.046, 0.157, 0.299, 0.449, 0.591, 0.716, 0.819, 0.899, 0.959, 1, 1.026, 1.04, 1.046, 1.045, 1.041, 1.035, 1.028, 1.021, 1.015, 1);
 
 	@keyframes enter {
 		from {

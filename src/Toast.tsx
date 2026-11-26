@@ -111,7 +111,7 @@ const surface = tv({
 
 const action = tv({
 	extend: focusRing,
-	base: '-my-0.5 shrink-0 cursor-default rounded-md px-2 py-1 text-control font-medium text-paper outline-paper transition-[background-color] duration-150 ease-out motion-reduce:transition-none',
+	base: '-my-0.5 shrink-0 cursor-default rounded-md px-2 py-1 text-control font-(--weight-medium) text-paper outline-paper transition-[background-color] duration-fast ease-standard motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'bg-bleed/12',
@@ -124,7 +124,7 @@ const action = tv({
 
 const close = tv({
 	extend: focusRing,
-	base: '-my-0.5 flex shrink-0 cursor-default items-center justify-center rounded-md p-1 text-paper/70 outline-paper transition-[background-color,color] duration-150 ease-out motion-reduce:transition-none',
+	base: '-my-0.5 flex shrink-0 cursor-default items-center justify-center rounded-md p-1 text-paper/70 outline-paper transition-[background-color,color] duration-fast ease-standard motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'bg-bleed/12 text-paper',

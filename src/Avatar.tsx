@@ -41,7 +41,7 @@ export const avatar = tv({
 		// Over the initials, and see-through until it loads, so a slow or broken image never shows a broken icon or shifts anything
 		image: [
 			// Inside the edge, which keeps a pale photo's shape as it keeps a tint's
-			'absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-150 ease-out motion-reduce:transition-none',
+			'absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-fast ease-standard motion-reduce:transition-none',
 		],
 		// Its centre sits on the face's edge at 45°, a corner's radius times 1 - 1/√2 in from each side, so it hugs a
 		// circle and a square's rounded corner alike

@@ -16,7 +16,7 @@ describe('Link', () => {
 		);
 		const current = screen.getByRole('link', { name: 'Website' });
 		expect(current.hasAttribute('data-current')).toBe(true);
-		expect(current.className).toContain('font-medium');
+		expect(current.className).toContain('font-(--weight-medium)');
 		expect(current.className).toContain('no-underline');
 		expect(screen.getByRole('link', { name: 'Brand identity' }).className).not.toContain('no-underline');
 	});

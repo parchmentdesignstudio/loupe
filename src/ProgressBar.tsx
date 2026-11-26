@@ -17,7 +17,7 @@ export const progressBar = tv({
 		label: 'min-w-0 truncate',
 		value: 'text-control whitespace-nowrap text-muted tabular-nums',
 		track: 'relative h-(--progress-bar-height) overflow-hidden rounded-full bg-bleed/12 inset-shadow-well',
-		fill: 'h-full rounded-full bg-(--progress-bar-fill,var(--color-ink)) transition-[width] duration-150 ease-out motion-reduce:transition-none',
+		fill: 'h-full rounded-full bg-(--progress-bar-fill,var(--color-ink)) transition-[width] duration-fast ease-standard motion-reduce:transition-none',
 	},
 	variants: {
 		hasLabel: {
@@ -86,7 +86,7 @@ export const progressCircle = tv({
 		base: 'inline-flex shrink-0',
 		svg: 'size-full -rotate-90 fill-none stroke-current stroke-2',
 		track: 'opacity-16',
-		fill: 'transition-[stroke-dashoffset] duration-150 ease-out motion-reduce:transition-none',
+		fill: 'transition-[stroke-dashoffset] duration-fast ease-standard motion-reduce:transition-none',
 	},
 	variants: {
 		size: {

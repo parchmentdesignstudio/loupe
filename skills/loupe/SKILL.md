@@ -37,7 +37,7 @@ Where a raw value is meant, say why on the line above: `// loupe-lint-ignore: a 
 - Secondary text is `text-muted`. Errors are `text-danger`, always with words that say what's wrong.
 - Words: labels, headings and buttons are sentence case. A button says what happens, such as "Send invoice", never
   "Submit" or "OK".
-- Headings: the page's is `text-title`, a section's `text-body font-medium`, and a group's name inside a panel
+- Headings: the page's is `text-title`, a section's `text-body font-(--weight-medium)`, and a group's name inside a panel
   `text-label text-muted`. A line under a heading is `text-body text-muted`.
 
 ## Laying out a page

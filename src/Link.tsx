@@ -3,13 +3,13 @@ import { focusRing, tv } from './tv.js';
 
 export const link = tv({
 	extend: focusRing,
-	base: 'rounded-sm text-ink underline decoration-(color:--underline) underline-offset-(--link-underline-offset) [--underline:var(--link-underline,color-mix(in_oklab,var(--color-ink)_32%,transparent))] transition-[text-decoration-color] duration-150 ease-out motion-reduce:transition-none',
+	base: 'rounded-sm text-ink underline decoration-(color:--underline) underline-offset-(--link-underline-offset) [--underline:var(--link-underline,color-mix(in_oklab,var(--color-ink)_32%,transparent))] transition-[text-decoration-color] duration-fast ease-standard motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: '[--underline:var(--link-hover-underline,var(--color-ink))]',
 		},
 		isCurrent: {
-			true: 'font-medium no-underline',
+			true: 'font-(--weight-medium) no-underline',
 		},
 		isDisabled: {
 			true: 'text-muted no-underline',

@@ -32,7 +32,7 @@ export const gridList = tv({
 
 export const gridListItem = tv({
 	extend: focusRing,
-	base: 'group/item relative cursor-default rounded-(--grid-list-item-radius) text-ink transition-[background-color,border-color,box-shadow] duration-150 ease-out [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
+	base: 'group/item relative cursor-default rounded-(--grid-list-item-radius) text-ink transition-[background-color,border-color,box-shadow] duration-fast ease-standard [-webkit-tap-highlight-color:transparent] motion-reduce:transition-none',
 	variants: {
 		layout: {
 			// The ring sits inside a row, clear of the rows next to it

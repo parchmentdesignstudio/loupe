@@ -51,7 +51,8 @@ button's fill. Don't use either for text: marigold doesn't pass contrast on line
 | `text-label` | 12 / 16px | Labels, column headers, meta, badges |
 
 These four are all there is. Don't use Tailwind's `text-sm`, `text-lg` and so on, and don't add weights: `title` is
-bold and the rest are regular, with `font-medium` for a label that names a group. Fonts are `font-sans` (Elza Round),
+bold and the rest are regular, with `font-(--weight-medium)` for a label that names a group. The weights are the
+brand's, `--weight-regular`, `--weight-medium` and `--weight-bold`, so Tailwind's `font-medium` won't follow it. Fonts are `font-sans` (Elza Round),
 `font-mono` for code and references such as `REF-0256`, and `font-serif` only through Quote. Long writing goes in
 Prose, which sets its own type.
 
@@ -108,12 +109,25 @@ mode on their own.
 | --- | --- |
 | `shadow-raised` | Something that sits on the page and can be pressed, such as a card that's a control |
 | `shadow-panel` | A card or panel that holds things |
-| `shadow-button` | Set by Button. Don't add it to anything else |
+| `shadow-button` | Set by Button, as are each filled variant's, such as `shadow-button-primary`. Don't add them to anything else |
 | `shadow-floating` | A floating toolbar |
 | `shadow-overlay` | Set by Popover, Menu, Modal and Drawer |
 | `inset-shadow-well` | A well that controls sit in, such as a track |
 
 Borders are for separation, not depth: a line between rows is `border-b border-bleed/8`.
+
+## Motion
+
+The timings are the brand's, so use them rather than numbers, and turn them off with `motion-reduce:transition-none`.
+
+| Utility | For |
+| --- | --- |
+| `duration-fast` | Feedback, such as a hover or a press |
+| `duration-base` | Something moving or changing size, such as a tab's bar or a disclosure opening |
+| `duration-slow` | A large move, such as a drawer |
+| `ease-standard` | What settles into place. The default |
+| `ease-move` | What travels from one place to another |
+| `ease-exit` | What leaves |
 
 ## Setting a token
 

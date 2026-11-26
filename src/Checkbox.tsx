@@ -21,7 +21,7 @@ export const choice = tv({
 // rings itself
 export const checkboxBox = tv({
 	extend: focusRing,
-	base: 'my-[calc((1lh-1rem)/2)] flex size-4 shrink-0 items-center justify-center rounded-(--checkbox-radius) bg-(--checkbox-fill,var(--color-raised)) text-(color:--checkbox-mark,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--checkbox-shadow)] transition-[scale] duration-150 ease-out motion-reduce:transition-none [[data-show-focus]>&]:outline-2',
+	base: 'my-[calc((1lh-1rem)/2)] flex size-4 shrink-0 items-center justify-center rounded-(--checkbox-radius) bg-(--checkbox-fill,var(--color-raised)) text-(color:--checkbox-mark,var(--color-ink)) shadow-raised [--shadow-raised-color:var(--checkbox-shadow)] transition-[scale] duration-fast ease-standard motion-reduce:transition-none [[data-show-focus]>&]:outline-2',
 	variants: {
 		isPressed: {
 			true: 'scale-(--checkbox-press-scale)',
@@ -41,8 +41,8 @@ const mark = tv({
 	base: 'size-3 shrink-0 fill-none stroke-current stroke-2 motion-reduce:transition-none',
 	variants: {
 		isSelected: {
-			false: 'scale-75 opacity-0 blur-[3px] transition-[scale,opacity,filter] duration-100 ease-in',
-			true: 'transition-[scale,opacity,filter] duration-200 ease-out',
+			false: 'scale-75 opacity-0 blur-[3px] transition-[scale,opacity,filter] duration-100 ease-exit',
+			true: 'transition-[scale,opacity,filter] duration-200 ease-standard',
 		},
 	},
 });

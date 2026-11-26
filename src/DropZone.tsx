@@ -29,7 +29,7 @@ export const dropZone = tv({
 	base: 'relative',
 	variants: {
 		variant: {
-			dashed: 'flex flex-col items-center justify-center gap-3 rounded-(--drop-zone-radius) border border-dashed border-bleed/16 p-(--drop-zone-padding) text-center text-label text-(color:--drop-zone-text,var(--color-muted)) transition-colors duration-150 ease-out motion-reduce:transition-none',
+			dashed: 'flex flex-col items-center justify-center gap-3 rounded-(--drop-zone-radius) border border-dashed border-bleed/16 p-(--drop-zone-padding) text-center text-label text-(color:--drop-zone-text,var(--color-muted)) transition-colors duration-fast ease-standard motion-reduce:transition-none',
 			quiet: '',
 		},
 		isDropTarget: {

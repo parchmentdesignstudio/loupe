@@ -34,7 +34,7 @@ const trigger = tv({
 });
 
 const chevron = tv({
-	base: 'size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted transition-transform duration-250 ease-in-out motion-reduce:transition-none',
+	base: 'size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted transition-transform duration-base ease-move motion-reduce:transition-none',
 	variants: {
 		isHovered: {
 			true: 'text-ink',
@@ -49,7 +49,7 @@ const chevron = tv({
 // inside, so it closes to nothing
 const panel = tv({
 	slots: {
-		base: 'h-(--disclosure-panel-height) overflow-clip transition-[height] duration-250 ease-in-out motion-reduce:transition-none',
+		base: 'h-(--disclosure-panel-height) overflow-clip transition-[height] duration-base ease-move motion-reduce:transition-none',
 		content: '',
 	},
 	variants: {

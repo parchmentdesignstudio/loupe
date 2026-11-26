@@ -7,7 +7,7 @@ const twMergeConfig = {
 	extend: {
 		theme: {
 			text: ['body', 'control', 'label', 'title'],
-			shadow: ['raised', 'button', 'button-lifted', 'floating', 'overlay', 'invalid'],
+			shadow: ['raised', 'button', 'button-lifted', ...['primary', 'quiet', 'danger'].flatMap((variant) => [`button-${variant}`, `button-${variant}-lifted`, `button-${variant}-bevel`]), 'floating', 'overlay', 'invalid'],
 		},
 	},
 } satisfies TWMergeConfig;

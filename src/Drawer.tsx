@@ -67,7 +67,7 @@ export function resizePushDrawer(within: HTMLElement, change: () => void) {
 	panel.animate({ width: [`${width}px`, `${panel.getBoundingClientRect().width}px`] }, { duration, easing });
 }
 
-const ease = 'duration-350 ease-[cubic-bezier(.32,.72,0,1)] motion-reduce:transition-none';
+const ease = 'duration-slow ease-[cubic-bezier(.32,.72,0,1)] motion-reduce:transition-none';
 const pushDrawer = tv({
 	slots: {
 		aside: 'relative h-full shrink-0',

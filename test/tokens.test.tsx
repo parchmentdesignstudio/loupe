@@ -35,6 +35,12 @@ describe('component tokens', () => {
 
 	it('read each colour with its listed value as the fallback', () => {
 		for (const [name, value] of listed) {
+			// A shadow's token is read first in its recipe, as --shadow-button-primary: var(--button-primary-shadow, …)
+			const shadow = /^var\(--(shadow-[\w-]+)\)$/.exec(value)?.[1];
+			if (shadow) {
+				expect(others['../styles/theme.css'], `--${shadow} reads --${name}`).toMatch(new RegExp(`--${shadow}: var\\(--${name},`));
+				continue;
+			}
 			const reads = sources.flatMap((text) => readsOf(text, name));
 			expect(reads.length, `--${name} is read`).toBeGreaterThan(0);
 			for (const fallback of reads) expect(fallback === null ? null : same(fallback), `--${name}'s fallback`).toBe(same(value));

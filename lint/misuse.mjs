@@ -32,7 +32,7 @@ const classRules = [
 	{ rule: 'raw-shadow', pattern: /(?<![\w-])(?:inset-)?shadow-(?:\[|(?:2xs|xs|sm|md|lg|xl|2xl)\b)/g, message: 'A shadow of its own. Use a level: shadow-raised, shadow-panel, shadow-floating or shadow-overlay' },
 	{ rule: 'raw-radius', pattern: new RegExp(String.raw`(?<![\w-])rounded${sides}-(?:\[|(?:xs|2xl|4xl)\b)`, 'g'), message: 'A corner Loupe has none of. Use rounded-sm, md, lg, xl, 3xl or full' },
 	{ rule: 'raw-text', pattern: /(?<![\w-])text-(?:\[(?:length:)?[\d.]|(?:xs|sm|base|lg|[2-9]?xl)\b)/g, message: 'A size outside Loupe. Use text-title, text-body, text-control or text-label' },
-	{ rule: 'raw-weight', pattern: /(?<![\w-])font-(?:thin|extralight|light|semibold|bold|extrabold|black)\b/g, message: 'Loupe is regular and medium, with bold only in text-title. Use font-medium' },
+	{ rule: 'raw-weight', pattern: /(?<![\w-])font-(?:thin|extralight|light|semibold|bold|extrabold|black)\b/g, message: "Loupe is regular and medium, with bold only in text-title. Use the brand's, font-(--weight-medium)" },
 	{ rule: 'raw-space', pattern: new RegExp(String.raw`(?<![\w-])(?:${space})-\[-?[\d.]`, 'g'), message: "A space off Loupe's 4px steps. Use one, such as gap-2 or p-4" },
 ];
 
