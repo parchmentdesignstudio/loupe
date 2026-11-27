@@ -83,7 +83,13 @@ export const styles = `
 }
 .panel > * { padding: 8px; }
 .panel > * + * { border-top: 1px solid var(--line); }
-header { display: flex; align-items: center; gap: 2px; cursor: grab; }
+header { display: flex; align-items: center; gap: 2px; cursor: grab; touch-action: none; }
+.handle, .badge { touch-action: none; }
+@media (pointer: coarse) {
+  .handle { width: 18px; height: 18px; border-radius: 5px; }
+  button kbd { display: none; }
+  .panel { width: min(296px, calc(100vw - 32px)); }
+}
 .crumbs { flex: 1; min-width: 0; display: flex; align-items: center; overflow: hidden; padding-left: 4px; color: var(--muted); white-space: nowrap; }
 .crumbs button { padding: 4px 2px; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: inherit; }
 .crumbs button:last-child { color: var(--ink); font-weight: 500; flex-shrink: 0; max-width: 100%; }

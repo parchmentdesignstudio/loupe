@@ -370,6 +370,7 @@ Compose works on a page that’s already running in a dev server. It groups elem
 | Open or close it | ⌥G, the Compose button, or its button in Astro’s toolbar |
 | Select | Click. A click stays at the level of what’s selected, and clicking inside what’s selected goes one level in. ⇧↩ selects the parent, ↩ the first child and ⇥ the next sibling, and the panel’s header lists the way down to it |
 | Select several | ⌘-click or ⇧-click |
+| On a phone | Two taps select, as one finger scrolls the page. Select several, in the panel, makes each double tap add to what’s selected. Drag what’s selected, or its handles, as with a mouse |
 | Group, ungroup | ⌘G wraps what’s selected in a new `div`. ⇧⌘G takes a wrapper away and leaves what it held |
 | Lay out | Block, Grid or Flex in the panel. A new grid has 12 columns, with every child across all of them, so nothing moves until it’s dragged. A grid inside a grid can take its columns or rows as a subgrid |
 | Move on a grid | Drag, or the arrow keys. The handles, or ⇧ with an arrow, change what it spans. Drag past the last row to start a new one |

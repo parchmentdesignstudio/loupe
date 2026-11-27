@@ -41,7 +41,7 @@ function icon(name) {
 export function mount({ launcher = true, onToggle } = {}) {
   if (window.parchmentCompose) return window.parchmentCompose
 
-  const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null }
+  const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false }
   const record = { styles: new Map(), groups: new Set(), removed: [], moved: new Map() }
   const history = { done: [], undone: [], batch: null }
 
@@ -726,13 +726,28 @@ export function mount({ launcher = true, onToggle } = {}) {
         h(
           'div',
           { class: 'body' },
-          !primary && h('p', { class: 'hint' }, `Click an element to select it, and ${command.trim()}-click to add more.`),
+          !primary && h('p', { class: 'hint' }, state.touch ? 'Double-tap an element to select it.' : `Click an element to select it, and ${command.trim()}-click to add more.`),
           primary &&
             h(
               'div',
               { class: 'pair' },
               h('button', { class: 'raised', onclick: group }, 'Group ', h('kbd', {}, `${command}G`)),
               h('button', { class: 'raised', disabled: !state.selected.some((element) => element.children.length), onclick: ungroup }, 'Ungroup ', h('kbd', {}, `⇧${command}G`)),
+            ),
+          // No ⌘ on a phone, so double taps add to what's selected while this is on
+          primary &&
+            state.touch &&
+            h(
+              'button',
+              {
+                class: 'toggle raised',
+                'aria-pressed': `${state.several}`,
+                onclick: () => {
+                  state.several = !state.several
+                  render()
+                },
+              },
+              'Select several',
             ),
           state.selected.length === 1 && layoutControls(primary),
         ),
@@ -793,6 +808,7 @@ export function mount({ launcher = true, onToggle } = {}) {
 
   function onPointerDown(event) {
     if (!state.on || ours(event) || event.button !== 0) return
+    if (event.pointerType === 'touch') return onTouchDown(event)
     swallow(event)
     root.activeElement?.blur()
     const target = pick(event.target)
@@ -806,6 +822,30 @@ export function mount({ launcher = true, onToggle } = {}) {
     state.press = { element: held ?? state.selected[0], inside: held && held !== target ? childOf(held, target) : null, x: event.clientX, y: event.clientY }
   }
 
+  // A finger scrolls the page, so one tap selects nothing: two do. A touch that starts on what's selected and
+  // moves is a drag, which the touchmove listener below keeps the page from scrolling under
+  function onTouchDown(event) {
+    if (!state.touch) {
+      state.touch = true
+      render()
+    }
+    const target = pick(event.target)
+    if (!target) return
+    const { tap } = state
+    const again = tap && event.timeStamp - tap.time < 350 && Math.hypot(event.clientX - tap.x, event.clientY - tap.y) < 30
+    state.tap = again ? null : { time: event.timeStamp, x: event.clientX, y: event.clientY }
+    const held = state.selected.find((element) => element.contains(target))
+    if (!again) {
+      if (held) state.press = { element: held, inside: null, touch: true, x: event.clientX, y: event.clientY }
+      return
+    }
+    state.zoom = true
+    root.activeElement?.blur()
+    state.press = null
+    if (state.several) select(held ? state.selected.filter((other) => other !== held) : [...state.selected, resolve(target)])
+    else select([resolve(target)])
+  }
+
   function onPointerMove(event) {
     if (!state.on) return
     if (state.drag) return state.drag.move(event)
@@ -817,7 +857,7 @@ export function mount({ launcher = true, onToggle } = {}) {
       state.press = state.drag ? state.press : null
       return state.drag?.move(event)
     }
-    const target = ours(event) ? null : pick(document.elementFromPoint(event.clientX, event.clientY))
+    const target = ours(event) || event.pointerType === 'touch' ? null : pick(document.elementFromPoint(event.clientX, event.clientY))
     state.hover = target && resolve(target)
   }
 
@@ -827,7 +867,7 @@ export function mount({ launcher = true, onToggle } = {}) {
       state.drag = null
       render()
     } else if (state.press?.inside) select([state.press.inside])
-    else if (state.press && state.selected.length > 1) select([state.press.element])
+    else if (state.press && !state.press.touch && state.selected.length > 1) select([state.press.element])
     state.press = null
   }
 
@@ -881,6 +921,16 @@ export function mount({ launcher = true, onToggle } = {}) {
   addEventListener('pointermove', onPointerMove, true)
   addEventListener('pointerup', onPointerUp, true)
   addEventListener('pointercancel', onPointerUp, true)
+  addEventListener('touchmove', (event) => state.on && (state.press || state.drag) && event.cancelable && event.preventDefault(), { capture: true, passive: false })
+  // The second tap of two would otherwise zoom the page in
+  addEventListener(
+    'touchend',
+    (event) => {
+      if (state.zoom && event.cancelable) event.preventDefault()
+      state.zoom = false
+    },
+    { capture: true, passive: false },
+  )
   addEventListener('keydown', onKeyDown, true)
   for (const type of ['click', 'dblclick', 'auxclick', 'mousedown', 'mouseup', 'dragstart', 'submit']) addEventListener(type, swallow, true)
   document.documentElement.append(host)
