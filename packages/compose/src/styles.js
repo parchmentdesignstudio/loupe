@@ -17,6 +17,7 @@ export const styles = `
   --accent: oklch(0.834 0.1525 85.6);
   --select: oklch(0.55 0.2 255);
   --grid: oklch(0.62 0.22 350);
+  --space: oklch(0.6 0.14 165);
   font: 13px/20px system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
   color: var(--ink);
 }
@@ -54,6 +55,22 @@ export const styles = `
   background: white;
 }
 .drop { background: var(--select); border-radius: 1px; }
+.grip {
+  pointer-events: auto;
+  translate: -50% -50%;
+  width: 12px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 6px;
+  background: var(--space) content-box;
+  cursor: ew-resize;
+  touch-action: none;
+  opacity: 0.75;
+}
+.grip.wide { width: 24px; height: 12px; cursor: ns-resize; }
+.grip:hover { opacity: 1; }
+.band { background: color-mix(in oklab, var(--space) 22%, transparent); }
+.note { padding: 0 6px; border-radius: 4px; background: var(--space); color: white; font: 500 11px/18px ui-monospace, Menlo, monospace; }
 .tag {
   translate: 0 -100%;
   padding: 0 5px;

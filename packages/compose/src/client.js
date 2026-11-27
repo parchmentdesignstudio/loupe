@@ -42,7 +42,7 @@ function icon(name) {
 export function mount({ launcher = true, onToggle } = {}) {
   if (window.parchmentCompose) return window.parchmentCompose
 
-  const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false }
+  const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, note: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false }
   const record = { styles: new Map(), groups: new Set(), removed: [], moved: new Map() }
   const history = { done: [], undone: [], batch: null }
 
@@ -407,6 +407,48 @@ export function mount({ launcher = true, onToggle } = {}) {
     change([element], () => assign(element, property, text))
   }
 
+  // Dragging a grip changes a gap or one side's padding by steps of the spacing scale. With Alt held it takes the
+  // other with it: the gap the other way, or the padding on the opposite side
+  function dragSpacing(element, { space, side, axis }, press) {
+    const root = getComputedStyle(document.documentElement)
+    const token = root.getPropertyValue('--spacing').trim()
+    const step = token.endsWith('px') ? px(token) : (px(token) || 0.25) * px(root.fontSize)
+    const opposite = { left: 'right', right: 'left', top: 'bottom', bottom: 'top' }
+    const property = space === 'padding' ? `padding-${side}` : axis === 'columns' ? 'column-gap' : 'row-gap'
+    const other = space === 'padding' ? `padding-${opposite[side]}` : axis === 'columns' ? 'row-gap' : 'column-gap'
+    const along = space === 'padding' ? side === 'left' || side === 'right' : axis === 'columns'
+    const start = px(getComputedStyle(element).getPropertyValue(property))
+    const before = snapshot([element])
+    const drag = {
+      spacing: true,
+      sides: [],
+      move(event) {
+        const moved = (along ? event.clientX - press.x : event.clientY - press.y) * (side === 'right' || side === 'bottom' ? -1 : 1)
+        const steps = Math.max(0, Math.round((start + moved) / step))
+        const value = gapValue(`${steps}`, Boolean(token))
+        restore(before)
+        write(element, property, value)
+        if (event.altKey) write(element, other, value)
+        if (space === 'gap') gatherGap(element)
+        drag.sides = space === 'padding' ? (event.altKey ? [side, opposite[side]] : [side]) : []
+        state.note = { left: event.clientX + 14, top: event.clientY - 14, text: `${steps}` }
+      },
+      end() {
+        state.note = null
+        commit(before)
+      },
+    }
+    return drag
+  }
+
+  // A gap is kept as the one property, rows then columns, so the panel's field and the list of changes read it whole
+  function gatherGap(element) {
+    const style = getComputedStyle(element)
+    const [rows, columns] = ['row-gap', 'column-gap'].map((property) => composed(element, property) || (style.getPropertyValue(property) === 'normal' ? '0px' : style.getPropertyValue(property)))
+    for (const property of ['row-gap', 'column-gap']) write(element, property, '')
+    write(element, 'gap', rows === columns ? rows : `${rows} ${columns}`)
+  }
+
   function nameLine(element, axis, line, value) {
     const property = axis === 'columns' ? COLUMNS : ROWS
     const tracks = template(element, property)
@@ -551,6 +593,46 @@ export function mount({ launcher = true, onToggle } = {}) {
       for (let line = 1; line <= focus.columns.tracks.length + 1 && focus.columns.tracks.length; line++) badge('columns', line, linePosition(focus.columns.tracks, line), above)
       for (let line = 1; line <= focus.rows.tracks.length + 1 && focus.rows.tracks.length; line++) badge('rows', line, beside, linePosition(focus.rows.tracks, line))
     }
+    // Grips for the selected container's padding, a side each, and for the gaps between its tracks or children
+    if (primary?.children.length && (!state.drag || state.drag.spacing)) {
+      const rect = primary.getBoundingClientRect()
+      const style = getComputedStyle(primary)
+      const edge = { left: rect.left + px(style.borderLeftWidth), right: rect.right - px(style.borderRightWidth), top: rect.top + px(style.borderTopWidth), bottom: rect.bottom - px(style.borderBottomWidth) }
+      const padding = { left: px(style.paddingLeft), right: px(style.paddingRight), top: px(style.paddingTop), bottom: px(style.paddingBottom) }
+      // In the middle of as much of it as is on screen, so a tall container's grips aren't a scroll away
+      const middle = { x: (Math.max(edge.left, 0) + Math.min(edge.right, innerWidth)) / 2, y: (Math.max(edge.top, 0) + Math.min(edge.bottom, innerHeight)) / 2 }
+      const grip = (left, top, upright, data) => parts.push({ kind: upright ? 'grip' : 'grip wide', left, top, ...data })
+      const inset = (size) => Math.max(size / 2, 7)
+      for (const side of state.drag?.sides ?? []) {
+        const upright = side === 'left' || side === 'right'
+        box('band', {
+          left: side === 'right' ? edge.right - padding.right : edge.left,
+          top: side === 'bottom' ? edge.bottom - padding.bottom : edge.top,
+          width: upright ? padding[side] : edge.right - edge.left,
+          height: upright ? edge.bottom - edge.top : padding[side],
+        })
+      }
+      if (rect.width > 64 && rect.height > 64) {
+        grip(edge.left + inset(padding.left), middle.y, true, { space: 'padding', side: 'left' })
+        grip(edge.right - inset(padding.right), middle.y, true, { space: 'padding', side: 'right' })
+        grip(middle.x, edge.top + inset(padding.top), false, { space: 'padding', side: 'top' })
+        grip(middle.x, edge.bottom - inset(padding.bottom), false, { space: 'padding', side: 'bottom' })
+      }
+      if (own) {
+        const between = (tracks, index) => (tracks[index - 1].end + tracks[index].start) / 2
+        for (let index = 1; index < own.columns.tracks.length; index++) grip(between(own.columns.tracks, index), middle.y, true, { space: 'gap', axis: 'columns' })
+        for (let index = 1; index < own.rows.tracks.length; index++) grip(middle.x, between(own.rows.tracks, index), false, { space: 'gap', axis: 'rows' })
+      } else if (style.display.endsWith('flex')) {
+        const across = style.flexDirection.startsWith('row')
+        const rects = [...primary.children].filter((child) => child.getClientRects().length).map((child) => child.getBoundingClientRect())
+        for (let index = 1; index < rects.length; index++) {
+          const [first, second] = [rects[index - 1], rects[index]]
+          if (across) grip((first.right + second.left) / 2, middle.y, true, { space: 'gap', axis: 'columns' })
+          else grip(middle.x, (first.bottom + second.top) / 2, false, { space: 'gap', axis: 'rows' })
+        }
+      }
+    }
+    if (state.note) parts.push({ kind: 'note', ...state.note })
     if (state.indicator) box('drop', state.indicator)
 
     const text = JSON.stringify(parts)
@@ -571,6 +653,11 @@ export function mount({ launcher = true, onToggle } = {}) {
   layer.addEventListener('pointerdown', (event) => {
     const { x, y } = event.target.dataset
     const element = state.selected.at(-1)
+    if (event.target.matches('.grip') && element) {
+      event.preventDefault()
+      state.drag = dragSpacing(element, event.target.dataset, { x: event.clientX, y: event.clientY })
+      return
+    }
     if (!event.target.matches('.handle') || !element) return
     event.preventDefault()
     state.drag = beginDrag({ element, x: event.clientX, y: event.clientY }, { x: Number(x), y: Number(y) })

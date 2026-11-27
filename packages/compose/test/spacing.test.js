@@ -30,5 +30,24 @@ describe('gapSteps and gapClasses', () => {
     expect(gapClasses('1rem 2rem')).toBe('gap-y-4 gap-x-8')
     expect(gapClasses('1rem 1rem')).toBe('gap-4')
     expect(gapClasses('24px')).toBeNull()
+    expect(gapClasses('0px 1.5rem')).toBe('gap-x-6')
+  })
+})
+
+describe('padding', () => {
+  it('names a side’s class, and an axis’s', async () => {
+    const { spacingClasses } = await import('../src/spacing.js')
+    expect(spacingClasses('padding-left', '1rem')).toBe('pl-4')
+    expect(spacingClasses('padding-inline', 'calc(var(--spacing) * 6)')).toBe('px-6')
+    expect(spacingClasses('padding', '13px')).toBeNull()
+    expect(spacingClasses('gap', '1rem 2rem')).toBe('gap-y-4 gap-x-8')
+  })
+
+  it('gathers sides that match', async () => {
+    const { gatherPadding } = await import('../src/spacing.js')
+    const sides = (top, right, bottom, left) => new Map([['padding-top', top], ['padding-right', right], ['padding-bottom', bottom], ['padding-left', left]])
+    expect([...gatherPadding(sides('1rem', '1rem', '1rem', '1rem'))]).toEqual([['padding', '1rem']])
+    expect([...gatherPadding(sides('1rem', '2rem', '1rem', '2rem'))]).toEqual([['padding-inline', '2rem'], ['padding-block', '1rem']])
+    expect([...gatherPadding(new Map([['display', 'grid'], ['padding-left', '1rem']]))]).toEqual([['display', 'grid'], ['padding-left', '1rem']])
   })
 })
