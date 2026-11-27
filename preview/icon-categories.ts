@@ -64,8 +64,8 @@ export const iconCategories: [string, IconName[]][] = [
 	['Actions and status', ['plus', 'minus', 'xmark', 'checkmark', 'checkmark-square', 'checkmark-underline', 'info-square', 'star', 'star-square', 'bookmark', 'magnifyingglass', 'link', 'paperclip', 'square-and-arrow-up', 'play', 'bolt', 'progress-indicator', 'accessibility']],
 	['Time', ['calendar', 'calendar-blank', 'alarm', 'timer', 'clock-arrow-circlepath']],
 	['Messages', ['message', 'ellipsis-message', 'bubble-left', 'envelope', 'envelope-open', 'paperplane']],
-	['Documents', ['note', 'note-text', 'note-text-badge-plus', 'note-text-badge-pencil', 'notepad', 'clipboard', 'clipboard-badge-checkmark', 'newspaper', 'blog', 'book-closed', 'books-vertical', 'folder', 'archivebox', 'list-bullet-rectangle-portrait', 'chart-bar']],
-	['Text', ['font', 'font-outline', 't-square', 'character-cursor-ibeam', 'text-alignleft', 'text-aligncenter', 'text-alignright', 'text-justify', 'text-justify-left', 'text-justify-left-compact']],
+	['Documents', ['note', 'note-text', 'note-text-badge-plus', 'note-text-badge-pencil', 'notepad', 'clipboard', 'clipboard-badge-checkmark', 'newspaper', 'book-closed', 'books-vertical', 'folder', 'archivebox', 'list-bullet-rectangle-portrait', 'chart-bar']],
+	['Text', ['font', 't-square', 'character-cursor-ibeam', 'text-alignleft', 'text-aligncenter', 'text-alignright', 'text-justify', 'text-justify-left', 'text-justify-left-compact']],
 	[
 		'Design',
 		[
@@ -87,8 +87,6 @@ export const iconCategories: [string, IconName[]][] = [
 			'component',
 			'batteryblock',
 			'puzzlepiece',
-			'design',
-			'category',
 		],
 	],
 	[
