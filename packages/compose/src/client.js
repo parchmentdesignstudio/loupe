@@ -30,8 +30,8 @@ function h(tag, properties = {}, ...children) {
 export function mount({ launcher = true, onToggle } = {}) {
   if (window.parchmentCompose) return window.parchmentCompose
 
-  const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, note: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false }
-  const record = { styles: new Map(), groups: new Set(), removed: [], moved: new Map() }
+  const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, note: null, landing: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false }
+  const record = { styles: new Map(), groups: new Set(), copies: new Map(), removed: [], deleted: [], moved: new Map() }
   const history = { done: [], undone: [], batch: null }
 
   const host = h('div', { 'data-compose': true })
@@ -263,7 +263,7 @@ export function mount({ launcher = true, onToggle } = {}) {
     render()
   }
 
-  const label = (element) => (record.groups.has(element) ? 'group' : element.localName + (element.classList[0] ? `.${element.classList[0]}` : ''))
+  const label = (element) => (record.groups.has(element) ? 'group' : record.copies.has(element) ? `${element.localName} copy` : element.localName + (element.classList[0] ? `.${element.classList[0]}` : ''))
 
   // ——— Structure: grouping, ungrouping and moving
 
@@ -320,7 +320,7 @@ export function mount({ launcher = true, onToggle } = {}) {
         const inside = [...wrapper.childNodes]
         const children = [...wrapper.children]
         const added = record.groups.has(wrapper)
-        const removal = { element: wrapper, parent, described: describe(wrapper, (element) => record.groups.has(element)) }
+        const removal = { element: wrapper, parent, described: describe(wrapper, isNew) }
         // In a grid each one takes the group's columns, or keeps its own lines where the group passed the grid's
         // on as a subgrid. Outside one, a place on the group's grid means nothing
         const outer = geometry(parent)
@@ -368,6 +368,62 @@ export function mount({ launcher = true, onToggle } = {}) {
     const apply = () => parent.insertBefore(element, before)
     apply()
     push({ undo: () => parent.insertBefore(element, was), redo: apply })
+  }
+
+  const isNew = (element) => record.groups.has(element) || record.copies.has(element)
+
+  function duplicate() {
+    const sources = state.selected.filter((element) => element !== document.body && element.parentElement)
+    if (!sources.length) return say('Select something to duplicate')
+    const copies = []
+    batch(() => {
+      for (const source of sources) {
+        const copy = source.cloneNode(true)
+        const apply = () => {
+          source.after(copy)
+          record.copies.set(copy, describe(source, isNew))
+        }
+        apply()
+        push({
+          undo: () => {
+            copy.remove()
+            record.copies.delete(copy)
+          },
+          redo: apply,
+        })
+        copies.push(copy)
+      }
+    })
+    select(copies)
+  }
+
+  function remove() {
+    const elements = state.selected.filter((element) => element !== document.body && element.parentElement)
+    if (!elements.length) return say('Select something to delete')
+    if (elements.some((element) => record.groups.has(element))) return say('Ungroup it first, or what it holds goes too')
+    batch(() => {
+      for (const element of elements) {
+        const parent = element.parentElement
+        const next = element.nextSibling
+        const copied = record.copies.get(element)
+        const deletion = { element, parent, described: describe(element, isNew) }
+        const apply = () => {
+          element.remove()
+          if (copied) record.copies.delete(element)
+          else record.deleted.push(deletion)
+        }
+        apply()
+        push({
+          undo: () => {
+            parent.insertBefore(element, next)
+            if (copied) record.copies.set(element, copied)
+            else record.deleted.splice(record.deleted.indexOf(deletion), 1)
+          },
+          redo: apply,
+        })
+      }
+    })
+    select([])
   }
 
   // ——— Layout: what the panel changes
@@ -551,6 +607,40 @@ export function mount({ launcher = true, onToggle } = {}) {
 
   // ——— Dragging
 
+  // What's dragged follows the pointer, though the page has it wherever it would land. `hold` shifts it there
+  // without changing the layout, and `settle` lets it slide into the place it ends up
+  function lift(element) {
+    const kept = ['translate', 'transition', 'opacity', 'z-index', 'position'].map((property) => [property, element.style.getPropertyValue(property)])
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+    const clear = () => {
+      for (const [property, value] of kept) value ? element.style.setProperty(property, value) : element.style.removeProperty(property)
+      if (!element.getAttribute('style')) element.removeAttribute('style')
+    }
+    return {
+      // Where it sits in the layout, without the shift
+      landed() {
+        element.style.translate = 'none'
+        return element.getBoundingClientRect()
+      },
+      hold(left, top) {
+        const rect = this.landed()
+        Object.assign(element.style, { translate: `${left - rect.left}px ${top - rect.top}px`, opacity: '0.85', transition: 'none' })
+        if (getComputedStyle(element).position === 'static') element.style.position = 'relative'
+        element.style.zIndex = '2147483000'
+        return rect
+      },
+      settle() {
+        const from = element.getBoundingClientRect()
+        const to = this.landed()
+        if (still || (from.left === to.left && from.top === to.top)) return clear()
+        element.style.translate = `${from.left - to.left}px ${from.top - to.top}px`
+        element.getBoundingClientRect()
+        Object.assign(element.style, { transition: 'translate 0.16s ease-out', translate: '0px 0px', opacity: '' })
+        setTimeout(clear, 180)
+      },
+    }
+  }
+
   function dragOnGrid(element, press, handle) {
     const grid = geometry(element.parentElement)
     const at = linesIn(element, grid)
@@ -563,6 +653,8 @@ export function mount({ launcher = true, onToggle } = {}) {
     const grab = { column: nearestTrack(columns, press.x) - at.columns.start, row: nearestTrack(rows, press.y) - at.rows.start }
     // Everything is read once, as the press began: rows change height as the item moves, and chasing them would
     // make it jump about under the pointer
+    const origin = element.getBoundingClientRect()
+    const lifted = handle ? null : lift(element)
     const others = siblings
       .filter((child) => child !== element && child.getClientRects().length && !/^(absolute|fixed)$/.test(getComputedStyle(child).position))
       .map((child) => ({ element: child, rect: child.getBoundingClientRect(), lines: linesIn(child, grid) }))
@@ -594,28 +686,70 @@ export function mount({ launcher = true, onToggle } = {}) {
           if (handle.y < 0) lines.rows.start = Math.min(nearestLine(rows, clientY), at.rows.end - 1)
           if (handle.y > 0) lines.rows.end = Math.max(nearestLine(rows, clientY, 24), at.rows.start + 1)
         }
-        if (!pinned && JSON.stringify(lines) === JSON.stringify(at)) return
-        pinned = true
-        restore(before)
-        pin(grid)
-        for (const [mate, shared] of shares) place(mate, grid, shared)
-        place(element, grid, lines)
+        if (pinned || JSON.stringify(lines) !== JSON.stringify(at)) {
+          pinned = true
+          restore(before)
+          pin(grid)
+          for (const [mate, shared] of shares) place(mate, grid, shared)
+          place(element, grid, lines)
+        }
+        if (!lifted) return
+        const rect = lifted.hold(origin.left + clientX - press.x, origin.top + clientY - press.y)
+        state.landing = { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
       },
       end() {
+        state.landing = null
+        lifted?.settle()
         refit([element])
         commit(before)
       },
     }
   }
 
-  function dragInFlow(element) {
+  // Dragging a column line gives one of the columns beside it what it takes from the other, in quarters of a
+  // fraction, so the rest of the grid keeps its widths
+  function dragLine(grid, line, press) {
+    const element = grid.element
+    const tracks = template(element, COLUMNS)
+    const fraction = (size) => /^(?:minmax\(0(?:px)?,\s*)?(\d*\.?\d+)fr\)?$/.exec(size ?? '')?.[1]
+    const [first, second] = [fraction(tracks.sizes[line - 2]), fraction(tracks.sizes[line - 1])].map(Number)
+    if (!first || !second) return null
+    const wrapped = tracks.sizes[line - 2].startsWith('minmax')
+    const widths = [grid.columns.tracks[line - 2], grid.columns.tracks[line - 1]].map((track) => track.end - track.start)
+    const before = snapshot([element])
+    let moved = false
+    return {
+      line: true,
+      move({ clientX }) {
+        if (!moved && Math.abs(clientX - press.x) < 4) return
+        moved = true
+        const total = first + second
+        const share = clamp((widths[0] + clientX - press.x) / (widths[0] + widths[1]), 0, 1)
+        const one = clamp(Math.round(share * total * 4) / 4, 0.25, total - 0.25)
+        const sizes = [...tracks.sizes]
+        for (const [index, value] of [[line - 2, one], [line - 1, total - one]]) sizes[index] = wrapped ? `minmax(0, ${value}fr)` : `${value}fr`
+        restore(before)
+        write(element, COLUMNS, formatTemplate({ sizes, names: tracks.names }))
+        state.note = { left: clientX + 14, top: press.y + 18, text: `${one}fr ${total - one}fr` }
+      },
+      end() {
+        state.note = null
+        commit(before)
+      },
+    }
+  }
+
+  function dragInFlow(element, press) {
     const parent = element.parentElement
+    const origin = element.getBoundingClientRect()
+    const lifted = lift(element)
     const style = getComputedStyle(parent)
     const across = style.display.endsWith('flex') && style.flexDirection.startsWith('row')
     let before
     let beside
     return {
       move({ clientX, clientY, altKey }) {
+        lifted.hold(origin.left + clientX - press.x, origin.top + clientY - press.y)
         const siblings = [...parent.children].filter((child) => child !== element && child !== host && child.getClientRects().length)
         // In a stack, the left or right third of another element puts the two side by side, half each
         const under = !across && !altKey && siblings.find((sibling) => {
@@ -640,8 +774,12 @@ export function mount({ launcher = true, onToggle } = {}) {
       },
       end() {
         state.indicator = null
+        const from = element.getBoundingClientRect()
         if (beside) pair(beside.sibling, element, beside.after)
         else if (before !== undefined) move(element, before)
+        // From where it was let go to where the page now has it
+        lifted.hold(from.left, from.top)
+        lifted.settle()
       },
     }
   }
@@ -681,7 +819,7 @@ export function mount({ launcher = true, onToggle } = {}) {
   function beginDrag(press, handle) {
     const element = press.element
     if (element === document.body || !element.parentElement) return null
-    return geometry(element.parentElement) ? dragOnGrid(element, press, handle) : handle ? null : dragInFlow(element)
+    return geometry(element.parentElement) ? dragOnGrid(element, press, handle) : handle ? null : dragInFlow(element, press)
   }
 
   // ——— The overlay: outlines, the grid, its line badges and the handles, redrawn only when one of them moves
@@ -719,12 +857,13 @@ export function mount({ launcher = true, onToggle } = {}) {
         }
       }
     }
-    if (focus && !state.drag) {
+    if (focus && (!state.drag || state.drag.line)) {
       const badge = (axis, line, left, top) => parts.push({ kind: 'badge', left, top, axis, line, text: focus[axis].names[line - 1]?.join(' ') || `${line}` })
       const above = focus.top > 28 ? focus.top - 12 : focus.top + 12
       const beside = focus.left > 28 ? focus.left - 14 : focus.left + 14
       for (let line = 1; line <= focus.columns.tracks.length + 1 && focus.columns.tracks.length; line++) badge('columns', line, linePosition(focus.columns.tracks, line), above)
       for (let line = 1; line <= focus.rows.tracks.length + 1 && focus.rows.tracks.length; line++) badge('rows', line, beside, linePosition(focus.rows.tracks, line))
+      if (focus.columns.tracks.length && !focus.columns.subgrid && !state.drag) parts.push({ kind: 'badge add', left: focus.columns.tracks.at(-1).end + 22, top: above, add: 'columns', text: '+' })
     }
     // Grips for the selected container's padding, a side each, and for the gaps between its tracks or children
     if (primary?.children.length && (!state.drag || state.drag.spacing)) {
@@ -765,6 +904,7 @@ export function mount({ launcher = true, onToggle } = {}) {
         }
       }
     }
+    if (state.landing) box('landing', state.landing)
     if (state.note) parts.push({ kind: 'note', ...state.note })
     if (state.indicator) box('drop', state.indicator)
 
@@ -791,6 +931,14 @@ export function mount({ launcher = true, onToggle } = {}) {
       state.drag = dragSpacing(element, event.target.dataset, { x: event.clientX, y: event.clientY })
       return
     }
+    if (event.target.matches('.badge') && layer.grid) {
+      const { axis, line, add } = event.target.dataset
+      event.preventDefault()
+      if (add) return setCount(layer.grid.element, COLUMNS, layer.grid.columns.tracks.length + 1)
+      // Pressed and moved it resizes the columns either side. Pressed twice, it's named, below
+      if (axis === 'columns' && !layer.grid.columns.subgrid) state.drag = dragLine(layer.grid, Number(line), { x: event.clientX, y: event.clientY })
+      return
+    }
     if (!event.target.matches('.handle') || !element) return
     event.preventDefault()
     state.drag = beginDrag({ element, x: event.clientX, y: event.clientY }, { x: Number(x), y: Number(y) })
@@ -800,7 +948,7 @@ export function mount({ launcher = true, onToggle } = {}) {
   layer.addEventListener('dblclick', (event) => {
     const { axis, line } = event.target.dataset
     const grid = layer.grid
-    if (!event.target.matches('.badge') || !grid) return
+    if (!event.target.matches('.badge') || !grid || !axis) return
     if (grid[axis].subgrid) return say('Name this line on the grid it comes from')
     Object.assign(naming.style, { left: event.target.style.left, top: event.target.style.top })
     naming.value = grid[axis].names[line - 1]?.join(' ') ?? ''
@@ -839,6 +987,8 @@ export function mount({ launcher = true, onToggle } = {}) {
     toggle,
     group,
     ungroup,
+    duplicate,
+    remove,
     reset,
     copy,
     undo: () => (history.done.length ? undo() : say('Nothing to undo')),
@@ -1010,7 +1160,9 @@ export function mount({ launcher = true, onToggle } = {}) {
     const primary = state.selected.at(-1)
     if (command && key === 'g') (event.shiftKey ? ungroup : group)()
     else if (command && key === 'z') (event.shiftKey ? redo : undo)()
+    else if (command && key === 'd') duplicate()
     else if (command || (event.altKey && !key.startsWith('arrow'))) return
+    else if ((key === 'delete' || key === 'backspace') && primary) remove()
     else if (key === 'escape' && state.selected.length) select([])
     else if (key === 'escape') toggle(false)
     else if (key === 'enter' && primary) {

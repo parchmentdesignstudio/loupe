@@ -49,6 +49,9 @@ export const styles = `
   background: white;
 }
 .drop { background: var(--select); border-radius: 1px; }
+.landing { border: 1.5px dashed var(--select); border-radius: 3px; background: color-mix(in oklab, var(--select) 8%, transparent); }
+.badge.add { cursor: pointer; background: var(--color-raised); color: var(--color-ink); box-shadow: var(--shadow-raised); }
+.badge[data-axis='columns'] { cursor: ew-resize; }
 .grip {
   pointer-events: auto;
   translate: -50% -50%;

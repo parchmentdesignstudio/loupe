@@ -52,8 +52,13 @@ export function describe(element, isNew = () => false) {
 export function summarise(record, { path = '/', width = 0 } = {}) {
   const inDocument = (first, second) => (first.compareDocumentPosition(second) & 4 ? -1 : 1)
   const groups = [...record.groups].filter((group) => group.isConnected).sort(inDocument)
-  const isNew = (element) => record.groups.has(element)
-  const name = (element) => (isNew(element) ? `the new <div> from ${groups.indexOf(element) + 1}` : describe(element, isNew))
+  const copies = [...(record.copies ?? [])].filter(([copy]) => copy.isConnected).sort(([first], [second]) => inDocument(first, second))
+  const isNew = (element) => record.groups.has(element) || Boolean(record.copies?.has(element))
+  const name = (element) => {
+    if (record.groups.has(element)) return `the new <div> from ${groups.indexOf(element) + 1}`
+    const copy = copies.findIndex(([made]) => made === element)
+    return copy < 0 ? describe(element, isNew) : `the copy from ${groups.length + copy + 1}`
+  }
   const declarations = (element) =>
     [...gatherPadding(record.styles.get(element)?.set ?? [])]
       .map(([property, value]) => `${property}: ${value}${spacingClasses(property, value) ? ` (${spacingClasses(property, value)})` : ''}${property === 'font-size' && /cqi$|vw$/.test(value) ? ' (sized so the text fills its width, which text-fit: grow does by itself in browsers that have it)' : ''}`)
@@ -65,6 +70,13 @@ export function summarise(record, { path = '/', width = 0 } = {}) {
     if (declarations(group)) lines.push(`   On the new <div>: ${declarations(group)}`)
     items.push(lines.join('\n'))
   }
+  for (const [copy, source] of copies) {
+    const next = copy.nextElementSibling
+    items.push(`Duplicate ${source}, and put the copy ${next ? `before ${name(next)}` : `at the end of ${name(copy.parentElement)}`}`)
+  }
+  for (const { element, parent, described } of record.deleted ?? []) {
+    if (!element.isConnected && parent.isConnected) items.push(`Delete ${described}`)
+  }
   for (const { element, parent, described } of record.removed) {
     if (!element.isConnected && parent.isConnected) items.push(`Remove the wrapper ${described}, leaving what’s inside it in its place`)
   }
@@ -75,7 +87,7 @@ export function summarise(record, { path = '/', width = 0 } = {}) {
     items.push(`Move ${name(element)} ${next ? `to before ${name(next)}` : `to the end of ${name(element.parentElement)}`}`)
   }
   // Siblings given the same thing, as the children of a new grid are, read as one change
-  const styled = [...record.styles.keys()].filter((element) => element.isConnected && !isNew(element) && declarations(element)).sort(inDocument)
+  const styled = [...record.styles.keys()].filter((element) => element.isConnected && !record.groups.has(element) && declarations(element)).sort(inDocument)
   const alike = Map.groupBy(styled, (element) => element.parentElement)
   for (const [parent, siblings] of alike) {
     for (const [text, elements] of Map.groupBy(siblings, declarations)) {

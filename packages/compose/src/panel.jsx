@@ -13,6 +13,7 @@ const COLUMNS = 'grid-template-columns'
 const ROWS = 'grid-template-rows'
 const ALIGN = ['stretch', 'flex-start', 'center', 'flex-end', 'baseline']
 const JUSTIFY = ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly']
+const SELF = ['stretch', 'start', 'center', 'end']
 const named = (values) => values.map((id) => ({ id, name: id.replace('flex-', '').replace('-', ' ') }))
 
 function Row({ name, children }) {
@@ -148,6 +149,12 @@ function Layout({ api, element }) {
           <Switch isSelected={api.fitted(element)} onChange={(on) => api.setFit(element, on)}>
             Fill width
           </Switch>
+        </Row>
+      )}
+      {outer && (
+        <Row name="Align">
+          <Choice label="Across its columns" options={SELF} value={SELF.includes(style.justifySelf) ? style.justifySelf : 'stretch'} onChange={(value) => api.assign(element, 'justify-self', value)} />
+          <Choice label="Down its rows" options={SELF} value={SELF.includes(style.alignSelf) ? style.alignSelf : 'stretch'} onChange={(value) => api.assign(element, 'align-self', value)} />
         </Row>
       )}
       {outer && (
