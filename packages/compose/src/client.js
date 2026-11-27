@@ -2,6 +2,7 @@
 // Everything it does is a change to the live page, kept in `record`, which `summarise` turns into the handover
 import { describe, sourceOf, summarise } from './changes.js'
 import { formatTemplate, linePosition, linesOf, nearestLine, nearestTrack, parseTemplate, placement, placeTracks, withCount } from './grid.js'
+import { gapSteps, gapValue } from './spacing.js'
 import { styles } from './styles.js'
 
 const COLUMNS = 'grid-template-columns'
@@ -627,7 +628,7 @@ export function mount({ launcher = true, onToggle } = {}) {
     const style = getComputedStyle(element)
     const mode = style.display.endsWith('grid') ? 'grid' : style.display.endsWith('flex') ? 'flex' : 'block'
     const controls = [row('Layout', segments('Layout', [['block', 'Block'], ['grid', 'Grid'], ['flex', 'Flex']], mode, (value) => setLayout(element, value)))]
-    const gap = () => row('Gap', field('Gap', composed(element, 'gap') || (style.gap === 'normal' ? '' : style.gap), (value, input) => setValue(element, 'gap', value, input), '0'))
+    const gap = () => row('Gap', field('Gap', gapSteps(composed(element, 'gap')) ?? (composed(element, 'gap') || (style.gap === 'normal' ? '' : style.gap)), (value, input) => setValue(element, 'gap', gapValue(value, Boolean(getComputedStyle(document.documentElement).getPropertyValue('--spacing'))), input), '0'))
 
     if (mode === 'grid') {
       const grid = geometry(element)

@@ -373,6 +373,7 @@ Compose works on a page that’s already running in a dev server. It groups elem
 | On a phone | Two taps select, as one finger scrolls the page. Select several, in the panel, makes each double tap add to what’s selected. Drag what’s selected, or its handles, as with a mouse |
 | Group, ungroup | ⌘G wraps what’s selected in a new `div`. ⇧⌘G takes a wrapper away and leaves what it held |
 | Lay out | Block, Grid or Flex in the panel. A new grid has 12 columns, with every child across all of them, so nothing moves until it’s dragged. A grid inside a grid can take its columns or rows as a subgrid |
+| Set the gap | A bare number is a step of Tailwind’s spacing scale, so 4 is `gap-4`, and 4 8 is `gap-y-4 gap-x-8`. The list of changes names the class beside the value. A length, such as 24px, is kept as it’s typed |
 | Move on a grid | Drag, or the arrow keys. The handles, or ⇧ with an arrow, change what it spans. Drag past the last row to start a new one |
 | Reorder | Outside a grid, dragging or the arrow keys change the order |
 | Name a line | Double-click its number. A place then uses the name, as in `grid-column: content-start / content-end` |

@@ -1,6 +1,8 @@
 // What changed, written for whoever makes it in the source: each element by its tag, classes, text and the place
 // it was written, then what to do with it. It reads the page as it stands, so a change that was undone isn't there
 
+import { gapClasses } from './spacing.js'
+
 const short = (text, length) => (text.length > length ? `${text.slice(0, length - 1).trimEnd()}…` : text)
 
 /**
@@ -53,7 +55,9 @@ export function summarise(record, { path = '/', width = 0 } = {}) {
   const isNew = (element) => record.groups.has(element)
   const name = (element) => (isNew(element) ? `the new <div> from ${groups.indexOf(element) + 1}` : describe(element, isNew))
   const declarations = (element) =>
-    [...(record.styles.get(element)?.set ?? [])].map(([property, value]) => `${property}: ${value}`).join('; ')
+    [...(record.styles.get(element)?.set ?? [])]
+      .map(([property, value]) => `${property}: ${value}${property === 'gap' && gapClasses(value) ? ` (${gapClasses(value)})` : ''}`)
+      .join('; ')
   const items = []
 
   for (const group of groups) {
