@@ -267,12 +267,29 @@ export function mount({ launcher = true, onToggle } = {}) {
 
   // ——— Structure: grouping, ungrouping and moving
 
+  // Where every element stood before anything was moved, read the first time something is: its neighbours, to tell
+  // later whether it has really moved, and its path down from the body, to find it again after a reload
+  const origins = new Map()
+  function stamp() {
+    if (origins.size) return
+    const visit = (parent, path) => {
+      const children = [...parent.children].filter((child) => child !== host)
+      children.forEach((child, index) => {
+        origins.set(child, { id: `${path}/${index}`, parent, next: children[index + 1] ?? null, previous: children[index - 1] ?? null })
+        visit(child, `${path}/${index}`)
+      })
+    }
+    origins.set(document.body, { id: '' })
+    visit(document.body, '')
+  }
+
   function group() {
     const elements = [...state.selected].sort((first, second) => (first.compareDocumentPosition(second) & 4 ? -1 : 1))
     const parent = elements[0]?.parentElement
     if (!parent || elements.includes(document.body) || elements.some((element) => element.parentElement !== parent)) {
       return say('Elements need the same parent to be grouped')
     }
+    stamp()
     const wrapper = document.createElement('div')
     const places = elements.map((element) => element.nextSibling)
     const outer = geometry(parent)
@@ -313,6 +330,7 @@ export function mount({ launcher = true, onToggle } = {}) {
     const loose = (wrapper) => [...wrapper.childNodes].some((node) => node.nodeType === 3 && node.data.trim())
     if (wrappers.some(loose)) return say('Text of its own would be left loose')
     const freed = []
+    stamp()
     batch(() => {
       for (const wrapper of wrappers) {
         const parent = wrapper.parentElement
@@ -360,14 +378,25 @@ export function mount({ launcher = true, onToggle } = {}) {
     select(freed)
   }
 
-  function move(element, before) {
-    const parent = element.parentElement
+  // Puts an element before another, in its own parent or a different one. A place on the grid it leaves means
+  // nothing where it's going, and in a grid it arrives across every column, as a new grid's children start
+  function move(element, before, parent = element.parentElement) {
+    const from = element.parentElement
     const was = element.nextSibling
-    if (before === element || before === element.nextElementSibling) return
-    if (!record.moved.has(element)) record.moved.set(element, { next: element.nextElementSibling, previous: element.previousElementSibling })
+    if (parent === from && (before === element || before === element.nextElementSibling)) return
+    stamp()
+    if (!record.moved.has(element)) record.moved.set(element, origins.get(element) ?? { next: element.nextElementSibling, previous: element.previousElementSibling })
     const apply = () => parent.insertBefore(element, before)
-    apply()
-    push({ undo: () => parent.insertBefore(element, was), redo: apply })
+    batch(() => {
+      const saved = snapshot([element])
+      apply()
+      if (parent !== from) {
+        for (const property of ['grid-column', 'grid-row']) write(element, property, '')
+        if (geometry(parent)) write(element, 'grid-column', '1 / -1')
+      }
+      push({ undo: () => from.insertBefore(element, was), redo: apply })
+      commit(saved)
+    })
   }
 
   const isNew = (element) => record.groups.has(element) || record.copies.has(element)
@@ -376,6 +405,7 @@ export function mount({ launcher = true, onToggle } = {}) {
     const sources = state.selected.filter((element) => element !== document.body && element.parentElement)
     if (!sources.length) return say('Select something to duplicate')
     const copies = []
+    stamp()
     batch(() => {
       for (const source of sources) {
         const copy = source.cloneNode(true)
@@ -401,6 +431,7 @@ export function mount({ launcher = true, onToggle } = {}) {
     const elements = state.selected.filter((element) => element !== document.body && element.parentElement)
     if (!elements.length) return say('Select something to delete')
     if (elements.some((element) => record.groups.has(element))) return say('Ungroup it first, or what it holds goes too')
+    stamp()
     batch(() => {
       for (const element of elements) {
         const parent = element.parentElement
@@ -655,11 +686,23 @@ export function mount({ launcher = true, onToggle } = {}) {
     // make it jump about under the pointer
     const origin = element.getBoundingClientRect()
     const lifted = handle ? null : lift(element)
+    let elsewhere = null
     const others = siblings
       .filter((child) => child !== element && child.getClientRects().length && !/^(absolute|fixed)$/.test(getComputedStyle(child).position))
       .map((child) => ({ element: child, rect: child.getBoundingClientRect(), lines: linesIn(child, grid) }))
     return {
-      move({ clientX, clientY, altKey }) {
+      move(event) {
+        const { clientX, clientY, altKey } = event
+        // Well outside the grid, it's on its way to somewhere else on the page
+        const away = Math.max(grid.left - clientX, clientX - grid.left - grid.width, grid.top - clientY, clientY - grid.top - grid.height) > 24
+        if (lifted && away) {
+          restore(before)
+          pinned = false
+          lifted.hold(origin.left + clientX - press.x, origin.top + clientY - press.y)
+          elsewhere = aim(element, event)
+          return
+        }
+        elsewhere = state.indicator = null
         const lines = { columns: { ...at.columns }, rows: { ...at.rows } }
         const shares = []
         // Dropped on another item, it shares that item's row: the two take half each, three a third, in the order
@@ -699,6 +742,7 @@ export function mount({ launcher = true, onToggle } = {}) {
       },
       end() {
         state.landing = null
+        if (elsewhere) return drop(element, elsewhere, lifted)
         lifted?.settle()
         refit([element])
         commit(before)
@@ -739,58 +783,86 @@ export function mount({ launcher = true, onToggle } = {}) {
     }
   }
 
-  function dragInFlow(element, press) {
-    const parent = element.parentElement
-    const origin = element.getBoundingClientRect()
-    const lifted = lift(element)
+  // Where a dragged element would go if it were let go here: before a sibling, into a container, or beside
+  // another element as a pair. It can be anywhere on the page, not only in the parent it came from
+  function aim(element, { clientX, clientY, altKey }) {
+    state.indicator = state.landing = null
+    const under = document.elementsFromPoint(clientX, clientY).find((node) => node !== host && node !== document.documentElement && !element.contains(node))
+    const leaf = under && pick(under)
+    if (!leaf || element.contains(leaf)) return null
+    const box = (node) => node.getBoundingClientRect()
+    const holds = (node) => node === document.body || record.groups.has(node) || (node.children.length > 0 && !holdsText(node))
+    // Within a few pixels of a container's edge means beside it, not inside it. Not for a container the element is
+    // already in, where the edge is as much the first or last place inside
+    const atEdge = (node) => {
+      const rect = box(node)
+      return !node.contains(element) && Math.min(clientX - rect.left, rect.right - clientX, clientY - rect.top, rect.bottom - clientY) < 10
+    }
+    let sibling = holds(leaf) && !(leaf !== document.body && atEdge(leaf)) ? null : leaf
+    let parent = sibling ? sibling.parentElement : leaf
+    while (parent !== document.body && parent.parentElement && atEdge(parent)) [sibling, parent] = [parent, parent.parentElement]
+    if (sibling === element) return null
+    if (geometry(parent)) {
+      const rect = box(parent)
+      state.landing = { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
+      return { parent, before: null }
+    }
     const style = getComputedStyle(parent)
     const across = style.display.endsWith('flex') && style.flexDirection.startsWith('row')
-    let before
-    let beside
+    const siblings = [...parent.children].filter((child) => child !== element && child !== host && child.getClientRects().length)
+    // In a stack, the left or right third of another element puts the two side by side, half each
+    const within = sibling && !across && !altKey ? (clientX - box(sibling).left) / box(sibling).width : 0.5
+    if (within < 1 / 3 || within > 2 / 3) {
+      const rect = box(sibling)
+      state.indicator = { left: (within > 2 / 3 ? rect.right : rect.left) - 1, top: rect.top, width: 2, height: rect.height }
+      return { pair: sibling, after: within > 2 / 3 }
+    }
+    const middle = (rect) => (across ? rect.left + rect.width / 2 : rect.top + rect.height / 2)
+    const before = siblings.find((other) => (across ? clientX : clientY) < middle(box(other))) ?? null
+    const near = before ?? siblings.at(-1)
+    if (!near) {
+      const rect = box(parent)
+      state.landing = { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
+      return { parent, before }
+    }
+    const rect = box(near)
+    state.indicator = across
+      ? { left: (before ? rect.left : rect.right) - 1, top: rect.top, width: 2, height: rect.height }
+      : { left: rect.left, top: (before ? rect.top : rect.bottom) - 1, width: rect.width, height: 2 }
+    return { parent, before }
+  }
+
+  function drop(element, target, lifted) {
+    state.indicator = state.landing = null
+    const from = element.getBoundingClientRect()
+    if (target?.pair) pair(target.pair, element, target.after)
+    else if (target) move(element, target.before, target.parent)
+    // From where it was let go to where the page now has it
+    lifted.hold(from.left, from.top)
+    lifted.settle()
+  }
+
+  function dragInFlow(element, press) {
+    const origin = element.getBoundingClientRect()
+    const lifted = lift(element)
+    let target
     return {
-      move({ clientX, clientY, altKey }) {
-        lifted.hold(origin.left + clientX - press.x, origin.top + clientY - press.y)
-        const siblings = [...parent.children].filter((child) => child !== element && child !== host && child.getClientRects().length)
-        // In a stack, the left or right third of another element puts the two side by side, half each
-        const under = !across && !altKey && siblings.find((sibling) => {
-          const rect = sibling.getBoundingClientRect()
-          return clientY >= rect.top && clientY <= rect.bottom && clientX >= rect.left && clientX <= rect.right
-        })
-        const within = under && (clientX - under.getBoundingClientRect().left) / under.getBoundingClientRect().width
-        beside = under && (within < 1 / 3 || within > 2 / 3) ? { sibling: under, after: within > 2 / 3 } : null
-        if (beside) {
-          const rect = under.getBoundingClientRect()
-          state.indicator = { left: (beside.after ? rect.right : rect.left) - 1, top: rect.top, width: 2, height: rect.height }
-          return
-        }
-        const middle = (rect) => (across ? rect.left + rect.width / 2 : rect.top + rect.height / 2)
-        before = siblings.find((sibling) => (across ? clientX : clientY) < middle(sibling.getBoundingClientRect())) ?? null
-        const near = before ?? siblings.at(-1)
-        if (!near) return
-        const rect = near.getBoundingClientRect()
-        state.indicator = across
-          ? { left: (before ? rect.left : rect.right) - 1, top: rect.top, width: 2, height: rect.height }
-          : { left: rect.left, top: (before ? rect.top : rect.bottom) - 1, width: rect.width, height: 2 }
+      move(event) {
+        lifted.hold(origin.left + event.clientX - press.x, origin.top + event.clientY - press.y)
+        target = aim(element, event)
       },
-      end() {
-        state.indicator = null
-        const from = element.getBoundingClientRect()
-        if (beside) pair(beside.sibling, element, beside.after)
-        else if (before !== undefined) move(element, before)
-        // From where it was let go to where the page now has it
-        lifted.hold(from.left, from.top)
-        lifted.settle()
-      },
+      end: () => drop(element, target, lifted),
     }
   }
 
   // Two elements of a stack side by side: a new 12-column grid where the first stood, with half each
   function pair(sibling, element, after) {
+    stamp()
     const parent = sibling.parentElement
     const wrapper = document.createElement('div')
     const inside = after ? [sibling, element] : [element, sibling]
     // Put back last to first as they stood, so each one's old neighbour is there to go before
-    const stood = [sibling, element].sort((first, second) => (first.compareDocumentPosition(second) & 4 ? 1 : -1)).map((node) => [node, node.nextSibling])
+    const stood = [sibling, element].sort((first, second) => (first.compareDocumentPosition(second) & 4 ? 1 : -1)).map((node) => [node, node.parentElement, node.nextSibling])
     const apply = () => {
       parent.insertBefore(wrapper, sibling)
       wrapper.append(...inside)
@@ -803,9 +875,10 @@ export function mount({ launcher = true, onToggle } = {}) {
       write(wrapper, COLUMNS, `repeat(12, ${FRACTION})`)
       write(inside[0], 'grid-column', '1 / span 6')
       write(inside[1], 'grid-column', '7 / span 6')
+      for (const node of inside) write(node, 'grid-row', '')
       push({
         undo: () => {
-          for (const [node, next] of stood) parent.insertBefore(node, next)
+          for (const [node, home, next] of stood) home.insertBefore(node, next)
           wrapper.remove()
           record.groups.delete(wrapper)
         },
