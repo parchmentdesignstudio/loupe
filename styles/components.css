@@ -51,11 +51,11 @@
 
 		/* A tray round a filled button's fill, as a well with a face sitting in it. The button grows by it on every side,
 		   and its corners by it too, so --button-radius stays the face's. The variant's shadow paints it, with an inset ring
-		   as wide. Unset, so 0, and the fill covers the whole button */
+		   as wide. 0 by default, so the fill covers the whole button. mcknny sets its primary's to 4px */
 		@media not all {
-			--button-primary-tray: 4px;
-			--button-quiet-tray: 4px;
-			--button-danger-tray: 4px;
+			--button-primary-tray: 0px;
+			--button-quiet-tray: 0px;
+			--button-danger-tray: 0px;
 		}
 
 		/* Colour */
