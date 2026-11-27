@@ -1,22 +1,16 @@
 // Compose: rearrange a page's layout in the browser, then hand the changes to whoever writes the source.
 // Everything it does is a change to the live page, kept in `record`, which `summarise` turns into the handover
-import { describe, sourceOf, summarise } from './changes.js'
+import { describe, summarise } from './changes.js'
 import { formatTemplate, linePosition, linesOf, nearestLine, nearestTrack, parseTemplate, placement, placeTracks, withCount } from './grid.js'
 import { gapSteps, gapValue } from './spacing.js'
+import sheet from 'virtual:compose-panel-styles'
+import { createPanel } from './panel.jsx'
 import { styles } from './styles.js'
 
 const COLUMNS = 'grid-template-columns'
 const ROWS = 'grid-template-rows'
 const FRACTION = 'minmax(0, 1fr)'
 const REPLACED = /^(img|svg|video|canvas|picture|iframe|input|button|select|textarea|object|embed)$/
-const ICONS = {
-  undo: '<path d="M6 3.5 2.5 7 6 10.5M3 7h6.5a4 4 0 0 1 0 8H7"/>',
-  redo: '<path d="M10 3.5 13.5 7 10 10.5M13 7H6.5a4 4 0 0 0 0 8H9"/>',
-  close: '<path d="m4 4 8 8m0-8-8 8"/>',
-  minus: '<path d="M4 8h8"/>',
-  plus: '<path d="M4 8h8M8 4v8"/>',
-}
-
 const px = (value) => parseFloat(value) || 0
 const clamp = (value, low, high) => Math.min(Math.max(value, low), high)
 const isMac = /Mac|iPhone|iPad/.test(navigator.platform)
@@ -32,12 +26,6 @@ function h(tag, properties = {}, ...children) {
   return node
 }
 
-function icon(name) {
-  const holder = document.createElement('span')
-  holder.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true">${ICONS[name]}</svg>`
-  return holder.firstChild
-}
-
 /** Puts Compose on the page. `launcher` adds its own button, for a page with no toolbar to open it from */
 export function mount({ launcher = true, onToggle } = {}) {
   if (window.parchmentCompose) return window.parchmentCompose
@@ -51,8 +39,14 @@ export function mount({ launcher = true, onToggle } = {}) {
   const layer = h('div', { class: 'layer' })
   const panel = h('div', { class: 'panel', hidden: true })
   const naming = h('input', { class: 'naming', hidden: true, 'aria-label': 'Line name', placeholder: 'Line name' })
-  const open = h('button', { class: 'launcher', hidden: !launcher, onclick: () => toggle(true) }, 'Compose')
-  root.append(h('style', {}, styles), layer, naming, panel, open)
+  const open = h('div', { class: 'launcher', hidden: !launcher })
+  const floats = h('div', { class: 'floats' })
+  // Loupe's sheet is written for a page, so its :root becomes this shadow root's host. A shadow root can't register
+  // properties, which Tailwind's shadows and rings start from, so those go to the page, where they change nothing
+  const registered = sheet.match(/@property[^{]+\{[^}]*\}/g) ?? []
+  root.append(h('style', {}, `@layer reset;${sheet.replaceAll(':root', ':host')}`), h('style', {}, styles), layer, naming, panel, open, floats)
+  document.head.append(h('style', { 'data-compose-properties': true }, registered.join('\n')))
+  const draw = createPanel({ panel, opener: open, floats })
 
   const ours = (event) => event.composedPath().some((node) => node === host || /^(astro-dev-toolbar|vite-error-overlay)$/.test(node.localName ?? ''))
 
@@ -402,9 +396,9 @@ export function mount({ launcher = true, onToggle } = {}) {
     change([element], () => assign(element, property, formatTemplate(withCount(template(element, property), count, property === ROWS ? 'auto' : FRACTION))))
   }
 
-  function setValue(element, property, value, input) {
+  function setValue(element, property, value) {
     const text = value.trim()
-    if (text && !CSS.supports(property, text)) return input?.setAttribute('aria-invalid', 'true')
+    if (text && !CSS.supports(property, text)) return false
     change([element], () => assign(element, property, text))
   }
 
@@ -834,166 +828,65 @@ export function mount({ launcher = true, onToggle } = {}) {
     render()
   }
 
-  const row = (name, ...controls) => h('div', { class: 'row' }, h('span', {}, name), h('div', {}, controls))
-  const field = (key, value, onCommit, placeholder) =>
-    h('input', { 'data-field': key, value, placeholder, 'aria-label': key, spellcheck: 'false', onchange: (event) => onCommit(event.target.value, event.target) })
-  const segments = (name, options, current, onPick) =>
-    h(
-      'div',
-      { class: 'segments', role: 'group', 'aria-label': name },
-      options.map(([value, text]) => h('button', { 'aria-pressed': `${value === current}`, onclick: () => onPick(value) }, text)),
-    )
-  const choice = (key, options, current, onPick) =>
-    h(
-      'select',
-      { 'data-field': key, 'aria-label': key, onchange: (event) => onPick(event.target.value) },
-      options.map((value) => h('option', { value, selected: value === current }, value.replace('flex-', ''))),
-    )
-
-  function layoutControls(element) {
-    const style = getComputedStyle(element)
-    const mode = style.display.endsWith('grid') ? 'grid' : style.display.endsWith('flex') ? 'flex' : 'block'
-    const controls = [row('Layout', segments('Layout', [['block', 'Block'], ['grid', 'Grid'], ['flex', 'Flex']], mode, (value) => setLayout(element, value)))]
-    const gap = () => row('Gap', field('Gap', gapSteps(composed(element, 'gap')) ?? (composed(element, 'gap') || (style.gap === 'normal' ? '' : style.gap)), (value, input) => setValue(element, 'gap', gapValue(value, Boolean(getComputedStyle(document.documentElement).getPropertyValue('--spacing'))), input), '0'))
-
-    if (mode === 'grid') {
-      const grid = geometry(element)
-      const nested = element !== document.body && getComputedStyle(element.parentElement).display.endsWith('grid')
-      const tracks = (name, axis, property) => {
-        const written = composed(element, property) || authored(element, property)
-        const isSubgrid = written.startsWith('subgrid')
-        const count = grid[axis].tracks.length
-        return row(
-          name,
-          axis === 'columns' &&
-            !isSubgrid &&
-            h(
-              'div',
-              { class: 'stepper' },
-              h('button', { class: 'icon', 'aria-label': 'One column fewer', disabled: count <= 1, onclick: () => setCount(element, property, count - 1) }, icon('minus')),
-              h('output', {}, `${count}`),
-              h('button', { class: 'icon', 'aria-label': 'One column more', onclick: () => setCount(element, property, count + 1) }, icon('plus')),
-            ),
-          field(name, written === 'none' ? '' : written, (value, input) => setValue(element, property, value, input), 'auto'),
-          nested &&
-            h(
-              'button',
-              { class: 'toggle raised', 'aria-pressed': `${isSubgrid}`, onclick: () => change([element], () => (isSubgrid ? write(element, property, composed(element, property) === 'subgrid' ? '' : 'none') : write(element, property, 'subgrid'))) },
-              'Subgrid',
-            ),
-        )
-      }
-      controls.push(tracks('Columns', 'columns', COLUMNS), tracks('Rows', 'rows', ROWS), gap())
-    }
-    if (mode === 'flex') {
-      controls.push(
-        row('Direction', segments('Direction', [['row', 'Row'], ['column', 'Column']], style.flexDirection.split('-')[0], (value) => change([element], () => assign(element, 'flex-direction', value)))),
-        row(
-          'Align',
-          choice('Align', ['stretch', 'flex-start', 'center', 'flex-end', 'baseline'], style.alignItems === 'normal' ? 'stretch' : style.alignItems, (value) => change([element], () => assign(element, 'align-items', value))),
-          choice('Justify', ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'], style.justifyContent === 'normal' ? 'flex-start' : style.justifyContent, (value) =>
-            change([element], () => assign(element, 'justify-content', value)),
-          ),
-        ),
-        row(
-          'Wrap',
-          h('button', { class: 'toggle raised', 'aria-pressed': `${style.flexWrap === 'wrap'}`, onclick: () => change([element], () => assign(element, 'flex-wrap', style.flexWrap === 'wrap' ? 'nowrap' : 'wrap')) }, 'Wrap'),
-        ),
-        gap(),
-      )
-    }
-    if (element !== document.body && holdsText(element)) {
-      controls.push(row('Type', h('button', { class: 'toggle raised', 'aria-pressed': `${fitted(element)}`, onclick: () => setFit(element, !fitted(element)) }, 'Fill width')))
-    }
-    const outer = element !== document.body && geometry(element.parentElement)
-    if (outer) {
+  const api = {
+    state,
+    isMac,
+    message: () => message,
+    count: () => summarise(record).count,
+    label,
+    geometry,
+    select,
+    toggle,
+    group,
+    ungroup,
+    reset,
+    copy,
+    undo: () => (history.done.length ? undo() : say('Nothing to undo')),
+    redo: () => (history.undone.length ? redo() : say('Nothing to redo')),
+    setLayout,
+    setCount,
+    setValue,
+    setFit,
+    fitted,
+    holdsText,
+    written: (element, property) => composed(element, property) || authored(element, property),
+    assign: (element, property, value) => change([element], () => assign(element, property, value)),
+    gapOf(element) {
+      const gap = getComputedStyle(element).gap
+      return gapSteps(composed(element, 'gap')) ?? (composed(element, 'gap') || (gap === 'normal' ? '' : gap))
+    },
+    setGap: (element, value) => setValue(element, 'gap', gapValue(value, Boolean(getComputedStyle(document.documentElement).getPropertyValue('--spacing')))),
+    // A subgrid from a stylesheet is turned off by saying none, and one Compose set by taking it away again
+    setSubgrid(element, property, on) {
+      change([element], () => write(element, property, on ? 'subgrid' : composed(element, property) === 'subgrid' ? '' : 'none'))
+    },
+    placeOf(element, outer) {
       const { columns, rows } = linesIn(element, outer)
-      const range = ({ start, end }) => `${start} / ${end}`
-      const placed = composed(element, 'grid-column') || composed(element, 'grid-row')
-      controls.push(
-        row(
-          'Placed',
-          h('span', { style: 'flex:1;align-self:center' }, `Column ${range(columns)}, row ${range(rows)}`),
-          h('button', { class: 'raised', disabled: !placed, onclick: () => change([element], () => ['grid-column', 'grid-row'].forEach((property) => write(element, property, ''))) }, 'Auto'),
-        ),
-      )
-    }
-    return controls
-  }
-
-  function crumbs(element) {
-    const path = []
-    for (let node = element; node && node !== document.documentElement; node = node.parentElement) path.unshift(node)
-    const shown = path.slice(-3)
-    return h(
-      'div',
-      { class: 'crumbs' },
-      path.length > shown.length && h('span', {}, '… ›'),
-      shown.flatMap((node, index) => [index > 0 && h('span', {}, '›'), h('button', { title: sourceOf(node) ?? undefined, onclick: () => select([node]) }, label(node))]),
-    )
+      return `Column ${columns.start} / ${columns.end}, row ${rows.start} / ${rows.end}`
+    },
+    clearPlace(element) {
+      if (!composed(element, 'grid-column') && !composed(element, 'grid-row')) return say('The grid already places it')
+      change([element], () => ['grid-column', 'grid-row'].forEach((property) => write(element, property, '')))
+    },
+    setSeveral(on) {
+      state.several = on
+      render()
+    },
   }
 
   let rendering = false
   function render() {
     if (rendering) return
     rendering = true
-    // After the event that asked for it, so a field left with Tab is drawn again with focus in the next one
+    // After the event that asked for it, so several changes in one go draw once
     setTimeout(() => {
       rendering = false
-      const focused = root.activeElement?.dataset.field
-      const primary = state.selected.at(-1)
-      const command = isMac ? '⌘' : 'Ctrl '
-      const { count } = summarise(record)
-      panel.replaceChildren(
-        h(
-          'header',
-          {},
-          primary ? crumbs(primary) : h('div', { class: 'crumbs' }, 'Compose'),
-          h('button', { class: 'icon', 'aria-label': 'Undo', title: `Undo ${command}Z`, disabled: !history.done.length, onclick: undo }, icon('undo')),
-          h('button', { class: 'icon', 'aria-label': 'Redo', title: `Redo ⇧${command}Z`, disabled: !history.undone.length, onclick: redo }, icon('redo')),
-          h('button', { class: 'icon', 'aria-label': 'Close Compose', title: 'Close', onclick: () => toggle(false) }, icon('close')),
-        ),
-        h(
-          'div',
-          { class: 'body' },
-          !primary && h('p', { class: 'hint' }, state.touch ? 'Double-tap an element to select it.' : `Click an element to select it, and ${command.trim()}-click to add more.`),
-          primary &&
-            h(
-              'div',
-              { class: 'pair' },
-              h('button', { class: 'raised', onclick: group }, 'Group ', h('kbd', {}, `${command}G`)),
-              h('button', { class: 'raised', disabled: !state.selected.some((element) => element.children.length), onclick: ungroup }, 'Ungroup ', h('kbd', {}, `⇧${command}G`)),
-            ),
-          // No ⌘ on a phone, so double taps add to what's selected while this is on
-          primary &&
-            state.touch &&
-            h(
-              'button',
-              {
-                class: 'toggle raised',
-                'aria-pressed': `${state.several}`,
-                onclick: () => {
-                  state.several = !state.several
-                  render()
-                },
-              },
-              'Select several',
-            ),
-          state.selected.length === 1 && layoutControls(primary),
-        ),
-        h(
-          'footer',
-          {},
-          h('output', {}, message || (count ? `${count} ${count === 1 ? 'change' : 'changes'}` : 'No changes yet')),
-          h('button', { disabled: !history.done.length, onclick: reset }, 'Reset'),
-          h('button', { class: 'primary', disabled: !count, onclick: copy }, 'Copy changes'),
-        ),
-      )
-      if (focused) panel.querySelector(`[data-field="${focused}"]`)?.focus()
+      draw(api)
     })
   }
 
   function reset() {
+    if (!history.done.length) return say('Nothing to put back')
     while (history.done.length) {
       const last = history.done.pop()
       last.undo()
@@ -1003,7 +896,8 @@ export function mount({ launcher = true, onToggle } = {}) {
   }
 
   async function copy() {
-    const { text } = summarise(record, { path: location.pathname, width: innerWidth })
+    const { count, text } = summarise(record, { path: location.pathname, width: innerWidth })
+    if (!count) return say('No changes to copy yet')
     try {
       await navigator.clipboard.writeText(text)
     } catch {
@@ -1168,6 +1062,7 @@ export function mount({ launcher = true, onToggle } = {}) {
   addEventListener('keydown', onKeyDown, true)
   for (const type of ['click', 'dblclick', 'auxclick', 'mousedown', 'mouseup', 'dragstart', 'submit']) addEventListener(type, swallow, true)
   document.documentElement.append(host)
+  render()
 
   window.parchmentCompose = {
     toggle,

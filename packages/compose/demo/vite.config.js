@@ -1,4 +1,11 @@
+// The demo runs Compose from its source, so a change shows without building
+import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import { compose } from '../vite.js'
+import { panelCss } from '../panel-css.js'
 
-export default defineConfig({ plugins: [compose()], server: { port: 5191 } })
+const source = {
+  name: 'compose-source',
+  transformIndexHtml: () => [{ tag: 'script', attrs: { type: 'module' }, children: `import { mount } from '/@fs/${import.meta.dirname.replace(/^\//, '')}/../src/client.js'\nmount()`, injectTo: 'body' }],
+}
+
+export default defineConfig({ plugins: [react(), panelCss(), source], server: { port: 5191, fs: { allow: ['../../..'] } } })

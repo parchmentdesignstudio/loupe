@@ -1,7 +1,7 @@
 // Puts Compose on every page a Vite dev server serves. It's never in a build
 import { fileURLToPath } from 'node:url'
 
-const client = fileURLToPath(new URL('./src/client.js', import.meta.url))
+const client = fileURLToPath(new URL('./lib/compose.js', import.meta.url))
 
 export function compose() {
   return {

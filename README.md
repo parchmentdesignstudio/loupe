@@ -386,6 +386,8 @@ The first time an item is moved on a grid, every item in that grid is given the 
 
 CSS has a property for type that fills its width, `text-fit: grow`, but it isn’t in every browser yet, so Compose writes the `cqi` size, which is, and the list of changes says the property could take over.
 
+The panel is drawn with Loupe’s own components, inside a shadow root, so the page’s styles don’t reach it and Loupe’s don’t reach the page. `pnpm --filter @parchment/compose build` gathers Compose, React, the components and their compiled styles into `lib/compose.js`, which is committed, as a site that has none of them still has to run it. The demo runs from `src`, so a change there shows without building.
+
 The changes last until the page reloads, and they’re for the width the browser is at. Compose doesn’t yet write breakpoints, move an element from one parent to another, or keep changes through a reload.
 
 ### Using it in a site
@@ -429,7 +431,7 @@ pnpm bump 0.9.0
 pnpm release icons
 ```
 
-Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`, and the logos with `pnpm release logos`, to the `logos` branch. Compose goes to the `compose` branch with `pnpm release compose`. It has nothing to build.
+Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`, and the logos with `pnpm release logos`, to the `logos` branch. Compose goes to the `compose` branch with `pnpm release compose`.
 
 ## Device
 

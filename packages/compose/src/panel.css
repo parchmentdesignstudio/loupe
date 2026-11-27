@@ -1,0 +1,4 @@
+/* Loupe for Compose's panel, compiled to a string and put in its shadow root, so none of it reaches the page */
+@import 'tailwindcss';
+@import '@parchment/ui/tokens.css';
+@source './panel.jsx';

@@ -1,5 +1,5 @@
 import { defineToolbarApp } from 'astro/toolbar'
-import { mount } from './src/client.js'
+import { mount } from './lib/compose.js'
 
 export default defineToolbarApp({
   init(_canvas, app) {
