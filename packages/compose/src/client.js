@@ -505,7 +505,30 @@ export function mount({ launcher = true, onToggle } = {}) {
     change([element], () => assign(element, property, text))
   }
 
-  // An arrow key moves a grid item by a track, or with Shift changes how many it spans. Outside a grid it reorders
+  // An arrow key selects the sibling that lies that way: the nearest one, counting distance to the side double so
+  // one straight ahead wins over one that's closer but off to the side
+  function walk(key) {
+    const element = state.selected.at(-1)
+    if (!element?.parentElement || element === document.body) return
+    const [x, y] = { arrowleft: [-1, 0], arrowright: [1, 0], arrowup: [0, -1], arrowdown: [0, 1] }[key]
+    const centre = (rect) => ({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
+    const from = centre(element.getBoundingClientRect())
+    let nearest = null
+    let least = Infinity
+    for (const sibling of element.parentElement.children) {
+      if (sibling === element || sibling === host || !sibling.getClientRects().length) continue
+      const to = centre(sibling.getBoundingClientRect())
+      const ahead = (to.x - from.x) * x + (to.y - from.y) * y
+      const aside = Math.abs((to.x - from.x) * y) + Math.abs((to.y - from.y) * x)
+      if (ahead > 1 && ahead + aside * 2 < least) [nearest, least] = [sibling, ahead + aside * 2]
+    }
+    if (!nearest) return
+    nearest.scrollIntoView({ block: 'nearest' })
+    select([nearest])
+  }
+
+  // With Shift an arrow key moves a grid item by a track, and with Alt changes how many it spans. Outside a grid,
+  // Shift reorders
   function nudge(key, resize) {
     const element = state.selected.at(-1)
     const parent = element?.parentElement
@@ -1093,7 +1116,7 @@ export function mount({ launcher = true, onToggle } = {}) {
     const primary = state.selected.at(-1)
     if (command && key === 'g') (event.shiftKey ? ungroup : group)()
     else if (command && key === 'z') (event.shiftKey ? redo : undo)()
-    else if (command || event.altKey) return
+    else if (command || (event.altKey && !key.startsWith('arrow'))) return
     else if (key === 'escape' && state.selected.length) select([])
     else if (key === 'escape') toggle(false)
     else if (key === 'enter' && primary) {
@@ -1102,7 +1125,11 @@ export function mount({ launcher = true, onToggle } = {}) {
     } else if (key === 'tab' && primary) {
       const next = event.shiftKey ? primary.previousElementSibling : primary.nextElementSibling
       if (next && next !== host) select([next])
-    } else if (key.startsWith('arrow') && primary) nudge(key, event.shiftKey)
+    } else if (key.startsWith('arrow') && primary) {
+      if (event.altKey) nudge(key, true)
+      else if (event.shiftKey) nudge(key, false)
+      else walk(key)
+    }
     else return
     event.preventDefault()
     event.stopPropagation()

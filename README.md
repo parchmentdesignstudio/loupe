@@ -368,16 +368,16 @@ Compose works on a page that’s already running in a dev server. It groups elem
 | To | Do |
 |---|---|
 | Open or close it | ⌥G, the Compose button, or its button in Astro’s toolbar |
-| Select | Click. A click stays at the level of what’s selected, and clicking inside what’s selected goes one level in. ⇧↩ selects the parent, ↩ the first child and ⇥ the next sibling, and the panel’s header lists the way down to it |
+| Select | Click. A click stays at the level of what’s selected, and clicking inside what’s selected goes one level in. The arrow keys select the element that lies that way among its siblings, ⇧↩ the parent, ↩ the first child and ⇥ the next sibling, and the panel’s header lists the way down to it |
 | Select several | ⌘-click or ⇧-click |
 | On a phone | Two taps select, as one finger scrolls the page. Select several, in the panel, makes each double tap add to what’s selected. Drag what’s selected, or its handles, as with a mouse |
 | Group, ungroup | ⌘G wraps what’s selected in a new `div`. ⇧⌘G takes a wrapper away and leaves what it held |
 | Lay out | Block, Grid or Flex in the panel. A new grid has 12 columns, with every child across all of them, so nothing moves until it’s dragged. A grid inside a grid can take its columns or rows as a subgrid |
 | Set the gap | A bare number is a step of Tailwind’s spacing scale, so 4 is `gap-4`, and 4 8 is `gap-y-4 gap-x-8`. The list of changes names the class beside the value. A length, such as 24px, is kept as it’s typed |
 | Drag the gap or padding | A selected container has a green grip in each gap and on each side’s padding. Dragging one moves it by steps of the spacing scale. With ⌥ held, a gap’s grip sets the gap both ways, and a side’s grip sets the opposite side too. The list of changes gathers matching sides, as `padding-inline: 2rem (px-8)` |
-| Move on a grid | Drag, or the arrow keys. The handles, or ⇧ with an arrow, change what it spans. Drag past the last row to start a new one |
+| Move on a grid | Drag, or ⇧ with an arrow key. The handles, or ⌥ with an arrow key, change what it spans. Drag past the last row to start a new one |
 | Share a row | Drop an item on another and they share its row: two take half the columns each, three a third, in the order they sit under the pointer. Dropped on empty cells it goes where it’s put, and ⌥ lets it overlap instead of sharing |
-| Reorder | Outside a grid, dragging or the arrow keys change the order. In a stack, dropping on the left or right third of another element puts the two side by side, in a new 12-column grid with half each |
+| Reorder | Outside a grid, dragging or ⇧ with an arrow key changes the order. In a stack, dropping on the left or right third of another element puts the two side by side, in a new 12-column grid with half each |
 | Fill the width with type | Fill width, in the panel, for an element that holds text, such as a line of a hero’s lock-up. It goes on one line, or as many as it has `<br>`s, at a size that’s a share of its container’s width (`cqi`), so it keeps filling it as the page narrows. Its parent becomes the container. Change the columns it spans and it’s sized again |
 | Name a line | Double-click its number. A place then uses the name, as in `grid-column: content-start / content-end` |
 | Undo, redo | ⌘Z and ⇧⌘Z. Reset puts the page back as it was |
