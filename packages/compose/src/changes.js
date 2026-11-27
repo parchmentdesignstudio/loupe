@@ -56,7 +56,7 @@ export function summarise(record, { path = '/', width = 0 } = {}) {
   const name = (element) => (isNew(element) ? `the new <div> from ${groups.indexOf(element) + 1}` : describe(element, isNew))
   const declarations = (element) =>
     [...gatherPadding(record.styles.get(element)?.set ?? [])]
-      .map(([property, value]) => `${property}: ${value}${spacingClasses(property, value) ? ` (${spacingClasses(property, value)})` : ''}`)
+      .map(([property, value]) => `${property}: ${value}${spacingClasses(property, value) ? ` (${spacingClasses(property, value)})` : ''}${property === 'font-size' && /cqi$|vw$/.test(value) ? ' (sized so the text fills its width, which text-fit: grow does by itself in browsers that have it)' : ''}`)
       .join('; ')
   const items = []
 

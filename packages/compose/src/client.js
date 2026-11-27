@@ -122,6 +122,7 @@ export function mount({ launcher = true, onToggle } = {}) {
   function change(elements, run) {
     const before = snapshot(elements)
     run()
+    refit(elements)
     commit(before)
     render()
   }
@@ -407,6 +408,52 @@ export function mount({ launcher = true, onToggle } = {}) {
     change([element], () => assign(element, property, text))
   }
 
+  // ——— Type that fills its width
+
+  const fitted = (element) => /c(qi|qw)$|vw$/.test(composed(element, 'font-size'))
+  const holdsText = (element) => [...element.childNodes].some((node) => node.nodeType === 3 && node.data.trim())
+
+  // The size is a share of the nearest container's width, so the type keeps filling it as the page narrows. The
+  // parent becomes that container unless something above already is one, or being one would change its own width,
+  // as it does for an element sized by what's in it. Then the size is a share of the window's width instead
+  function sizeToWidth(element) {
+    const parent = element.parentElement
+    let container = parent
+    while (container && getComputedStyle(container).containerType === 'normal') container = container.parentElement
+    if (!container) {
+      const width = parent.getBoundingClientRect().width
+      write(parent, 'container-type', 'inline-size')
+      if (Math.abs(parent.getBoundingClientRect().width - width) > 1) write(parent, 'container-type', '')
+      else container = parent
+    }
+    const inner = (box) => box.clientWidth - px(getComputedStyle(box).paddingLeft) - px(getComputedStyle(box).paddingRight)
+    const basis = container ? inner(container) : innerWidth
+    const words = document.createRange()
+    words.selectNodeContents(element)
+    // Twice, as the width of a line doesn't grow quite in step with its size
+    for (let pass = 0; pass < 2; pass++) {
+      const size = (px(getComputedStyle(element).fontSize) * inner(element)) / words.getBoundingClientRect().width
+      write(element, 'font-size', `${Math.floor((size / basis) * 10000) / 100}${container ? 'cqi' : 'vw'}`)
+    }
+  }
+
+  function setFit(element, on) {
+    const parent = element.parentElement
+    change([element, parent], () => {
+      if (on) {
+        write(element, 'white-space', 'nowrap')
+        return sizeToWidth(element)
+      }
+      for (const property of ['font-size', 'white-space']) write(element, property, '')
+      if (![...parent.children].some(fitted)) write(parent, 'container-type', '')
+    })
+  }
+
+  // Type that fills its width is sized again when the width it has changes
+  function refit(elements) {
+    for (const element of elements) if (element.isConnected && fitted(element)) sizeToWidth(element)
+  }
+
   // Dragging a grip changes a gap or one side's padding by steps of the spacing scale. With Alt held it takes the
   // other with it: the gap the other way, or the padding on the opposite side
   function dragSpacing(element, { space, side, axis }, press) {
@@ -490,18 +537,36 @@ export function mount({ launcher = true, onToggle } = {}) {
   function dragOnGrid(element, press, handle) {
     const grid = geometry(element.parentElement)
     const at = linesIn(element, grid)
-    const before = snapshot([...element.parentElement.children])
+    const siblings = [...element.parentElement.children]
+    const before = snapshot(siblings)
     let pinned = false
     const columns = grid.columns.tracks
     const rows = grid.rows.tracks
     const span = { columns: at.columns.end - at.columns.start, rows: at.rows.end - at.rows.start }
     const grab = { column: nearestTrack(columns, press.x) - at.columns.start, row: nearestTrack(rows, press.y) - at.rows.start }
-    // Tracks are read once, as the press began: rows change height as the item moves, and chasing them would make
-    // it jump about under the pointer
+    // Everything is read once, as the press began: rows change height as the item moves, and chasing them would
+    // make it jump about under the pointer
+    const others = siblings
+      .filter((child) => child !== element && child.getClientRects().length && !/^(absolute|fixed)$/.test(getComputedStyle(child).position))
+      .map((child) => ({ element: child, rect: child.getBoundingClientRect(), lines: linesIn(child, grid) }))
     return {
-      move({ clientX, clientY }) {
+      move({ clientX, clientY, altKey }) {
         const lines = { columns: { ...at.columns }, rows: { ...at.rows } }
-        if (!handle) {
+        const shares = []
+        // Dropped on another item, it shares that item's row: the two take half each, three a third, in the order
+        // they sit under the pointer. Alt leaves it free to overlap instead
+        const over = !handle && !altKey && others.find(({ rect }) => clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom)
+        const mates = over ? others.filter((other) => other.lines.rows.start === over.lines.rows.start).sort((first, second) => first.lines.columns.start - second.lines.columns.start) : []
+        if (over && mates.length < columns.length) {
+          const order = [...mates]
+          order.splice(mates.filter(({ rect }) => rect.left + rect.width / 2 < clientX).length, 0, null)
+          const each = Math.floor(columns.length / order.length)
+          order.forEach((mate, index) => {
+            const shared = { start: 1 + index * each, end: index === order.length - 1 ? columns.length + 1 : 1 + (index + 1) * each }
+            if (mate) shares.push([mate.element, { columns: shared, rows: mate.lines.rows }])
+            else Object.assign(lines, { columns: shared, rows: { ...over.lines.rows } })
+          })
+        } else if (!handle) {
           const column = clamp(nearestTrack(columns, clientX) - grab.column, 1, Math.max(1, columns.length + 1 - span.columns))
           const row = Math.max(1, nearestTrack(rows, clientY, 24) - grab.row)
           lines.columns = { start: column, end: column + span.columns }
@@ -513,11 +578,16 @@ export function mount({ launcher = true, onToggle } = {}) {
           if (handle.y > 0) lines.rows.end = Math.max(nearestLine(rows, clientY, 24), at.rows.start + 1)
         }
         if (!pinned && JSON.stringify(lines) === JSON.stringify(at)) return
-        if (!pinned) pin(grid)
         pinned = true
-        place(element, geometry(element.parentElement) ?? grid, lines)
+        restore(before)
+        pin(grid)
+        for (const [mate, shared] of shares) place(mate, grid, shared)
+        place(element, grid, lines)
       },
-      end: () => commit(before),
+      end() {
+        refit([element])
+        commit(before)
+      },
     }
   }
 
@@ -526,23 +596,69 @@ export function mount({ launcher = true, onToggle } = {}) {
     const style = getComputedStyle(parent)
     const across = style.display.endsWith('flex') && style.flexDirection.startsWith('row')
     let before
+    let beside
     return {
-      move({ clientX, clientY }) {
-        const siblings = [...parent.children].filter((child) => child !== element && child.getClientRects().length)
+      move({ clientX, clientY, altKey }) {
+        const siblings = [...parent.children].filter((child) => child !== element && child !== host && child.getClientRects().length)
+        // In a stack, the left or right third of another element puts the two side by side, half each
+        const under = !across && !altKey && siblings.find((sibling) => {
+          const rect = sibling.getBoundingClientRect()
+          return clientY >= rect.top && clientY <= rect.bottom && clientX >= rect.left && clientX <= rect.right
+        })
+        const within = under && (clientX - under.getBoundingClientRect().left) / under.getBoundingClientRect().width
+        beside = under && (within < 1 / 3 || within > 2 / 3) ? { sibling: under, after: within > 2 / 3 } : null
+        if (beside) {
+          const rect = under.getBoundingClientRect()
+          state.indicator = { left: (beside.after ? rect.right : rect.left) - 1, top: rect.top, width: 2, height: rect.height }
+          return
+        }
         const middle = (rect) => (across ? rect.left + rect.width / 2 : rect.top + rect.height / 2)
         before = siblings.find((sibling) => (across ? clientX : clientY) < middle(sibling.getBoundingClientRect())) ?? null
-        const beside = before ?? siblings.at(-1)
-        if (!beside) return
-        const rect = beside.getBoundingClientRect()
+        const near = before ?? siblings.at(-1)
+        if (!near) return
+        const rect = near.getBoundingClientRect()
         state.indicator = across
           ? { left: (before ? rect.left : rect.right) - 1, top: rect.top, width: 2, height: rect.height }
           : { left: rect.left, top: (before ? rect.top : rect.bottom) - 1, width: rect.width, height: 2 }
       },
       end() {
         state.indicator = null
-        if (before !== undefined) move(element, before)
+        if (beside) pair(beside.sibling, element, beside.after)
+        else if (before !== undefined) move(element, before)
       },
     }
+  }
+
+  // Two elements of a stack side by side: a new 12-column grid where the first stood, with half each
+  function pair(sibling, element, after) {
+    const parent = sibling.parentElement
+    const wrapper = document.createElement('div')
+    const inside = after ? [sibling, element] : [element, sibling]
+    // Put back last to first as they stood, so each one's old neighbour is there to go before
+    const stood = [sibling, element].sort((first, second) => (first.compareDocumentPosition(second) & 4 ? 1 : -1)).map((node) => [node, node.nextSibling])
+    const apply = () => {
+      parent.insertBefore(wrapper, sibling)
+      wrapper.append(...inside)
+      record.groups.add(wrapper)
+    }
+    batch(() => {
+      const saved = snapshot([wrapper, ...inside])
+      apply()
+      write(wrapper, 'display', 'grid')
+      write(wrapper, COLUMNS, `repeat(12, ${FRACTION})`)
+      write(inside[0], 'grid-column', '1 / span 6')
+      write(inside[1], 'grid-column', '7 / span 6')
+      push({
+        undo: () => {
+          for (const [node, next] of stood) parent.insertBefore(node, next)
+          wrapper.remove()
+          record.groups.delete(wrapper)
+        },
+        redo: apply,
+      })
+      commit(saved)
+    })
+    select([element])
   }
 
   function beginDrag(press, handle) {
@@ -762,6 +878,9 @@ export function mount({ launcher = true, onToggle } = {}) {
         ),
         gap(),
       )
+    }
+    if (element !== document.body && holdsText(element)) {
+      controls.push(row('Type', h('button', { class: 'toggle raised', 'aria-pressed': `${fitted(element)}`, onclick: () => setFit(element, !fitted(element)) }, 'Fill width')))
     }
     const outer = element !== document.body && geometry(element.parentElement)
     if (outer) {

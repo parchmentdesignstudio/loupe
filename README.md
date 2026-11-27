@@ -376,11 +376,15 @@ Compose works on a page that’s already running in a dev server. It groups elem
 | Set the gap | A bare number is a step of Tailwind’s spacing scale, so 4 is `gap-4`, and 4 8 is `gap-y-4 gap-x-8`. The list of changes names the class beside the value. A length, such as 24px, is kept as it’s typed |
 | Drag the gap or padding | A selected container has a green grip in each gap and on each side’s padding. Dragging one moves it by steps of the spacing scale. With ⌥ held, a gap’s grip sets the gap both ways, and a side’s grip sets the opposite side too. The list of changes gathers matching sides, as `padding-inline: 2rem (px-8)` |
 | Move on a grid | Drag, or the arrow keys. The handles, or ⇧ with an arrow, change what it spans. Drag past the last row to start a new one |
-| Reorder | Outside a grid, dragging or the arrow keys change the order |
+| Share a row | Drop an item on another and they share its row: two take half the columns each, three a third, in the order they sit under the pointer. Dropped on empty cells it goes where it’s put, and ⌥ lets it overlap instead of sharing |
+| Reorder | Outside a grid, dragging or the arrow keys change the order. In a stack, dropping on the left or right third of another element puts the two side by side, in a new 12-column grid with half each |
+| Fill the width with type | Fill width, in the panel, for an element that holds text, such as a line of a hero’s lock-up. It goes on one line, or as many as it has `<br>`s, at a size that’s a share of its container’s width (`cqi`), so it keeps filling it as the page narrows. Its parent becomes the container. Change the columns it spans and it’s sized again |
 | Name a line | Double-click its number. A place then uses the name, as in `grid-column: content-start / content-end` |
 | Undo, redo | ⌘Z and ⇧⌘Z. Reset puts the page back as it was |
 
 The first time an item is moved on a grid, every item in that grid is given the place it has. The browser moves an item it placed itself when another is put in its way, so without this, dragging one thing would shuffle the rest, and nothing could overlap.
+
+CSS has a property for type that fills its width, `text-fit: grow`, but it isn’t in every browser yet, so Compose writes the `cqi` size, which is, and the list of changes says the property could take over.
 
 The changes last until the page reloads, and they’re for the width the browser is at. Compose doesn’t yet write breakpoints, move an element from one parent to another, or keep changes through a reload.
 
