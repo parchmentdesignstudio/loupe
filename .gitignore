@@ -12,3 +12,6 @@ elyx_deps
 packages/ui/preview/genui/evals/results
 # and the gallery's reviews of them
 packages/ui/preview/genui/evals/reviews
+
+# Compose's list of layout changes, written by its dev-server plugin for an agent to read
+.compose

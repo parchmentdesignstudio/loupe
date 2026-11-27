@@ -30,7 +30,7 @@ function h(tag, properties = {}, ...children) {
 export function mount({ launcher = true, onToggle } = {}) {
   if (window.parchmentCompose) return window.parchmentCompose
 
-  const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, note: null, landing: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false }
+  const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, note: null, landing: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false, from: 'base', file: '' }
   const record = { styles: new Map(), groups: new Set(), copies: new Map(), removed: [], deleted: [], moved: new Map() }
   const history = { done: [], undone: [], batch: null }
 
@@ -52,23 +52,54 @@ export function mount({ launcher = true, onToggle } = {}) {
 
   // ——— Styles: what Compose set on each element, and what its style attribute held before
 
+  // Tailwind's breakpoints, or the site's own where it has set them, as the width each starts at
+  const breakpoints = () => {
+    const root = getComputedStyle(document.documentElement)
+    const widths = { base: 0 }
+    for (const [name, rem] of [['sm', 40], ['md', 48], ['lg', 64], ['xl', 80], ['2xl', 96]]) {
+      const own = root.getPropertyValue(`--breakpoint-${name}`).trim()
+      widths[name] = Math.round(own.endsWith('px') ? px(own) : (px(own) || rem) * px(root.fontSize))
+    }
+    return widths
+  }
+  // What's set goes in the layer for the breakpoint chosen in the panel, unless the window is narrower than it
+  const active = () => (breakpoints()[state.from] <= innerWidth ? state.from : 'base')
+
   function entry(element) {
-    if (!record.styles.has(element)) record.styles.set(element, { original: new Map(), set: new Map() })
+    if (!record.styles.has(element)) record.styles.set(element, { original: new Map(), layers: new Map() })
     return record.styles.get(element)
   }
 
-  function write(element, property, value) {
-    const { original, set } = entry(element)
+  function layerOf(element, name) {
+    const { layers } = entry(element)
+    if (!layers.has(name)) layers.set(name, new Map())
+    return layers.get(name)
+  }
+
+  // What an element has at this width: the widest layer that sets it and has begun
+  function composed(element, property) {
+    const layers = record.styles.get(element)?.layers
+    let value = ''
+    if (layers) for (const [name, from] of Object.entries(breakpoints())) if (from <= innerWidth && layers.get(name)?.get(property)) value = layers.get(name).get(property)
+    return value
+  }
+
+  function show(element, property) {
+    const { original } = entry(element)
     if (!original.has(property)) original.set(property, element.style.getPropertyValue(property))
+    const value = composed(element, property) || original.get(property)
     element.style.removeProperty(property)
-    if (value) {
-      element.style.setProperty(property, value)
-      set.set(property, value)
-    } else {
-      if (original.get(property)) element.style.setProperty(property, original.get(property))
-      set.delete(property)
-      if (!element.getAttribute('style')) element.removeAttribute('style')
-    }
+    if (value) element.style.setProperty(property, value)
+    else if (!element.getAttribute('style')) element.removeAttribute('style')
+  }
+
+  function write(element, property, value, name = active()) {
+    const { original } = entry(element)
+    if (!original.has(property)) original.set(property, element.style.getPropertyValue(property))
+    const layer = layerOf(element, name)
+    if (value) layer.set(property, value)
+    else layer.delete(property)
+    show(element, property)
   }
 
   // The same, but a value that changes nothing is left out, so going back to how an element was leaves no change
@@ -80,13 +111,22 @@ export function mount({ launcher = true, onToggle } = {}) {
     if (getComputedStyle(element).getPropertyValue(property) !== applied) write(element, property, value)
   }
 
-  const composed = (element, property) => record.styles.get(element)?.set.get(property) ?? ''
-  const snapshot = (elements) => elements.map((element) => [element, new Map(entry(element).set)])
+  const snapshot = (elements) => elements.map((element) => [element, active(), new Map(layerOf(element, active()))])
   const restore = (saved) => {
-    for (const [element, values] of saved) {
-      for (const property of new Set([...entry(element).set.keys(), ...values.keys()])) write(element, property, values.get(property) ?? '')
+    for (const [element, name, values] of saved) {
+      for (const property of new Set([...layerOf(element, name).keys(), ...values.keys()])) write(element, property, values.get(property) ?? '', name)
     }
   }
+
+  // A layer begins or ends as the window crosses its breakpoint
+  addEventListener('resize', () => {
+    for (const [element, { layers }] of record.styles) {
+      for (const property of new Set([...layers.values()].flatMap((values) => [...values.keys()]))) show(element, property)
+    }
+    render()
+  })
+
+  const report = () => summarise(record, { path: location.pathname, width: innerWidth, breakpoints: breakpoints() })
 
   // ——— History
 
@@ -94,6 +134,7 @@ export function mount({ launcher = true, onToggle } = {}) {
     if (history.batch) return history.batch.push(step)
     history.done.push(step)
     history.undone = []
+    save()
   }
 
   function batch(run) {
@@ -109,7 +150,7 @@ export function mount({ launcher = true, onToggle } = {}) {
 
   function commit(before) {
     const after = snapshot(before.map(([element]) => element))
-    const text = (saved) => JSON.stringify(saved.map(([, values]) => [...values]))
+    const text = (saved) => JSON.stringify(saved.map(([, , values]) => [...values]))
     if (text(before) !== text(after)) push({ undo: () => restore(before), redo: () => restore(after) })
   }
 
@@ -126,6 +167,7 @@ export function mount({ launcher = true, onToggle } = {}) {
     if (!last) return
     last[action]()
     to.push(last)
+    save()
     select(state.selected.filter((element) => element.isConnected))
   }
   const undo = () => step(history.done, history.undone, 'undo')
@@ -276,11 +318,104 @@ export function mount({ launcher = true, onToggle } = {}) {
       const children = [...parent.children].filter((child) => child !== host)
       children.forEach((child, index) => {
         origins.set(child, { id: `${path}/${index}`, parent, next: children[index + 1] ?? null, previous: children[index - 1] ?? null })
+        signature += child.localName + child.className
         visit(child, `${path}/${index}`)
       })
     }
     origins.set(document.body, { id: '' })
     visit(document.body, '')
+  }
+  let signature = ''
+
+  // ——— Keeping changes through a reload, and in a file for an agent
+
+  const KEY = `compose:${location.pathname}`
+  const idOf = (element, made) => origins.get(element)?.id ?? (made.has(element) ? `n${[...made.keys()].indexOf(element)}` : null)
+
+  // The page as it now differs from how it began: what was made, the children of every parent whose children
+  // changed, what was taken out, and the styles. Enough to do it all again on the same page
+  function save() {
+    try {
+      if (!history.done.length || !report().count) sessionStorage.removeItem(KEY)
+      else {
+        stamp()
+        const made = new Map([...[...record.groups].map((node) => [node, { kind: 'div' }]), ...[...record.copies].map(([node, source]) => [node, { kind: 'copy', source, html: node.outerHTML }])].filter(([node]) => node.isConnected))
+        const childrenOf = (parent) => [...parent.children].filter((child) => child !== host)
+        const parents = new Map([...origins].filter(([, origin]) => origin.parent).map(([, origin]) => [origin.parent, null]))
+        for (const node of made.keys()) parents.set(node, null)
+        const layouts = []
+        for (const parent of parents.keys()) {
+          const now = childrenOf(parent).map((child) => idOf(child, made))
+          const began = [...origins].filter(([, origin]) => origin.parent === parent).map(([, origin]) => origin.id)
+          if (now.join() !== began.join() && !now.includes(null)) layouts.push([idOf(parent, made), now])
+        }
+        const gone = (list) => list.filter(({ element }) => !element.isConnected && origins.has(element)).map(({ element, described }) => ({ id: origins.get(element).id, described }))
+        sessionStorage.setItem(
+          KEY,
+          JSON.stringify({
+            signature,
+            made: [...made.values()],
+            layouts,
+            removed: gone(record.removed),
+            deleted: gone(record.deleted),
+            moved: [...record.moved.keys()].map((element) => origins.get(element)?.id).filter(Boolean),
+            styles: [...record.styles].map(([element, { layers }]) => [idOf(element, made), [...layers].map(([name, values]) => [name, [...values]])]).filter(([id]) => id !== null),
+          }),
+        )
+      }
+    } catch {}
+    if (state.file) fetch('/__compose', { method: 'POST', body: report().count ? report().text : '' }).catch(() => {})
+  }
+
+  // After a reload, the saved changes are made again as one step, which Undo and Reset take back like any other.
+  // On a page that isn't the one they were made on, as once an agent has put them in the source, they're let go
+  function resume() {
+    let saved
+    try {
+      saved = JSON.parse(sessionStorage.getItem(KEY))
+    } catch {}
+    if (!saved) return
+    stamp()
+    if (saved.signature !== signature) {
+      sessionStorage.removeItem(KEY)
+      return say('The page has changed, so the earlier changes were let go')
+    }
+    const byId = new Map([...origins].map(([element, origin]) => [origin.id, element]))
+    const made = saved.made.map(({ kind, html, source }, index) => {
+      const holder = document.createElement('template')
+      holder.innerHTML = kind === 'copy' ? html : '<div></div>'
+      const node = holder.content.firstElementChild
+      byId.set(`n${index}`, node)
+      return [node, kind, source]
+    })
+    const began = saved.layouts.map(([id]) => [byId.get(id), [...(byId.get(id)?.children ?? [])].filter((child) => child !== host)])
+    const out = (list) => list.map(({ id, described }) => ({ element: byId.get(id), parent: origins.get(byId.get(id)).parent, described }))
+    const [removed, deleted] = [out(saved.removed), out(saved.deleted)]
+    const redo = () => {
+      for (const [node, kind, source] of made) {
+        if (kind === 'copy') record.copies.set(node, source)
+        else record.groups.add(node)
+      }
+      for (const [id, children] of saved.layouts) byId.get(id).append(...children.map((child) => byId.get(child)))
+      for (const { element } of [...removed, ...deleted]) element.remove()
+      record.removed.push(...removed)
+      record.deleted.push(...deleted)
+      for (const id of saved.moved) record.moved.set(byId.get(id), origins.get(byId.get(id)))
+      for (const [id, layers] of saved.styles) for (const [name, values] of layers) for (const [property, value] of values) write(byId.get(id), property, value, name)
+    }
+    const undo = () => {
+      for (const [id, layers] of saved.styles) for (const [name, values] of layers) for (const [property] of values) write(byId.get(id), property, '', name)
+      for (const [parent, children] of began) if (origins.has(parent)) parent.append(...children)
+      for (const [node, kind] of made) {
+        node.remove()
+        if (kind === 'copy') record.copies.delete(node)
+        else record.groups.delete(node)
+      }
+      for (const list of [record.removed, record.deleted]) list.length = 0
+      for (const id of saved.moved) record.moved.delete(byId.get(id))
+    }
+    redo()
+    history.done.push({ undo, redo })
   }
 
   function group() {
@@ -644,7 +779,10 @@ export function mount({ launcher = true, onToggle } = {}) {
     const kept = ['translate', 'transition', 'opacity', 'z-index', 'position'].map((property) => [property, element.style.getPropertyValue(property)])
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches
     const clear = () => {
-      for (const [property, value] of kept) value ? element.style.setProperty(property, value) : element.style.removeProperty(property)
+      for (const [property, value] of kept) {
+        if (value) element.style.setProperty(property, value)
+        else element.style.removeProperty(property)
+      }
       if (!element.getAttribute('style')) element.removeAttribute('style')
     }
     return {
@@ -1053,7 +1191,12 @@ export function mount({ launcher = true, onToggle } = {}) {
     state,
     isMac,
     message: () => message,
-    count: () => summarise(record).count,
+    count: () => report().count,
+    breakpoints,
+    setFrom(name) {
+      state.from = name
+      render()
+    },
     label,
     geometry,
     select,
@@ -1115,11 +1258,12 @@ export function mount({ launcher = true, onToggle } = {}) {
       last.undo()
       history.undone.push(last)
     }
+    save()
     select(state.selected.filter((element) => element.isConnected))
   }
 
   async function copy() {
-    const { count, text } = summarise(record, { path: location.pathname, width: innerWidth })
+    const { count, text } = report()
     if (!count) return say('No changes to copy yet')
     try {
       await navigator.clipboard.writeText(text)
@@ -1132,7 +1276,7 @@ export function mount({ launcher = true, onToggle } = {}) {
       document.execCommand('copy')
       holder.remove()
     }
-    say('Copied')
+    say(state.file ? `Copied, and in ${state.file}` : 'Copied')
   }
 
   // The panel moves by its header, to get it off whatever is being worked on
@@ -1267,6 +1411,9 @@ export function mount({ launcher = true, onToggle } = {}) {
       render()
       if (!painting) requestAnimationFrame(paint)
     }
+    try {
+      sessionStorage.setItem('compose:on', on ? '1' : '')
+    } catch {}
     onToggle?.(on)
   }
 
@@ -1288,6 +1435,18 @@ export function mount({ launcher = true, onToggle } = {}) {
   for (const type of ['click', 'dblclick', 'auxclick', 'mousedown', 'mouseup', 'dragstart', 'submit']) addEventListener(type, swallow, true)
   document.documentElement.append(host)
   render()
+  // A dev server with Compose's plugin keeps the changes in a file as well, and says which
+  fetch('/__compose')
+    .then((response) => (response.ok && response.headers.get('content-type') === null ? response.text() : ''))
+    .then((file) => {
+      state.file = /^[\w./-]+\.md$/.test(file) ? file : ''
+      render()
+    })
+    .catch(() => {})
+  resume()
+  try {
+    if (sessionStorage.getItem('compose:on')) toggle(true)
+  } catch {}
 
   window.parchmentCompose = {
     toggle,
@@ -1295,7 +1454,7 @@ export function mount({ launcher = true, onToggle } = {}) {
       return state.on
     },
     /** The changes so far, as the text Copy changes gives */
-    changes: () => summarise(record, { path: location.pathname, width: innerWidth }),
+    changes: () => report(),
   }
   return window.parchmentCompose
 }

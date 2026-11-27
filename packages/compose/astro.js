@@ -1,8 +1,12 @@
 // Adds Compose to Astro's dev toolbar, which opens and closes it
+import { middleware } from './server.js'
+
 export default function compose() {
   return {
     name: '@parchment/compose',
     hooks: {
+      // The list of changes is kept in a file in the site, for an agent to read
+      'astro:server:setup': ({ server }) => void server.middlewares.use('/__compose', middleware(server.config.root)),
       'astro:config:setup': ({ command, addDevToolbarApp, injectScript }) => {
         if (command !== 'dev') return
         injectScript('head-inline', `(${keepSources})()`)

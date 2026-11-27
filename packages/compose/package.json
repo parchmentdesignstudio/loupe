@@ -8,6 +8,7 @@
     "vite.js",
     "astro.js",
     "astro-app.js",
+    "server.js",
     "index.d.ts"
   ],
   "exports": {

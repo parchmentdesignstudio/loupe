@@ -47,9 +47,9 @@ export function describe(element, isNew = () => false) {
 
 /**
  * The changes as a numbered list. `record` holds what Compose has touched: `groups`, the wrappers it added,
- * `removed`, the wrappers it took away, each described as it was, `moved`, the neighbours each reordered element began between, and `styles`, what it set
+ * `removed`, the wrappers it took away, each described as it was, `moved`, the neighbours each reordered element began between, and `styles`, what it set, in `layers` by the breakpoint each applies from
  */
-export function summarise(record, { path = '/', width = 0 } = {}) {
+export function summarise(record, { path = '/', width = 0, breakpoints = {} } = {}) {
   const inDocument = (first, second) => (first.compareDocumentPosition(second) & 4 ? -1 : 1)
   const groups = [...record.groups].filter((group) => group.isConnected).sort(inDocument)
   const copies = [...(record.copies ?? [])].filter(([copy]) => copy.isConnected).sort(([first], [second]) => inDocument(first, second))
@@ -59,10 +59,23 @@ export function summarise(record, { path = '/', width = 0 } = {}) {
     const copy = copies.findIndex(([made]) => made === element)
     return copy < 0 ? describe(element, isNew) : `the copy from ${groups.length + copy + 1}`
   }
-  const declarations = (element) =>
-    [...gatherPadding(record.styles.get(element)?.set ?? [])]
-      .map(([property, value]) => `${property}: ${value}${spacingClasses(property, value) ? ` (${spacingClasses(property, value)})` : ''}${property === 'font-size' && /cqi$|vw$/.test(value) ? ' (sized so the text fills its width, which text-fit: grow does by itself in browsers that have it)' : ''}`)
+  const written = (values) =>
+    [...gatherPadding(values)]
+      .map(([property, value]) => {
+        const classes = spacingClasses(property, value)
+        const fills = property === 'font-size' && /cqi$|vw$/.test(value)
+        return `${property}: ${value}${classes ? ` (${classes})` : ''}${fills ? ' (sized so the text fills its width, which text-fit: grow does by itself in browsers that have it)' : ''}`
+      })
       .join('; ')
+  // What's set for every width first, then what only applies from a breakpoint up, narrowest first
+  const declarations = (element) => {
+    const entry = record.styles.get(element)
+    const layers = [...(entry?.layers ?? [['base', entry?.set ?? new Map()]])].filter(([, values]) => values.size)
+    return layers
+      .sort(([first], [second]) => (breakpoints[first] ?? 0) - (breakpoints[second] ?? 0))
+      .map(([name, values]) => (name === 'base' ? written(values) : `From ${name}${breakpoints[name] ? ` (${breakpoints[name]}px)` : ''}: ${written(values)}`))
+      .join('\n   ')
+  }
   const items = []
 
   for (const group of groups) {

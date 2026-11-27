@@ -174,6 +174,10 @@ function Panel({ api }) {
   const primary = selected.at(-1)
   const command = api.isMac ? '⌘' : 'Ctrl '
   const count = api.count()
+  // Only the breakpoints the window has reached, as a change from a wider one wouldn't show
+  const froms = Object.entries(api.breakpoints())
+    .filter(([, from]) => from <= innerWidth)
+    .map(([id, from]) => ({ id, name: id === 'base' ? 'Every width' : `${id}, ${from}px and up` }))
   const path = []
   for (let node = primary; node && node !== document.documentElement; node = node.parentElement) path.unshift(node)
   return (
@@ -209,11 +213,18 @@ function Panel({ api }) {
             Select several
           </Switch>
         )}
+        {primary && (
+          <Row name="From">
+            <Select variant="filled" size="small" className="min-w-0 flex-1" aria-label="The width changes apply from" items={froms} value={froms.some(({ id }) => id === api.state.from) ? api.state.from : 'base'} onChange={(id) => id !== null && api.setFrom(String(id))}>
+              {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+            </Select>
+          </Row>
+        )}
         {selected.length === 1 && <Layout api={api} element={primary} />}
       </div>
       <footer className="flex items-center gap-2 border-t border-bleed/8 p-2">
         <output className="min-w-0 flex-1 px-1 text-label text-muted">
-          {api.message() || (count ? `${count} ${count === 1 ? 'change' : 'changes'}` : 'No changes yet')}
+          {api.message() || (count ? `${count} ${count === 1 ? 'change' : 'changes'}${api.state.file ? `, in ${api.state.file}` : ''}` : 'No changes yet')}
         </output>
         <Button variant="secondary" size="small" onPress={api.reset}>
           Reset

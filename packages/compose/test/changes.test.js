@@ -69,6 +69,23 @@ describe('summarise', () => {
     expect(summarise(changes).count).toBe(0)
   })
 
+  it('keeps what applies from a breakpoint apart from what always does', () => {
+    const changes = record()
+    changes.styles.set(document.querySelector('h1'), { original: new Map(), layers: new Map([['lg', new Map([['grid-column', '1 / span 6']])], ['base', new Map([['grid-column', '1 / -1']])]]) })
+    expect(summarise(changes, { breakpoints: { base: 0, lg: 1024 } }).text).toContain('grid-column: 1 / -1\n   From lg (1024px): grid-column: 1 / span 6')
+  })
+
+  it('lists a copy and a deletion', () => {
+    const changes = { ...record(), copies: new Map(), deleted: [] }
+    const copy = document.querySelector('h1').cloneNode(true)
+    document.querySelector('h1').after(copy)
+    changes.copies.set(copy, '<h1> “Tide tables” (src/pages/index.astro:12:5)')
+    changes.deleted.push({ element: document.createElement('p'), parent: document.querySelector('main'), described: '<p> “Last” (body > main > p)' })
+    const { text } = summarise(changes)
+    expect(text).toContain('1. Duplicate <h1> “Tide tables” (src/pages/index.astro:12:5), and put the copy before <p class="standfirst lede">')
+    expect(text).toContain('2. Delete <p> “Last” (body > main > p)')
+  })
+
   it('says which wrapper was taken away', () => {
     const changes = record()
     changes.removed.push({ element: document.createElement('div'), parent: document.querySelector('main'), described: '<div class="stack"> (src/pages/index.astro:8:3)' })

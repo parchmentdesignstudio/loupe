@@ -377,8 +377,13 @@ Compose works on a page that’s already running in a dev server. It groups elem
 | Drag the gap or padding | A selected container has a green grip in each gap and on each side’s padding. Dragging one moves it by steps of the spacing scale. With ⌥ held, a gap’s grip sets the gap both ways, and a side’s grip sets the opposite side too. The list of changes gathers matching sides, as `padding-inline: 2rem (px-8)` |
 | Move on a grid | Drag, or ⇧ with an arrow key. The handles, or ⌥ with an arrow key, change what it spans. Drag past the last row to start a new one |
 | Share a row | Drop an item on another and they share its row: two take half the columns each, three a third, in the order they sit under the pointer. Dropped on empty cells it goes where it’s put, and ⌥ lets it overlap instead of sharing |
+| Move anywhere | What’s dragged follows the pointer, with a line or a dashed box where it will land. It can go before any element on the page, into another group, or out of a grid once the pointer leaves it. Within a few pixels of a group’s edge is beside the group, not in it |
 | Reorder | Outside a grid, dragging or ⇧ with an arrow key changes the order. In a stack, dropping on the left or right third of another element puts the two side by side, in a new 12-column grid with half each |
 | Fill the width with type | Fill width, in the panel, for an element that holds text, such as a line of a hero’s lock-up. It goes on one line, or as many as it has `<br>`s, at a size that’s a share of its container’s width (`cqi`), so it keeps filling it as the page narrows. Its parent becomes the container. Change the columns it spans and it’s sized again |
+| Size the columns | Drag a column line and one of the columns beside it takes what the other gives up, in quarters of a fraction. The plus after the last line adds a column |
+| Align in its cell | Align, in the panel, for an item on a grid: across its columns and down its rows |
+| Duplicate, delete | ⌘D and Delete, each in the list of changes |
+| Lay out a width at a time | From, in the panel, is the breakpoint what you change applies from: every width, or `lg` and up. Narrow the window below it and the page falls back to what’s under it, to compose that too. They’re Tailwind’s breakpoints, or the site’s own where it sets `--breakpoint-*`, and the list of changes keeps each apart, as `From lg (1024px): grid-column: 1 / span 6`. Grouping and moving are the same at every width |
 | Name a line | Double-click its number. A place then uses the name, as in `grid-column: content-start / content-end` |
 | Undo, redo | ⌘Z and ⇧⌘Z. Reset puts the page back as it was |
 
@@ -388,7 +393,7 @@ CSS has a property for type that fills its width, `text-fit: grow`, but it isn�
 
 The panel is drawn with Loupe’s own components, inside a shadow root, so the page’s styles don’t reach it and Loupe’s don’t reach the page. `pnpm --filter @parchment/compose build` gathers Compose, React, the components and their compiled styles into `lib/compose.js`, which is committed, as a site that has none of them still has to run it. The demo runs from `src`, so a change there shows without building.
 
-The changes last until the page reloads, and they’re for the width the browser is at. Compose doesn’t yet write breakpoints, move an element from one parent to another, or keep changes through a reload.
+The changes are kept for the tab, so they’re made again after a reload, and Compose opens again if it was open. They’re let go when the page itself is different, as it is once an agent has put them in the source. A copy that was changed after it was made comes back as it looked, without its own entries in the list.
 
 ### Using it in a site
 
@@ -418,7 +423,7 @@ Anywhere else, such as Next.js, whose dev menu can’t be added to, call `mount(
 if (process.env.NODE_ENV === 'development') import('@parchment/compose').then(({ mount }) => mount())
 ```
 
-`window.parchmentCompose.changes()` returns the same list Copy changes gives, for an agent that can drive the browser to read for itself.
+With the Astro integration or the Vite plugin, the dev server also keeps the list in `.compose/changes.md` in the site, written as each change is made and removed when there are none, so an agent can be told to make the layout changes in that file with nothing copied. Add `.compose` to the site’s `.gitignore`. `window.parchmentCompose.changes()` returns the same list, for an agent that can drive the browser to read for itself.
 
 ## Releasing
 
