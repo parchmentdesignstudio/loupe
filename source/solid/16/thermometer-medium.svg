@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/thermometer-medium</title>
+    <g id="solid/16/thermometer-medium" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(5, 1.5)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1.25,1.75 C1.25,0.784 2.033,0 3,0 C3.966,0 4.75,0.783 4.75,1.75 L4.75,7.563 C5.507,8.107 6,8.996 6,9.999 C6,11.655 4.657,12.999 3,12.999 C1.344,12.999 0,11.656 0,9.999 C0,8.996 0.492,8.107 1.25,7.563 L1.25,1.75 Z M3.25,6.75 C3.457,6.75 3.625,6.583 3.625,6.375 L3.625,1.875 C3.625,1.668 3.458,1.5 3.25,1.5 L2.75,1.5 C2.543,1.5 2.375,1.667 2.375,1.875 L2.375,6.375 C2.375,6.582 2.542,6.75 2.75,6.75 L3.25,6.75 Z" id="thermometer"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/arrow-right-to-line</title>
+    <g id="solid/16/arrow-right-to-line" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(3.5, 2.75)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M0.5,4.5 C0.224,4.5 0,4.723 0,5 L0,5.5 C0,5.776 0.223,6 0.5,6 L6.13,6 L3.344,8.786 C3.149,8.981 3.149,9.297 3.344,9.493 L3.698,9.846 C3.893,10.041 4.209,10.041 4.405,9.846 L8.647,5.604 C8.741,5.511 8.793,5.383 8.793,5.25 C8.793,5.118 8.741,4.99 8.647,4.896 L4.404,0.654 L3.697,0.654 L3.343,1.007 C3.148,1.202 3.148,1.518 3.343,1.714 L6.129,4.5 L0.5,4.5 Z M11.25,0.5 C11.25,0.224 11.027,0 10.75,0 L10.25,0 C9.974,0 9.75,0.223 9.75,0.5 L9.75,10 C9.75,10.276 9.973,10.5 10.25,10.5 L10.75,10.5 C11.026,10.5 11.25,10.277 11.25,10 L11.25,0.5 Z"></path>
+        </g>
+    </g>
+</svg>

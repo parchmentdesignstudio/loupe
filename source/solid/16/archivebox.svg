@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/archivebox</title>
+    <g id="solid/16/archivebox" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(1, 1.5)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1,3.5 C0.448,3.5 0,3.053 0,2.5 L0,1 C0,0.448 0.447,0 1,0 L13,0 C13.552,0 14,0.447 14,1 L14,2.5 C14,3.052 13.553,3.5 13,3.5 L1,3.5 Z M2.5,13 C1.672,13 1,12.329 1,11.5 L1,5.75 C1,4.922 1.671,4.25 2.5,4.25 L11.5,4.25 C12.328,4.25 13,4.921 13,5.75 L13,11.5 C13,12.328 12.329,13 11.5,13 L2.5,13 Z M9,8 C9.276,8 9.5,7.777 9.5,7.5 L9.5,7 C9.5,6.724 9.277,6.5 9,6.5 L5,6.5 C4.724,6.5 4.5,6.723 4.5,7 L4.5,7.5 C4.5,7.776 4.723,8 5,8 L9,8 Z"></path>
+        </g>
+    </g>
+</svg>

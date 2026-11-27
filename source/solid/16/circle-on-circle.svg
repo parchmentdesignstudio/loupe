@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/circle-on-circle</title>
+    <g id="solid/16/circle-on-circle" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M14,9.5 C14,11.985 11.986,14 9.5,14 C7.8,14 6.32,13.057 5.555,11.666 C5.861,11.721 6.177,11.75 6.5,11.75 C9.399,11.75 11.75,9.4 11.75,6.5 C11.75,6.178 11.721,5.861 11.666,5.555 C13.057,6.32 14,7.8 14,9.5 Z" id="fill-opacity-60" fill="color(display-p3 0.035 0.180 0.141)" opacity="0.6"></path>
+        <path d="M2,6.5 C2,4.015 4.014,2 6.5,2 C8.985,2 11,4.014 11,6.5 C11,8.985 8.986,11 6.5,11 C4.015,11 2,8.986 2,6.5 Z" id="fill" fill="color(display-p3 0.035 0.180 0.141)"></path>
+    </g>
+</svg>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/point-bottomleft-forward-to-point-topright-scurvepath</title>
+    <g id="solid/16/point-bottomleft-forward-to-point-topright-scurvepath" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(1.75, 1.75)">
+            <path d="M1.75,10.75 C10.75,10.75 1.75,1.75 10.75,1.75" id="curve" stroke="color(display-p3 0.035 0.180 0.141)" stroke-width="1.5"></path>
+            <circle id="point" fill="color(display-p3 0.035 0.180 0.141)" cx="1.75" cy="10.75" r="1.75"></circle>
+            <circle id="point" fill="color(display-p3 0.035 0.180 0.141)" cx="10.75" cy="1.75" r="1.75"></circle>
+        </g>
+    </g>
+</svg>

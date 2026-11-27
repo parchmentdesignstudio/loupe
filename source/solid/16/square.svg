@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/square</title>
+    <g id="solid/16/square" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(2, 2)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1,12 C0.448,12 0,11.553 0,11 L0,1 C0,0.448 0.447,0 1,0 L11,0 C11.552,0 12,0.447 12,1 L12,11 C12,11.552 11.553,12 11,12 L1,12 Z"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/puzzlepiece</title>
+    <g id="solid/16/puzzlepiece" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M2.25,1 L11.75,1 C12.4403559,1 13,1.55964406 13,2.25 L13,5.75 C13,5.75 15,4.25 15,8 C15,11.75 13,10.25 13,10.25 L13,13.75 C13,14.4403559 12.4403559,15 11.75,15 L2.25,15 C1.55964406,15 1,14.4403559 1,13.75 L1,10.25 C1,10.25 3,11.375 3,8 C3,4.625 1,5.75 1,5.75 L1,2.25 C1,1.55964406 1.55964406,1 2.25,1 Z" id="fill" fill="color(display-p3 0.035 0.180 0.141)"></path>
+    </g>
+</svg>

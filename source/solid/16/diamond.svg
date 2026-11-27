@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/diamond</title>
+    <g id="solid/16/diamond" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(1.1248, 1.1247)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M5.63725,0.51225 C6.32025,-0.17075 7.42825,-0.17075 8.11125,0.51225 L13.23625,5.63725 C13.91925,6.32025 13.91925,7.42825 13.23625,8.11125 L8.11125,13.23625 C7.42825,13.91925 6.32025,13.91925 5.63725,13.23625 L0.51225,8.11125 C-0.17075,7.42825 -0.17075,6.32025 0.51225,5.63725 L5.63725,0.51225 Z"></path>
+        </g>
+    </g>
+</svg>

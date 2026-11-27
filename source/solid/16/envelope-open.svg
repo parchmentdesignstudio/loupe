@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/envelope-open</title>
+    <g id="solid/16/envelope-open" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(1, 1.479)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M0.418,4.471 L6.418,0.186 C6.765,-0.062 7.232,-0.062 7.58,0.186 L13.58,4.471 C13.767,4.604 13.9,4.796 13.961,5.012 L6.999,8.989 L0.037,5.012 C0.098,4.796 0.231,4.604 0.418,4.471 Z M14,12.521 C14,13.073 13.553,13.521 13,13.521 L1,13.521 C0.448,13.521 0,13.074 0,12.521 L0,5.853 L7,9.851 L14,5.853 L14,12.521 Z"></path>
+        </g>
+    </g>
+</svg>

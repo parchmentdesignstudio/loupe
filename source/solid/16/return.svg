@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/return</title>
+    <g id="solid/16/return" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(1.171, 3)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M2.975,9.682 L0.146,6.854 C0.052,6.761 0,6.633 0,6.5 C0,6.368 0.052,6.24 0.146,6.146 L2.975,3.318 C3.17,3.123 3.486,3.123 3.682,3.318 L4.036,3.672 C4.231,3.867 4.231,4.183 4.036,4.379 L2.665,5.75 L11.329,5.75 L11.329,0.5 C11.329,0.224 11.552,0 11.829,0 L12.329,0 C12.605,0 12.829,0.223 12.829,0.5 L12.829,5.25 C12.829,6.354 11.934,7.25 10.829,7.25 L2.665,7.25 L4.036,8.621 C4.231,8.816 4.231,9.132 4.036,9.328 L3.682,9.682 L2.975,9.682 Z"></path>
+        </g>
+    </g>
+</svg>
