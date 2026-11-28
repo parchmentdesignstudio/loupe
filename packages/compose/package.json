@@ -1,0 +1,62 @@
+{
+  "name": "@parchment/compose",
+  "version": "0.11.0",
+  "description": "Rearrange a page’s layout in the browser, on its own CSS grid, and hand the changes to whoever writes the source",
+  "type": "module",
+  "files": [
+    "lib",
+    "vite.js",
+    "vite.d.ts",
+    "astro.js",
+    "astro-app.js",
+    "server.js",
+    "index.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./lib/compose.js"
+    },
+    "./vite": {
+      "types": "./index.d.ts",
+      "default": "./vite.js"
+    },
+    "./astro": {
+      "types": "./index.d.ts",
+      "default": "./astro.js"
+    },
+    "./astro-app": "./astro-app.js"
+  },
+  "scripts": {
+    "dev": "vite demo",
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "astro": ">=4",
+    "vite": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@parchment/icons": "workspace:*",
+    "@parchment/ui": "workspace:*",
+    "@tailwindcss/node": "^4.3.3",
+    "@tailwindcss/oxide": "^4.3.3",
+    "@vitejs/plugin-react": "^6.1.2",
+    "jsdom": "^30.1.3",
+    "react": "^19.3.1",
+    "react-aria": "3.53.1",
+    "react-dom": "^19.3.1",
+    "react-stately": "3.51.0",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

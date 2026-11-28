@@ -5,6 +5,12 @@ import { NumberField } from '../src/index.js';
 import { expectAccessible } from './accessible.js';
 
 describe('NumberField', () => {
+	it('puts an icon before the number', () => {
+		render(<NumberField aria-label="Columns" start={<svg data-testid="icon" aria-hidden="true" />} />);
+		expect(screen.getByTestId('icon').parentElement?.className).toContain('text-muted');
+		expect(screen.getByRole('textbox', { name: 'Columns' }).className).toContain('ps-1.5');
+	});
+
 	it('steps with the arrow keys and its buttons, within its limits', async () => {
 		const user = userEvent.setup();
 		render(<NumberField label="Width" defaultValue={10} maxValue={12} />);

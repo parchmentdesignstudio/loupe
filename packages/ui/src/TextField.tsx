@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Input, TextArea, TextField as AriaTextField, type TextFieldProps as AriaTextFieldProps } from 'react-aria-components';
 import { boxField, boxLabel, Description, FieldError, type FieldTextProps, type Size, type FieldVariant, Label, readOnly } from './Field.js';
 import { composeClassName, tv } from './tv.js';
@@ -44,15 +45,30 @@ export interface TextFieldProps extends AriaTextFieldProps, FieldTextProps {
 	variant?: FieldVariant;
 	/** 32px tall, or 28px when small, as a button is */
 	size?: Size;
+	/** An icon before the value, as a button has, to say what a field with no label holds. Not for several lines */
+	start?: ReactNode;
 }
 
+// The icon sits over the input's start, and the input's text begins after it: the icon's 16px, its inset and 6px
+const startIcon = tv({
+	base: 'pointer-events-none absolute inset-y-0 flex items-center text-muted',
+	variants: { size: { medium: 'start-2.5', small: 'start-2' } },
+	defaultVariants: { size: 'medium' },
+});
+const afterStart = { medium: 'ps-8', small: 'ps-7' };
+
 /** A labelled text input, with an optional description and the error React Aria's validation gives it */
-export function TextField({ label, description, errorMessage, placeholder, isMultiline = false, rows = 4, variant, size, ...props }: TextFieldProps) {
+export function TextField({ label, description, errorMessage, placeholder, isMultiline = false, rows = 4, variant, size, start, ...props }: TextFieldProps) {
 	return (
 		<AriaTextField {...props} className={composeClassName(props.className, boxField)}>
 			{label && <Label className={boxLabel}>{label}</Label>}
 			{isMultiline ? (
 				<TextArea placeholder={placeholder} rows={rows} className={(state) => textFieldInput({ ...state, variant, size, className: 'resize-y leading-[1.5]' })} />
+			) : start ? (
+				<span className="relative flex">
+					<span className={startIcon({ size })}>{start}</span>
+					<Input placeholder={placeholder} className={(state) => textFieldInput({ ...state, variant, size, className: afterStart[size ?? 'medium'] })} />
+				</span>
 			) : (
 				<Input placeholder={placeholder} className={(state) => textFieldInput({ ...state, variant, size })} />
 			)}

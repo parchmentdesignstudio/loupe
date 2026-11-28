@@ -209,15 +209,26 @@ export interface DocsSearchPage {
 	group: string;
 }
 
+/** Something to do rather than somewhere to go, such as opening a tool */
+export interface DocsSearchCommand {
+	id: string;
+	name: string;
+	/** What it belongs to, or its shortcut, shown at the row's end */
+	group?: string;
+	onAction: () => void;
+}
+
 export interface DocsSearchProps {
 	pages: DocsSearchPage[];
+	/** Things to do, listed before the pages and found by name as they are */
+	commands?: DocsSearchCommand[];
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
 	placeholder?: string;
 }
 
-/** Finds a page by name: type to narrow the list, the arrow keys to move through it, and Enter to go. ⌘K opens it */
-export function DocsSearch({ pages, isOpen, onOpenChange, placeholder = 'Search components' }: DocsSearchProps) {
+/** Finds a page by name, or a command: type to narrow the list, the arrow keys to move through it, and Enter to go. ⌘K opens it */
+export function DocsSearch({ pages, commands = [], isOpen, onOpenChange, placeholder = 'Search components' }: DocsSearchProps) {
 	const { contains } = useFilter({ sensitivity: 'base' });
 
 	useEffect(() => {
@@ -240,10 +251,12 @@ export function DocsSearch({ pages, isOpen, onOpenChange, placeholder = 'Search 
 						<SearchField aria-label="Search" placeholder={placeholder} autoFocus />
 						<ListBox
 							aria-label="Pages"
-							items={pages}
+							items={[...commands.map((command) => ({ href: `command:${command.id}`, name: command.name, group: command.group ?? '' })), ...pages]}
 							onAction={(key) => {
-								window.location.assign(String(key));
 								close();
+								const command = commands.find(({ id }) => `command:${id}` === key);
+								if (command) command.onAction();
+								else window.location.assign(String(key));
 							}}
 							renderEmptyState={() => <p className="px-3 py-1.5 text-control text-muted">Nothing called that</p>}
 							className="-mx-1 -mb-1 min-h-0 flex-1"

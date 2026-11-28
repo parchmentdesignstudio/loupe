@@ -8,6 +8,7 @@ Parchment’s shared design library, used by mcknny, iamsteve.me and parchment. 
 | `@parchment/icons` | Line and solid icons at 16 and 24px |
 | `@parchment/ui` | Accessible React components, built on React Aria |
 | `@parchment/logos` | Company logos, with versions drawn for 16px where a company’s own doesn’t hold up |
+| `@parchment/compose` | Rearranges a page’s layout in the browser, on its own CSS grid, and hands the changes to whoever writes the source |
 
 | Tool | What it does | Command |
 |---|---|---|
@@ -109,7 +110,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `Quote` | Someone else’s words in Livory’s italic, centred under an opening mark, with who said it under them, as a figure. It shares prose’s blockquote rules, through the `quote` class in `styles/prose.css`. `variant="testimonial"` sets them from the start edge, with the person’s photo beside their name |
 | `Aside` | The writer’s own voice beside the main text: a signpost to what’s coming or what the reader needs first, behind the accent’s rule, or an afterthought in muted italic. In prose the rule hangs in the margin |
 | `Composer` | A message field with its send button |
-| `TextField` | Text, or several lines with `isMultiline` |
+| `TextField` | Text, or several lines with `isMultiline`. `start` puts an icon before the value, as it does on `NumberField` and `Select`, for a field in a panel with no label to see |
 | `NumberField` | A number, typed or stepped with the arrow keys and its buttons, within its limits |
 | `SearchField` | Searching, with a button that clears what’s typed. Escape clears it too |
 | `Slider` | A number between two limits, dragged or moved with the arrow keys, with its value beside the label. Two values make a range, with a thumb for each |
@@ -358,6 +359,94 @@ import { Logo } from '@parchment/logos/react'
 
 Logos are 16px tall by default, and as wide as their proportions make them. `size` sets the height. A version drawn for that size is used when there is one, otherwise the original scales to it, and asking for a size a logo has neither for is an error. Without `label` the logo is hidden from screen readers.
 
+## Compose
+
+Compose works on a page that’s already running in a dev server. It groups elements, lays a group out as a grid, a subgrid or flex, and moves things about on the grid, all as changes to the live page. Nothing is written to the source. Copy changes gives a list of what changed, each element named by its tag, classes, words and the file and line it was written at, to paste to an agent or make by hand.
+
+`pnpm compose` opens a page of loose, stacked elements to try it on, at localhost:5191.
+
+| To | Do |
+|---|---|
+| Open or close it | ⌥G, the Compose button, or its button in Astro’s toolbar |
+| Select | Click. A click stays at the level of what’s selected, and clicking inside what’s selected goes one level in. The arrow keys select the element that lies that way among its siblings, ⇧↩ the parent, ↩ the first child and ⇥ the next sibling, and the panel’s header lists the way down to it |
+| Select several | ⌘-click or ⇧-click |
+| On a phone | Two taps select, as one finger scrolls the page. Select several, in the panel’s menu, makes each double tap add to what’s selected. Drag what’s selected, or its handles, as with a mouse |
+| Group, ungroup | ⌘G wraps what’s selected in a new `div`. ⇧⌘G takes a wrapper away and leaves what it held |
+| Lay out | Block, Grid or Flex in the panel. A new grid has 12 columns, with every child across all of them, so nothing moves until it’s dragged. A grid inside a grid can take its columns or rows as a subgrid |
+| Set the gap | A bare number is a step of Tailwind’s spacing scale, so 4 is `gap-4`, and 4 8 is `gap-y-4 gap-x-8`. The list of changes names the class beside the value. A length, such as 24px, is kept as it’s typed |
+| Drag the gap or padding | A selected container has a green grip in each gap and on each side’s padding. Dragging one moves it by steps of the spacing scale. With ⌥ held, a gap’s grip sets the gap both ways, and a side’s grip sets the opposite side too. The list of changes gathers matching sides, as `padding-inline: 2rem (px-8)` |
+| Move on a grid | Drag, or ⇧ with an arrow key. The handles, or ⌥ with an arrow key, change what it spans. Drag past the last row to start a new one |
+| Share a row | Drop an item on another and they share its row: two take half the columns each, three a third, in the order they sit under the pointer. Dropped on empty cells it goes where it’s put, and ⌥ lets it overlap instead of sharing |
+| Move anywhere | What’s dragged follows the pointer, with a line or a dashed box where it will land. It can go before any element on the page, into another group, or out of a grid once the pointer leaves it. Within a few pixels of a group’s edge is beside the group, not in it |
+| Reorder | Outside a grid, dragging or ⇧ with an arrow key changes the order. In a stack, dropping on the left or right third of another element puts the two side by side, in a new 12-column grid with half each |
+| Fill the width with type | Fill width, in the panel, for an element that holds text, such as a line of a hero’s lock-up. It goes on one line, or as many as it has `<br>`s, at a size that’s a share of its container’s width (`cqi`), so it keeps filling it as the page narrows. Its parent becomes the container. Change the columns it spans and it’s sized again |
+| Size the columns | Drag a column line and one of the columns beside it takes what the other gives up, in quarters of a fraction. The plus after the last line adds a column |
+| Align in its cell | Across and Down, in the panel, for an item on a grid |
+| Duplicate, delete | ⌘D and Delete, each in the list of changes |
+| Everything else | The panel has no names beside its controls, and only what changes the selected element’s layout. The icon at the start of a field or select says what it sets. The panel sits at the top right and grows downwards, and nothing in it moves when it reports: the button says Copied in the width it has, and anything else floats beside the panel. Some stand in for icons not drawn yet, listed in `packages/icons/WANTED.md`. Group, ungroup, duplicate, delete, undo, redo, reset and handing an item back to the grid to place are in its menu, each with its shortcut |
+| Lay out a width at a time | Every width, at the foot of the panel, is the breakpoint what you change applies from: every width, or `lg` and up. Narrow the window below it and the page falls back to what’s under it, to compose that too. They’re Tailwind’s breakpoints, or the site’s own where it sets `--breakpoint-*`, and the list of changes keeps each apart, as `From lg (1024px): grid-column: 1 / span 6`. Grouping and moving are the same at every width |
+| Name a line | Double-click its number. A place then uses the name, as in `grid-column: content-start / content-end` |
+| Undo, redo | ⌘Z and ⇧⌘Z. Reset puts the page back as it was |
+
+The first time an item is moved on a grid, every item in that grid is given the place it has. The browser moves an item it placed itself when another is put in its way, so without this, dragging one thing would shuffle the rest, and nothing could overlap.
+
+CSS has a property for type that fills its width, `text-fit: grow`, but it isn’t in every browser yet, so Compose writes the `cqi` size, which is, and the list of changes says the property could take over.
+
+The panel is drawn with Loupe’s own components, inside a shadow root, so the page’s styles don’t reach it and Loupe’s don’t reach the page. `pnpm --filter @parchment/compose build` writes two files to `lib`, which is committed. `compose.js` is the loader, a couple of kilobytes, and all a page fetches until Compose is opened: it holds the shortcut, and what a site’s menu of commands lists. `compose-client.js` is the tool, with React, the components and their compiled styles inside it, as a site that has none of them still has to run it. It’s fetched when Compose is first opened, or once the page has loaded and is idle where there’s something to show before that: Compose’s own button, changes kept from before a reload, or Compose having been open. The styles are only those of the components the panel is drawn with, and nothing of them goes on the page. The demo runs from `src`, so a change there shows without building.
+
+The changes are kept for the tab, so they’re made again after a reload, and Compose opens again if it was open. They’re let go when the page itself is different, as it is once an agent has put them in the source. A page known by its hash, as `#/ui/button` is, keeps its changes apart from the others at that path. A copy that was changed after it was made comes back as it looked, without its own entries in the list.
+
+### Using it in a site
+
+```sh
+pnpm add -D github:parchmentdesignstudio/loupe#compose
+```
+
+In Astro it’s an integration, which adds Compose to the dev toolbar and keeps the file and line Astro gives each element:
+
+```js
+import compose from '@parchment/compose/astro'
+
+export default defineConfig({ integrations: [compose()] })
+```
+
+With Vite alone it’s a plugin, which adds a Compose button to every page of the dev server. Run `locate` from `scripts/locate.mjs` beside it, as Loupe’s tools do, and each element in the list has its file and line as well:
+
+```js
+import { compose } from '@parchment/compose/vite'
+
+export default defineConfig({ plugins: [compose()] })
+```
+
+Anywhere else, such as Next.js, whose dev menu can’t be added to, call `mount()` from code that only runs in development. This hasn’t been tried in Next.js yet, and without a file and line each element is named by a path of selectors instead:
+
+```js
+if (process.env.NODE_ENV === 'development') import('@parchment/compose').then(({ mount }) => mount())
+```
+
+With the Astro integration or the Vite plugin, the dev server also keeps the list in `.compose/changes.md` in the site, written as each change is made and removed when there are none, so an agent can be told to make the layout changes in that file with nothing copied. Add `.compose` to the site’s `.gitignore`. `window.parchmentCompose.changes()` returns the same list, for an agent that can drive the browser to read for itself.
+
+### Opening it
+
+⌥G opens and closes Compose wherever it’s on the page. The Vite plugin and `mount()` also put a Compose button at the foot of the page, and both take options for a site that opens it another way:
+
+```js
+compose({ launcher: false, shortcut: 'cmd+shift+l' })
+```
+
+`launcher: false` leaves the button out, and `shortcut` changes the keys, or is `false` for none. The Astro integration takes `shortcut`, as its button is the toolbar’s.
+
+A site with its own menu of commands, such as one behind ⌘K, lists what Compose offers by asking it. Compose is only on the page in development, so in a build there’s nothing to ask and nothing is listed:
+
+```js
+const commands = window.parchmentCompose?.commands() ?? []
+// [{ id: 'compose', name: 'Compose this page', keys: '⌥G', run }]
+```
+
+Each has a `name` to show, `keys` if it has a shortcut, and `run`. What’s offered changes, as Close Compose replaces Compose this page while it’s open, and copying and resetting appear once there are changes, so ask again on the window’s `compose:change` event.
+
+Loupe’s own preview and tools have Compose this way, with no button: ⌥G in any of them, and in the preview’s search as well, through `DocsSearch`’s `commands`.
+
 ## Releasing
 
 Each package is published to its own branch, so npm and pnpm can both install it from GitHub.
@@ -369,7 +458,7 @@ pnpm bump 0.9.0
 pnpm release icons
 ```
 
-Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`, and the logos with `pnpm release logos`, to the `logos` branch.
+Release checks the package is at Loupe's version, builds, checks everything is committed, pushes `packages/icons` to the `icons` branch and tags it `icons@<version>`. Sites can pin with `#icons@0.8.0` or follow `#icons`. The UI package releases the same way, with `pnpm release ui`, and the logos with `pnpm release logos`, to the `logos` branch. Compose goes to the `compose` branch with `pnpm release compose`.
 
 ## Device
 

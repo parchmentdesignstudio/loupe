@@ -48,8 +48,8 @@ export function DocsSearchButton({ onPress, icon, tooltip }) {
         return button;
     return (_jsxs(TooltipTrigger, { children: [button, _jsx(Tooltip, { children: tooltip })] }));
 }
-/** Finds a page by name: type to narrow the list, the arrow keys to move through it, and Enter to go. ⌘K opens it */
-export function DocsSearch({ pages, isOpen, onOpenChange, placeholder = 'Search components' }) {
+/** Finds a page by name, or a command: type to narrow the list, the arrow keys to move through it, and Enter to go. ⌘K opens it */
+export function DocsSearch({ pages, commands = [], isOpen, onOpenChange, placeholder = 'Search components' }) {
     const { contains } = useFilter({ sensitivity: 'base' });
     useEffect(() => {
         const onKey = (event) => {
@@ -62,8 +62,12 @@ export function DocsSearch({ pages, isOpen, onOpenChange, placeholder = 'Search 
         return () => window.removeEventListener('keydown', onKey);
     }, [onOpenChange]);
     // It opens over the page, outside DocsShell, so it sets its own type
-    return (_jsx(Modal, { isOpen: isOpen, onOpenChange: onOpenChange, isDismissable: true, className: "items-start pt-[12vh]", children: _jsx(Dialog, { "aria-label": "Search", className: "flex max-h-[min(28rem,70vh)] flex-col gap-2 p-3 font-sans text-body", children: ({ close }) => (_jsxs(Autocomplete, { filter: contains, children: [_jsx(SearchField, { "aria-label": "Search", placeholder: placeholder, autoFocus: true }), _jsx(ListBox, { "aria-label": "Pages", items: pages, onAction: (key) => {
-                            window.location.assign(String(key));
+    return (_jsx(Modal, { isOpen: isOpen, onOpenChange: onOpenChange, isDismissable: true, className: "items-start pt-[12vh]", children: _jsx(Dialog, { "aria-label": "Search", className: "flex max-h-[min(28rem,70vh)] flex-col gap-2 p-3 font-sans text-body", children: ({ close }) => (_jsxs(Autocomplete, { filter: contains, children: [_jsx(SearchField, { "aria-label": "Search", placeholder: placeholder, autoFocus: true }), _jsx(ListBox, { "aria-label": "Pages", items: [...commands.map((command) => ({ href: `command:${command.id}`, name: command.name, group: command.group ?? '' })), ...pages], onAction: (key) => {
                             close();
+                            const command = commands.find(({ id }) => `command:${id}` === key);
+                            if (command)
+                                command.onAction();
+                            else
+                                window.location.assign(String(key));
                         }, renderEmptyState: () => _jsx("p", { className: "px-3 py-1.5 text-control text-muted", children: "Nothing called that" }), className: "-mx-1 -mb-1 min-h-0 flex-1", children: (page) => (_jsxs(ListBoxItem, { id: page.href, textValue: page.name, children: [page.name, _jsx("span", { className: "ms-auto text-label text-muted", children: page.group })] })) })] })) }) }));
 }

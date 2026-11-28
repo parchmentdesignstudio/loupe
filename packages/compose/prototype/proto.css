@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+@import '@parchment/ui/tokens.css';
+@source './variations.jsx';
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { color-scheme: dark; }
+}
+:root[data-theme='dark'] { color-scheme: dark; }
+:root[data-theme='light'] { color-scheme: light; }
+body { background: var(--color-ground); color: var(--color-ink); font-family: var(--font-sans); }

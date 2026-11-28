@@ -36,6 +36,31 @@ These are SVGs inside the components, standing in for icons. Once each is in the
 | `trash` | Delete, in a row's menu | The solid set has it now. Nothing yet on the screen |
 | `arrow-up-arrow-down` | Sort | The solid set has it. Until it's swapped in, a chevron |
 
+## Missing for Compose
+
+Compose’s panel (`packages/compose/src/panel.jsx`) has no names beside its controls, so the icon at the start of each field and select is its name. These are the ones it wants and what stands in for each until it’s drawn. Names are SF Symbols’ where it has one, and worth checking against it before drawing. All at 16px, solid.
+
+| Icon | For | Stands in now |
+|---|---|---|
+| `rectangle-split-1x2` | Row sizes, and a column of flex items | `line-3-horizontal`, which reads as a menu |
+| `arrow-left-and-line-vertical-and-arrow-right`, or one drawn for it | The gap between tracks or items | `arrow-left-arrow-right`, which reads as swap |
+| `align-horizontal-left`, `-center`, `-right` | Where an item sits across its cell | `arrow-left-and-right`, for all of them |
+| `align-vertical-top`, `-center`, `-bottom` | Where an item sits down its cell | `arrow-up-and-down`, for all of them |
+| `distribute-horizontal-center`, `distribute-vertical-center` | Justify, in a flex container | `arrow-left-and-right` or `arrow-up-and-down`, the same as an item’s own, so a flex container that sits in a grid shows two rows of the same arrows |
+| One for align, in a flex container | Where items sit across the way they run | The other arrow, with the same clash |
+| `iphone`, `ipad` | A breakpoint, beside `display` and `desktopcomputer` | `display`, at every width |
+| `textformat-size` | Type that fills its width | Nothing: it’s a Switch with its words |
+
+These the set has, and the panel uses as they are: `rectangle-split-3x1` for how many columns, `ruler` for their sizes, `display` for the breakpoint, `ellipsis` and `xmark`.
+
+A row of tools, as one of the panel’s prototypes had (`packages/compose/prototype`), would also want these:
+
+| Icon | For | Stands in now |
+|---|---|---|
+| `rectangle-3-group` | Group | `square-dashed-and-cursorarrow` in the prototype, which reads as select |
+| `square-dashed` | Ungroup, and a group’s outline | `rectangle-split-3x1` in the prototype, which reads as columns |
+| `rectangle-grid-1x2` | Block, a stack | Nothing. `square-grid-2x2` covers Grid, and `autolayout-h` and `autolayout-v` flex |
+
 ## To redraw
 
 ### Chevrons, centred by one rule

@@ -97,7 +97,7 @@ import { Notifications, SwitchPlayground } from './playgrounds/switch.js';
 import { EmptyTable, LoadingMoreTable, TablePlayground } from './playgrounds/table.js';
 import { TabsPlayground } from './playgrounds/tabs.js';
 import { TagGroupPlayground } from './playgrounds/tag-group.js';
-import { FieldsInARow, TextFieldPlayground } from './playgrounds/text-field.js';
+import { FieldsInARow, FieldsWithIcons, TextFieldPlayground } from './playgrounds/text-field.js';
 import { OnItsOwn, WaitingForAnAnswer } from './playgrounds/scribble.js';
 import { ToastPlayground } from './playgrounds/toast.js';
 import { ToggleButtonGroupPlayground } from './playgrounds/toggle-button-group.js';
@@ -586,6 +586,7 @@ const groups: Group[] = [
 				stories: [
 					{ name: 'Build one', render: TextFieldPlayground },
 					{ name: 'In a row', render: FieldsInARow },
+					{ name: 'With an icon', render: FieldsWithIcons },
 				],
 			},
 			{

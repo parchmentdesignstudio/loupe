@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Button, Group, Input, NumberField as AriaNumberField, type NumberFieldProps as AriaNumberFieldProps } from 'react-aria-components';
 import { boxField, boxLabel, Description, FieldError, type FieldTextProps, type Size, type FieldVariant, Label, readOnly } from './Field.js';
 import { Dash, Plus } from './glyphs.js';
@@ -8,6 +9,7 @@ export const numberField = tv({
 	slots: {
 		group: ['flex items-center rounded-(--field-radius) pe-1 outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2', readOnly],
 		input: 'min-w-0 flex-1 bg-transparent text-control text-(color:--field-text,var(--color-ink)) tabular-nums outline-none placeholder:text-(color:--field-placeholder,var(--color-muted))',
+		start: 'flex shrink-0 items-center text-muted',
 		stepper: 'flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[disabled]:text-bleed/24 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
 	},
 	variants: {
@@ -18,8 +20,8 @@ export const numberField = tv({
 		},
 		// As a text field's: 32px, or 28px when small
 		size: {
-			medium: { input: 'py-(--field-padding-y) ps-(--field-padding-x)' },
-			small: { input: 'py-(--field-small-padding-y) ps-(--field-small-padding-x)', stepper: 'p-0.5' },
+			medium: { input: 'py-(--field-padding-y) ps-(--field-padding-x)', start: 'ps-2.5' },
+			small: { input: 'py-(--field-small-padding-y) ps-(--field-small-padding-x)', start: 'ps-2', stepper: 'p-0.5' },
 		},
 		isFocusWithin: {
 			false: { group: 'outline-0' },
@@ -42,10 +44,12 @@ export interface NumberFieldProps extends AriaNumberFieldProps, FieldTextProps {
 	variant?: FieldVariant;
 	/** 32px tall, or 28px when small, as a button is */
 	size?: Size;
+	/** An icon before the number, as a button has, to say what a field with no label counts */
+	start?: ReactNode;
 }
 
 /** A number, typed or stepped. The arrow keys and its buttons move it by step, within minValue and maxValue, and formatOptions shows it as a percentage, currency or unit */
-export function NumberField({ label, description, errorMessage, placeholder, variant, size, ...props }: NumberFieldProps) {
+export function NumberField({ label, description, errorMessage, placeholder, variant, size, start, ...props }: NumberFieldProps) {
 	return (
 		<AriaNumberField {...props} className={composeClassName(props.className, boxField)}>
 			{({ isInvalid, isDisabled }) => {
@@ -54,7 +58,8 @@ export function NumberField({ label, description, errorMessage, placeholder, var
 					<>
 						{label && <Label className={boxLabel}>{label}</Label>}
 						<Group className={(state) => slots.group(state)}>
-							<Input placeholder={placeholder} className={slots.input()} />
+							{start && <span className={slots.start()}>{start}</span>}
+							<Input placeholder={placeholder} className={slots.input({ className: start ? 'ps-1.5' : undefined })} />
 							<Button slot="decrement" className={slots.stepper()}>
 								<Dash />
 							</Button>
