@@ -8,6 +8,7 @@ export const numberField = tv({
     slots: {
         group: ['flex items-center rounded-(--field-radius) pe-1 outline-offset-2 outline-(color:--field-focus-ring,var(--color-ink)) forced-colors:outline-[Highlight] in-data-[show-focus]:outline-2', readOnly],
         input: 'min-w-0 flex-1 bg-transparent text-control text-(color:--field-text,var(--color-ink)) tabular-nums outline-none placeholder:text-(color:--field-placeholder,var(--color-muted))',
+        start: 'flex shrink-0 items-center text-muted',
         stepper: 'flex shrink-0 cursor-default items-center justify-center rounded-sm p-1 text-muted outline-0 data-[disabled]:text-bleed/24 data-[hovered]:bg-bleed/4 data-[pressed]:bg-bleed/12',
     },
     variants: {
@@ -18,8 +19,8 @@ export const numberField = tv({
         },
         // As a text field's: 32px, or 28px when small
         size: {
-            medium: { input: 'py-(--field-padding-y) ps-(--field-padding-x)' },
-            small: { input: 'py-(--field-small-padding-y) ps-(--field-small-padding-x)', stepper: 'p-0.5' },
+            medium: { input: 'py-(--field-padding-y) ps-(--field-padding-x)', start: 'ps-2.5' },
+            small: { input: 'py-(--field-small-padding-y) ps-(--field-small-padding-x)', start: 'ps-2', stepper: 'p-0.5' },
         },
         isFocusWithin: {
             false: { group: 'outline-0' },
@@ -36,9 +37,9 @@ export const numberField = tv({
     defaultVariants: { variant: 'raised', size: 'medium' },
 });
 /** A number, typed or stepped. The arrow keys and its buttons move it by step, within minValue and maxValue, and formatOptions shows it as a percentage, currency or unit */
-export function NumberField({ label, description, errorMessage, placeholder, variant, size, ...props }) {
+export function NumberField({ label, description, errorMessage, placeholder, variant, size, start, ...props }) {
     return (_jsx(AriaNumberField, { ...props, className: composeClassName(props.className, boxField), children: ({ isInvalid, isDisabled }) => {
             const slots = numberField({ isInvalid, isDisabled, variant, size });
-            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { className: boxLabel, children: label }), _jsxs(Group, { className: (state) => slots.group(state), children: [_jsx(Input, { placeholder: placeholder, className: slots.input() }), _jsx(Button, { slot: "decrement", className: slots.stepper(), children: _jsx(Dash, {}) }), _jsx(Button, { slot: "increment", className: slots.stepper(), children: _jsx(Plus, {}) })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
+            return (_jsxs(_Fragment, { children: [label && _jsx(Label, { className: boxLabel, children: label }), _jsxs(Group, { className: (state) => slots.group(state), children: [start && _jsx("span", { className: slots.start(), children: start }), _jsx(Input, { placeholder: placeholder, className: slots.input({ className: start ? 'ps-1.5' : undefined }) }), _jsx(Button, { slot: "decrement", className: slots.stepper(), children: _jsx(Dash, {}) }), _jsx(Button, { slot: "increment", className: slots.stepper(), children: _jsx(Plus, {}) })] }), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
         } }));
 }

@@ -1,5 +1,5 @@
 // Compose's panel and its opening button, drawn with Loupe's components. `api` is what client.js lets it read and do.
-// The panel has no names beside its controls: each one says what it is, by its options, its placeholder or its label,
+// The panel has no names beside its controls: each one says what it is, by its options, its icon or its label,
 // and what's done less often is in the menu
 import { Icon } from '@parchment/icons/react'
 import { Button, Keyboard, ListBoxItem, Menu, MenuItem, MenuSeparator, MenuTrigger, NumberField, Select, Switch, TextField, ToggleButton, ToggleButtonGroup, Tooltip, TooltipTrigger } from '@parchment/ui'
@@ -19,9 +19,10 @@ const SELF = ['stretch', 'start', 'center', 'end']
 
 // The key starts it afresh when the value changes from outside, such as by a drag or an undo
 const Text = (props) => <TextInput key={props.value} {...props} />
+const glyph = (name) => <Icon name={name} />
 
 // Text that's set when the field is left or Enter is pressed, and marked when CSS won't take it
-function TextInput({ label, value, placeholder, onCommit }) {
+function TextInput({ label, icon, value, placeholder, onCommit }) {
   const [text, setText] = useState(value)
   const [isInvalid, setInvalid] = useState(false)
   const commit = () => text !== value && setInvalid(onCommit(text) === false)
@@ -31,6 +32,7 @@ function TextInput({ label, value, placeholder, onCommit }) {
       size="small"
       className="min-w-0 flex-1"
       aria-label={label}
+      start={glyph(icon)}
       placeholder={placeholder}
       value={text}
       isInvalid={isInvalid}
@@ -53,11 +55,11 @@ function Segments({ label, options, value, onChange }) {
   )
 }
 
-// A choice that names itself in each option, as in Across, center, so it needs no name beside it
-function Choice({ label, says, options, value, onChange }) {
-  const items = options.map((id) => ({ id, name: `${says}, ${id.replace('flex-', '').replace('-', ' ')}` }))
+// A choice with no name beside it: its icon says what it sets
+function Choice({ label, icon, options, value, onChange }) {
+  const items = options.map((id) => ({ id, name: id.replace('flex-', '').replace('-', ' ') }))
   return (
-    <Select variant="filled" size="small" className="min-w-0 flex-1" aria-label={label} items={items} value={value} onChange={(id) => id !== null && onChange(String(id))}>
+    <Select variant="filled" size="small" className="min-w-0 flex-1" aria-label={label} start={glyph(icon)} items={items} value={value} onChange={(id) => id !== null && onChange(String(id))}>
       {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
     </Select>
   )
@@ -72,7 +74,9 @@ function Layout({ api, element }) {
   const isItem = element !== document.body && getComputedStyle(element.parentElement).display.endsWith('grid')
   const grid = mode === 'grid' && api.geometry(element)
   const fills = element !== document.body && api.holdsText(element)
-  const gap = <Text label="Gap" placeholder="Gap" value={api.gapOf(element)} onCommit={(value) => api.setGap(element, value)} />
+  // Which way a flex container's items run, as align and justify swap with it
+  const across = style.flexDirection.startsWith('row')
+  const gap = <Text label="Gap" icon="arrow-left-arrow-right" placeholder="Gap" value={api.gapOf(element)} onCommit={(value) => api.setGap(element, value)} />
   const subgrid = (property) => api.written(element, property).startsWith('subgrid')
   const sizes = (property) => (api.written(element, property) === 'none' ? '' : api.written(element, property))
 
@@ -86,18 +90,19 @@ function Layout({ api, element }) {
               <NumberField
                 variant="filled"
                 size="small"
-                className="w-20 shrink-0"
+                className="w-24 shrink-0"
+                start={glyph('rectangle-split-3x1')}
                 aria-label="How many columns"
                 minValue={1}
                 formatOptions={{ maximumFractionDigits: 0 }}
                 value={grid.columns.tracks.length}
                 onChange={(count) => !Number.isNaN(count) && api.setCount(element, COLUMNS, count)}
               />
-              <Text label="Column sizes" placeholder="Columns" value={sizes(COLUMNS)} onCommit={(value) => api.setValue(element, COLUMNS, value)} />
+              <Text label="Column sizes" icon="ruler" placeholder="Columns" value={sizes(COLUMNS)} onCommit={(value) => api.setValue(element, COLUMNS, value)} />
             </Pair>
           )}
           <Pair>
-            {!subgrid(ROWS) && <Text label="Row sizes" placeholder="Rows, auto" value={sizes(ROWS)} onCommit={(value) => api.setValue(element, ROWS, value)} />}
+            {!subgrid(ROWS) && <Text label="Row sizes" icon="line-3-horizontal" placeholder="Rows, auto" value={sizes(ROWS)} onCommit={(value) => api.setValue(element, ROWS, value)} />}
             {gap}
           </Pair>
         </>
@@ -106,16 +111,16 @@ function Layout({ api, element }) {
         <>
           <Segments label="Direction" options={[['row', 'Row'], ['column', 'Column']]} value={style.flexDirection.split('-')[0]} onChange={(value) => api.assign(element, 'flex-direction', value)} />
           <Pair>
-            <Choice label="Align" says="Align" options={ALIGN} value={style.alignItems === 'normal' ? 'stretch' : style.alignItems} onChange={(value) => api.assign(element, 'align-items', value)} />
-            <Choice label="Justify" says="Justify" options={JUSTIFY} value={style.justifyContent === 'normal' ? 'flex-start' : style.justifyContent} onChange={(value) => api.assign(element, 'justify-content', value)} />
+            <Choice label="Align" icon={across ? 'arrow-up-and-down' : 'arrow-left-and-right'} options={ALIGN} value={style.alignItems === 'normal' ? 'stretch' : style.alignItems} onChange={(value) => api.assign(element, 'align-items', value)} />
+            <Choice label="Justify" icon={across ? 'arrow-left-and-right' : 'arrow-up-and-down'} options={JUSTIFY} value={style.justifyContent === 'normal' ? 'flex-start' : style.justifyContent} onChange={(value) => api.assign(element, 'justify-content', value)} />
           </Pair>
           <Pair>{gap}</Pair>
         </>
       )}
       {isItem && (
         <Pair>
-          <Choice label="Across its columns" says="Across" options={SELF} value={SELF.includes(style.justifySelf) ? style.justifySelf : 'stretch'} onChange={(value) => api.assign(element, 'justify-self', value)} />
-          <Choice label="Down its rows" says="Down" options={SELF} value={SELF.includes(style.alignSelf) ? style.alignSelf : 'stretch'} onChange={(value) => api.assign(element, 'align-self', value)} />
+          <Choice label="Across its columns" icon="arrow-left-and-right" options={SELF} value={SELF.includes(style.justifySelf) ? style.justifySelf : 'stretch'} onChange={(value) => api.assign(element, 'justify-self', value)} />
+          <Choice label="Down its rows" icon="arrow-up-and-down" options={SELF} value={SELF.includes(style.alignSelf) ? style.alignSelf : 'stretch'} onChange={(value) => api.assign(element, 'align-self', value)} />
         </Pair>
       )}
       {(fills || mode === 'flex' || (mode === 'grid' && isItem)) && (
@@ -211,7 +216,7 @@ function Panel({ api }) {
       <footer className="flex flex-col gap-2 border-t border-bleed/8 p-2">
         {message && <output className="px-1 text-label text-muted">{message}</output>}
         <div className="flex items-center gap-2">
-          <Select variant="filled" size="small" className="min-w-0 flex-1" aria-label="The width changes apply from" items={froms} value={froms.some(({ id }) => id === from) ? from : 'base'} onChange={(id) => id !== null && api.setFrom(String(id))}>
+          <Select variant="filled" size="small" className="min-w-0 flex-1" aria-label="The width changes apply from" start={glyph('display')} items={froms} value={froms.some(({ id }) => id === from) ? from : 'base'} onChange={(id) => id !== null && api.setFrom(String(id))}>
             {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
           </Select>
           <Button variant={count ? 'primary' : 'secondary'} size="small" onPress={api.copy}>

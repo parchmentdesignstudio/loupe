@@ -35,6 +35,8 @@ export interface SelectProps<T extends object> extends Omit<AriaSelectProps<T>, 
     variant?: FieldVariant;
     /** 32px tall, or 28px when small, as a button is */
     size?: Size;
+    /** An icon before the value, as a button has, to say what a select with no label chooses */
+    start?: ReactNode;
 }
 /** Picks one option from a list that opens below it */
-export declare function Select<T extends object>({ label, description, errorMessage, items, children, variant, size, ...props }: SelectProps<T>): import("react").JSX.Element;
+export declare function Select<T extends object>({ label, description, errorMessage, items, children, variant, size, start, ...props }: SelectProps<T>): import("react").JSX.Element;

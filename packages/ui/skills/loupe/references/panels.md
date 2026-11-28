@@ -39,8 +39,12 @@ Does the control need a name beside it?
  ├── It's a Switch → its own label is the name
  ├── It's a Select → put the name in each option: "Across, center", "Down, stretch"
  ├── It's a field whose value says what it is, such as a list of column sizes → no name, a placeholder for when it's empty
- └── It's a field holding a bare number or word → it keeps a name
+ └── It's a field holding a bare number or word → an icon in `start` says what it is, or it keeps a name
 ```
+
+An icon in `start` is the name of a field in a panel: `<Icon name="ruler" />` before a size, or the gap's before a
+gap. Give every field and Select in a row of them one, or none, so their values line up. A Select with an icon drops the
+name from its options, unless the icon is one a new user wouldn't read without it.
 
 - Every row has the same shape. Either each control has its name in one column, at one width, or none has. A panel
   where some rows have a name and others start at the edge has no line for the eye to run down.
@@ -87,8 +91,8 @@ with its `Keyboard`, which is how the shortcut is learned. A destructive item is
 <div className="flex flex-col gap-3 px-3 pb-3">
 	<ToggleButtonGroup aria-label="Layout" size="small" width="fill" selectionMode="single">…</ToggleButtonGroup>
 	<div className="flex gap-1.5">
-		<NumberField variant="filled" size="small" aria-label="How many columns" />
-		<TextField variant="filled" size="small" aria-label="Column sizes" placeholder="Columns" />
+		<NumberField variant="filled" size="small" aria-label="How many columns" start={<Icon name="rectangle-split-3x1" />} />
+		<TextField variant="filled" size="small" aria-label="Column sizes" placeholder="Columns" start={<Icon name="ruler" />} />
 	</div>
 	<Switch>Fill width</Switch>
 </div>

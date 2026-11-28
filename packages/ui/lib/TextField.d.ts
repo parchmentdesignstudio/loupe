@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { type TextFieldProps as AriaTextFieldProps } from 'react-aria-components';
 import { type FieldTextProps, type Size, type FieldVariant } from './Field.js';
 export declare const textFieldInput: import("tailwind-variants").TVReturnType<{
@@ -30,6 +31,8 @@ export interface TextFieldProps extends AriaTextFieldProps, FieldTextProps {
     variant?: FieldVariant;
     /** 32px tall, or 28px when small, as a button is */
     size?: Size;
+    /** An icon before the value, as a button has, to say what a field with no label holds. Not for several lines */
+    start?: ReactNode;
 }
 /** A labelled text input, with an optional description and the error React Aria's validation gives it */
-export declare function TextField({ label, description, errorMessage, placeholder, isMultiline, rows, variant, size, ...props }: TextFieldProps): import("react").JSX.Element;
+export declare function TextField({ label, description, errorMessage, placeholder, isMultiline, rows, variant, size, start, ...props }: TextFieldProps): import("react").JSX.Element;

@@ -40,16 +40,19 @@ export interface SelectProps<T extends object> extends Omit<AriaSelectProps<T>, 
 	variant?: FieldVariant;
 	/** 32px tall, or 28px when small, as a button is */
 	size?: Size;
+	/** An icon before the value, as a button has, to say what a select with no label chooses */
+	start?: ReactNode;
 }
 
 /** Picks one option from a list that opens below it */
-export function Select<T extends object>({ label, description, errorMessage, items, children, variant, size, ...props }: SelectProps<T>) {
+export function Select<T extends object>({ label, description, errorMessage, items, children, variant, size, start, ...props }: SelectProps<T>) {
 	return (
 		<AriaSelect {...props} className={composeClassName(props.className, boxField)}>
 			{({ isInvalid }) => (
 				<>
 					{label && <Label className={boxLabel}>{label}</Label>}
 					<Button className={(state) => selectTrigger({ ...state, isInvalid, variant, size })}>
+						{start && <span className="-ms-0.5 -me-0.5 flex shrink-0 items-center text-muted">{start}</span>}
 						<SelectValue className="min-w-0 flex-1 truncate data-[placeholder]:text-(color:--field-placeholder,var(--color-muted))">{({ isPlaceholder, selectedText, defaultChildren }) => (isPlaceholder ? defaultChildren : selectedText)}</SelectValue>
 						<ChevronDown className="size-4 shrink-0 fill-none stroke-current stroke-[1.5] text-muted" />
 					</Button>

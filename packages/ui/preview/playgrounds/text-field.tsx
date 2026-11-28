@@ -1,3 +1,4 @@
+import { Icon } from '@parchment/icons/react';
 import { ComboBox, type FieldVariant, ListBoxItem, NumberField, Select, type Size, TextField } from '../../src/index.js';
 import { Choice, ControlGroup, NumberControl, Playground, SwitchControl, longWords, pick, useRemembered } from '../playground.js';
 
@@ -117,5 +118,21 @@ export function FieldsInARow() {
 				{(item) => <ListBoxItem>{item.name}</ListBoxItem>}
 			</ComboBox>
 		</form>
+	);
+}
+
+/** Fields with no label to see, as a panel has them, each with an icon that says what it holds */
+export function FieldsWithIcons() {
+	return (
+		<div className="flex w-72 flex-col gap-3">
+			<div className="flex gap-1.5">
+				<NumberField variant="filled" size="small" className="w-24 shrink-0" aria-label="How many columns" defaultValue={12} minValue={1} start={<Icon name="rectangle-split-3x1" />} />
+				<TextField variant="filled" size="small" className="min-w-0 flex-1" aria-label="Column sizes" defaultValue="repeat(12, 1fr)" start={<Icon name="ruler" />} />
+			</div>
+			<Select variant="filled" size="small" aria-label="Developer" items={developers} defaultSelectedKey="harbour" start={<Icon name="building" />}>
+				{(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+			</Select>
+			<TextField aria-label="Email" placeholder="Email" start={<Icon name="envelope" />} />
+		</div>
 	);
 }

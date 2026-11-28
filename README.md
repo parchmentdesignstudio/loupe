@@ -110,7 +110,7 @@ React components built on React Aria, so keyboard use, focus, labels and screen 
 | `Quote` | Someone else’s words in Livory’s italic, centred under an opening mark, with who said it under them, as a figure. It shares prose’s blockquote rules, through the `quote` class in `styles/prose.css`. `variant="testimonial"` sets them from the start edge, with the person’s photo beside their name |
 | `Aside` | The writer’s own voice beside the main text: a signpost to what’s coming or what the reader needs first, behind the accent’s rule, or an afterthought in muted italic. In prose the rule hangs in the margin |
 | `Composer` | A message field with its send button |
-| `TextField` | Text, or several lines with `isMultiline` |
+| `TextField` | Text, or several lines with `isMultiline`. `start` puts an icon before the value, as it does on `NumberField` and `Select`, for a field in a panel with no label to see |
 | `NumberField` | A number, typed or stepped with the arrow keys and its buttons, within its limits |
 | `SearchField` | Searching, with a button that clears what’s typed. Escape clears it too |
 | `Slider` | A number between two limits, dragged or moved with the arrow keys, with its value beside the label. Two values make a range, with a thumb for each |
@@ -383,7 +383,7 @@ Compose works on a page that’s already running in a dev server. It groups elem
 | Size the columns | Drag a column line and one of the columns beside it takes what the other gives up, in quarters of a fraction. The plus after the last line adds a column |
 | Align in its cell | Across and Down, in the panel, for an item on a grid |
 | Duplicate, delete | ⌘D and Delete, each in the list of changes |
-| Everything else | The panel has no names beside its controls, and only what changes the selected element’s layout. Group, ungroup, duplicate, delete, undo, redo, reset and handing an item back to the grid to place are in its menu, each with its shortcut |
+| Everything else | The panel has no names beside its controls, and only what changes the selected element’s layout. The icon at the start of a field or select says what it sets. Some stand in for icons not drawn yet, listed in `packages/icons/WANTED.md`. Group, ungroup, duplicate, delete, undo, redo, reset and handing an item back to the grid to place are in its menu, each with its shortcut |
 | Lay out a width at a time | Every width, at the foot of the panel, is the breakpoint what you change applies from: every width, or `lg` and up. Narrow the window below it and the page falls back to what’s under it, to compose that too. They’re Tailwind’s breakpoints, or the site’s own where it sets `--breakpoint-*`, and the list of changes keeps each apart, as `From lg (1024px): grid-column: 1 / span 6`. Grouping and moving are the same at every width |
 | Name a line | Double-click its number. A place then uses the name, as in `grid-column: content-start / content-end` |
 | Undo, redo | ⌘Z and ⇧⌘Z. Reset puts the page back as it was |

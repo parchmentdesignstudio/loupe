@@ -33,7 +33,14 @@ export const textFieldInput = tv({
     compoundVariants: [{ variant: 'filled', isDisabled: true, class: 'bg-bleed/4' }],
     defaultVariants: { variant: 'raised', size: 'medium' },
 });
+// The icon sits over the input's start, and the input's text begins after it: the icon's 16px, its inset and 6px
+const startIcon = tv({
+    base: 'pointer-events-none absolute inset-y-0 flex items-center text-muted',
+    variants: { size: { medium: 'start-2.5', small: 'start-2' } },
+    defaultVariants: { size: 'medium' },
+});
+const afterStart = { medium: 'ps-8', small: 'ps-7' };
 /** A labelled text input, with an optional description and the error React Aria's validation gives it */
-export function TextField({ label, description, errorMessage, placeholder, isMultiline = false, rows = 4, variant, size, ...props }) {
-    return (_jsxs(AriaTextField, { ...props, className: composeClassName(props.className, boxField), children: [label && _jsx(Label, { className: boxLabel, children: label }), isMultiline ? (_jsx(TextArea, { placeholder: placeholder, rows: rows, className: (state) => textFieldInput({ ...state, variant, size, className: 'resize-y leading-[1.5]' }) })) : (_jsx(Input, { placeholder: placeholder, className: (state) => textFieldInput({ ...state, variant, size }) })), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
+export function TextField({ label, description, errorMessage, placeholder, isMultiline = false, rows = 4, variant, size, start, ...props }) {
+    return (_jsxs(AriaTextField, { ...props, className: composeClassName(props.className, boxField), children: [label && _jsx(Label, { className: boxLabel, children: label }), isMultiline ? (_jsx(TextArea, { placeholder: placeholder, rows: rows, className: (state) => textFieldInput({ ...state, variant, size, className: 'resize-y leading-[1.5]' }) })) : start ? (_jsxs("span", { className: "relative flex", children: [_jsx("span", { className: startIcon({ size }), children: start }), _jsx(Input, { placeholder: placeholder, className: (state) => textFieldInput({ ...state, variant, size, className: afterStart[size ?? 'medium'] }) })] })) : (_jsx(Input, { placeholder: placeholder, className: (state) => textFieldInput({ ...state, variant, size }) })), description && _jsx(Description, { children: description }), _jsx(FieldError, { children: errorMessage })] }));
 }

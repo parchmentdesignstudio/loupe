@@ -25,6 +25,12 @@ describe('TextField', () => {
 		expect(screen.getByRole('textbox', { name: 'Height' }).className).toContain('bg-bleed/4');
 	});
 
+	it('puts an icon before the value, and starts the text after it', () => {
+		render(<TextField aria-label="Gap" variant="filled" size="small" start={<svg data-testid="icon" aria-hidden="true" />} />);
+		expect(screen.getByTestId('icon').parentElement?.className).toContain('start-2');
+		expect(screen.getByRole('textbox', { name: 'Gap' }).className).toContain('ps-7');
+	});
+
 	it('labels its input and describes it', () => {
 		render(<TextField label="Your name" description="As you’d like Steve to say it" />);
 		const input = screen.getByLabelText('Your name');

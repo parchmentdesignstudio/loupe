@@ -36,6 +36,10 @@ TextField, NumberField, Select and ColorField share them. Variants: `raised`, `f
 
 Don't mix `raised` and `filled` in one form.
 
+TextField, NumberField and Select take `start`, an icon before the value, as a Button does. It's for a field with no
+label to see, in a [panel](panels.md), where the icon says what the value is. A field in a form has its label, so it
+needs no icon. The field still takes an `aria-label`.
+
 ```tsx
 // Correct
 <form className="flex flex-col gap-4">
