@@ -203,7 +203,7 @@ function Panel({ api }) {
           <Tooltip>Close</Tooltip>
         </TooltipTrigger>
       </header>
-      <div className="flex flex-col gap-2 px-3 pb-3">
+      <div className="flex flex-col gap-3 px-3 pb-3">
         {!primary && <p className="text-body text-muted">{touch ? 'Double-tap an element to select it.' : `Click an element to select it, and ${command.trim()}-click to add more.`}</p>}
         {selected.length > 1 && <p className="text-body text-muted">{`${selected.length} selected. ${touch ? 'Group them from the menu.' : `${command}G groups them.`}`}</p>}
         {selected.length === 1 && <Layout api={api} element={primary} />}

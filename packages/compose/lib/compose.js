@@ -25258,7 +25258,7 @@ function Lx({ api: e }) {
 				]
 			}),
 			/* @__PURE__ */ (0, $.jsxs)("div", {
-				className: "flex flex-col gap-2 px-3 pb-3",
+				className: "flex flex-col gap-3 px-3 pb-3",
 				children: [
 					!a && /* @__PURE__ */ (0, $.jsx)("p", {
 						className: "text-body text-muted",

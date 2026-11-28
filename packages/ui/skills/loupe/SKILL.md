@@ -91,5 +91,6 @@ Load the one the task needs:
 | [collections.md](references/collections.md) | Table, GridList, List, Card, ListBox, Tabs, TagGroup, navigation, pagination |
 | [feedback.md](references/feedback.md) | Status, Alert, EmptyState, progress, Avatar |
 | [content.md](references/content.md) | Prose, Quote, Aside, Code, Disclosure, Separator, chat |
+| [panels.md](references/panels.md) | An inspector or a tool's panel: what goes in its header, body, menu and foot, and when a control needs a name |
 
 Each component's props and what it's built on are also in the Loupe preview, beside its stories.

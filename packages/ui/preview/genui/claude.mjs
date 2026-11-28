@@ -53,6 +53,7 @@ const topics = {
 	feedback: 'loupe/references/feedback.md',
 	forms: 'loupe/references/forms.md',
 	overlays: 'loupe/references/overlays.md',
+	panels: 'loupe/references/panels.md',
 	tokens: 'loupe/references/tokens.md',
 	'product-design': 'product-design/SKILL.md',
 };
@@ -94,7 +95,7 @@ async function setUp(server) {
 	tools = [
 		{
 			name: 'read_guide',
-			description: 'Reads one of Loupe’s guides: which component to use over its alternative, which variant applies where, and how it’s laid out. actions: buttons, links, menus, toolbars. collections: tables, lists, tabs, navigation. content: prose, quotes, code, chat. feedback: status, alerts, empty states, progress. forms: fields, choices, dates, files, search, and how a form is laid out. overlays: dialogs, drawers, popovers, toasts. tokens: colour, type, space, corners and shadows. product-design: how buttons give feedback rather than being disabled',
+			description: 'Reads one of Loupe’s guides: which component to use over its alternative, which variant applies where, and how it’s laid out. actions: buttons, links, menus, toolbars. collections: tables, lists, tabs, navigation. content: prose, quotes, code, chat. feedback: status, alerts, empty states, progress. forms: fields, choices, dates, files, search, and how a form is laid out. overlays: dialogs, drawers, popovers, toasts. panels: an inspector or a tool’s panel, and when a control needs a name. tokens: colour, type, space, corners and shadows. product-design: how buttons give feedback rather than being disabled',
 			input_schema: { type: 'object', properties: { topic: { enum: Object.keys(topics) } }, required: ['topic'], additionalProperties: false },
 		},
 		{
@@ -132,7 +133,7 @@ const historyOf = (messages) =>
 	});
 
 // What the user watches while Claude works, as each step starts
-const guideNames = { actions: 'the actions guide', collections: 'the collections guide', content: 'the content guide', feedback: 'the feedback guide', forms: 'the forms guide', overlays: 'the overlays guide', tokens: 'the tokens guide', 'product-design': 'the product design guide' };
+const guideNames = { actions: 'the actions guide', collections: 'the collections guide', content: 'the content guide', feedback: 'the feedback guide', forms: 'the forms guide', overlays: 'the overlays guide', panels: 'the panels guide', tokens: 'the tokens guide', 'product-design': 'the product design guide' };
 const stepOf = (call) => {
 	if (call.name === 'read_guide') return `Reading ${guideNames[call.input?.topic] ?? 'a guide'}`;
 	if (call.name === 'get_component') return `Looking up ${call.input?.name ?? 'a component'}`;
