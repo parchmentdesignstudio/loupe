@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/heart</title>
+    <g id="solid/16/heart" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(1.515, 2.264)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M11.505,6.839 L6.839,11.505 C6.644,11.7 6.328,11.7 6.132,11.505 L1.119,6.492 C0.427,5.798 0,4.844 0,3.799 C0,2.75 0.425,1.8 1.112,1.112 C1.799,0.425 2.749,0 3.799,0 C4.848,0 5.798,0.425 6.486,1.112 C7.173,0.425 8.123,0 9.173,0 C10.222,0 11.172,0.425 11.86,1.112 C12.547,1.799 12.972,2.749 12.972,3.799 C12.972,4.848 12.547,5.798 11.86,6.486 C11.775,6.571 11.681,6.657 11.586,6.736 C11.565,6.772 11.539,6.807 11.507,6.838 L11.505,6.839 Z" id="heart"></path>
+        </g>
+    </g>
+</svg>

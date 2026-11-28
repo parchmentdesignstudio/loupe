@@ -87,7 +87,25 @@ mcknny draws some icons from Lucide. These were the ones with no solid to swap t
 | `SquareDashedText` | `text-viewfinder` |
 | `CodeXml` | `chevron-left-forwardslash-chevron-right` |
 
-The site hasn't been moved over to them yet.
+The site is on them now, from 0.12.0, and no longer uses Lucide.
+
+### Drawn for general use
+
+mcknny used to map these from Lucide. Nothing uses them today, so they're first drafts for general use, still to be reviewed:
+
+| Lucide | Solid, by its SF Symbols name | For |
+|---|---|---|
+| `Eye` | `eye` | View, show, preview |
+| `Heart` | `heart` | Like, favourite |
+| `Shield` | `shield`, a framed kite shield with tinted panes, and `shield-fill`, the solid one with the cross cut out | Security, privacy |
+| `Sparkles` | `sparkles` | AI, new, generate |
+| `Wrench` | `wrench` | Tools, fix, settings |
+| `Target` | `target` | Goal, aim, focus |
+| `Rocket` | `rocket` | Launch, ship |
+| `Laptop` | `laptopcomputer` | Device, beside `desktopcomputer` |
+| `Microscope` | `microscope` | Research, inspect |
+| `MoonStar` | `moon-stars` | Night, beside `moon` |
+| `PencilRuler` | `pencil-and-ruler` | Design tools, drafting |
 
 ## Weather
 
@@ -95,9 +113,28 @@ A first set of 16 sits on the Weather artboard: `cloud-sun`, `cloud-moon`, `clou
 
 ## Options kept in Sketch
 
-Drawings that weren't chosen stay on their own artboards, for later: Bee options, Car options (nine car concepts, none shipped yet) and Globe options (the outline globe from before the cut-out one).
+Drawings that weren't chosen stay on their own artboards, for later: Bee options, Car options (nine car concepts, none shipped yet), Globe options (the outline globe from before the cut-out one) and Shield options (the plain shield from before the kite shield, plus a peaked kite and one with the cross cut out).
 
 ## To redraw
+
+### From Steve's review, 28 Nov
+
+Still open, for Steve to come back to. Options for each are drafted:
+
+| Icon | What to look at |
+|---|---|
+| `rocket` | Now the turned Starship with a window and flame. Steve wants to iterate on the shape further another time |
+| `shadow` | Subtle lines or dithering, and maybe a transparent fill. Kept as it is for now |
+| `touchid` | One or two more ridges, less geometric, closer to a real fingertip. Kept as it is for now |
+
+Done from the same review:
+
+- `paintpalette` has its four holes on an arc.
+- `js-square` is set at weight 600.
+- `shapes` is three larger shapes.
+- Roundness goes by size (0.5 on narrow bars, 1 on full shapes), which took `diamond` from 1.75 to 1 and `chart-bar` from 1 to 0.5.
+- `person-2` is drawn from `person` twice at 0.9, so both ears match. The back one is raised and at 60%, and the pair fills the box.
+- `checklist` uses the 1px mini checkmark, and four checkmark blocks sit on the Building blocks artboard.
 
 ### Inner shapes, from the building blocks
 

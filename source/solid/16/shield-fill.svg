@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>solid/16/shield-fill</title>
+    <g id="solid/16/shield-fill" stroke="none" fill="none" fill-rule="evenodd" stroke-width="1">
+        <g id="fill" transform="translate(2.25, 1.25)" fill="color(display-p3 0.035 0.180 0.141)">
+            <path d="M1,0 L10.5,0 C11.0522847,0 11.5,0.44771525 11.5,1 L11.5,8.93745258 C11.5,9.44435369 11.2439874,9.91696473 10.8194017,10.1938685 L6.43283473,13.054673 C6.01783958,13.325322 5.48216042,13.325322 5.06716527,13.054673 L0.680598329,10.1938685 C0.256012589,9.91696473 0,9.44435369 0,8.93745258 L0,1 C0,0.44771525 0.44771525,0 1,0 Z M5.25,1.25 L6.25,1.25 L6.25,5.75 L10.25,5.75 L10.25,6.75 L6.25,6.75 L6.25,11.6816 L5.75,12.0077 L5.25,11.6816 L5.25,6.75 L1.25,6.75 L1.25,5.75 L5.25,5.75 L5.25,1.25 Z" id="shield"></path>
+        </g>
+    </g>
+</svg>
