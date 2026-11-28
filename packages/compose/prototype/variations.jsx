@@ -72,15 +72,31 @@ const IconButton = ({ label, icon, onPress }) => (
 const Shell = ({ children }) => <div className="flex w-72 flex-col rounded-xl bg-overlay text-control text-ink shadow-overlay [--bleed:var(--overlay-bleed)]">{children}</div>
 const tally = (count) => (count ? `${count} ${count === 1 ? 'change' : 'changes'}` : 'No changes yet')
 
+// Each variation's own way of setting a name beside or over its controls
+const NowRow = ({ name, children }) => (
+  <div className="flex items-center gap-2">
+    <span className="w-16 shrink-0 px-1 text-label text-muted">{name}</span>
+    <div className="flex min-w-0 flex-1 items-center gap-2">{children}</div>
+  </div>
+)
+
+const Section = ({ name, children }) => (
+  <section className="flex flex-col gap-1.5">
+    <h3 className="px-1 text-label text-muted">{name}</h3>
+    {children}
+  </section>
+)
+
+const ListRow = ({ name, children }) => (
+  <>
+    <span className="self-center text-label text-muted">{name}</span>
+    <div className="flex min-w-0 items-center gap-1.5">{children}</div>
+  </>
+)
+
 // ——— Now: the panel as it is
 
 function Now({ selection: s }) {
-  const Row = ({ name, children }) => (
-    <div className="flex items-center gap-2">
-      <span className="w-16 shrink-0 px-1 text-label text-muted">{name}</span>
-      <div className="flex min-w-0 flex-1 items-center gap-2">{children}</div>
-    </div>
-  )
   return (
     <Shell>
       <header className="flex items-center gap-1 p-2">
@@ -104,45 +120,45 @@ function Now({ selection: s }) {
             Ungroup
           </Button>
         </div>
-        <Row name="From">
+        <NowRow name="From">
           <From selection={s} className="min-w-0 flex-1" />
-        </Row>
-        <Row name="Layout">
+        </NowRow>
+        <NowRow name="Layout">
           <Layouts selection={s} />
-        </Row>
+        </NowRow>
         {s.mode === 'grid' && (
           <>
-            <Row name="Columns">
+            <NowRow name="Columns">
               <Count selection={s} />
               <Field label="Columns" value={`repeat(${s.columns}, minmax(0, 1fr))`} />
-            </Row>
-            <Row name="Rows">
+            </NowRow>
+            <NowRow name="Rows">
               <Field label="Rows" placeholder="auto" />
-            </Row>
-            <Row name="Gap">
+            </NowRow>
+            <NowRow name="Gap">
               <Field label="Gap" value={s.gap} onChange={s.setGap} />
-            </Row>
+            </NowRow>
           </>
         )}
         {s.text && (
-          <Row name="Type">
+          <NowRow name="Type">
             <Switch isSelected={s.fit} onChange={s.setFit}>
               Fill width
             </Switch>
-          </Row>
+          </NowRow>
         )}
         {s.item && (
           <>
-            <Row name="Align">
+            <NowRow name="Align">
               <Choice label="Across its columns" />
               <Choice label="Down its rows" />
-            </Row>
-            <Row name="Placed">
+            </NowRow>
+            <NowRow name="Placed">
               <span className="min-w-0 flex-1">Column 1 / 7, row 2 / 3</span>
               <Button variant="secondary" size="small">
                 Auto
               </Button>
-            </Row>
+            </NowRow>
           </>
         )}
       </div>
@@ -162,12 +178,6 @@ function Now({ selection: s }) {
 // ——— A: named sections, each a label over its controls
 
 function Sections({ selection: s }) {
-  const Section = ({ name, children }) => (
-    <section className="flex flex-col gap-1.5">
-      <h3 className="px-1 text-label text-muted">{name}</h3>
-      {children}
-    </section>
-  )
   return (
     <Shell>
       <header className="flex items-start gap-1 p-2 pb-3">
@@ -238,12 +248,6 @@ function Sections({ selection: s }) {
 // ——— B: tools along the top, then one column of names and one of controls
 
 function Columns({ selection: s }) {
-  const Row = ({ name, children }) => (
-    <>
-      <span className="self-center text-label text-muted">{name}</span>
-      <div className="flex min-w-0 items-center gap-1.5">{children}</div>
-    </>
-  )
   return (
     <Shell>
       <header className="flex items-center gap-1 p-2">
@@ -264,45 +268,45 @@ function Columns({ selection: s }) {
         <IconButton label="Redo ⇧⌘Z" icon="arrow-uturn-right" />
       </div>
       <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-2 border-t border-bleed/8 p-3">
-        <Row name="Layout">
+        <ListRow name="Layout">
           <Layouts selection={s} />
-        </Row>
+        </ListRow>
         {s.mode === 'grid' && (
           <>
-            <Row name="Columns">
+            <ListRow name="Columns">
               <Count selection={s} className="min-w-0 flex-1" />
-            </Row>
-            <Row name="Sizes">
+            </ListRow>
+            <ListRow name="Sizes">
               <Field label="Columns" value={`repeat(${s.columns}, minmax(0, 1fr))`} />
-            </Row>
-            <Row name="Rows">
+            </ListRow>
+            <ListRow name="Rows">
               <Field label="Rows" placeholder="auto" />
-            </Row>
-            <Row name="Gap">
+            </ListRow>
+            <ListRow name="Gap">
               <Field label="Gap" value={s.gap} onChange={s.setGap} />
-            </Row>
+            </ListRow>
           </>
         )}
         {s.text && (
-          <Row name="Fill width">
+          <ListRow name="Fill width">
             <span className="flex-1" />
             <Switch aria-label="Fill width" isSelected={s.fit} onChange={s.setFit} />
-          </Row>
+          </ListRow>
         )}
         {s.item && (
           <>
-            <Row name="Across">
+            <ListRow name="Across">
               <Choice label="Across its columns" />
-            </Row>
-            <Row name="Down">
+            </ListRow>
+            <ListRow name="Down">
               <Choice label="Down its rows" />
-            </Row>
-            <Row name="Placed">
+            </ListRow>
+            <ListRow name="Placed">
               <span className="min-w-0 flex-1">1 / 7, 2 / 3</span>
               <Button variant="ghost" size="small">
                 Auto
               </Button>
-            </Row>
+            </ListRow>
           </>
         )}
       </div>
