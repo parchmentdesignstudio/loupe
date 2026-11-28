@@ -426,6 +426,27 @@ if (process.env.NODE_ENV === 'development') import('@parchment/compose').then(({
 
 With the Astro integration or the Vite plugin, the dev server also keeps the list in `.compose/changes.md` in the site, written as each change is made and removed when there are none, so an agent can be told to make the layout changes in that file with nothing copied. Add `.compose` to the site’s `.gitignore`. `window.parchmentCompose.changes()` returns the same list, for an agent that can drive the browser to read for itself.
 
+### Opening it
+
+⌥G opens and closes Compose wherever it’s on the page. The Vite plugin and `mount()` also put a Compose button at the foot of the page, and both take options for a site that opens it another way:
+
+```js
+compose({ launcher: false, shortcut: 'cmd+shift+l' })
+```
+
+`launcher: false` leaves the button out, and `shortcut` changes the keys, or is `false` for none. The Astro integration takes `shortcut`, as its button is the toolbar’s.
+
+A site with its own menu of commands, such as one behind ⌘K, lists what Compose offers by asking it. Compose is only on the page in development, so in a build there’s nothing to ask and nothing is listed:
+
+```js
+const commands = window.parchmentCompose?.commands() ?? []
+// [{ id: 'compose', name: 'Compose this page', keys: '⌥G', run }]
+```
+
+Each has a `name` to show, `keys` if it has a shortcut, and `run`. What’s offered changes, as Close Compose replaces Compose this page while it’s open, and copying and resetting appear once there are changes, so ask again on the window’s `compose:change` event.
+
+Loupe’s own preview and tools have Compose this way, with no button: ⌥G in any of them, and in the preview’s search as well, through `DocsSearch`’s `commands`.
+
 ## Releasing
 
 Each package is published to its own branch, so npm and pnpm can both install it from GitHub.

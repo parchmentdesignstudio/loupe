@@ -6,6 +6,7 @@
   "files": [
     "lib",
     "vite.js",
+    "vite.d.ts",
     "astro.js",
     "astro-app.js",
     "server.js",

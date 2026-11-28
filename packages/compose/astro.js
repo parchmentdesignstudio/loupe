@@ -1,7 +1,8 @@
 // Adds Compose to Astro's dev toolbar, which opens and closes it
 import { middleware } from './server.js'
 
-export default function compose() {
+/** `shortcut` changes the keys that open and close it from alt+g, or is false for none */
+export default function compose({ shortcut = 'alt+g' } = {}) {
   return {
     name: '@parchment/compose',
     hooks: {
@@ -10,6 +11,7 @@ export default function compose() {
       'astro:config:setup': ({ command, addDevToolbarApp, injectScript }) => {
         if (command !== 'dev') return
         injectScript('head-inline', `(${keepSources})()`)
+        injectScript('head-inline', `window.parchmentComposeOptions = ${JSON.stringify({ shortcut })}`)
         addDevToolbarApp({
           id: 'parchment-compose',
           name: 'Compose',

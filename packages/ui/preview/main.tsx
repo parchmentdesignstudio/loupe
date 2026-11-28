@@ -14,7 +14,7 @@ import {
 	Tooltip,
 	TooltipTrigger,
 } from '../src/index.js';
-import { DocsBadge, DocsPage, DocsSearch, DocsSearchButton, DocsShell } from '../src/docs.js';
+import { DocsBadge, DocsPage, DocsSearch, DocsSearchButton, DocsShell, type DocsSearchCommand } from '../src/docs.js';
 import { Contents, ContentsMenu, type Heading } from './contents.js';
 import { Inspector, hasInspector } from './inspector.js';
 import { Reference, hasReference } from './reference.js';
@@ -399,6 +399,8 @@ function Preview() {
 		}
 	};
 
+	const commands = useComposeCommands();
+
 	return (
 		<>
 			<DocsShell
@@ -442,7 +444,7 @@ function Preview() {
 					)}
 				</DocsPage>
 			</DocsShell>
-			<DocsSearch pages={searchPages} isOpen={isSearching} onOpenChange={setSearching} />
+			<DocsSearch pages={searchPages} commands={commands} isOpen={isSearching} onOpenChange={setSearching} />
 		</>
 	);
 }
@@ -467,3 +469,18 @@ createRoot(document.getElementById('root')!).render(
 // first Code block to need them doesn't wait. Safari has no requestIdleCallback, so it waits a moment instead
 const whenIdle = (task: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(task) : setTimeout(task, 1000));
 whenIdle(() => void highlight('', { language: 'tsx' }));
+
+// Compose is on the page in development, from its Vite plugin, and says what it can do. Listing that in search opens
+// it from ⌘K, with no button of its own on the page
+type ComposeWindow = { parchmentCompose?: { commands(): { id: string; name: string; keys?: string; run(): void }[] } };
+function useComposeCommands(): DocsSearchCommand[] {
+	const read = () => ((window as ComposeWindow).parchmentCompose?.commands() ?? []).map(({ id, name, keys, run }) => ({ id, name, group: keys ?? 'Compose', onAction: run }));
+	const [commands, setCommands] = useState<DocsSearchCommand[]>(read);
+	useEffect(() => {
+		const update = () => setCommands(read());
+		update();
+		window.addEventListener('compose:change', update);
+		return () => window.removeEventListener('compose:change', update);
+	}, []);
+	return commands;
+}

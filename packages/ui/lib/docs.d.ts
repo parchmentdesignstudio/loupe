@@ -68,11 +68,21 @@ export interface DocsSearchPage {
     /** What it's in, shown at the row's end */
     group: string;
 }
+/** Something to do rather than somewhere to go, such as opening a tool */
+export interface DocsSearchCommand {
+    id: string;
+    name: string;
+    /** What it belongs to, or its shortcut, shown at the row's end */
+    group?: string;
+    onAction: () => void;
+}
 export interface DocsSearchProps {
     pages: DocsSearchPage[];
+    /** Things to do, listed before the pages and found by name as they are */
+    commands?: DocsSearchCommand[];
     isOpen: boolean;
     onOpenChange: (isOpen: boolean) => void;
     placeholder?: string;
 }
-/** Finds a page by name: type to narrow the list, the arrow keys to move through it, and Enter to go. ⌘K opens it */
-export declare function DocsSearch({ pages, isOpen, onOpenChange, placeholder }: DocsSearchProps): import("react").JSX.Element;
+/** Finds a page by name, or a command: type to narrow the list, the arrow keys to move through it, and Enter to go. ⌘K opens it */
+export declare function DocsSearch({ pages, commands, isOpen, onOpenChange, placeholder }: DocsSearchProps): import("react").JSX.Element;

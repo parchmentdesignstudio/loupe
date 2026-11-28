@@ -26,9 +26,25 @@ function h(tag, properties = {}, ...children) {
   return node
 }
 
-/** Puts Compose on the page. `launcher` adds its own button, for a page with no toolbar to open it from */
-export function mount({ launcher = true, onToggle } = {}) {
+// A shortcut as it's written, such as alt+g or cmd+shift+l, and as a menu shows it
+function readShortcut(text) {
+  const parts = text ? text.toLowerCase().split('+') : []
+  const key = parts.pop()
+  if (!key) return null
+  const has = (...names) => names.some((name) => parts.includes(name))
+  const keys = { alt: has('alt', 'option'), command: has('cmd', 'command', 'meta', 'ctrl'), shift: has('shift'), code: /^[a-z]$/.test(key) ? `Key${key.toUpperCase()}` : /^\d$/.test(key) ? `Digit${key}` : key }
+  keys.shown = `${keys.alt ? '⌥' : ''}${keys.shift ? '⇧' : ''}${keys.command ? (isMac ? '⌘' : 'Ctrl ') : ''}${key.toUpperCase()}`
+  keys.matches = (event) => event.altKey === keys.alt && (event.metaKey || event.ctrlKey) === keys.command && event.shiftKey === keys.shift && (event.code === keys.code || event.key.toLowerCase() === key)
+  return keys
+}
+
+/**
+ * Puts Compose on the page. `launcher` adds its own button, for a page with nothing else to open it from, and
+ * `shortcut` is the keys that open and close it, or false for none
+ */
+export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
   if (window.parchmentCompose) return window.parchmentCompose
+  const keys = readShortcut(shortcut)
 
   const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, note: null, landing: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false, from: 'base', file: '' }
   const record = { styles: new Map(), groups: new Set(), copies: new Map(), removed: [], deleted: [], moved: new Map() }
@@ -329,6 +345,9 @@ export function mount({ launcher = true, onToggle } = {}) {
 
   // ——— Keeping changes through a reload, and in a file for an agent
 
+  // Tells a site's menu of commands that what Compose offers may have changed
+  const announce = () => window.parchmentCompose && dispatchEvent(new CustomEvent('compose:change'))
+
   const KEY = `compose:${location.pathname}`
   const idOf = (element, made) => origins.get(element)?.id ?? (made.has(element) ? `n${[...made.keys()].indexOf(element)}` : null)
 
@@ -364,6 +383,7 @@ export function mount({ launcher = true, onToggle } = {}) {
         )
       }
     } catch {}
+    announce()
     if (state.file) fetch('/__compose', { method: 'POST', body: report().count ? report().text : '' }).catch(() => {})
   }
 
@@ -1372,12 +1392,14 @@ export function mount({ launcher = true, onToggle } = {}) {
 
   function onKeyDown(event) {
     const command = event.metaKey || event.ctrlKey
-    if (event.altKey && !command && event.code === 'KeyG') {
+    if (keys?.matches(event)) {
       event.preventDefault()
       return toggle()
     }
     if (!state.on) return
     const target = event.composedPath()[0]
+    // Typing in the page, such as into its own search, is the page's
+    if (!ours(event) && (target.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName))) return
     if (ours(event) && /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName)) return event.key === 'Escape' && target.blur()
     const key = event.key.toLowerCase()
     // A focused control in the panel keeps the keys that work it, and an open menu or list keeps them all
@@ -1423,6 +1445,7 @@ export function mount({ launcher = true, onToggle } = {}) {
       sessionStorage.setItem('compose:on', on ? '1' : '')
     } catch {}
     onToggle?.(on)
+    announce()
   }
 
   addEventListener('pointerdown', onPointerDown, true)
@@ -1463,6 +1486,15 @@ export function mount({ launcher = true, onToggle } = {}) {
     },
     /** The changes so far, as the text Copy changes gives */
     changes: () => report(),
+    /** What Compose can be asked to do just now, for a site's own menu of commands to list and run */
+    commands() {
+      const { count } = report()
+      return [
+        { id: 'compose', name: state.on ? 'Close Compose' : 'Compose this page', keys: keys?.shown, run: () => toggle() },
+        ...(count ? [{ id: 'compose-copy', name: `Copy ${count} layout ${count === 1 ? 'change' : 'changes'}`, run: copy }, { id: 'compose-reset', name: 'Reset layout changes', run: reset }] : []),
+      ]
+    },
   }
+  announce()
   return window.parchmentCompose
 }
