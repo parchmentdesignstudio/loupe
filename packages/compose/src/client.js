@@ -5,6 +5,7 @@ import { formatTemplate, linePosition, linesOf, nearestLine, nearestTrack, parse
 import { gapSteps, gapValue } from './spacing.js'
 import sheet from 'virtual:compose-panel-styles'
 import { createPanel } from './panel.jsx'
+import { OPEN, isMac, page, readShortcut, storeKey } from './shared.js'
 import { styles } from './styles.js'
 
 const COLUMNS = 'grid-template-columns'
@@ -13,7 +14,13 @@ const FRACTION = 'minmax(0, 1fr)'
 const REPLACED = /^(img|svg|video|canvas|picture|iframe|input|button|select|textarea|object|embed)$/
 const px = (value) => parseFloat(value) || 0
 const clamp = (value, low, high) => Math.min(Math.max(value, low), high)
-const isMac = /Mac|iPhone|iPad/.test(navigator.platform)
+
+// A page's elements, as a few characters to tell one page from another by, rather than the 200,000 they come to
+function digest(text) {
+  let hash = 5381
+  for (let index = 0; index < text.length; index++) hash = ((hash * 33) ^ text.charCodeAt(index)) >>> 0
+  return `${text.length.toString(36)}-${hash.toString(36)}`
+}
 
 function h(tag, properties = {}, ...children) {
   const node = document.createElement(tag)
@@ -26,24 +33,11 @@ function h(tag, properties = {}, ...children) {
   return node
 }
 
-// A shortcut as it's written, such as alt+g or cmd+shift+l, and as a menu shows it
-function readShortcut(text) {
-  const parts = text ? text.toLowerCase().split('+') : []
-  const key = parts.pop()
-  if (!key) return null
-  const has = (...names) => names.some((name) => parts.includes(name))
-  const keys = { alt: has('alt', 'option'), command: has('cmd', 'command', 'meta', 'ctrl'), shift: has('shift'), code: /^[a-z]$/.test(key) ? `Key${key.toUpperCase()}` : /^\d$/.test(key) ? `Digit${key}` : key }
-  keys.shown = `${keys.alt ? '⌥' : ''}${keys.shift ? '⇧' : ''}${keys.command ? (isMac ? '⌘' : 'Ctrl ') : ''}${key.toUpperCase()}`
-  keys.matches = (event) => event.altKey === keys.alt && (event.metaKey || event.ctrlKey) === keys.command && event.shiftKey === keys.shift && (event.code === keys.code || event.key.toLowerCase() === key)
-  return keys
-}
-
 /**
- * Puts Compose on the page. `launcher` adds its own button, for a page with nothing else to open it from, and
- * `shortcut` is the keys that open and close it, or false for none
+ * The tool itself, which the loader fetches and starts once, when Compose is first wanted, and hands on from
+ * window.parchmentCompose. It takes what `mount` was given
  */
-export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
-  if (window.parchmentCompose) return window.parchmentCompose
+export function start({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
   const keys = readShortcut(shortcut)
 
   const state = { on: false, selected: [], hover: null, press: null, drag: null, indicator: null, note: null, landing: null, tap: null, touch: matchMedia('(pointer: coarse)').matches, several: false, from: 'base', file: '' }
@@ -57,11 +51,8 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
   const naming = h('input', { class: 'naming', hidden: true, 'aria-label': 'Line name', placeholder: 'Line name' })
   const open = h('div', { class: 'launcher', hidden: !launcher })
   const floats = h('div', { class: 'floats' })
-  // Loupe's sheet is written for a page, so its :root becomes this shadow root's host. A shadow root can't register
-  // properties, which Tailwind's shadows and rings start from, so those go to the page, where they change nothing
-  const registered = sheet.match(/@property[^{]+\{[^}]*\}/g) ?? []
-  root.append(h('style', {}, `@layer reset;${sheet.replaceAll(':root', ':host')}`), h('style', {}, styles), layer, naming, panel, open, floats)
-  document.head.append(h('style', { 'data-compose-properties': true }, registered.join('\n')))
+  // Loupe's sheet, made ready for a shadow root as it's built (panel-css.js), so nothing of it goes on the page
+  root.append(h('style', {}, sheet), h('style', {}, styles), layer, naming, panel, open, floats)
   const draw = createPanel({ panel, opener: open, floats })
 
   const ours = (event) => event.composedPath().some((node) => node === host || /^(astro-dev-toolbar|vite-error-overlay)$/.test(node.localName ?? ''))
@@ -142,7 +133,7 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
     render()
   })
 
-  const report = () => summarise(record, { path: location.pathname, width: innerWidth, breakpoints: breakpoints() })
+  const report = () => summarise(record, { path: page(), width: innerWidth, breakpoints: breakpoints() })
 
   // ——— History
 
@@ -348,14 +339,14 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
   // Tells a site's menu of commands that what Compose offers may have changed
   const announce = () => window.parchmentCompose && dispatchEvent(new CustomEvent('compose:change'))
 
-  const KEY = `compose:${location.pathname}`
   const idOf = (element, made) => origins.get(element)?.id ?? (made.has(element) ? `n${[...made.keys()].indexOf(element)}` : null)
 
   // The page as it now differs from how it began: what was made, the children of every parent whose children
   // changed, what was taken out, and the styles. Enough to do it all again on the same page
   function save() {
+    const { count, text } = report()
     try {
-      if (!history.done.length || !report().count) sessionStorage.removeItem(KEY)
+      if (!history.done.length || !count) sessionStorage.removeItem(storeKey())
       else {
         stamp()
         const made = new Map([...[...record.groups].map((node) => [node, { kind: 'div' }]), ...[...record.copies].map(([node, source]) => [node, { kind: 'copy', source, html: node.outerHTML }])].filter(([node]) => node.isConnected))
@@ -370,9 +361,9 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
         }
         const gone = (list) => list.filter(({ element }) => !element.isConnected && origins.has(element)).map(({ element, described }) => ({ id: origins.get(element).id, described }))
         sessionStorage.setItem(
-          KEY,
+          storeKey(),
           JSON.stringify({
-            signature,
+            signature: digest(signature),
             made: [...made.values()],
             layouts,
             removed: gone(record.removed),
@@ -384,7 +375,7 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
       }
     } catch {}
     announce()
-    if (state.file) fetch('/__compose', { method: 'POST', body: report().count ? report().text : '' }).catch(() => {})
+    if (state.file) fetch('/__compose', { method: 'POST', body: count ? text : '' }).catch(() => {})
   }
 
   // After a reload, the saved changes are made again as one step, which Undo and Reset take back like any other.
@@ -392,12 +383,12 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
   function resume() {
     let saved
     try {
-      saved = JSON.parse(sessionStorage.getItem(KEY))
+      saved = JSON.parse(sessionStorage.getItem(storeKey()))
     } catch {}
     if (!saved) return
     stamp()
-    if (saved.signature !== signature) {
-      sessionStorage.removeItem(KEY)
+    if (saved.signature !== digest(signature)) {
+      sessionStorage.removeItem(storeKey())
       return say('The page has changed, so the earlier changes were let go')
     }
     const byId = new Map([...origins].map(([element, origin]) => [origin.id, element]))
@@ -1442,7 +1433,7 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
       if (!painting) requestAnimationFrame(paint)
     }
     try {
-      sessionStorage.setItem('compose:on', on ? '1' : '')
+      sessionStorage.setItem(OPEN, on ? '1' : '')
     } catch {}
     onToggle?.(on)
     announce()
@@ -1476,10 +1467,10 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
     .catch(() => {})
   resume()
   try {
-    if (sessionStorage.getItem('compose:on')) toggle(true)
+    if (sessionStorage.getItem(OPEN)) toggle(true)
   } catch {}
 
-  window.parchmentCompose = {
+  const compose = {
     toggle,
     get active() {
       return state.on
@@ -1496,5 +1487,5 @@ export function mount({ launcher = true, shortcut = 'alt+g', onToggle } = {}) {
     },
   }
   announce()
-  return window.parchmentCompose
+  return compose
 }

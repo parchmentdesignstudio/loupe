@@ -24,7 +24,7 @@ export interface ComposeOptions {
   shortcut?: string | false
 }
 
-/** Puts Compose on the page */
+/** Puts Compose on the page: its shortcut straight away, and the tool itself when it’s first opened */
 export function mount(options?: ComposeOptions & { onToggle?: (on: boolean) => void }): Compose
 
 /** Vite plugin: Compose on every page of the dev server */

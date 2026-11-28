@@ -1,4 +1,18 @@
-/* Loupe for Compose's panel, compiled to a string and put in its shadow root, so none of it reaches the page */
+/* Loupe for Compose's panel, compiled to a string and put in its shadow root, so none of it reaches the page. The
+   theme and the components' tokens, without the prose and code styles a panel has no use for. Tailwind reads the
+   panel, and panel-css.js adds the files of Loupe's components it's drawn with, rather than all of them as
+   @parchment/ui/tokens.css does */
 @import 'tailwindcss';
-@import '@parchment/ui/tokens.css';
+@import '@parchment/ui/styles/theme.css';
+@import '@parchment/ui/styles/components.css';
 @source './panel.jsx';
+
+/* As tokens.css has it, for a switch's | and O */
+@custom-variant on-off-labels {
+  &:where([data-on-off-labels], [data-on-off-labels] *) {
+    @slot;
+  }
+  @media (prefers-contrast: more) {
+    @slot;
+  }
+}
