@@ -93,7 +93,8 @@ export const styles = `
 
 .panel, .launcher, .floats > * { pointer-events: auto; }
 .panel, .launcher { position: fixed; }
-.panel { right: 16px; bottom: 16px; user-select: none; }
+/* From the top, so the panel grows downwards as rows come and go and what's in it stays where it was */
+.panel { top: 16px; right: 16px; display: flex; max-height: calc(100dvh - 32px); user-select: none; }
 .launcher { left: 16px; bottom: 16px; }
 .handle, .badge, .grip { touch-action: none; }
 @media (pointer: coarse) {

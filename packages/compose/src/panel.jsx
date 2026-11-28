@@ -152,7 +152,7 @@ function Layout({ api, element }) {
 }
 
 function Panel({ api }) {
-  const { selected, touch, several, from } = api.state
+  const { selected, touch, several, from, copied } = api.state
   const primary = selected.at(-1)
   const command = api.isMac ? '⌘' : 'Ctrl '
   const count = api.count()
@@ -167,7 +167,7 @@ function Panel({ api }) {
   // What's done by a shortcut, or seldom, so it needn't be in view. The keys aren't shown where there's no keyboard
   const key = (keys) => (touch ? null : <Keyboard>{keys}</Keyboard>)
   return (
-    <div className="flex w-72 flex-col rounded-xl bg-overlay text-control text-ink shadow-overlay [--bleed:var(--overlay-bleed)]">
+    <div className="relative flex max-h-full w-72 flex-col rounded-xl bg-overlay text-control text-ink shadow-overlay [--bleed:var(--overlay-bleed)]">
       <header className="flex cursor-grab touch-none items-center gap-1 p-2">
         <div className="flex min-w-0 flex-1 items-center overflow-hidden pl-1">
           {!primary && <span className="px-1 font-medium">Compose</span>}
@@ -208,22 +208,23 @@ function Panel({ api }) {
           <Tooltip>Close</Tooltip>
         </TooltipTrigger>
       </header>
-      <div className="flex flex-col gap-3 px-3 pb-3">
+      <div className="flex min-h-0 flex-col gap-3 overflow-y-auto px-3 pb-3">
         {!primary && <p className="text-body text-muted">{touch ? 'Double-tap an element to select it.' : `Click an element to select it, and ${command.trim()}-click to add more.`}</p>}
         {selected.length > 1 && <p className="text-body text-muted">{`${selected.length} selected. ${touch ? 'Group them from the menu.' : `${command}G groups them.`}`}</p>}
         {selected.length === 1 && <Layout api={api} element={primary} />}
       </div>
-      <footer className="flex flex-col gap-2 border-t border-bleed/8 p-2">
-        {message && <output className="px-1 text-label text-muted">{message}</output>}
-        <div className="flex items-center gap-2">
-          <Select variant="filled" size="small" className="min-w-0 flex-1" aria-label="The width changes apply from" start={glyph('display')} items={froms} value={froms.some(({ id }) => id === from) ? from : 'base'} onChange={(id) => id !== null && api.setFrom(String(id))}>
-            {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
-          </Select>
-          <Button variant={count ? 'primary' : 'secondary'} size="small" onPress={api.copy}>
-            {count ? `Copy ${count} ${count === 1 ? 'change' : 'changes'}` : 'Copy changes'}
-          </Button>
-        </div>
+      {/* Nothing in the foot changes size: the button has a set width, whatever it says, so the select keeps its own. The
+          select's words say what it is, so it has no icon */}
+      <footer className="flex shrink-0 items-center gap-2 border-t border-bleed/8 p-2">
+        <Select variant="filled" size="small" className="min-w-0 flex-1" aria-label="The width changes apply from" items={froms} value={froms.some(({ id }) => id === from) ? from : 'base'} onChange={(id) => id !== null && api.setFrom(String(id))}>
+          {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+        </Select>
+        <Button variant={count ? 'primary' : 'secondary'} size="small" className="w-32 shrink-0 tabular-nums" onPress={api.copy}>
+          {copied ? 'Copied' : count ? `Copy ${count} ${count === 1 ? 'change' : 'changes'}` : 'Copy changes'}
+        </Button>
       </footer>
+      {/* A message floats beside the panel, so it pushes nothing */}
+      {message && <output className={`absolute right-0 rounded-lg bg-inverse px-3 py-1.5 text-label text-paper shadow-floating ${api.messageAbove() ? 'bottom-full mb-2' : 'top-full mt-2'}`}>{message}</output>}
     </div>
   )
 }

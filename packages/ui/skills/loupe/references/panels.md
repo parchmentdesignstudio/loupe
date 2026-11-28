@@ -14,8 +14,11 @@ What is it?
  ├── Changes how the whole panel works, such as a breakpoint or a mode → the header or the foot
  ├── Done by a shortcut, or seldom → a Menu in the header
  ├── The one thing the panel is for → the foot, as its only Button
- └── News about the last action → a line above the foot, only while there's something to say
+ └── News about the last action → on the button it came from, or floating beside the panel, never a new line in it
 ```
+
+A panel that floats is placed from its top, so it grows downwards as controls come and go and the header, and
+whatever the pointer was on, stay where they were. A panel taller than the window scrolls its body, not the page.
 
 A panel reads top to bottom as what's selected, what can be changed about it, then what to do with the result. Something
 in the wrong band is what makes a panel feel untidy, more than any spacing: a mode among the controls reads as a
@@ -68,8 +71,10 @@ with its `Keyboard`, which is how the shortcut is learned. A destructive item is
 - A count goes on the button, as in "Copy 3 changes". Text beside a button in a narrow foot wraps to three lines.
 - A mode that changes what the controls apply to, such as a breakpoint, sits beside the button as a `filled`
   `small` Select with an `aria-label`.
-- What the last action said, such as "Copied" or "Nothing to undo", is an `<output>` in `text-label text-muted` on its
-  own line above, and gone once it's been read.
+- Nothing in a panel moves when it reports. The button has a set width (`w-32`), so a label that changes, to "Copied"
+  or to a new count, changes in place and the Select beside it keeps its own width. Counts are `tabular-nums`.
+- What the last action said that the button can't, such as "Nothing to undo", is an `<output>` on `bg-inverse` in
+  `text-paper`, placed outside the panel's box with `absolute`, so it pushes nothing, and gone once it's been read.
 - Reset, and anything else that undoes work, is in the menu, not beside the button.
 
 ```tsx
@@ -97,8 +102,8 @@ with its `Keyboard`, which is how the shortcut is learned. A destructive item is
 	<Switch>Fill width</Switch>
 </div>
 <footer className="flex items-center gap-2 border-t border-bleed/8 p-2">
-	<Select variant="filled" size="small" aria-label="The width changes apply from">…</Select>
-	<Button variant="primary" size="small">Copy 3 changes</Button>
+	<Select variant="filled" size="small" className="min-w-0 flex-1" aria-label="The width changes apply from">…</Select>
+	<Button variant="primary" size="small" className="w-32 shrink-0 tabular-nums">Copy 3 changes</Button>
 </footer>
 
 // Incorrect: a mode among the properties, rows of two shapes, and a status beside two raised buttons

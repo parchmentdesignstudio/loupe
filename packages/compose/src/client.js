@@ -1191,6 +1191,8 @@ export function mount({ launcher = true, onToggle } = {}) {
     state,
     isMac,
     message: () => message,
+    // A message goes under the panel, or over it when the panel has been moved too low for that
+    messageAbove: () => panel.getBoundingClientRect().bottom + 56 > innerHeight,
     count: () => report().count,
     breakpoints,
     setFrom(name) {
@@ -1276,7 +1278,13 @@ export function mount({ launcher = true, onToggle } = {}) {
       document.execCommand('copy')
       holder.remove()
     }
-    say(state.file ? `Copied, and in ${state.file}` : 'Copied')
+    // Said on the button itself, in the room it already has
+    state.copied = true
+    setTimeout(() => {
+      state.copied = false
+      render()
+    }, 1600)
+    render()
   }
 
   // The panel moves by its header, to get it off whatever is being worked on
