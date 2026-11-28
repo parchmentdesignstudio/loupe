@@ -36,6 +36,22 @@ These are SVGs inside the components, standing in for icons. Once each is in the
 | `trash` | Delete, in a row's menu | The solid set has it now. Nothing yet on the screen |
 | `arrow-up-arrow-down` | Sort | The solid set has it. Until it's swapped in, a chevron |
 
+## Missing for Compose
+
+Compose’s panel (`packages/compose`) gets by on `ellipsis` and `xmark`, as its controls are words. These are what a row of tools for it would need, as one of its prototypes had (`packages/compose/prototype`), and what any layout tool would. Names are SF Symbols’ where it has one.
+
+| Icon | For | Stands in now |
+|---|---|---|
+| `rectangle-3-group` | Group | `square-dashed-and-cursorarrow` in the prototype, which reads as select |
+| `square-dashed` | Ungroup, and a group’s outline | `rectangle-split-3x1` in the prototype, which reads as columns. Only `square-dashed-and-cursorarrow` is in the set |
+| `rectangle-grid-1x2` | Block, a stack | Nothing. `square-grid-2x2` covers Grid and `rectangle-split-3x1` a row |
+| `rectangle-split-1x2` | A column of flex items | Nothing |
+| `align-horizontal-left`, `-center`, `-right` | Where an item sits across its cell | Nothing. The `text-align` three are for text |
+| `align-vertical-top`, `-center`, `-bottom` | Where it sits down its cell | Nothing |
+| `distribute-horizontal-center`, `distribute-vertical-center` | Justify: space between and around | Nothing |
+| `iphone`, `ipad` | Breakpoints, beside `display` and `desktopcomputer` | Nothing |
+| `textformat-size` | Type that fills its width | Nothing |
+
 ## To redraw
 
 ### Chevrons, centred by one rule

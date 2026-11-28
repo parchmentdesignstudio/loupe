@@ -1372,8 +1372,8 @@ export function mount({ launcher = true, onToggle } = {}) {
     const target = event.composedPath()[0]
     if (ours(event) && /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName)) return event.key === 'Escape' && target.blur()
     const key = event.key.toLowerCase()
-    // A focused button in the panel keeps the keys that work it
-    if (ours(event) && ['enter', 'tab', ' '].includes(key)) return
+    // A focused control in the panel keeps the keys that work it, and an open menu or list keeps them all
+    if (ours(event) && (event.composedPath().includes(floats) || key.startsWith('arrow') || ['enter', 'tab', ' '].includes(key))) return
     const primary = state.selected.at(-1)
     if (command && key === 'g') (event.shiftKey ? ungroup : group)()
     else if (command && key === 'z') (event.shiftKey ? redo : undo)()
